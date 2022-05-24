@@ -11,7 +11,7 @@ import React from "react";
 
 export default function Header() {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <Image style={styles.logo} source={require("../../assets/Tizly.jpg")} />
       <TouchableOpacity>
         <Image
@@ -26,11 +26,19 @@ export default function Header() {
           source={require("../../assets/notification.png")}
         />
       </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image style={styles.user} source={require("../../assets/user.png")} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    top: 20,
+  },
+
   logo: {
     position: "relative",
     top: -360,
@@ -48,6 +56,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 24,
     bottom: 360,
-    right: -105,
+    right: -99,
+  },
+
+  user: {
+    left: 185,
+    top: -389,
   },
 });
