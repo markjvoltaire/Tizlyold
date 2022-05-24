@@ -26,7 +26,7 @@ export default function Header() {
 const styles = StyleSheet.create({
   logo: {
     position: "relative",
-    top: -415,
+    top: -360,
     resizeMode: "contain",
   },
 
