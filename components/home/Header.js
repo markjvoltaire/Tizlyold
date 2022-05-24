@@ -19,6 +19,13 @@ export default function Header() {
           source={require("../../assets/drawer.png")}
         />
       </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image
+          style={styles.notification}
+          source={require("../../assets/notification.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -35,5 +42,12 @@ const styles = StyleSheet.create({
     width: 24,
     bottom: 360,
     right: 180,
+  },
+
+  notification: {
+    position: "absolute",
+    width: 24,
+    bottom: 360,
+    right: -105,
   },
 });
