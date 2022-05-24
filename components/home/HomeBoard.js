@@ -21,12 +21,13 @@ const styles = StyleSheet.create({
     top: -300,
     color: "black",
     width: 100,
-    left: -150,
+    left: -160,
   },
 
   homeboard: {
     position: "absolute",
-    left: -160,
-    top: -280,
+    left: -190,
+    top: -260,
+    width: 430,
   },
 });
