@@ -12,7 +12,10 @@ import React from "react";
 export default function Header() {
   return (
     <SafeAreaView style={styles.container}>
-      <Image style={styles.logo} source={require("../../assets/Tizly.jpg")} />
+      <Image
+        style={styles.logo}
+        source={require("../../assets/tizlyicon.jpg")}
+      />
       <TouchableOpacity>
         <Image
           style={styles.drawer}
@@ -23,12 +26,12 @@ export default function Header() {
       <TouchableOpacity>
         <Image
           style={styles.notification}
-          source={require("../../assets/notification.png")}
+          source={require("../../assets/noti.png")}
         />
       </TouchableOpacity>
 
       <TouchableOpacity>
-        <Image style={styles.user} source={require("../../assets/user.png")} />
+        <Image style={styles.user} source={require("../../assets/mark.png")} />
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -36,31 +39,38 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   container: {
-    top: 20,
+    top: 2,
   },
 
   logo: {
+    position: "absolute",
     position: "relative",
     top: -360,
     resizeMode: "contain",
+    width: 52,
+    height: 26,
   },
 
   drawer: {
     position: "absolute",
     width: 24,
-    bottom: 360,
+    bottom: 365,
     right: 180,
   },
 
   notification: {
     position: "absolute",
     width: 24,
+    height: 24,
     bottom: 360,
     right: -99,
   },
 
   user: {
+    position: "absolute",
     left: 185,
     top: -389,
+    width: 32,
+    height: 32,
   },
 });

@@ -8,7 +8,7 @@ export default function HomeBoard() {
       <TouchableOpacity>
         <Image
           style={styles.homeboard}
-          source={require("../../assets/homeboard.png")}
+          source={require("../../assets/homeBanner.png")}
         />
       </TouchableOpacity>
     </View>
@@ -26,8 +26,9 @@ const styles = StyleSheet.create({
 
   homeboard: {
     position: "absolute",
-    left: -190,
     top: -260,
+    left: -188,
+    height: 200,
     width: 430,
   },
 });

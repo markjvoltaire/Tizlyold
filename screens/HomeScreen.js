@@ -3,6 +3,7 @@ import React from "react";
 import Header from "../components/home/Header";
 import HomeBoard from "../components/home/HomeBoard";
 import TrendingCreators from "../components/home/TrendingCreators";
+import TrendingTag from "../components/home/TrendingTag";
 
 export default function HomeScreen() {
   return (
@@ -10,6 +11,7 @@ export default function HomeScreen() {
       <Header />
       <HomeBoard />
       <TrendingCreators />
+      <TrendingTag />
     </View>
   );
 }
