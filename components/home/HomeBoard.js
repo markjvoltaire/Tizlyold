@@ -4,7 +4,7 @@ import React from "react";
 export default function HomeBoard() {
   return (
     <View>
-      <Text style={styles.header}> Discovery</Text>
+      <Text style={styles.header}> Hello Mark </Text>
       <TouchableOpacity>
         <Image
           style={styles.homeboard}

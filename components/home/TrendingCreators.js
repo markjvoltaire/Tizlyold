@@ -4,20 +4,28 @@ import React from "react";
 export default function TrendingCreators() {
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.creatorImage}
-        source={require("../../assets/desi.png")}
-      />
+      <View style={styles.iconContainer}>
+        <TouchableOpacity>
+          <Image
+            style={styles.userIcon}
+            source={require("../../assets/desi.png")}
+          />
+        </TouchableOpacity>
 
-      <Image
-        style={styles.creatorImage}
-        source={require("../../assets/iaa.png")}
-      />
+        <TouchableOpacity>
+          <Image
+            style={styles.userIcon}
+            source={require("../../assets/iaa.png")}
+          />
+        </TouchableOpacity>
 
-      <Image
-        style={styles.creatorImage}
-        source={require("../../assets/complex.png")}
-      />
+        <TouchableOpacity>
+          <Image
+            style={styles.userIcon}
+            source={require("../../assets/complex.png")}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -25,17 +33,19 @@ export default function TrendingCreators() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
+    justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: -100,
+    marginLeft: -150,
   },
-  creatorRow: {
-    position: "absolute",
+
+  iconContainer: {
     flexDirection: "row",
   },
 
-  creatorImage: {
-    justifyContent: "space-between",
+  userIcon: {
+    marginLeft: 10,
+    resizeMode: "contain",
+    marginHorizontal: 20,
   },
 });
