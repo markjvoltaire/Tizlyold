@@ -20,6 +20,8 @@ export default function TrendingTag() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
+    flex: 2,
+    marginHorizontal: "auto",
   },
   tagTitle: {
     position: "absolute",
