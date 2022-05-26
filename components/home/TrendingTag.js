@@ -25,6 +25,34 @@ export default function TrendingTag() {
           source={require("../../assets/rectangleBlue.png")}
         />
       </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image
+          style={styles.fitness}
+          source={require("../../assets/rectanglePurple.png")}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image
+          style={styles.cooking}
+          source={require("../../assets/rectanglePink.png")}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image
+          style={styles.wraps}
+          source={require("../../assets/rectangleRed.png")}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image
+          style={styles.gaming}
+          source={require("../../assets/rectangleOrange.png")}
+        />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -60,4 +88,37 @@ const styles = StyleSheet.create({
     left: -30,
     top: 300,
   },
+
+  fitness: {
+    position: "absolute",
+    width: 91,
+    height: 29,
+    left: 100,
+    top: 300,
+  },
+
+  cooking: {
+    position: "absolute",
+    width: 91,
+    height: 29,
+    left: -150,
+    top: 360,
+  },
+
+  wraps: {
+    position: "absolute",
+    width: 102,
+    height: 29,
+    left: -30,
+    top: 360,
+  },
+
+  gaming: {
+    position: "absolute",
+    width: 102,
+    height: 29,
+    left: 100,
+    top: 360,
+  },
+  text: {},
 });
