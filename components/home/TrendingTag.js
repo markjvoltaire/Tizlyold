@@ -1,18 +1,30 @@
-import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 
 export default function TrendingTag() {
   return (
     <View style={styles.container}>
       <Text style={styles.tagTitle}>TrendingTag</Text>
-      <View style={styles.buttons}>
-        <Button title="#StyleHacks" />
-        <Button title="#HomeBusiness" />
-        <Button title="#FitnessTips" />
-        <Button title="#Cooking" />
-        <Button title="#Wraps" />
-        <Button title="#Gaming" />
-      </View>
+      <TouchableOpacity>
+        <Image
+          style={styles.styleHacks}
+          source={require("../../assets/rectangleGreen.png")}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Image
+          style={styles.homeBusiness}
+          source={require("../../assets/rectangleBlue.png")}
+        />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -20,17 +32,32 @@ export default function TrendingTag() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    flex: 2,
+    flex: 1,
+    alignContent: "center",
+    justifyContent: "center",
     marginHorizontal: "auto",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
   },
   tagTitle: {
     position: "absolute",
     top: 250,
     right: 65,
   },
-  buttons: {
+  styleHacks: {
     position: "absolute",
-    top: 285,
-    right: 60,
+    width: 91,
+    height: 29,
+    left: -150,
+    top: 300,
+  },
+
+  homeBusiness: {
+    position: "absolute",
+    width: 104,
+    height: 29,
+    left: -30,
+    top: 300,
   },
 });
