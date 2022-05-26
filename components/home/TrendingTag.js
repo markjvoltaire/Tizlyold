@@ -12,45 +12,47 @@ export default function TrendingTag() {
   return (
     <View style={styles.container}>
       <Text style={styles.tagTitle}>TrendingTag</Text>
-      <TouchableOpacity>
-        <Image
-          style={styles.styleHacks}
-          source={require("../../assets/rectangleGreen.png")}
-        />
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity>
+          <Image
+            style={styles.styleHacks}
+            source={require("../../assets/styleHacksBean.png")}
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity>
         <Image
           style={styles.homeBusiness}
-          source={require("../../assets/rectangleBlue.png")}
+          source={require("../../assets/podcastBean.png")}
         />
       </TouchableOpacity>
 
       <TouchableOpacity>
         <Image
           style={styles.fitness}
-          source={require("../../assets/rectanglePurple.png")}
+          source={require("../../assets/fitnessBean.png")}
         />
       </TouchableOpacity>
 
       <TouchableOpacity>
         <Image
           style={styles.cooking}
-          source={require("../../assets/rectanglePink.png")}
+          source={require("../../assets/cookingBean.png")}
         />
       </TouchableOpacity>
 
       <TouchableOpacity>
         <Image
           style={styles.wraps}
-          source={require("../../assets/rectangleRed.png")}
+          source={require("../../assets/wrapBean.png")}
         />
       </TouchableOpacity>
 
       <TouchableOpacity>
         <Image
           style={styles.gaming}
-          source={require("../../assets/rectangleOrange.png")}
+          source={require("../../assets/gamingBean.png")}
         />
       </TouchableOpacity>
     </View>
@@ -120,5 +122,29 @@ const styles = StyleSheet.create({
     left: 95,
     top: 358,
   },
-  text: {},
+  styleHacksTitle: {
+    position: "absolute",
+    top: 300,
+    left: -120,
+  },
+
+  homebusinessTitle: {
+    position: "absolute",
+  },
+
+  fitnessTitle: {
+    position: "absolute",
+  },
+
+  cookingTitle: {
+    position: "absolute",
+  },
+
+  wrapsTitle: {
+    position: "absolute",
+  },
+
+  gamingTitle: {
+    position: "absolute",
+  },
 });
