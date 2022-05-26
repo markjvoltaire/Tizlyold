@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   styleHacks: {
     position: "absolute",
-    width: 91,
+    width: 100,
     height: 29,
     left: -150,
     top: 300,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 
   homeBusiness: {
     position: "absolute",
-    width: 104,
+    width: 100,
     height: 29,
     left: -30,
     top: 300,
@@ -91,34 +91,34 @@ const styles = StyleSheet.create({
 
   fitness: {
     position: "absolute",
-    width: 91,
+    width: 100,
     height: 29,
-    left: 100,
+    left: 95,
     top: 300,
   },
 
   cooking: {
     position: "absolute",
-    width: 91,
+    width: 100,
     height: 29,
     left: -150,
-    top: 360,
+    top: 358,
   },
 
   wraps: {
     position: "absolute",
-    width: 102,
+    width: 100,
     height: 29,
     left: -30,
-    top: 360,
+    top: 358,
   },
 
   gaming: {
     position: "absolute",
-    width: 102,
+    width: 100,
     height: 29,
-    left: 100,
-    top: 360,
+    left: 95,
+    top: 358,
   },
   text: {},
 });
