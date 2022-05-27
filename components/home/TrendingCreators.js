@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginLeft: -150,
-    left: 160,
+    left: 165,
   },
 
   iconContainer: {
@@ -65,5 +65,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 155,
     left: 20,
+    fontWeight: "bold",
   },
 });
