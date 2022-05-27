@@ -3,7 +3,14 @@ import React from "react";
 
 export default function HomeBoard() {
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+      }}
+    >
       <Text style={styles.header}> Hello Mark </Text>
       <TouchableOpacity>
         <Image

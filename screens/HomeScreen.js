@@ -7,7 +7,7 @@ import TrendingTag from "../components/home/TrendingTag";
 
 export default function HomeScreen() {
   return (
-    <View>
+    <View style={styles.homeScreen}>
       <Header />
       <HomeBoard />
       <TrendingCreators />
@@ -16,4 +16,9 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  homeScreen: {
+    left: 180,
+    top: 450,
+  },
+});
