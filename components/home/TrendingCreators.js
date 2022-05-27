@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   trendTitle: {
     position: "absolute",
     top: 3,
+    fontWeight: "bold",
   },
 
   userName1: {

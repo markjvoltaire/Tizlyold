@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     color: "black",
     width: 100,
     left: -160,
+    fontWeight: "bold",
   },
 
   homeboard: {
