@@ -39,7 +39,7 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   container: {
-    top: 2,
+    top: 30,
   },
 
   logo: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 24,
     bottom: 365,
-    right: 180,
+    right: 565,
   },
 
   notification: {
@@ -63,12 +63,12 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     bottom: 360,
-    right: -99,
+    right: 273,
   },
 
   user: {
     position: "absolute",
-    left: 185,
+    left: 195,
     top: -389,
     width: 32,
     height: 32,
