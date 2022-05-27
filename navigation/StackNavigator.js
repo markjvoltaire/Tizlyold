@@ -7,6 +7,7 @@ import Subscriptions from "../screens/Subscriptions";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import BottomTabNavigator from "./TabNavigator";
+import Settings from "../screens/Settings";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,8 @@ const screenOptionStyle = {
   },
   headerTintColor: "white",
   headerBackTitle: "Back",
+
+  headerShown: false,
 };
 
 const HomeStackNavigator = () => {
@@ -42,6 +45,14 @@ const SubscriptionStackNavigator = () => {
   );
 };
 
+const SettingsStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Explore" component={Settings} />
+    </Stack.Navigator>
+  );
+};
+
 export default MainStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -54,4 +65,5 @@ export {
   HomeStackNavigator,
   ExploreStackNavigator,
   SubscriptionStackNavigator,
+  SettingsStackNavigator,
 };
