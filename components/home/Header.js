@@ -40,6 +40,8 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     top: 30,
+    backgroundColor: "white",
+    left: 180,
   },
 
   logo: {
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 52,
     height: 26,
+    backgroundColor: "white",
   },
 
   drawer: {
@@ -56,6 +59,7 @@ const styles = StyleSheet.create({
     width: 24,
     bottom: 365,
     right: 565,
+    backgroundColor: "white",
   },
 
   notification: {
@@ -64,6 +68,7 @@ const styles = StyleSheet.create({
     height: 24,
     bottom: 360,
     right: 273,
+    backgroundColor: "white",
   },
 
   user: {

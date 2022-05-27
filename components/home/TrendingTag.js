@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "flex-start",
     top: -10,
+    left: 180,
   },
   tagTitle: {
     position: "absolute",

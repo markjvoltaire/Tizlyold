@@ -16,6 +16,9 @@ export default function HomeBoard() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    left: 180,
+  },
   header: {
     position: "absolute",
     top: -300,

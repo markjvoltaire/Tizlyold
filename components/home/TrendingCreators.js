@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginLeft: -150,
+    left: 160,
   },
 
   iconContainer: {

@@ -7,8 +7,8 @@ import TrendingTag from "../components/home/TrendingTag";
 
 export default function HomeScreen() {
   return (
-    <ScrollView>
-      <View style={styles.homeScreen}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View>
         <Header />
         <HomeBoard />
         <TrendingCreators />
@@ -19,8 +19,9 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  homeScreen: {
-    left: 180,
-    top: 395,
+  container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
   },
 });
