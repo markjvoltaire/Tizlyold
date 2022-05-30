@@ -4,6 +4,9 @@ import Header from "../components/home/Header";
 import HomeBoard from "../components/home/HomeBoard";
 import TrendingCreators from "../components/home/TrendingCreators";
 import TrendingTag from "../components/home/TrendingTag";
+import MainStackNavigator from "../navigation/StackNavigator";
+
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function HomeScreen() {
   return (

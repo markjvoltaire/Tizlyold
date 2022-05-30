@@ -1,7 +1,18 @@
-import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 
-export default function Welcome() {
+export default function Welcome({ navigation }) {
+  const toHome = () => {
+    navigation.navigate("HomeScreen");
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -12,14 +23,20 @@ export default function Welcome() {
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
       <Image style={styles.tagLine} source={require("../assets/word.png")} />
       <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
-      <Image
-        style={styles.signIn}
-        source={require("../assets/signInButton.png")}
-      />
-      <Image
-        style={styles.signUp}
-        source={require("../assets/signUpButton.png")}
-      />
+
+      <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+        <Image
+          style={styles.signIn}
+          source={require("../assets/signInButton.png")}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+        <Image
+          style={styles.signUp}
+          source={require("../assets/signUpButton.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -30,7 +47,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 80,
     left: 110,
-    top: 225,
+    top: 245,
   },
   logoBg: {
     position: "absolute",
@@ -41,7 +58,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 230,
     height: 20,
-    top: 356,
+    top: 376,
     left: 100,
   },
   signIn: {

@@ -17,7 +17,6 @@ const BottomTabNavigator = () => {
       initialRouteName="welcomeScreen"
       screenOptions={{ headerShown: false }}
     >
-      <Tab.Screen name="Welcome" component={WelcomeStackNavigator} />
       <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="Explore" component={ExploreStackNavigator} />
       <Tab.Screen name="Subscriptions" component={SubscriptionStackNavigator} />

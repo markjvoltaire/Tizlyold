@@ -54,7 +54,7 @@ const SettingsStackNavigator = () => {
   );
 };
 
-const WelcomeStackNavigator = () => {
+const WelcomeStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="WelcomeScreen" component={Welcome} />
