@@ -3,7 +3,12 @@ import React from "react";
 
 export default function Settings() {
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#FFFFFF",
+      }}
+    >
       <Text>Settings</Text>
     </View>
   );

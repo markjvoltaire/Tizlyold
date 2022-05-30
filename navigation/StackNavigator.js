@@ -8,6 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import BottomTabNavigator from "./TabNavigator";
 import Settings from "../screens/Settings";
+import Welcome from "../screens/Welcome";
 
 const Stack = createStackNavigator();
 
@@ -31,7 +32,7 @@ const HomeStackNavigator = () => {
 
 const ExploreStackNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ExploreScreen" component={Explore} />
     </Stack.Navigator>
   );
@@ -39,16 +40,24 @@ const ExploreStackNavigator = () => {
 
 const SubscriptionStackNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Explore" component={Subscriptions} />
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="SubscriptionScreen" component={Subscriptions} />
     </Stack.Navigator>
   );
 };
 
 const SettingsStackNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Explore" component={Settings} />
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="SettingsScreen" component={Settings} />
+    </Stack.Navigator>
+  );
+};
+
+const WelcomeStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="WelcomeScreen" component={Welcome} />
     </Stack.Navigator>
   );
 };
@@ -66,4 +75,5 @@ export {
   ExploreStackNavigator,
   SubscriptionStackNavigator,
   SettingsStackNavigator,
+  WelcomeStackNavigator,
 };
