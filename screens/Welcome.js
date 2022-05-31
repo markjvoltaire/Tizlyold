@@ -9,10 +9,6 @@ import {
 import React from "react";
 
 export default function Welcome({ navigation }) {
-  const toHome = () => {
-    navigation.navigate("HomeScreen");
-  };
-
   return (
     <SafeAreaView
       style={{
