@@ -29,6 +29,11 @@ export default function SignUp({ navigation }) {
         />
       </TouchableOpacity>
 
+      <Image
+        style={styles.userPic}
+        source={require("../assets/userIcon.png")}
+      />
+
       <TextInput style={styles.usernameInput} placeholder="Username" />
 
       <TextInput style={styles.emailInput} placeholder="Email" />
@@ -64,18 +69,36 @@ const styles = StyleSheet.create({
   },
   usernameInput: {
     position: "absolute",
-    left: 160,
-    top: 371,
+    left: 55,
+    top: 350,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 25,
+    paddingLeft: 30,
   },
   emailInput: {
     position: "absolute",
-    left: 160,
-    top: 410,
+    left: 55,
+    top: 440,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 25,
+    paddingLeft: 30,
   },
   passwordInput: {
     position: "absolute",
-    left: 160,
-    top: 450,
+    left: 55,
+    top: 530,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 25,
+    paddingLeft: 30,
   },
   continueButton: {
     position: "absolute",
@@ -83,5 +106,12 @@ const styles = StyleSheet.create({
     height: 50,
     top: 630,
     left: 55,
+  },
+  userPic: {
+    resizeMode: "contain",
+    width: 128,
+    height: 90,
+    top: 130,
+    left: 145,
   },
 });
