@@ -20,7 +20,7 @@ export default function Welcome({ navigation }) {
       <Image style={styles.tagLine} source={require("../assets/word.png")} />
       <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
 
-      <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Image
           style={styles.signIn}
           source={require("../assets/signInButton.png")}

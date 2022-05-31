@@ -11,7 +11,12 @@ import React from "react";
 
 export default function SignUp({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#FFFFFF",
+      }}
+    >
       <Image
         style={styles.headerIcon}
         source={require("../assets/Tizlymed.png")}
@@ -23,14 +28,24 @@ export default function SignUp({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
+
+      <TextInput style={styles.usernameInput} placeholder="Username" />
+
+      <TextInput style={styles.emailInput} placeholder="Email" />
+
+      <TextInput style={styles.passwordInput} placeholder="Password" />
+
+      <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
+        <Image
+          style={styles.continueButton}
+          source={require("../assets/continueButton.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-  },
   headerIcon: {
     position: "absolute",
     width: 80,
@@ -46,5 +61,27 @@ const styles = StyleSheet.create({
     height: 30,
     left: 41,
     top: 90,
+  },
+  usernameInput: {
+    position: "absolute",
+    left: 160,
+    top: 371,
+  },
+  emailInput: {
+    position: "absolute",
+    left: 160,
+    top: 410,
+  },
+  passwordInput: {
+    position: "absolute",
+    left: 160,
+    top: 450,
+  },
+  continueButton: {
+    position: "absolute",
+    width: 311,
+    height: 50,
+    top: 630,
+    left: 55,
   },
 });
