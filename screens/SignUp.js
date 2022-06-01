@@ -39,6 +39,7 @@ export default function SignUp({ navigation }) {
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
+            <Image style={styles.logoBg} source={require("../assets/bg.png")} />
             <Image
               style={styles.headerIcon}
               source={require("../assets/Tizlymed.png")}
@@ -50,11 +51,6 @@ export default function SignUp({ navigation }) {
                 source={require("../assets/backButton.png")}
               />
             </TouchableOpacity>
-
-            <Image
-              style={styles.userPic}
-              source={require("../assets/userIcon.png")}
-            />
 
             <TextInput
               style={styles.usernameInput}
@@ -68,16 +64,49 @@ export default function SignUp({ navigation }) {
               value={values.username}
             />
 
-            <TextInput style={styles.emailInput} placeholder="Email" />
+            <TextInput
+              style={styles.emailInput}
+              placeholder="Email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoFocus={true}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
 
-            <TextInput style={styles.passwordInput} placeholder="Password" />
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="Password"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              textContentType="password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
 
-            <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
+            <TouchableOpacity onPress={handleSubmit}>
               <Image
                 style={styles.continueButton}
-                source={require("../assets/continueButton.png")}
+                source={require("../assets/buttonBlue.png")}
               />
             </TouchableOpacity>
+            <View>
+              <Text style={styles.signupRedirect}>
+                Already have an account account?
+              </Text>
+              <TouchableOpacity>
+                <Text
+                  onPress={() => navigation.navigate("Login")}
+                  style={styles.signupButton}
+                >
+                  Log In Here
+                </Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </Formik>
@@ -91,7 +120,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 39,
     left: 168,
-    top: 80,
+    top: 90,
     resizeMode: "contain",
   },
   backButton: {
@@ -105,41 +134,41 @@ const styles = StyleSheet.create({
   usernameInput: {
     position: "absolute",
     left: 55,
-    top: 350,
+    top: 220,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
     width: 311,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingLeft: 30,
   },
   emailInput: {
     position: "absolute",
     left: 55,
-    top: 440,
+    top: 285,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
     width: 311,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingLeft: 30,
   },
   passwordInput: {
     position: "absolute",
     left: 55,
-    top: 530,
+    top: 350,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
     width: 311,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingLeft: 30,
   },
   continueButton: {
     position: "absolute",
     width: 311,
     height: 50,
-    top: 630,
+    top: 420,
     left: 55,
   },
   userPic: {
@@ -148,5 +177,22 @@ const styles = StyleSheet.create({
     height: 90,
     top: 130,
     left: 145,
+  },
+  logoBg: {
+    position: "absolute",
+    width: 538,
+    height: 389,
+    top: -70,
+  },
+  signupButton: {
+    position: "absolute",
+    width: 100,
+    top: 484.5,
+    left: 294,
+    color: "#00A3FF",
+  },
+  signupRedirect: {
+    top: 502,
+    left: 65,
   },
 });

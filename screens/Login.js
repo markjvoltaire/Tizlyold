@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Button,
 } from "react-native";
 import React from "react";
 
@@ -88,6 +89,19 @@ export default function Login({ navigation }) {
                 source={require("../assets/buttonBlue.png")}
               />
             </TouchableOpacity>
+            <View>
+              <Text style={styles.signupRedirect}>
+                Don't have an account account?
+              </Text>
+              <TouchableOpacity>
+                <Text
+                  onPress={() => navigation.navigate("SignUp")}
+                  style={styles.signupButton}
+                >
+                  Sign Up Here
+                </Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </Formik>
@@ -106,14 +120,6 @@ const styles = StyleSheet.create({
     height: 389,
   },
 
-  headerIcon: {
-    position: "absolute",
-    width: 80,
-    height: 39,
-    left: 168,
-    top: 80,
-    resizeMode: "contain",
-  },
   backButton: {
     position: "absolute",
     resizeMode: "contain",
@@ -178,5 +184,16 @@ const styles = StyleSheet.create({
   tagline: {
     top: 220,
     left: 55,
+  },
+  signupRedirect: {
+    top: 520,
+    left: 65,
+  },
+  signupButton: {
+    position: "absolute",
+    width: 100,
+    top: 503,
+    left: 279,
+    color: "#00A3FF",
   },
 });
