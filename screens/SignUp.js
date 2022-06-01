@@ -9,6 +9,10 @@ import {
 } from "react-native";
 import React from "react";
 
+import { Formik } from "formik";
+import * as Yup from "yup";
+import Validator from "email-validator";
+
 export default function SignUp({ navigation }) {
   return (
     <SafeAreaView
@@ -34,7 +38,17 @@ export default function SignUp({ navigation }) {
         source={require("../assets/userIcon.png")}
       />
 
-      <TextInput style={styles.usernameInput} placeholder="Username" />
+      <TextInput
+        style={styles.usernameInput}
+        placeholder="Username"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        autoFocus={true}
+        onChangeText={handleChange("email")}
+        onBlur={handleBlur("email")}
+        value={values.email}
+      />
 
       <TextInput style={styles.emailInput} placeholder="Email" />
 

@@ -9,7 +9,18 @@ import {
 } from "react-native";
 import React from "react";
 
+import { Formik } from "formik";
+import * as Yup from "yup";
+import Validator from "email-validator";
+
 export default function Login({ navigation }) {
+  const loginFormSchema = Yup.object().shape({
+    email: Yup.string().email().required("An email is required"),
+    password: Yup.string()
+      .required()
+      .min(8, "Your password must have at least 8 characters"),
+  });
+
   return (
     <SafeAreaView
       style={{
@@ -17,40 +28,73 @@ export default function Login({ navigation }) {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <Image
-        style={styles.headerIcon}
-        source={require("../assets/Tizlymed.png")}
-      />
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values) => {
+          console.log(values);
+        }}
+        validationSchema={loginFormSchema}
+        validateOnMount={true}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
+          <>
+            <Image
+              style={styles.headerIcon}
+              source={require("../assets/Tizlymed.png")}
+            />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
-        />
-      </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+              <Image
+                style={styles.backButton}
+                source={require("../assets/backButton.png")}
+              />
+            </TouchableOpacity>
 
-      <Image
-        style={styles.headerIcon}
-        source={require("../assets/Tizlymed.png")}
-      />
+            <Image
+              style={styles.headerIcon}
+              source={require("../assets/Tizlymed.png")}
+            />
 
-      <Image
-        style={styles.userPic}
-        source={require("../assets/userIcon.png")}
-      />
+            <Image
+              style={styles.userPic}
+              source={require("../assets/userIcon.png")}
+            />
 
-      <Text style={styles.tagline}>Log Back Into Your Account</Text>
+            <Text style={styles.tagline}>Log Back Into Your Account</Text>
 
-      <TextInput style={styles.usernameInput} placeholder="Username" />
+            <TextInput
+              style={styles.usernameInput}
+              placeholder="Email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoFocus={true}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
 
-      <TextInput style={styles.passwordInput} placeholder="Password" />
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="Password"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              textContentType="password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
 
-      <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
-        <Image
-          style={styles.continueButton}
-          source={require("../assets/continueButton.png")}
-        />
-      </TouchableOpacity>
+            <TouchableOpacity onPress={handleSubmit}>
+              <Image
+                style={styles.continueButton}
+                source={require("../assets/continueButton.png")}
+              />
+            </TouchableOpacity>
+          </>
+        )}
+      </Formik>
     </SafeAreaView>
   );
 }
