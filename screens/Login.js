@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import React from "react";
 
@@ -22,7 +23,7 @@ export default function Login({ navigation }) {
   });
 
   return (
-    <SafeAreaView
+    <ScrollView
       style={{
         flex: 1,
         backgroundColor: "#FFFFFF",
@@ -38,6 +39,8 @@ export default function Login({ navigation }) {
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
+            <Image style={styles.logoBg} source={require("../assets/bg.png")} />
+
             <Image
               style={styles.headerIcon}
               source={require("../assets/Tizlymed.png")}
@@ -54,13 +57,6 @@ export default function Login({ navigation }) {
               style={styles.headerIcon}
               source={require("../assets/Tizlymed.png")}
             />
-
-            <Image
-              style={styles.userPic}
-              source={require("../assets/userIcon.png")}
-            />
-
-            <Text style={styles.tagline}>Log Back Into Your Account</Text>
 
             <TextInput
               style={styles.usernameInput}
@@ -89,13 +85,13 @@ export default function Login({ navigation }) {
             <TouchableOpacity onPress={handleSubmit}>
               <Image
                 style={styles.continueButton}
-                source={require("../assets/continueButton.png")}
+                source={require("../assets/buttonBlue.png")}
               />
             </TouchableOpacity>
           </>
         )}
       </Formik>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -103,6 +99,13 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
   },
+
+  logoBg: {
+    position: "absolute",
+    width: 538,
+    height: 389,
+  },
+
   headerIcon: {
     position: "absolute",
     width: 80,
@@ -121,10 +124,10 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     position: "absolute",
-    width: 80,
-    height: 39,
+    width: 100,
+    height: 100,
     left: 168,
-    top: 80,
+    top: 180,
     resizeMode: "contain",
   },
   backButton: {
@@ -139,30 +142,30 @@ const styles = StyleSheet.create({
   usernameInput: {
     position: "absolute",
     left: 55,
-    top: 440,
+    top: 300,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
     width: 311,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingLeft: 30,
   },
   passwordInput: {
     position: "absolute",
     left: 55,
-    top: 530,
+    top: 370,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
     width: 311,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingLeft: 30,
   },
   continueButton: {
     position: "absolute",
     width: 311,
     height: 50,
-    top: 630,
+    top: 450,
     left: 55,
   },
   userPic: {
