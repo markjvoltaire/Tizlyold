@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React from "react";
 
@@ -14,53 +15,73 @@ import * as Yup from "yup";
 import Validator from "email-validator";
 
 export default function SignUp({ navigation }) {
+  const signupFormSchema = Yup.object().shape({
+    username: Yup.string().required("An username is required"),
+    email: Yup.string().email().required("An email is required"),
+    password: Yup.string()
+      .required()
+      .min(8, "Your password must have at least 8 characters"),
+  });
   return (
-    <SafeAreaView
+    <ScrollView
       style={{
         flex: 1,
         backgroundColor: "#FFFFFF",
       }}
     >
-      <Image
-        style={styles.headerIcon}
-        source={require("../assets/Tizlymed.png")}
-      />
+      <Formik
+        initialValues={{ username: "", email: "", password: "" }}
+        onSubmit={(values) => {
+          console.log(values);
+        }}
+        validationSchema={signupFormSchema}
+        validateOnMount={true}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
+          <>
+            <Image
+              style={styles.headerIcon}
+              source={require("../assets/Tizlymed.png")}
+            />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
-        />
-      </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+              <Image
+                style={styles.backButton}
+                source={require("../assets/backButton.png")}
+              />
+            </TouchableOpacity>
 
-      <Image
-        style={styles.userPic}
-        source={require("../assets/userIcon.png")}
-      />
+            <Image
+              style={styles.userPic}
+              source={require("../assets/userIcon.png")}
+            />
 
-      <TextInput
-        style={styles.usernameInput}
-        placeholder="Username"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        textContentType="emailAddress"
-        autoFocus={true}
-        onChangeText={handleChange("email")}
-        onBlur={handleBlur("email")}
-        value={values.email}
-      />
+            <TextInput
+              style={styles.usernameInput}
+              placeholder="Username"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoFocus={true}
+              onChangeText={handleChange("username")}
+              onBlur={handleBlur("usename")}
+              value={values.username}
+            />
 
-      <TextInput style={styles.emailInput} placeholder="Email" />
+            <TextInput style={styles.emailInput} placeholder="Email" />
 
-      <TextInput style={styles.passwordInput} placeholder="Password" />
+            <TextInput style={styles.passwordInput} placeholder="Password" />
 
-      <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
-        <Image
-          style={styles.continueButton}
-          source={require("../assets/continueButton.png")}
-        />
-      </TouchableOpacity>
-    </SafeAreaView>
+            <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
+              <Image
+                style={styles.continueButton}
+                source={require("../assets/continueButton.png")}
+              />
+            </TouchableOpacity>
+          </>
+        )}
+      </Formik>
+    </ScrollView>
   );
 }
 

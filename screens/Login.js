@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
             />
 
             <TextInput
-              style={styles.usernameInput}
+              style={styles.emailInput}
               placeholder="Email"
               autoCapitalize="none"
               keyboardType="email-address"
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     top: 90,
   },
 
-  usernameInput: {
+  emailInput: {
     position: "absolute",
     left: 55,
     top: 300,
