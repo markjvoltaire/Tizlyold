@@ -10,6 +10,7 @@ import {
   Button,
 } from "react-native";
 import React from "react";
+import firebase from "../firebase";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
