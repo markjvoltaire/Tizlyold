@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import firebase from "firebase/compat";
 
 export default function Welcome({ navigation }) {
+  console.log("hello");
   return (
     <SafeAreaView
       style={{

@@ -1,20 +1,23 @@
+// Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDO7BQS9xiMfIBwvLuXaTS-OUZF0geC3qU",
-  authDomain: "tizly-v1.firebaseapp.com",
-  projectId: "tizly-v1",
-  storageBucket: "tizly-v1.appspot.com",
-  messagingSenderId: "472419105471",
-  appId: "1:472419105471:web:21f63ac5a62c24836be40a",
-  measurementId: "G-7WWQE66V6E",
+  apiKey: "AIzaSyAk9Hu8FtqHB6hWl9LBsSK-LW7iOExTFII",
+  authDomain: "tizlybuild.firebaseapp.com",
+  projectId: "tizlybuild",
+  storageBucket: "tizlybuild.appspot.com",
+  messagingSenderId: "250802462742",
+  appId: "1:250802462742:web:ff7f05b6841da34d005537",
 };
 
 // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
 firebase.initializeApp(firebaseConfig);
 
 export default firebase;
