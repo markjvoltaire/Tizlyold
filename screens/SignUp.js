@@ -7,8 +7,10 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import React from "react";
+import firebase from "../firebase";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -22,6 +24,17 @@ export default function SignUp({ navigation }) {
       .required()
       .min(8, "Your password must have at least 8 characters"),
   });
+
+  const onSignup = async (username, email, password) => {
+    try {
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password, username);
+      console.log("firebase sign up works", email, password, username);
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
   return (
     <ScrollView
       style={{
@@ -32,7 +45,7 @@ export default function SignUp({ navigation }) {
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={(values) => {
-          console.log(values);
+          onSignup(values.username, values.email, values.password);
         }}
         validationSchema={signupFormSchema}
         validateOnMount={true}

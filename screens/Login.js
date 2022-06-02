@@ -30,7 +30,7 @@ export default function Login({ navigation }) {
       console.log("firebase login works", email, password);
     } catch (error) {
       Alert.alert(error.message);
-      console.log(Alert.alert(error.message));
+      console.log(Alert.alert("Incorrect usernamer or password"));
     }
   };
 
