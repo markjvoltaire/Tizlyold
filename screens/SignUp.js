@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import React from "react";
-import firebase from "../firebase";
+import { firebase, db } from "../firebase";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -27,10 +27,16 @@ export default function SignUp({ navigation }) {
 
   const onSignup = async (username, email, password) => {
     try {
-      await firebase
+      const authUser = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password, username);
       console.log("firebase sign up works", email, password, username);
+
+      db.collection("users").add({
+        owner_uid: authUser.user.uid,
+        username: username,
+        email: authUser.user.email,
+      });
     } catch (error) {
       Alert.alert(error.message);
     }
