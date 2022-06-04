@@ -97,10 +97,16 @@ export default function SignUp({ navigation }) {
               />
             </TouchableOpacity>
 
-            <Image
-              style={styles.profilePic}
-              source={require("../assets/noProfilePic.jpeg")}
-            />
+            <TouchableOpacity>
+              <Image
+                style={styles.profilePic}
+                source={require("../assets/noProfilePic.jpeg")}
+              />
+              <Image
+                style={styles.profilePicPlus}
+                source={require("../assets/bluePlus.png")}
+              />
+            </TouchableOpacity>
 
             <TextInput
               style={styles.usernameInput}
@@ -144,6 +150,7 @@ export default function SignUp({ navigation }) {
                 source={require("../assets/buttonBlue.png")}
               />
             </TouchableOpacity>
+
             <View>
               <Text style={styles.signupRedirect}>
                 Already have an account account?
@@ -254,5 +261,13 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 100 / 2,
     overflow: "hidden",
+  },
+  profilePicPlus: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 185,
+    left: 220,
+    width: 20,
+    height: 20,
   },
 });
