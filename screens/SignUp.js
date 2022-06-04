@@ -9,14 +9,33 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { firebase, db } from "../firebase";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
+import * as ImagePicker from "expo-image-picker";
 
 export default function SignUp({ navigation }) {
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   const signupFormSchema = Yup.object().shape({
     username: Yup.string().required("An username is required"),
     email: Yup.string().email().required("An email is required"),
@@ -36,10 +55,12 @@ export default function SignUp({ navigation }) {
         owner_uid: authUser.user.uid,
         username: username,
         email: authUser.user.email,
+        profilePic: authUser.user.profilePic,
       });
     } catch (error) {
       Alert.alert(error.message);
     }
+    console.log("ImagePicker", ImagePicker);
   };
   return (
     <ScrollView
@@ -49,7 +70,12 @@ export default function SignUp({ navigation }) {
       }}
     >
       <Formik
-        initialValues={{ username: "", email: "", password: "" }}
+        initialValues={{
+          username: "",
+          email: "",
+          password: "",
+          profilePic: "",
+        }}
         onSubmit={(values) => {
           onSignup(values.username, values.email, values.password);
         }}
@@ -70,6 +96,11 @@ export default function SignUp({ navigation }) {
                 source={require("../assets/backButton.png")}
               />
             </TouchableOpacity>
+
+            <Image
+              style={styles.profilePic}
+              source={require("../assets/noProfilePic.jpeg")}
+            />
 
             <TextInput
               style={styles.usernameInput}
@@ -139,7 +170,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 39,
     left: 168,
-    top: 90,
+    top: 50,
     resizeMode: "contain",
   },
   backButton: {
@@ -153,7 +184,7 @@ const styles = StyleSheet.create({
   usernameInput: {
     position: "absolute",
     left: 55,
-    top: 220,
+    top: 240,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -164,7 +195,7 @@ const styles = StyleSheet.create({
   emailInput: {
     position: "absolute",
     left: 55,
-    top: 285,
+    top: 305,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -175,7 +206,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     position: "absolute",
     left: 55,
-    top: 350,
+    top: 370,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -187,7 +218,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 311,
     height: 50,
-    top: 420,
+    top: 440,
     left: 55,
   },
   userPic: {
@@ -206,12 +237,22 @@ const styles = StyleSheet.create({
   signupButton: {
     position: "absolute",
     width: 100,
-    top: 484.5,
+    top: 500.5,
     left: 294,
     color: "#00A3FF",
   },
   signupRedirect: {
-    top: 502,
+    top: 518,
     left: 65,
+  },
+  profilePic: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 125,
+    left: 165,
+    width: 80,
+    height: 80,
+    borderRadius: 100 / 2,
+    overflow: "hidden",
   },
 });
