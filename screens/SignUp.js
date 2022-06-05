@@ -30,7 +30,7 @@ export default function SignUp({ navigation }) {
       quality: 1,
     });
 
-    console.log(result);
+    console.log("result", result.uri);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -56,12 +56,11 @@ export default function SignUp({ navigation }) {
         owner_uid: authUser.user.uid,
         username: username,
         email: authUser.user.email,
-        profilePic: authUser.user.profilePic,
+        uri: image,
       });
     } catch (error) {
       Alert.alert(error.message);
     }
-    console.log("ImagePicker", ImagePicker);
   };
 
   let profileImage;
@@ -89,7 +88,7 @@ export default function SignUp({ navigation }) {
           username: "",
           email: "",
           password: "",
-          profilePic: "",
+          uri: "",
         }}
         onSubmit={(values) => {
           onSignup(values.username, values.email, values.password);
