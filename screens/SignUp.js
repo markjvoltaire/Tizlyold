@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Button,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase, db } from "../firebase";
@@ -62,6 +63,20 @@ export default function SignUp({ navigation }) {
     }
     console.log("ImagePicker", ImagePicker);
   };
+
+  let profileImage;
+
+  <TouchableOpacity onPress={pickImage}>
+    <Image
+      style={styles.profilePic}
+      source={require("../assets/noProfilePic.jpeg")}
+    />
+    <Image
+      style={styles.profilePicPlus}
+      source={require("../assets/bluePlus.png")}
+    />
+  </TouchableOpacity>;
+
   return (
     <ScrollView
       style={{
@@ -82,7 +97,14 @@ export default function SignUp({ navigation }) {
         validationSchema={signupFormSchema}
         validateOnMount={true}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          isValid,
+          profileImage,
+        }) => (
           <>
             <Image style={styles.logoBg} source={require("../assets/bg.png")} />
             <Image
@@ -97,7 +119,7 @@ export default function SignUp({ navigation }) {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={pickImage}>
               <Image
                 style={styles.profilePic}
                 source={require("../assets/noProfilePic.jpeg")}
@@ -107,6 +129,34 @@ export default function SignUp({ navigation }) {
                 source={require("../assets/bluePlus.png")}
               />
             </TouchableOpacity>
+
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                title="Pick an image from camera roll"
+                onPress={pickImage}
+              >
+                {image && (
+                  <Image
+                    source={{ uri: image }}
+                    style={{
+                      position: "absolute",
+                      top: 125,
+                      width: 100,
+                      height: 100,
+                      left: -50,
+                      top: 120,
+                      borderRadius: 400,
+                    }}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
 
             <TextInput
               style={styles.usernameInput}
@@ -153,7 +203,7 @@ export default function SignUp({ navigation }) {
 
             <View>
               <Text style={styles.signupRedirect}>
-                Already have an account account?
+                Already have an account ?
               </Text>
               <TouchableOpacity>
                 <Text
@@ -245,7 +295,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 100,
     top: 500.5,
-    left: 294,
+    left: 245,
     color: "#00A3FF",
   },
   signupRedirect: {

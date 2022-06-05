@@ -101,9 +101,7 @@ export default function Login({ navigation }) {
               />
             </TouchableOpacity>
             <View>
-              <Text style={styles.signupRedirect}>
-                Don't have an account account?
-              </Text>
+              <Text style={styles.signupRedirect}>Don't have an account?</Text>
               <TouchableOpacity>
                 <Text
                   onPress={() => navigation.navigate("SignUp")}
@@ -204,7 +202,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 100,
     top: 503,
-    left: 279,
+    left: 235,
     color: "#00A3FF",
   },
 });
