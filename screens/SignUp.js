@@ -50,14 +50,16 @@ export default function SignUp({ navigation }) {
       const authUser = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password, username);
-      console.log("firebase sign up works", email, password, username);
+      console.log("firebase sign up works", email, password, username, image);
 
-      db.collection("users").add({
-        owner_uid: authUser.user.uid,
-        username: username,
-        email: authUser.user.email,
-        uri: image,
-      });
+      db.collection("users")
+        .add({
+          owner_uid: authUser.user.uid,
+          username: username,
+          email: authUser.user.email,
+          uri: image,
+        })
+        .then(() => navigation.navigate("HomeScreen"));
     } catch (error) {
       Alert.alert(error.message);
     }
