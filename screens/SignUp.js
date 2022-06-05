@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase, db } from "../firebase";
+import { useUser } from "../context/UserContext";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -20,6 +21,7 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function SignUp({ navigation }) {
   const [image, setImage] = useState(null);
+  const { setUser } = useUser();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -50,6 +52,7 @@ export default function SignUp({ navigation }) {
       const authUser = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password, username);
+      setUser(username);
       console.log("firebase sign up works", email, password, username, image);
 
       db.collection("users")

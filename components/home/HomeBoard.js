@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
+import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
+  const { user } = useUser();
   return (
     <View style={styles.container}>
-      <Text style={styles.header}> Hello Mark </Text>
+      <Text style={styles.header}> Hello {user} </Text>
       <TouchableOpacity>
         <Image
           style={styles.homeboard}
