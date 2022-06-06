@@ -11,11 +11,12 @@ import {
   Alert,
 } from "react-native";
 import React from "react";
-import { firebase } from "../firebase";
+import { firebase, auth } from "../firebase";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
+
 export default function Login({ navigation }) {
   const loginFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
@@ -26,11 +27,12 @@ export default function Login({ navigation }) {
 
   const onLogin = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log("firebase login works", email, password);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => navigation.navigate("HomeScreen"));
     } catch (error) {
-      Alert.alert(error.message);
-      console.log(Alert.alert("Incorrect usernamer or password"));
+      console.log(Alert.alert("Incorrect username or password"));
     }
   };
 

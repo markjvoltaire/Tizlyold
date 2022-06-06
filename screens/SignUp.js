@@ -101,14 +101,7 @@ export default function SignUp({ navigation }) {
         validationSchema={signupFormSchema}
         validateOnMount={true}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          isValid,
-          profileImage,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
             <Image style={styles.logoBg} source={require("../assets/bg.png")} />
             <Image

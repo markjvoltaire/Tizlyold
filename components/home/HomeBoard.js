@@ -4,9 +4,11 @@ import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
   const { user } = useUser();
+  console.log("user", user);
   return (
     <View style={styles.container}>
       <Text style={styles.header}> Hello {user} </Text>
+
       <TouchableOpacity>
         <Image
           style={styles.homeboard}
