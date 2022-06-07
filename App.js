@@ -11,6 +11,7 @@ import Explore from "./screens/Explore";
 import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Subscriptions";
 import { UserProvider } from "./context/UserContext";
+import UserProfile from "./screens/UserProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,12 @@ export default function App() {
           <Stack.Screen
             name="Subscriptions"
             component={Subscriptions}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="UserProfile"
+            component={UserProfile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

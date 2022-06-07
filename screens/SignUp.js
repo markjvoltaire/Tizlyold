@@ -47,13 +47,20 @@ export default function SignUp({ navigation }) {
       .min(8, "Your password must have at least 8 characters"),
   });
 
-  const onSignup = async (username, email, password) => {
+  const onSignup = async (username, email, password, displayname) => {
     try {
       const authUser = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password, username);
+        .createUserWithEmailAndPassword(email, password, username, displayname);
       setUser(username);
-      console.log("firebase sign up works", email, password, username, image);
+      console.log(
+        "firebase sign up works",
+        email,
+        password,
+        username,
+        image,
+        displayname
+      );
 
       db.collection("users")
         .add({
@@ -61,6 +68,7 @@ export default function SignUp({ navigation }) {
           username: username,
           email: authUser.user.email,
           uri: image,
+          displayname: displayname,
         })
         .then(() => navigation.navigate("HomeScreen"));
     } catch (error) {

@@ -10,7 +10,6 @@ import React from "react";
 import firebase from "firebase/compat";
 
 export default function Welcome({ navigation }) {
-  console.log("hello");
   return (
     <SafeAreaView
       style={{
@@ -22,7 +21,7 @@ export default function Welcome({ navigation }) {
       <Image style={styles.tagLine} source={require("../assets/word.png")} />
       <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+      <TouchableOpacity onPress={() => navigation.navigate("UserProfile")}>
         <Image
           style={styles.signIn}
           source={require("../assets/signInButton.png")}

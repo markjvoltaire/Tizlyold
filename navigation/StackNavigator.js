@@ -9,6 +9,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomTabNavigator from "./TabNavigator";
 import Settings from "../screens/Settings";
 import Welcome from "../screens/Welcome";
+import UserProfile from "../screens/UserProfile";
 
 const Stack = createStackNavigator();
 
@@ -54,7 +55,7 @@ const SettingsStackNavigator = () => {
   );
 };
 
-const WelcomeStackNavigator = ({ navigation }) => {
+const WelcomeStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="WelcomeScreen" component={Welcome} />
@@ -62,7 +63,15 @@ const WelcomeStackNavigator = ({ navigation }) => {
   );
 };
 
-export default MainStackNavigator = () => {
+const ProfileStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="ProfileScreen" component={UserProfile} />
+    </Stack.Navigator>
+  );
+};
+
+const MainStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
@@ -76,4 +85,6 @@ export {
   SubscriptionStackNavigator,
   SettingsStackNavigator,
   WelcomeStackNavigator,
+  ProfileStackNavigator,
+  MainStackNavigator,
 };

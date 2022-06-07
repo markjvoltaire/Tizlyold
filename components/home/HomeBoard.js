@@ -3,11 +3,12 @@ import React from "react";
 import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
-  const { user } = useUser();
-  console.log("user", user);
+  // bring this back when we can store the user name in context when logging in
+  // const { user } = useUser();
+  // console.log("user", user);
   return (
     <View style={styles.container}>
-      <Text style={styles.header}> Hello {user} </Text>
+      <Text style={styles.header}> Welcome vc</Text>
 
       <TouchableOpacity>
         <Image

@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
 
-export default function TrendingCreators() {
+export default function TrendingCreators({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.trendTitle}>Trending Creator</Text>
       <View style={styles.iconContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
           <Image
             style={styles.userIcon}
             source={require("../../assets/desi.png")}
