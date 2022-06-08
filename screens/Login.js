@@ -10,32 +10,24 @@ import {
   Button,
   Alert,
 } from "react-native";
-import React from "react";
-import { firebase, auth } from "../firebase";
 
-import { Formik } from "formik";
-import * as Yup from "yup";
-import Validator from "email-validator";
+import React, { useState } from "react";
+import { signIn } from "../services/user";
 
 export default function Login({ navigation }) {
-  const loginFormSchema = Yup.object().shape({
-    email: Yup.string().email().required("An email is required"),
-    password: Yup.string()
-      .required()
-      .min(8, "Your password must have at least 8 characters"),
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onLogin = async (email, password) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => navigation.navigate("HomeScreen"));
-    } catch (error) {
-      console.log(Alert.alert("Incorrect username or password"));
+      let resp;
+
+      resp = await signIn(email, password);
+    } catch {
+      setErrorMessage("There was an error, please try again.");
     }
   };
-
   return (
     <ScrollView
       style={{
@@ -43,79 +35,64 @@ export default function Login({ navigation }) {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          onLogin(values.email, values.password);
-        }}
-        validationSchema={loginFormSchema}
-        validateOnMount={true}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
-          <>
-            <Image style={styles.logoBg} source={require("../assets/bg.png")} />
+      <Image style={styles.logoBg} source={require("../assets/bg.png")} />
 
-            <Image
-              style={styles.headerIcon}
-              source={require("../assets/Tizlymed.png")}
-            />
+      <Image
+        style={styles.headerIcon}
+        source={require("../assets/Tizlymed.png")}
+      />
 
-            <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-              <Image
-                style={styles.backButton}
-                source={require("../assets/backButton.png")}
-              />
-            </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton.png")}
+        />
+      </TouchableOpacity>
 
-            <Image
-              style={styles.headerIcon}
-              source={require("../assets/Tizlymed.png")}
-            />
+      <Image
+        style={styles.headerIcon}
+        source={require("../assets/Tizlymed.png")}
+      />
 
-            <TextInput
-              style={styles.emailInput}
-              placeholder="Email"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              autoFocus={true}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-            />
+      <TextInput
+        style={styles.emailInput}
+        placeholder="Email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        autoFocus={true}
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+      />
 
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Password"
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry={true}
-              textContentType="password"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-            />
+      <TextInput
+        style={styles.passwordInput}
+        placeholder="Password"
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={true}
+        textContentType="password"
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+      />
 
-            <TouchableOpacity onPress={handleSubmit}>
-              <Image
-                style={styles.continueButton}
-                source={require("../assets/buttonBlue.png")}
-              />
-            </TouchableOpacity>
-            <View>
-              <Text style={styles.signupRedirect}>Don't have an account?</Text>
-              <TouchableOpacity>
-                <Text
-                  onPress={() => navigation.navigate("SignUp")}
-                  style={styles.signupButton}
-                >
-                  Sign Up Here
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </Formik>
+      <TouchableOpacity onPress={handleSubmit}>
+        <Image
+          style={styles.continueButton}
+          source={require("../assets/buttonBlue.png")}
+        />
+      </TouchableOpacity>
+      <View>
+        <Text style={styles.signupRedirect}>Don't have an account?</Text>
+        <TouchableOpacity>
+          <Text
+            onPress={() => navigation.navigate("SignUp")}
+            style={styles.signupButton}
+          >
+            Sign Up Here
+          </Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }

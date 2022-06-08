@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   TextInput,
   Image,
   TouchableOpacity,
@@ -11,83 +10,27 @@ import {
   Button,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { firebase, db } from "../firebase";
-import { useUser } from "../context/UserContext";
 
-import { Formik } from "formik";
-import * as Yup from "yup";
-import Validator from "email-validator";
-import * as ImagePicker from "expo-image-picker";
+import { supabase } from "../services/supabase";
+import { signUpUserDetails, signUpWithEmail } from "../services/user";
 
 export default function SignUp({ navigation }) {
-  const [image, setImage] = useState(null);
-  const { setUser } = useUser();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+  async function signUpWithEmail() {
+    setLoading(true);
+    const { user, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
     });
 
-    console.log("result", result.uri);
+    if (error) Alert.alert(error.message);
+    setLoading(false);
 
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
-  const signupFormSchema = Yup.object().shape({
-    username: Yup.string().required("An username is required"),
-    email: Yup.string().email().required("An email is required"),
-    password: Yup.string()
-      .required()
-      .min(8, "Your password must have at least 8 characters"),
-  });
-
-  const onSignup = async (username, email, password, displayname) => {
-    try {
-      const authUser = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password, username, displayname);
-      setUser(username);
-      console.log(
-        "firebase sign up works",
-        email,
-        password,
-        username,
-        image,
-        displayname
-      );
-
-      db.collection("users")
-        .add({
-          owner_uid: authUser.user.uid,
-          username: username,
-          email: authUser.user.email,
-          uri: image,
-          displayname: displayname,
-        })
-        .then(() => navigation.navigate("HomeScreen"));
-    } catch (error) {
-      Alert.alert(error.message);
-    }
-  };
-
-  let profileImage;
-
-  <TouchableOpacity onPress={pickImage}>
-    <Image
-      style={styles.profilePic}
-      source={require("../assets/noProfilePic.jpeg")}
-    />
-    <Image
-      style={styles.profilePicPlus}
-      source={require("../assets/bluePlus.png")}
-    />
-  </TouchableOpacity>;
+    return user;
+  }
 
   return (
     <ScrollView
@@ -96,132 +39,65 @@ export default function SignUp({ navigation }) {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <Formik
-        initialValues={{
-          username: "",
-          email: "",
-          password: "",
-          uri: "",
-        }}
-        onSubmit={(values) => {
-          onSignup(values.username, values.email, values.password);
-        }}
-        validationSchema={signupFormSchema}
-        validateOnMount={true}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
-          <>
-            <Image style={styles.logoBg} source={require("../assets/bg.png")} />
-            <Image
-              style={styles.headerIcon}
-              source={require("../assets/Tizlymed.png")}
-            />
+      <TouchableOpacity>
+        <Image
+          style={styles.profilePic}
+          source={require("../assets/noProfilePic.jpeg")}
+        />
+        <Image
+          style={styles.profilePicPlus}
+          source={require("../assets/bluePlus.png")}
+        />
+      </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-              <Image
-                style={styles.backButton}
-                source={require("../assets/backButton.png")}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={pickImage}>
-              <Image
-                style={styles.profilePic}
-                source={require("../assets/noProfilePic.jpeg")}
-              />
-              <Image
-                style={styles.profilePicPlus}
-                source={require("../assets/bluePlus.png")}
-              />
-            </TouchableOpacity>
-
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <TouchableOpacity
-                title="Pick an image from camera roll"
-                onPress={pickImage}
-              >
-                {image && (
-                  <Image
-                    source={{ uri: image }}
-                    style={{
-                      position: "absolute",
-                      top: 125,
-                      width: 100,
-                      height: 100,
-                      left: -50,
-                      top: 120,
-                      borderRadius: 400,
-                    }}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <TextInput
-              style={styles.usernameInput}
-              placeholder="Username"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              autoFocus={true}
-              onChangeText={handleChange("username")}
-              onBlur={handleBlur("usename")}
-              value={values.username}
-            />
-
-            <TextInput
-              style={styles.emailInput}
-              placeholder="Email"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              autoFocus={true}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-            />
-
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Password"
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry={true}
-              textContentType="password"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-            />
-
-            <TouchableOpacity onPress={handleSubmit}>
-              <Image
-                style={styles.continueButton}
-                source={require("../assets/buttonBlue.png")}
-              />
-            </TouchableOpacity>
-
-            <View>
-              <Text style={styles.signupRedirect}>
-                Already have an account ?
-              </Text>
-              <TouchableOpacity>
-                <Text
-                  onPress={() => navigation.navigate("Login")}
-                  style={styles.signupButton}
-                >
-                  Log In Here
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </Formik>
+      <Image style={styles.logoBg} source={require("../assets/bg.png")} />
+      <Image
+        style={styles.headerIcon}
+        source={require("../assets/Tizlymed.png")}
+      />
+      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton.png")}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Image
+          style={styles.profilePic}
+          source={require("../assets/noProfilePic.jpeg")}
+        />
+        <Image
+          style={styles.profilePicPlus}
+          source={require("../assets/bluePlus.png")}
+        />
+      </TouchableOpacity>
+      <TextInput
+        style={styles.emailInput}
+        placeholder="Email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        autoFocus={true}
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+      />
+      <TextInput
+        style={styles.passwordInput}
+        placeholder="Password"
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={true}
+        textContentType="password"
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+      />
+      <TouchableOpacity onPress={() => signUpWithEmail()}>
+        <Image
+          style={styles.continueButton}
+          source={require("../assets/buttonBlue.png")}
+        />
+      </TouchableOpacity>
+      <View></View>
     </ScrollView>
   );
 }
