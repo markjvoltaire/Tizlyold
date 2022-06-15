@@ -1,14 +1,15 @@
-import { supabase, client } from "./supabase";
+import { supabase } from "./supabase";
 
-export async function signUpWithEmail() {
-  setLoading(true);
-  const { user, error } = await supabase.auth.signUp({
-    email: email,
-    password: password,
-  });
-
-  if (error) Alert.alert(error.message);
-  setLoading(false);
-
+export async function signInUser(email, password) {
+  const { user, error } = await supabase.auth.signIn({ email, password });
+  if (error) throw error;
   return user;
+}
+
+export function getUser() {
+  return supabase.auth.user();
+}
+
+export function getUserEmail() {
+  return supabase.auth.currentUser.email;
 }

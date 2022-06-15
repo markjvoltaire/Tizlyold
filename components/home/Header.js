@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import { supabase } from "../../services/supabase";
 
-export default function Header() {
+export default function Header({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -28,10 +29,6 @@ export default function Header() {
           style={styles.notification}
           source={require("../../assets/noti.png")}
         />
-      </TouchableOpacity>
-
-      <TouchableOpacity>
-        <Image style={styles.user} source={require("../../assets/mark.png")} />
       </TouchableOpacity>
     </SafeAreaView>
   );

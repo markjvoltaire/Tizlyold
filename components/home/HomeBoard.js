@@ -1,14 +1,26 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
+import { getUserEmail } from "../../services/user";
+import { supabase } from "../../services/supabase";
 
 export default function HomeBoard() {
   // bring this back when we can store the user name in context when logging in
   // const { user } = useUser();
   // console.log("user", user);
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getUserEmail();
+      setUserEmail(data);
+    };
+    fetchData();
+  });
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}> Welcome vc</Text>
+      <Text style={styles.header}>Welcome {userEmail}</Text>
 
       <TouchableOpacity>
         <Image
@@ -28,7 +40,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -300,
     color: "black",
-    width: 100,
+    width: 500,
     left: -160,
     fontWeight: "bold",
   },

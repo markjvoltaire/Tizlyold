@@ -12,7 +12,6 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { supabase } from "../services/supabase";
-import { signUpUserDetails, signUpWithEmail } from "../services/user";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -20,16 +19,15 @@ export default function SignUp({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   async function signUpWithEmail() {
-    setLoading(true);
-    const { user, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-
-    return user;
+    await supabase.auth
+      .signUp({
+        email: email,
+        password: password,
+      })
+      .then(() => navigation.navigate("HomeScreen"))
+      .then(() =>
+        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
+      );
   }
 
   return (

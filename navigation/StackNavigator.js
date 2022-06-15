@@ -66,7 +66,7 @@ const WelcomeStackNavigator = () => {
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="ProfileScreen" component={UserProfile} />
+      <Stack.Screen name="UserScreen" component={UserProfile} />
     </Stack.Navigator>
   );
 };

@@ -8,19 +8,21 @@ import {
   SettingsStackNavigator,
   WelcomeStackNavigator,
 } from "./StackNavigator";
+import UserProfile from "../screens/UserProfile";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="welcomeScreen"
+      initialRouteName="Home"
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="Explore" component={ExploreStackNavigator} />
       <Tab.Screen name="Subscriptions" component={SubscriptionStackNavigator} />
       <Tab.Screen name="Settings" component={SettingsStackNavigator} />
+      <Tab.Screen showLabel="false" name="Profile" component={UserProfile} />
     </Tab.Navigator>
   );
 };

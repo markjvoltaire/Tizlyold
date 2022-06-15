@@ -12,22 +12,25 @@ import {
 } from "react-native";
 
 import React, { useState } from "react";
-import { signIn } from "../services/user";
+import { signIn, signInUser } from "../services/user";
+import { supabase } from "../services/supabase";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      let resp;
+  async function loginWithEmail() {
+    const { user, session, error } = await supabase.auth
+      .signIn({
+        email,
+        password,
+      })
+      .then(() => navigation.navigate("HomeScreen"))
+      .then(() =>
+        console.log("current user after log in ", supabase.auth.currentUser)
+      );
+  }
 
-      resp = await signIn(email, password);
-    } catch {
-      setErrorMessage("There was an error, please try again.");
-    }
-  };
   return (
     <ScrollView
       style={{
@@ -76,7 +79,7 @@ export default function Login({ navigation }) {
         value={password}
       />
 
-      <TouchableOpacity onPress={handleSubmit}>
+      <TouchableOpacity onPress={() => loginWithEmail()}>
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}

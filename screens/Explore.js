@@ -6,7 +6,9 @@ export default function Explore() {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#FFFFFF",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
       }}
     >
       <Text>Explore</Text>

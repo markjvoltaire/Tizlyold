@@ -3,7 +3,9 @@ import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainStackNavigator from "./navigation/StackNavigator";
+import MainStackNavigator, {
+  ProfileStackNavigator,
+} from "./navigation/StackNavigator";
 import Welcome from "./screens/Welcome";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
@@ -12,6 +14,7 @@ import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Subscriptions";
 import { UserProvider } from "./context/UserContext";
 import UserProfile from "./screens/UserProfile";
+import BottomTabNavigator from "./navigation/TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +30,7 @@ export default function App() {
           />
           <Stack.Screen
             name="HomeScreen"
-            component={HomeScreen}
+            component={BottomTabNavigator}
             options={{ headerShown: false }}
           />
 
@@ -64,6 +67,12 @@ export default function App() {
           <Stack.Screen
             name="UserProfile"
             component={UserProfile}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Profile"
+            component={ProfileStackNavigator}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
