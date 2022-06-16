@@ -16,9 +16,6 @@ import TrendingCreators from "../components/home/TrendingCreators";
 import TrendingTag from "../components/home/TrendingTag";
 import MainStackNavigator from "../navigation/StackNavigator";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { supabase } from "../services/supabase";
-
 export default function HomeScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -27,9 +24,6 @@ export default function HomeScreen({ navigation }) {
         <HomeBoard />
         <TrendingCreators />
         <TrendingTag />
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Image style={styles.user} source={require("../assets/mark.png")} />
-        </TouchableOpacity>
       </SafeAreaView>
     </ScrollView>
   );

@@ -6,11 +6,16 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  TextInput,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { supabase } from "../services/supabase";
+import { addUsername } from "../services/user";
 
 export default function Settings({ navigation }) {
+  const [username, setUsername] = useState("");
+
   async function signOutUser() {
     await supabase.auth
       .signOut()
@@ -18,6 +23,7 @@ export default function Settings({ navigation }) {
         console.log("supabase.auth.currentUser", supabase.auth.currentUser)
       );
   }
+
   return (
     <SafeAreaView
       style={{
@@ -35,6 +41,22 @@ export default function Settings({ navigation }) {
           source={require("../assets/signoutButton.png")}
         />
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => addUsername(username)}>
+        <Image
+          style={styles.button}
+          source={require("../assets/buttonBlue.png")}
+        />
+      </TouchableOpacity>
+
+      <TextInput
+        style={styles.usernameInput}
+        placeholder="username"
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(text) => setUsername(text)}
+        value={username}
+      />
     </SafeAreaView>
   );
 }
@@ -53,5 +75,22 @@ const styles = StyleSheet.create({
     width: 315,
     right: -160,
     top: 250,
+  },
+  usernameInput: {
+    position: "absolute",
+    left: 55,
+    top: 370,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 10,
+    paddingLeft: 30,
+  },
+  button: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 300,
+    left: -150,
   },
 });

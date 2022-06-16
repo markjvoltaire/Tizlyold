@@ -30,6 +30,10 @@ export default function Header({ navigation }) {
           source={require("../../assets/noti.png")}
         />
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate("Root")}>
+        <Image style={styles.user} source={require("../../assets/mark.png")} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

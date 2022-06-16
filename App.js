@@ -3,9 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainStackNavigator, {
-  ProfileStackNavigator,
-} from "./navigation/StackNavigator";
+import { MainStackNavigator } from "./navigation/StackNavigator";
 import Welcome from "./screens/Welcome";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
@@ -15,6 +13,8 @@ import Subscriptions from "./screens/Subscriptions";
 import { UserProvider } from "./context/UserContext";
 import UserProfile from "./screens/UserProfile";
 import BottomTabNavigator from "./navigation/TabNavigator";
+import { ProfileStackNavigator } from "./navigation/StackNavigator";
+import "react-native-url-polyfill/auto";
 
 const Stack = createNativeStackNavigator();
 
@@ -71,7 +71,7 @@ export default function App() {
           />
 
           <Stack.Screen
-            name="Profile"
+            name="Root"
             component={ProfileStackNavigator}
             options={{ headerShown: false }}
           />

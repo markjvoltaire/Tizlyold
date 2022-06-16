@@ -16,19 +16,29 @@ import { supabase } from "../services/supabase";
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  async function signUpWithEmail() {
-    await supabase.auth
+  const signUpWithEmail = async (username) => {
+    let { user, error: signUpError } = await supabase.auth
       .signUp({
         email: email,
         password: password,
       })
       .then(() => navigation.navigate("HomeScreen"))
       .then(() =>
-        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
+        console.log("supabase.auth.currentUser", supabase.auth.currentUser.id)
       );
-  }
+
+    if (!signUpError) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .insert([{ description: username, users_id: supabase.auth.user().id }]);
+    }
+
+    return { user, error };
+  };
 
   return (
     <ScrollView
@@ -89,13 +99,13 @@ export default function SignUp({ navigation }) {
         onChangeText={(text) => setPassword(text)}
         value={password}
       />
+
       <TouchableOpacity onPress={() => signUpWithEmail()}>
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}
         />
       </TouchableOpacity>
-      <View></View>
     </ScrollView>
   );
 }

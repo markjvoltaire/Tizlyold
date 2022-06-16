@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import Header from "../components/home/Header";
 
 export default function Explore() {
   return (
@@ -16,4 +17,10 @@ export default function Explore() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  ontainer: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+  },
+});

@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
+import BottomTabNavigator from "../navigation/TabNavigator";
 
-export default function UserProfile() {
+export default function UserProfile({ navigation }) {
   return (
     <SafeAreaView>
       <Image
@@ -40,6 +41,12 @@ export default function UserProfile() {
           />
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -72,7 +79,6 @@ const styles = StyleSheet.create({
   bio: {
     position: "absolute",
     color: "white",
-    fontWeight: "medium",
     fontSize: 13,
     width: 400,
     top: 315,
@@ -93,5 +99,13 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: "contain",
     top: 295,
+  },
+  backButton: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 25,
+    height: 30,
+    left: 41,
+    top: 90,
   },
 });

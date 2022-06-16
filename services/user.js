@@ -13,3 +13,9 @@ export function getUser() {
 export function getUserEmail() {
   return supabase.auth.currentUser.email;
 }
+
+export async function addUsername(username) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .insert([{ username: username, users_id: supabase.auth.currentUser.id }]);
+}
