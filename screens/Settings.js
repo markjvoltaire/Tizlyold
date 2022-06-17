@@ -33,6 +33,13 @@ export default function Settings({ navigation }) {
         backgroundColor: "white",
       }}
     >
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton.png")}
+        />
+      </TouchableOpacity>
+
       <TouchableOpacity
         onPress={() => signOutUser().then(() => navigation.navigate("Welcome"))}
       >
@@ -41,22 +48,6 @@ export default function Settings({ navigation }) {
           source={require("../assets/signoutButton.png")}
         />
       </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => addUsername(username)}>
-        <Image
-          style={styles.button}
-          source={require("../assets/buttonBlue.png")}
-        />
-      </TouchableOpacity>
-
-      <TextInput
-        style={styles.usernameInput}
-        placeholder="username"
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-      />
     </SafeAreaView>
   );
 }
@@ -67,6 +58,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  backButton: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 25,
+    height: 30,
+    left: -170,
+    top: -350,
   },
 
   signoutButton: {

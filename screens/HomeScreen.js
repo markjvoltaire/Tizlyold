@@ -49,7 +49,7 @@ export default function HomeScreen({ navigation }) {
         <TrendingCreators />
         <TrendingTag />
       </SafeAreaView>
-      <TouchableOpacity onPress={() => navigation.navigate("Root")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
         <Image style={styles.user} source={require("../assets/Setting.jpg")} />
       </TouchableOpacity>
     </ScrollView>
