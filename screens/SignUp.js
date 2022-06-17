@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   Button,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
@@ -18,24 +19,16 @@ export default function SignUp({ navigation }) {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const [loading, setLoading] = useState(false);
-
   const signUpWithEmail = async (username) => {
-    let { user, error: signUpError } = await supabase.auth
+    let { user } = await supabase.auth
       .signUp({
         email: email,
         password: password,
       })
-      .then(() => navigation.navigate("HomeScreen"))
+      .then(() => navigation.navigate("Username"))
       .then(() =>
-        console.log("supabase.auth.currentUser", supabase.auth.currentUser.id)
+        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
       );
-
-    if (!signUpError) {
-      const { data, error } = await supabase
-        .from("profiles")
-        .insert([{ description: username, users_id: supabase.auth.user().id }]);
-    }
 
     return { user, error };
   };
@@ -47,38 +40,19 @@ export default function SignUp({ navigation }) {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <TouchableOpacity>
-        <Image
-          style={styles.profilePic}
-          source={require("../assets/noProfilePic.jpeg")}
-        />
-        <Image
-          style={styles.profilePicPlus}
-          source={require("../assets/bluePlus.png")}
-        />
-      </TouchableOpacity>
-
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
       <Image
         style={styles.headerIcon}
         source={require("../assets/Tizlymed.png")}
       />
+
       <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
         <Image
           style={styles.backButton}
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
-      <TouchableOpacity>
-        <Image
-          style={styles.profilePic}
-          source={require("../assets/noProfilePic.jpeg")}
-        />
-        <Image
-          style={styles.profilePicPlus}
-          source={require("../assets/bluePlus.png")}
-        />
-      </TouchableOpacity>
+
       <TextInput
         style={styles.emailInput}
         placeholder="Email"
@@ -113,10 +87,10 @@ export default function SignUp({ navigation }) {
 const styles = StyleSheet.create({
   headerIcon: {
     position: "absolute",
-    width: 80,
-    height: 39,
+    width: 100,
+    height: 100,
     left: 168,
-    top: 50,
+    top: 180,
     resizeMode: "contain",
   },
   backButton: {

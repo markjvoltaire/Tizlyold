@@ -22,7 +22,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="Explore" component={ExploreStackNavigator} />
       <Tab.Screen name="Subscriptions" component={SubscriptionStackNavigator} />
-      <Tab.Screen name="Settings" component={SettingsStackNavigator} />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
 };

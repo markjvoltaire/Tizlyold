@@ -9,10 +9,16 @@ import {
 } from "react-native";
 import React from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
+import ProfileNav from "../components/profile/ProfileNav";
 
 export default function UserProfile({ navigation }) {
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#FFFFFF",
+      }}
+    >
       <Image
         style={styles.userBanner}
         source={require("../assets/desinew.png")}
@@ -47,6 +53,7 @@ export default function UserProfile({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
+      <ProfileNav />
     </SafeAreaView>
   );
 }

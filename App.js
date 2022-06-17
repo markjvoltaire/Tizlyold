@@ -10,11 +10,13 @@ import SignUp from "./screens/SignUp";
 import Explore from "./screens/Explore";
 import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Subscriptions";
+
 import { UserProvider } from "./context/UserContext";
 import UserProfile from "./screens/UserProfile";
 import BottomTabNavigator from "./navigation/TabNavigator";
 import { ProfileStackNavigator } from "./navigation/StackNavigator";
 import "react-native-url-polyfill/auto";
+import UserNames from "./screens/UserNames";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +28,12 @@ export default function App() {
           <Stack.Screen
             name="Welcome"
             component={Welcome}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Username"
+            component={UserNames}
             options={{ headerShown: false }}
           />
           <Stack.Screen

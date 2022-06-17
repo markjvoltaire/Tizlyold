@@ -71,6 +71,14 @@ const ProfileStackNavigator = () => {
   );
 };
 
+const UsernameStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Username" component={Username} />
+    </Stack.Navigator>
+  );
+};
+
 const MainStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -87,4 +95,5 @@ export {
   WelcomeStackNavigator,
   ProfileStackNavigator,
   MainStackNavigator,
+  UsernameStackNavigator,
 };

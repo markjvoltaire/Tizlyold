@@ -10,8 +10,27 @@ export function getUser() {
   return supabase.auth.user();
 }
 
+export async function getUserById(users_id) {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .match({ users_id })
+    .single();
+  return resp;
+}
+
 export function getUserEmail() {
   return supabase.auth.currentUser.email;
+}
+
+export async function getUsername() {
+  try {
+    await supabase.auth.user();
+  } catch (error) {
+    if (error) {
+      return error;
+    }
+  }
 }
 
 export async function addUsername(username) {

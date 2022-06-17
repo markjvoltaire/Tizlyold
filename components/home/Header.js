@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { supabase } from "../../services/supabase";
 
-export default function Header({ navigation }) {
+export default function Header() {
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -29,10 +29,6 @@ export default function Header({ navigation }) {
           style={styles.notification}
           source={require("../../assets/noti.png")}
         />
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate("Root")}>
-        <Image style={styles.user} source={require("../../assets/mark.png")} />
       </TouchableOpacity>
     </SafeAreaView>
   );
