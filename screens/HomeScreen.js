@@ -76,10 +76,10 @@ const styles = StyleSheet.create({
   },
   settingIcon: {
     position: "absolute",
-    left: 365,
-    bottom: 286,
-    width: 32,
-    height: 32,
+    left: 368,
+    bottom: 289.5,
+    width: 29,
+    height: 29,
   },
   fullSeperator: {
     borderBottomColor: "grey",
@@ -103,6 +103,6 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     width: 298,
     left: 70,
-    top: 210,
+    top: 235,
   },
 });

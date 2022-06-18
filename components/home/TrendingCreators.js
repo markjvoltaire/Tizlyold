@@ -4,30 +4,30 @@ import React from "react";
 export default function TrendingCreators({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.trendTitle}>Trending Creator</Text>
+      <Text style={styles.trendTitle}>Trending Creator 🔥</Text>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
+        <TouchableOpacity>
           <Image
             style={styles.userIcon}
-            source={require("../../assets/desi.png")}
+            source={require("../../assets/druski.jpg")}
           />
-          <Text style={styles.userName1}>Desi Banks</Text>
+          <Text style={styles.userName1}>Druski</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
           <Image
             style={styles.userIcon}
-            source={require("../../assets/iaa.png")}
+            source={require("../../assets/wallo.jpg")}
           />
-          <Text style={styles.userName2}>I AM ATHLETE</Text>
+          <Text style={styles.userName2}>Millon Dollar Worth of Game </Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
           <Image
             style={styles.userIcon}
-            source={require("../../assets/complex.png")}
+            source={require("../../assets/taylor.jpg")}
           />
-          <Text style={styles.userName3}>Complex</Text>
+          <Text style={styles.userName3}>DJ Taylor</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginLeft: -150,
-    left: 165,
+    left: 164,
+    top: 12,
   },
 
   iconContainer: {
@@ -66,20 +67,24 @@ const styles = StyleSheet.create({
 
   userName1: {
     position: "absolute",
-    top: 200,
-    left: 10,
+    top: 189,
+    left: 25,
     fontWeight: "bold",
+    color: "#5C5C5C",
   },
   userName2: {
     position: "absolute",
-    top: 200,
+    top: 185,
     left: 6,
+    width: 110,
     fontWeight: "bold",
+    color: "#5C5C5C",
   },
   userName3: {
     position: "absolute",
-    top: 200,
+    top: 189,
     left: 15,
     fontWeight: "bold",
+    color: "#5C5C5C",
   },
 });

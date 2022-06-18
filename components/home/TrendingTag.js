@@ -11,7 +11,7 @@ import React from "react";
 export default function TrendingTag() {
   return (
     <View style={styles.container}>
-      <Text style={styles.tagTitle}>Trending Tags</Text>
+      <Text style={styles.tagTitle}>Trending Tags 🆙</Text>
       <View>
         <TouchableOpacity>
           <Image
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   tagTitle: {
     position: "absolute",
     top: 250,
-    right: 55,
+    right: 40,
     fontWeight: "bold",
   },
   styleHacks: {

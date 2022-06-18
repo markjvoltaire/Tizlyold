@@ -7,10 +7,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { supabase } from "../../services/supabase";
 
 export default function Header() {
+  const [query, setQuery] = useState("");
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -18,15 +19,20 @@ export default function Header() {
         source={require("../../assets/tizlyicon.jpg")}
       />
 
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search"
-        autoCapitalize="none"
-        autoCorrect={false}
-        secureTextEntry={true}
-        textContentType="password"
-        onChangeText={(text) => setPassword(text)}
-      />
+      <View>
+        <TextInput
+          style={styles.searchInput}
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setQuery(text)}
+          value={query}
+        />
+
+        <Image
+          style={styles.searchIcon}
+          source={require("../../assets/Search.png")}
+        />
+      </View>
 
       <TouchableOpacity>
         <Image
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 24,
     height: 24,
-    bottom: 300,
+    bottom: 303,
     right: 255,
     backgroundColor: "white",
   },
@@ -88,13 +94,21 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     position: "absolute",
-    bottom: 299,
+    bottom: 295,
     borderColor: "grey",
-    borderWidth: 0.5,
+    borderWidth: 0.1,
     borderRadius: 25,
     backgroundColor: "#F3F3F9",
     width: 200,
     height: 35,
     left: -89,
+  },
+  searchIcon: {
+    position: "absolute",
+    bottom: 304,
+    width: 20,
+    height: 20,
+    left: 80,
+    color: "#F3F3F9",
   },
 });
