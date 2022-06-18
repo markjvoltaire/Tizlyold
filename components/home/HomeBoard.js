@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  TextInput,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 
 export default function HomeBoard() {
@@ -14,6 +21,8 @@ export default function HomeBoard() {
           source={require("../../assets/homeBanner.png")}
         />
       </TouchableOpacity>
+
+      <TextInput />
     </View>
   );
 }
@@ -33,7 +42,7 @@ const styles = StyleSheet.create({
 
   homeboard: {
     position: "absolute",
-    top: -260,
+    top: -230,
     left: -188,
     height: 200,
     width: 430,

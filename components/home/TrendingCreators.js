@@ -19,7 +19,7 @@ export default function TrendingCreators({ navigation }) {
             style={styles.userIcon}
             source={require("../../assets/iaa.png")}
           />
-          <Text style={styles.userName1}>I AM ATHLETE</Text>
+          <Text style={styles.userName2}>I AM ATHLETE</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
@@ -27,7 +27,7 @@ export default function TrendingCreators({ navigation }) {
             style={styles.userIcon}
             source={require("../../assets/complex.png")}
           />
-          <Text style={styles.userName1}>Complex</Text>
+          <Text style={styles.userName3}>Complex</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -51,8 +51,11 @@ const styles = StyleSheet.create({
   userIcon: {
     marginLeft: 10,
     resizeMode: "contain",
-    marginHorizontal: 30,
+    marginHorizontal: 2,
     top: 50,
+    width: 127,
+    height: 123,
+    right: 20,
   },
 
   trendTitle: {
@@ -63,8 +66,20 @@ const styles = StyleSheet.create({
 
   userName1: {
     position: "absolute",
-    top: 155,
-    left: 20,
+    top: 200,
+    left: 10,
+    fontWeight: "bold",
+  },
+  userName2: {
+    position: "absolute",
+    top: 200,
+    left: 6,
+    fontWeight: "bold",
+  },
+  userName3: {
+    position: "absolute",
+    top: 200,
+    left: 15,
     fontWeight: "bold",
   },
 });

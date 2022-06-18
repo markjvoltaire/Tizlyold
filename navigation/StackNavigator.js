@@ -10,6 +10,7 @@ import BottomTabNavigator from "./TabNavigator";
 import Settings from "../screens/Settings";
 import Welcome from "../screens/Welcome";
 import UserProfile from "../screens/UserProfile";
+import Post from "../screens/Post";
 
 const Stack = createStackNavigator();
 
@@ -79,6 +80,14 @@ const UsernameStackNavigator = () => {
   );
 };
 
+const PostStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="PostScreen" component={Post} />
+    </Stack.Navigator>
+  );
+};
+
 const MainStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -96,4 +105,5 @@ export {
   ProfileStackNavigator,
   MainStackNavigator,
   UsernameStackNavigator,
+  PostStackNavigator,
 };

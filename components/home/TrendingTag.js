@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    top: -10,
+    top: 30,
     left: 180,
   },
   tagTitle: {

@@ -17,6 +17,7 @@ import BottomTabNavigator from "./navigation/TabNavigator";
 import { ProfileStackNavigator } from "./navigation/StackNavigator";
 import "react-native-url-polyfill/auto";
 import UserNames from "./screens/UserNames";
+import Post from "./screens/Post";
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +76,12 @@ export default function App() {
           <Stack.Screen
             name="UserProfile"
             component={UserProfile}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Post"
+            component={Post}
             options={{ headerShown: false }}
           />
 

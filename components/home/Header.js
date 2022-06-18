@@ -17,6 +17,17 @@ export default function Header() {
         style={styles.logo}
         source={require("../../assets/tizlyicon.jpg")}
       />
+
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search"
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={true}
+        textContentType="password"
+        onChangeText={(text) => setPassword(text)}
+      />
+
       <TouchableOpacity>
         <Image
           style={styles.drawer}
@@ -43,8 +54,8 @@ const styles = StyleSheet.create({
 
   logo: {
     position: "absolute",
-    position: "relative",
-    top: -360,
+
+    top: -380,
     resizeMode: "contain",
     width: 52,
     height: 26,
@@ -54,8 +65,8 @@ const styles = StyleSheet.create({
   drawer: {
     position: "absolute",
     width: 24,
-    bottom: 365,
-    right: 565,
+    bottom: 300,
+    right: 555,
     backgroundColor: "white",
   },
 
@@ -63,8 +74,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 24,
     height: 24,
-    bottom: 360,
-    right: 273,
+    bottom: 300,
+    right: 255,
     backgroundColor: "white",
   },
 
@@ -74,5 +85,16 @@ const styles = StyleSheet.create({
     top: -389,
     width: 32,
     height: 32,
+  },
+  searchInput: {
+    position: "absolute",
+    bottom: 299,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    borderRadius: 25,
+    backgroundColor: "#F3F3F9",
+    width: 200,
+    height: 35,
+    left: -89,
   },
 });

@@ -7,7 +7,7 @@ import {
   ExploreStackNavigator,
   SubscriptionStackNavigator,
   SettingsStackNavigator,
-  WelcomeStackNavigator,
+  PostStackNavigator,
   ProfileStackNavigator,
 } from "./StackNavigator";
 import UserProfile from "../screens/UserProfile";
@@ -28,7 +28,7 @@ const BottomTabNavigator = () => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/Home.jpg")}
+                  source={require("../assets/bottomtab/HomeLight.jpg")}
                 />
                 <Text
                   style={{
@@ -58,7 +58,7 @@ const BottomTabNavigator = () => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/Search.jpg")}
+                  source={require("../assets/bottomtab/SearchLight.jpg")}
                 />
                 <Text
                   style={{
@@ -87,8 +87,25 @@ const BottomTabNavigator = () => {
             return (
               <View>
                 <Image
+                  style={{ width: 45, height: 42 }}
+                  source={require("../assets/bottomtab/postButton.jpg")}
+                />
+              </View>
+            );
+          },
+        }}
+        name="Post"
+        component={PostStackNavigator}
+      />
+
+      <Tab.Screen
+        options={{
+          tabBarIcon: () => {
+            return (
+              <View>
+                <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/Subscribers.jpg")}
+                  source={require("../assets/bottomtab/SubscribersLight.jpg")}
                 />
                 <Text
                   style={{
@@ -118,7 +135,7 @@ const BottomTabNavigator = () => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/Profile.jpg")}
+                  source={require("../assets/bottomtab/ProfileLight.jpg")}
                 />
                 <Text
                   style={{

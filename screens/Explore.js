@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
 import Header from "../components/home/Header";
 
@@ -12,7 +12,17 @@ export default function Explore() {
         backgroundColor: "white",
       }}
     >
-      <Text>Explore</Text>
+      {" "}
+      <TextInput
+        style={styles.passwordInput}
+        placeholder="Password"
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={true}
+        textContentType="password"
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+      />
     </View>
   );
 }
