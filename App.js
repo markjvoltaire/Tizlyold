@@ -10,6 +10,7 @@ import SignUp from "./screens/SignUp";
 import Explore from "./screens/Explore";
 import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Subscriptions";
+import Header from "./components/home/Header";
 
 import { UserProvider } from "./context/UserContext";
 import UserProfile from "./screens/UserProfile";

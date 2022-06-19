@@ -9,7 +9,7 @@ import {
 import React from "react";
 import Header from "../components/home/Header";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -21,6 +21,7 @@ export default function HomeScreen() {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
+      <Text style={{ paddingLeft: 155 }}>HomeScreen</Text>
     </ScrollView>
   );
 }

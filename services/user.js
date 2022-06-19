@@ -10,17 +10,19 @@ export function getUser() {
   return supabase.auth.user();
 }
 
-export async function getUserById(users_id) {
+export async function getUserById(id) {
   const resp = await supabase
     .from("profiles")
     .select("*")
-    .match({ users_id })
+    .match({ id })
     .single();
   return resp;
 }
 
 export function getUserEmail() {
-  return supabase.auth.currentUser.email;
+  const userEmail = supabase.auth.currentUser.email;
+  console.log("userEmail", userEmail);
+  return userEmail;
 }
 
 export async function getUsername() {

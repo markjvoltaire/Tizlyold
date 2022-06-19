@@ -10,7 +10,7 @@ import React from "react";
 import Header from "../components/home/Header";
 import HomeBoard from "../components/home/HomeBoard";
 
-export default function Subscriptions() {
+export default function Subscriptions({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -22,6 +22,7 @@ export default function Subscriptions() {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
+      <Text style={{ paddingLeft: 155 }}>Subscriptions</Text>
     </ScrollView>
   );
 }

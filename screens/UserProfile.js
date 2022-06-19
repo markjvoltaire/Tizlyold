@@ -6,12 +6,29 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Button,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
+import getUserEmail, { getUser } from "../services/user";
+import { supabase } from "../services/supabase";
 
 export default function UserProfile({ navigation }) {
+  const [userEmail, setUserEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const data = await getUserEmail();
+      setUserEmail(data);
+      setLoading(false);
+      console.log("userEmail", userEmail);
+    };
+    fetchEmail();
+  }, []);
+
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <SafeAreaView
       style={{
@@ -34,18 +51,14 @@ export default function UserProfile({ navigation }) {
         source={require("../assets/desiProfile.png")}
       />
       <View style={styles.userinfoContainer}>
-        <Text style={styles.displayname}>Desi Banks</Text>
+        <Text style={styles.displayname}>
+          {supabase.auth.currentUser.email}
+        </Text>
         <Text style={styles.username}>@desibanks</Text>
         <Text style={styles.bio}>
           God1st 🙏 Actor/Comedian/Entertainer/Host IG: IAMDESIBANKS
           FaceBook:iamdesibanks Business: Iamdesibanks@gmail.com
         </Text>
-        <TouchableOpacity>
-          <Image
-            style={styles.followbutton}
-            source={require("../assets/followbutton.png")}
-          />
-        </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image
@@ -53,7 +66,12 @@ export default function UserProfile({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
+      <Button
+        title="press me"
+        onPress={() => console.log(supabase.auth.currentUser.email)}
+      />
       <ProfileNav />
+      <FullSeperator />
     </SafeAreaView>
   );
 }
@@ -114,5 +132,13 @@ const styles = StyleSheet.create({
     height: 30,
     left: 41,
     top: 90,
+  },
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 460,
   },
 });
