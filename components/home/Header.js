@@ -53,6 +53,7 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     top: 30,
     backgroundColor: "white",
     left: 180,
@@ -109,6 +110,5 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     left: 80,
-    color: "#F3F3F9",
   },
 });
