@@ -10,13 +10,9 @@ export function getUser() {
   return supabase.auth.user();
 }
 
-export async function getUserById(id) {
-  const resp = await supabase
-    .from("profiles")
-    .select("*")
-    .match({ id })
-    .single();
-  return resp;
+export async function userId() {
+  const users = getUser().id;
+  return users;
 }
 
 export function getUserEmail() {
@@ -25,18 +21,17 @@ export function getUserEmail() {
   return userEmail;
 }
 
-export async function getUsername() {
-  try {
-    await supabase.auth.user();
-  } catch (error) {
-    if (error) {
-      return error;
-    }
-  }
+export async function addUser(username, displayName) {
+  const { data, error } = await supabase.from("profiles").insert([
+    {
+      username: username,
+      user_id: supabase.auth.currentUser.id,
+      email: supabase.auth.currentUser.email,
+      displayName: displayName,
+    },
+  ]);
 }
 
-export async function addUsername(username) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .insert([{ username: username, users_id: supabase.auth.currentUser.id }]);
+export async function getUsers() {
+  const { data: profiles, error } = await supabase.from("profiles").select("*");
 }

@@ -12,10 +12,12 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { supabase } from "../services/supabase";
-import { addUsername } from "../services/user";
+import { addUser } from "../services/user";
 
 export default function UserNames({ navigation }) {
   const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
 
   return (
     <ScrollView
@@ -49,9 +51,18 @@ export default function UserNames({ navigation }) {
         value={username}
       />
 
+      <TextInput
+        style={styles.displayNameInput}
+        placeholder="Display Name"
+        autoCapitalize="none"
+        autoFocus={true}
+        onChangeText={(text) => setDisplayName(text)}
+        value={displayName}
+      />
+
       <TouchableOpacity
         onPress={() =>
-          addUsername(username).then(() => {
+          addUser(username, displayName).then(() => {
             navigation.navigate("HomeScreen");
           })
         }
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 311,
     height: 50,
-    top: 440,
+    top: 490,
     left: 55,
   },
   userPic: {
@@ -120,5 +131,16 @@ const styles = StyleSheet.create({
     top: 300,
     left: 120,
     opacity: 0.6,
+  },
+  displayNameInput: {
+    position: "absolute",
+    left: 55,
+    top: 415,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 10,
+    paddingLeft: 30,
   },
 });

@@ -7,28 +7,46 @@ import {
   ScrollView,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
-import getUserEmail, { getUser } from "../services/user";
+import getUserEmail, { getUser, getUserById, userId } from "../services/user";
 import { supabase } from "../services/supabase";
 
 export default function UserProfile({ navigation }) {
-  const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchEmail = async () => {
-      const data = await getUserEmail();
-      setUserEmail(data);
-      setLoading(false);
-      console.log("userEmail", userEmail);
-    };
-    fetchEmail();
-  }, []);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  async function getUserById() {
+    const user = supabase.auth.currentUser.id;
+    console.log("user", user);
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user)
+      .single();
+    setCurrentUser(data);
+  }
+
+  console.log("currentUser", currentUser);
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const resp = await getUserById();
+      setUser(resp);
+    };
+    getUserProfile();
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -51,10 +69,8 @@ export default function UserProfile({ navigation }) {
         source={require("../assets/desiProfile.png")}
       />
       <View style={styles.userinfoContainer}>
-        <Text style={styles.displayname}>
-          {supabase.auth.currentUser.email}
-        </Text>
-        <Text style={styles.username}>@desibanks</Text>
+        <Text style={styles.displayname}>{currentUser.displayName}</Text>
+        <Text style={styles.username}>@{currentUser.username}</Text>
         <Text style={styles.bio}>
           God1st 🙏 Actor/Comedian/Entertainer/Host IG: IAMDESIBANKS
           FaceBook:iamdesibanks Business: Iamdesibanks@gmail.com
@@ -66,10 +82,7 @@ export default function UserProfile({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
-      <Button
-        title="press me"
-        onPress={() => console.log(supabase.auth.currentUser.email)}
-      />
+      <Button title="press me" onPress={() => console.log()} />
       <ProfileNav />
       <FullSeperator />
     </SafeAreaView>

@@ -17,18 +17,17 @@ import { supabase } from "../services/supabase";
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
 
-  const signUpWithEmail = async (username) => {
+  const signUpWithEmail = async () => {
     let { user } = await supabase.auth
       .signUp({
         email: email,
         password: password,
       })
-      .then(() => navigation.navigate("Username"))
       .then(() =>
         console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-      );
+      )
+      .then(() => navigation.navigate("Username"));
 
     return { user, error };
   };
@@ -59,7 +58,7 @@ export default function SignUp({ navigation }) {
         autoCapitalize="none"
         keyboardType="email-address"
         textContentType="emailAddress"
-        autoFocus={true}
+        autoFocus={false}
         onChangeText={(text) => setEmail(text)}
         value={email}
       />
@@ -74,7 +73,11 @@ export default function SignUp({ navigation }) {
         value={password}
       />
 
-      <TouchableOpacity onPress={() => signUpWithEmail()}>
+      <TouchableOpacity
+        onPress={() =>
+          signUpWithEmail().then(() => navigation.navigate("Username"))
+        }
+      >
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     left: 168,
-    top: 180,
+    top: 150,
     resizeMode: "contain",
   },
   backButton: {
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
   usernameInput: {
     position: "absolute",
     left: 55,
-    top: 240,
+    top: 255,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
   emailInput: {
     position: "absolute",
     left: 55,
-    top: 305,
+    top: 320,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     position: "absolute",
     left: 55,
-    top: 370,
+    top: 385,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 311,
     height: 50,
-    top: 440,
+    top: 460,
     left: 55,
   },
   userPic: {
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
   signupButton: {
     position: "absolute",
     width: 100,
-    top: 500.5,
+    top: 505,
     left: 245,
     color: "#00A3FF",
   },
