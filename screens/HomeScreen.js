@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import Header from "../components/home/Header";
+import { useUser } from "../context/UserContext";
 
 export default function HomeScreen({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;

@@ -14,6 +14,7 @@ import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
 import getUserEmail, { getUser, getUserById, userId } from "../services/user";
 import { supabase } from "../services/supabase";
+import { useUser } from "../context/UserContext";
 
 export default function UserProfile({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -25,24 +26,24 @@ export default function UserProfile({ navigation }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  const { user, setUser } = useUser();
+
   async function getUserById() {
-    const user = supabase.auth.currentUser.id;
-    console.log("user", user);
+    const userId = supabase.auth.currentUser.id;
+    console.log("user", userId);
 
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", user)
+      .eq("user_id", userId)
       .single();
-    setCurrentUser(data);
+    setUser(data);
+    console.log("User", user);
   }
-
-  console.log("currentUser", currentUser);
 
   useEffect(() => {
     const getUserProfile = async () => {
-      const resp = await getUserById();
-      setUser(resp);
+      await getUserById();
     };
     getUserProfile();
   }, []);
@@ -69,8 +70,8 @@ export default function UserProfile({ navigation }) {
         source={require("../assets/desiProfile.png")}
       />
       <View style={styles.userinfoContainer}>
-        <Text style={styles.displayname}>{currentUser.displayName}</Text>
-        <Text style={styles.username}>@{currentUser.username}</Text>
+        <Text style={styles.displayname}>{user.displayName}</Text>
+        <Text style={styles.username}>@{user.username}</Text>
         <Text style={styles.bio}>
           God1st 🙏 Actor/Comedian/Entertainer/Host IG: IAMDESIBANKS
           FaceBook:iamdesibanks Business: Iamdesibanks@gmail.com
@@ -82,7 +83,6 @@ export default function UserProfile({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
-      <Button title="press me" onPress={() => console.log()} />
       <ProfileNav />
       <FullSeperator />
     </SafeAreaView>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     height: 38,
     left: 75,
     right: 64.27,
-    top: 250,
+    top: 273,
     color: "white",
     fontWeight: "bold",
     fontSize: 22,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   username: {
     position: "absolute",
     color: "white",
-    top: 280,
+    top: 303,
     left: 75,
   },
 
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 13,
     width: 400,
-    top: 315,
+    top: 345,
     left: 8,
   },
 
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    top: 295,
+    top: 318,
   },
   backButton: {
     position: "absolute",
@@ -152,6 +152,6 @@ const styles = StyleSheet.create({
     opacity: 0.2,
     width: 900,
     left: 1,
-    top: 460,
+    top: 470,
   },
 });

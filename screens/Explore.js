@@ -28,52 +28,6 @@ export default function Explore({ navigation }) {
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const getProfile = async () => {
-    try {
-      setLoading(true);
-      const user = supabase.auth.user();
-
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, email, displayName, profileimage`)
-        .eq("id", user.id)
-        .single();
-
-      console.log("data", data);
-
-      if (data) {
-        setUsername(data.username);
-        setEmail(data.email);
-        setDisplayName(data.displayName);
-        setProfileImage(data.profileImage);
-      }
-    } catch (error) {
-      alert(error.meessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const resp = await getProfile();
-      setUser(resp);
-      console.log("username", resp);
-    };
-
-    fetchData();
-  }, []);
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const resp = await getUser();
-  //     setUser(resp);
-  //     console.log("user", user);
-  //   };
-
-  //   fetchUser();
-  // }, []);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView>

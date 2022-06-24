@@ -35,3 +35,16 @@ export async function addUser(username, displayName) {
 export async function getUsers() {
   const { data: profiles, error } = await supabase.from("profiles").select("*");
 }
+
+export async function getUserById() {
+  const userId = supabase.auth.currentUser.id;
+  console.log("user", userId);
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+  setCurrentUser(data);
+  console.log("currentUser", currentUser.username);
+}

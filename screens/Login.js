@@ -14,6 +14,7 @@ import {
 import React, { useState } from "react";
 import { signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
+import { useUser } from "../context/UserContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");

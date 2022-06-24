@@ -13,11 +13,11 @@ import React, { useState, useEffect } from "react";
 
 import { supabase } from "../services/supabase";
 import { addUser } from "../services/user";
+import { useUser } from "../context/UserContext";
 
 export default function UserNames({ navigation }) {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [email, setEmail] = useState("");
 
   return (
     <ScrollView

@@ -14,8 +14,6 @@ import { supabase } from "../services/supabase";
 import { addUsername } from "../services/user";
 
 export default function Settings({ navigation }) {
-  const [username, setUsername] = useState("");
-
   async function signOutUser() {
     await supabase.auth
       .signOut()

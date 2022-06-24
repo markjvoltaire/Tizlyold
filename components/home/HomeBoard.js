@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
+import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
-  // bring this back when we can store the user name in context when logging in
-  // const { user } = useUser();
-  // console.log("user", user);
+  const { user, setUser } = useUser();
+  console.log("user", user);
 
   const [currentUser, setCurrentUser] = useState("");
 
@@ -38,7 +38,7 @@ export default function HomeBoard() {
 
   return (
     <View style={styles.container}>
-      <Text> {currentUser.username} </Text>
+      <Text style={styles.username}> Welcome 👋 {currentUser.username} </Text>
       <TouchableOpacity>
         <Image
           style={styles.homeboard}
@@ -54,6 +54,7 @@ export default function HomeBoard() {
 const styles = StyleSheet.create({
   container: {
     left: 180,
+    top: 20,
   },
   header: {
     position: "absolute",
@@ -70,5 +71,10 @@ const styles = StyleSheet.create({
     left: -188,
     height: 200,
     width: 430,
+  },
+  username: {
+    bottom: 250,
+    right: 175,
+    fontWeight: "bold",
   },
 });
