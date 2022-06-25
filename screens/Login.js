@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import React, { useState } from "react";
-import { signIn, signInUser } from "../services/user";
+import { getUserById, signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 

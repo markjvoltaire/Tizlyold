@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   settingIcon: {
     position: "absolute",
     left: 368,
-    bottom: 289.5,
+    bottom: 306.5,
     width: 29,
     height: 29,
   },

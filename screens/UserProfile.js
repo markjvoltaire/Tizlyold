@@ -12,25 +12,17 @@ import {
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
-import getUserEmail, { getUser, getUserById, userId } from "../services/user";
+
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 
 export default function UserProfile({ navigation }) {
-  const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [profileImage, setProfileImage] = useState("");
-  const [currentUser, setCurrentUser] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const { user, setUser } = useUser();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  const { user, setUser } = useUser();
-
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
-    console.log("user", userId);
 
     const { data } = await supabase
       .from("profiles")
@@ -38,7 +30,6 @@ export default function UserProfile({ navigation }) {
       .eq("user_id", userId)
       .single();
     setUser(data);
-    console.log("User", user);
   }
 
   useEffect(() => {
@@ -72,10 +63,7 @@ export default function UserProfile({ navigation }) {
       <View style={styles.userinfoContainer}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
-        <Text style={styles.bio}>
-          God1st 🙏 Actor/Comedian/Entertainer/Host IG: IAMDESIBANKS
-          FaceBook:iamdesibanks Business: Iamdesibanks@gmail.com
-        </Text>
+        <Text style={styles.bio}>{user.bio}</Text>
       </View>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image

@@ -11,34 +11,11 @@ import { supabase } from "../../services/supabase";
 import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
-  const { user, setUser } = useUser();
-  console.log("user", user);
-
-  const [currentUser, setCurrentUser] = useState("");
-
-  async function getUserById() {
-    const user = supabase.auth.currentUser.id;
-    console.log("user", user);
-
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", user)
-      .single();
-    setCurrentUser(data);
-  }
-
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const resp = await getUserById();
-      setUser(resp);
-    };
-    getUserProfile();
-  }, []);
+  const { user } = useUser();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}> Welcome 👋 {currentUser.username} </Text>
+      <Text style={styles.username}> Welcome {user.username} </Text>
       <TouchableOpacity>
         <Image
           style={styles.homeboard}

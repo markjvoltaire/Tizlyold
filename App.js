@@ -19,6 +19,7 @@ import { ProfileStackNavigator } from "./navigation/StackNavigator";
 import "react-native-url-polyfill/auto";
 import UserNames from "./screens/UserNames";
 import Post from "./screens/Post";
+import SignUpSuccess from "./screens/SignUpSuccess";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
+          <Stack.Screen
+            name="SignupSuccess"
+            component={SignUpSuccess}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Login"
             component={Login}

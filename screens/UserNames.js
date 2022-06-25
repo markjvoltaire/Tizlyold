@@ -13,7 +13,6 @@ import React, { useState, useEffect } from "react";
 
 import { supabase } from "../services/supabase";
 import { addUser } from "../services/user";
-import { useUser } from "../context/UserContext";
 
 export default function UserNames({ navigation }) {
   const [username, setUsername] = useState("");
@@ -55,7 +54,6 @@ export default function UserNames({ navigation }) {
         style={styles.displayNameInput}
         placeholder="Display Name"
         autoCapitalize="none"
-        autoFocus={true}
         onChangeText={(text) => setDisplayName(text)}
         value={displayName}
       />

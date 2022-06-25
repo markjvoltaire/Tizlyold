@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { useUser } from "../context/UserContext";
 
 export async function signInUser(email, password) {
   const { user, error } = await supabase.auth.signIn({ email, password });
@@ -22,10 +23,12 @@ export function getUserEmail() {
 }
 
 export async function addUser(username, displayName) {
+  const userId = supabase.auth.currentUser.id;
+
   const { data, error } = await supabase.from("profiles").insert([
     {
       username: username,
-      user_id: supabase.auth.currentUser.id,
+      user_id: userId,
       email: supabase.auth.currentUser.email,
       displayName: displayName,
     },
@@ -37,6 +40,7 @@ export async function getUsers() {
 }
 
 export async function getUserById() {
+  const { user, setUser } = useUser();
   const userId = supabase.auth.currentUser.id;
   console.log("user", userId);
 
@@ -45,6 +49,20 @@ export async function getUserById() {
     .select("*")
     .eq("user_id", userId)
     .single();
-  setCurrentUser(data);
-  console.log("currentUser", currentUser.username);
+  setUser(data);
+  console.log("currentUserContext", user);
+}
+
+export async function signUp(email, password) {
+  let { user } = await supabase.auth
+    .signUp({
+      email: email,
+      password: password,
+    })
+    .then(() =>
+      console.log("supabase.auth.currentUser", supabase.auth.currentUser)
+    )
+    .then(() => navigation.navigate("Username"));
+
+  return { user, error };
 }

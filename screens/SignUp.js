@@ -13,6 +13,7 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { supabase } from "../services/supabase";
+import { signUp } from "../services/user";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
