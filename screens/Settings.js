@@ -12,8 +12,11 @@ import {
 import React, { useState } from "react";
 import { supabase } from "../services/supabase";
 import { addUsername } from "../services/user";
+import { useUser } from "../context/UserContext";
 
 export default function Settings({ navigation }) {
+  const { user, setUser } = useUser();
+
   async function signOutUser() {
     await supabase.auth
       .signOut()
@@ -31,12 +34,23 @@ export default function Settings({ navigation }) {
         backgroundColor: "white",
       }}
     >
+      <Text style={styles.username}>{user.username}</Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image
           style={styles.backButton}
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
+      <View style={styles.accountSettings}>
+        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+          <Image
+            style={{ width: 24, height: 24 }}
+            source={require("../assets/Profile.jpg")}
+          />
+          <Image style={styles.arrow} source={require("../assets/arrow.png")} />
+          <Text style={styles.accountSettingsText}> Account Settings</Text>
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity
         onPress={() => signOutUser().then(() => navigation.navigate("Welcome"))}
@@ -63,7 +77,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 30,
     left: -170,
-    top: -350,
+    top: -400,
   },
 
   signoutButton: {
@@ -89,5 +103,27 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 300,
     left: -150,
+  },
+  username: {
+    bottom: 210,
+    fontWeight: "bold",
+    fontSize: 23,
+    right: 100,
+  },
+  accountSettingsText: {
+    left: 39,
+    bottom: 20,
+    fontWeight: "400",
+  },
+  arrow: {
+    position: "absolute",
+    height: 13,
+    width: 13,
+    left: 350,
+    top: 7,
+  },
+  accountSettings: {
+    right: 120,
+    bottom: 130,
   },
 });

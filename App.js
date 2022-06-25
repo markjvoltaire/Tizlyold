@@ -20,6 +20,7 @@ import "react-native-url-polyfill/auto";
 import UserNames from "./screens/UserNames";
 import Post from "./screens/Post";
 import SignUpSuccess from "./screens/SignUpSuccess";
+import EditProfile from "./screens/EditProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -95,6 +96,12 @@ export default function App() {
           <Stack.Screen
             name="Root"
             component={ProfileStackNavigator}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
