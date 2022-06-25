@@ -93,7 +93,7 @@ const BottomTabNavigator = () => {
                     width: 45,
                     height: 45,
                     resizeMode: "contain",
-                    top: -28,
+                    top: -20,
                   }}
                   source={require("../assets/postButton.png")}
                 />
