@@ -36,6 +36,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
+      <FullSeperator />
       <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
         <Image
           style={styles.settingIcon}

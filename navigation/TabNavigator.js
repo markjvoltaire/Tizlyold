@@ -87,8 +87,15 @@ const BottomTabNavigator = () => {
             return (
               <View>
                 <Image
-                  style={{ width: 45, height: 42 }}
-                  source={require("../assets/bottomtab/postButton.jpg")}
+                  style={{
+                    position: "absolute",
+                    left: -24,
+                    width: 45,
+                    height: 45,
+                    resizeMode: "contain",
+                    top: -28,
+                  }}
+                  source={require("../assets/postButton.png")}
                 />
               </View>
             );
