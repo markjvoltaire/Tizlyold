@@ -44,8 +44,9 @@ export default function HomeScreen({ navigation }) {
         />
       </TouchableOpacity>
       <Image
+        style={styles.userBanner}
         source={{
-          uri: user.profileimage,
+          uri: user.bannerImage,
         }}
       />
     </ScrollView>
@@ -76,5 +77,11 @@ const styles = StyleSheet.create({
   image: {
     width: 900,
     height: 900,
+  },
+  userBanner: {
+    position: "absolute",
+    width: 455,
+    right: -10,
+    height: 455,
   },
 });
