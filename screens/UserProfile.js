@@ -48,7 +48,9 @@ export default function UserProfile({ navigation }) {
     >
       <Image
         style={styles.userBanner}
-        source={require("../assets/desinew.png")}
+        source={{
+          uri: user.bannerImage,
+        }}
       />
 
       <Image
@@ -58,8 +60,17 @@ export default function UserProfile({ navigation }) {
 
       <Image
         style={styles.profileImage}
-        source={require("../assets/desiProfile.png")}
+        source={{
+          uri: user.profileimage,
+        }}
       />
+
+      {/* <Image
+        style={styles.img}
+        source={{
+          uri: user.profileimage,
+        }}
+      /> */}
       <View style={styles.userinfoContainer}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
@@ -81,7 +92,7 @@ const styles = StyleSheet.create({
   userBanner: {
     position: "absolute",
     width: 455,
-    right: 0.5,
+    right: -10,
     height: 455,
   },
 

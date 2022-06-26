@@ -43,7 +43,11 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
-      <Text style={{ paddingLeft: 155 }}>{user.username}</Text>
+      <Image
+        source={{
+          uri: user.profileimage,
+        }}
+      />
     </ScrollView>
   );
 }
@@ -68,5 +72,9 @@ const styles = StyleSheet.create({
     bottom: 270.7,
     width: 29,
     height: 29,
+  },
+  image: {
+    width: 900,
+    height: 900,
   },
 });

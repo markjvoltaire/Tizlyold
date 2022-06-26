@@ -15,7 +15,7 @@ import { addUsername } from "../services/user";
 import { useUser } from "../context/UserContext";
 
 export default function Settings({ navigation }) {
-  const { user, setUser } = useUser();
+  const { user } = useUser();
 
   async function signOutUser() {
     await supabase.auth
@@ -35,6 +35,14 @@ export default function Settings({ navigation }) {
       }}
     >
       <Text style={styles.username}>{user.username}</Text>
+
+      <Image
+        style={styles.img}
+        source={{
+          uri: user.profileimage,
+        }}
+      />
+
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image
           style={styles.backButton}
@@ -105,10 +113,11 @@ const styles = StyleSheet.create({
     left: -150,
   },
   username: {
-    bottom: 210,
+    position: "absolute",
+    bottom: 600,
     fontWeight: "bold",
     fontSize: 23,
-    right: 100,
+    right: 290,
   },
   accountSettingsText: {
     left: 39,
@@ -123,7 +132,15 @@ const styles = StyleSheet.create({
     top: 7,
   },
   accountSettings: {
-    right: 120,
-    bottom: 130,
+    position: "absolute",
+    right: 280,
+    bottom: 500,
+  },
+  img: {
+    position: "absolute",
+    height: 60,
+    width: 60,
+    top: 150,
+    right: 320,
   },
 });
