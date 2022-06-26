@@ -66,3 +66,27 @@ export async function signUp(email, password) {
 
   return { user, error };
 }
+
+export async function editProfile() {
+  const userId = supabase.auth.currentUser.id;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ username: username, displayName: displayName })
+    .eq("user_id", userId);
+}
+
+export async function createProfileImage() {
+  await supabase.storage
+    .from("profile-images")
+    .upload(`public/${file.name}`, file, { upsert: true });
+
+  const { publicURL } = await supabase.storage
+    .from("profile-images")
+    .getPublicUrl(`public/${file.name}`);
+
+  const resp = await supabase.from("profiles").insert({
+    profileimage: publicURL,
+  });
+  return error(resp);
+}

@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getUserById, signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
@@ -19,6 +19,7 @@ import { useUser } from "../context/UserContext";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user, setUser } = useUser();
 
   async function loginWithEmail() {
     const { user, session, error } = await supabase.auth
@@ -31,6 +32,25 @@ export default function Login({ navigation }) {
         console.log("current user after log in ", supabase.auth.currentUser)
       );
   }
+
+  async function getUserById() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    setUser(data);
+  }
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      await getUserById();
+    };
+    getUserProfile();
+    console.log("user", user);
+  }, []);
 
   return (
     <ScrollView

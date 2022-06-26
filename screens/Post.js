@@ -13,13 +13,13 @@ export default function Post() {
   const [test, setTest] = useState("");
 
   async function getUserById() {
-    const user = supabase.auth.currentUser.id;
+    const userId = supabase.auth.currentUser.id;
     console.log("user", user);
 
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", user)
+      .eq("user_id", userId)
       .single();
     setTest(data);
   }
