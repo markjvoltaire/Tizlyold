@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
 import Header from "../components/home/Header";
 import { useUser } from "../context/UserContext";
+import * as ImagePicker from "expo-image-picker";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
+  const [image, setImage] = useState(null);
 
   async function getUser() {
     const userId = supabase.auth.currentUser.id;
@@ -33,6 +35,9 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+ 
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -43,12 +48,7 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
-      <Image
-        style={styles.userBanner}
-        source={{
-          uri: user.bannerImage,
-        }}
-      />
+      <Text>{user.username}</Text>
     </ScrollView>
   );
 }

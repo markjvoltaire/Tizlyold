@@ -76,14 +76,14 @@ export async function editProfile() {
     .eq("user_id", userId);
 }
 
-export async function createProfileImage() {
+export async function createProfileImage(photo) {
   await supabase.storage
     .from("profile-images")
-    .upload(`public/${file.name}`, file, { upsert: true });
+    .upload(`public/${photo}`, { upsert: true });
 
   const { publicURL } = await supabase.storage
     .from("profile-images")
-    .getPublicUrl(`public/${file.name}`);
+    .getPublicUrl(`public/${photo}`);
 
   const resp = await supabase.from("profiles").insert({
     profileimage: publicURL,

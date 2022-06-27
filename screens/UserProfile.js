@@ -15,9 +15,12 @@ import ProfileNav from "../components/profile/ProfileNav";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
+import * as ImagePicker from "expo-image-picker";
 
 export default function UserProfile({ navigation }) {
   const { user, setUser } = useUser();
+  const [image, setImage] = useState(null);
+  const [imageData, setImageData] = useState(null);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -39,6 +42,53 @@ export default function UserProfile({ navigation }) {
     getUserProfile();
   }, []);
 
+  const uploadFromUri = async (photo) => {
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      console.log(error);
+
+      if (error) throw new Error(error.message);
+
+      return { ...photo, imageData: data };
+    } else {
+      return photo;
+    }
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    try {
+      return await uploadFromUri(photo);
+
+      console.log(result);
+    } catch (e) {
+      ErrorAlert({ title: "image upload", message: e.message });
+      return null;
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -58,19 +108,23 @@ export default function UserProfile({ navigation }) {
         source={require("../assets/fader.png")}
       />
 
-      <Image
-        style={styles.profileImage}
-        source={{
-          uri: user.profileimage,
+      <TouchableOpacity
+        onPress={async () => {
+          const resp = await pickImage();
+          if (resp?.imageData) {
+            setImage(resp.uri);
+            setImageData(resp?.imageData);
+          }
         }}
-      />
+      >
+        <Image
+          style={styles.profileImage}
+          source={{
+            uri: user.profileimage,
+          }}
+        />
+      </TouchableOpacity>
 
-      {/* <Image
-        style={styles.img}
-        source={{
-          uri: user.profileimage,
-        }}
-      /> */}
       <View style={styles.userinfoContainer}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
@@ -135,7 +189,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    top: 318,
+    top: 270,
   },
   backButton: {
     position: "absolute",

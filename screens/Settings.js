@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { supabase } from "../services/supabase";
-import { addUsername } from "../services/user";
+import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
 
 export default function Settings({ navigation }) {
@@ -24,6 +24,19 @@ export default function Settings({ navigation }) {
         console.log("supabase.auth.currentUser", supabase.auth.currentUser)
       );
   }
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
 
   return (
     <SafeAreaView
