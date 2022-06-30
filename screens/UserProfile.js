@@ -21,6 +21,7 @@ export default function UserProfile({ navigation }) {
   const { user, setUser } = useUser();
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -38,11 +39,18 @@ export default function UserProfile({ navigation }) {
   useEffect(() => {
     const getUserProfile = async () => {
       await getUserById();
+      setLoading(false);
     };
     getUserProfile();
   }, []);
 
+  if (loading) {
+    return <Text> Please Wait</Text>;
+  }
+
   const uploadFromUri = async (photo) => {
+    const userId = supabase.auth.currentUser.id;
+
     if (!photo.cancelled) {
       const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
 
@@ -61,7 +69,16 @@ export default function UserProfile({ navigation }) {
           upsert: false,
         });
 
-      console.log(error);
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`public/${fileName}`);
+
+      const resp = await supabase
+        .from("profiles")
+        .update({ profileimage: publicURL })
+        .eq("user_id", userId);
+
+      console.log("error", error);
 
       if (error) throw new Error(error.message);
 
@@ -81,9 +98,8 @@ export default function UserProfile({ navigation }) {
     });
 
     try {
+      console.log(photo);
       return await uploadFromUri(photo);
-
-      console.log(result);
     } catch (e) {
       ErrorAlert({ title: "image upload", message: e.message });
       return null;
@@ -125,6 +141,14 @@ export default function UserProfile({ navigation }) {
         />
       </TouchableOpacity>
 
+      {/* <Button
+        style={styles.testButton}
+        title="press me "
+        onPress={() => {
+          console.log(user);
+        }}
+      /> */}
+
       <View style={styles.userinfoContainer}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
@@ -138,6 +162,39 @@ export default function UserProfile({ navigation }) {
       </TouchableOpacity>
       <ProfileNav />
       <FullSeperator />
+
+      <View style={styles.paywall}>
+        <View style={styles.photosDiv}>
+          <Image
+            style={styles.photoBox}
+            source={require("../assets/subBox.png")}
+          />
+          <Text style={styles.photosTextTitle}>Photos</Text>
+          <Text style={styles.photosLength}>18</Text>
+        </View>
+        <View style={styles.videosDiv}>
+          <Image
+            style={styles.videosBox}
+            source={require("../assets/subBox.png")}
+          />
+          <Text style={styles.videosTextTitle}>Videos</Text>
+          <Text style={styles.videosLength}>32</Text>
+        </View>
+        <View style={styles.wrapsDiv}>
+          <Image
+            style={styles.wrapBox}
+            source={require("../assets/subBox.png")}
+          />
+          <Text style={styles.wrapsTextTitle}>Wraps</Text>
+          <Text style={styles.wrapsLength}>9</Text>
+        </View>
+        <TouchableOpacity>
+          <Image
+            style={styles.accessButton}
+            source={require("../assets/accessButton.png")}
+          />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -206,5 +263,91 @@ const styles = StyleSheet.create({
     width: 900,
     left: 1,
     top: 470,
+  },
+  photoBox: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    top: 575,
+    left: 20,
+  },
+  videosBox: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    top: 575,
+    left: 165,
+  },
+  wrapBox: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    top: 575,
+    left: 305,
+  },
+  testButton: {
+    position: "absolute",
+  },
+  paywall: {
+    position: "absolute",
+  },
+  photosDiv: {
+    position: "absolute",
+  },
+  videosDiv: {
+    position: "absolute",
+  },
+  wrapsDiv: {
+    position: "absolute",
+  },
+  photosTextTitle: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 14,
+    top: 600,
+    left: 45,
+  },
+  videosTextTitle: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 14,
+    top: 600,
+    left: 190,
+  },
+  wrapsTextTitle: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 14,
+    top: 600,
+    left: 330,
+  },
+  photosLength: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    top: 615,
+    left: 55,
+  },
+  videosLength: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    top: 615,
+    left: 200,
+  },
+  wrapsLength: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    top: 615,
+    left: 350,
+  },
+  accessButton: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 190,
+    height: 61,
+    top: 720,
+    left: 120,
   },
 });
