@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: "contain",
     top: 270,
+    borderRadius: 100,
   },
   backButton: {
     position: "absolute",
