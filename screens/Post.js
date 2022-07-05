@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Alert, TextInput, Button } from "react-native";
 import React, { useState, useEffect } from "react";
 import { getUser, getUsers } from "../services/user";
 import { supabase } from "../services/supabase";
+import { useLinkTo } from "@react-navigation/native";
 
 export default function Post() {
   const [loading, setLoading] = useState(true);
@@ -12,8 +13,11 @@ export default function Post() {
   const [displayName, setDisplayName] = useState("");
   const [test, setTest] = useState("");
 
+  const linkTo = useLinkTo();
+
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
+
     console.log("user", user);
 
     const { data } = await supabase
@@ -43,12 +47,7 @@ export default function Post() {
         backgroundColor: "white",
       }}
     >
-      <Button
-        title="pressMe"
-        onPress={() => {
-          console.log(test);
-        }}
-      />
+      <Button title="pressMe" onPress={() => linkTo("/ProfileDetail")} />
     </View>
   );
 }

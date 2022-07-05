@@ -36,8 +36,6 @@ export default function HomeScreen({ navigation }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
- 
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -48,7 +46,7 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
-      <Text>{user.username}</Text>
+      {/* <Text> user is {user.username}</Text> */}
     </ScrollView>
   );
 }

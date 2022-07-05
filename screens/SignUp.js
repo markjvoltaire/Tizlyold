@@ -74,11 +74,7 @@ export default function SignUp({ navigation }) {
         value={password}
       />
 
-      <TouchableOpacity
-        onPress={() =>
-          signUpWithEmail().then(() => navigation.navigate("Username"))
-        }
-      >
+      <TouchableOpacity onPress={() => signUpWithEmail()}>
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}

@@ -71,7 +71,7 @@ export default function UserProfile({ navigation }) {
 
       const { publicURL } = await supabase.storage
         .from("profile-images")
-        .getPublicUrl(`public/${fileName}`);
+        .getPublicUrl(`${fileName}`);
 
       const resp = await supabase
         .from("profiles")
