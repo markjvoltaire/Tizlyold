@@ -80,6 +80,14 @@ export default function UserProfile({ navigation }) {
 
       console.log("error", error);
 
+      useEffect(() => {
+        const getUserProfile = async () => {
+          await getUserById();
+          setLoading(false);
+        };
+        getUserProfile();
+      }, [photo]);
+
       if (error) throw new Error(error.message);
 
       return { ...photo, imageData: data };
@@ -127,6 +135,7 @@ export default function UserProfile({ navigation }) {
       <TouchableOpacity
         onPress={async () => {
           const resp = await pickImage();
+
           if (resp?.imageData) {
             setImage(resp.uri);
             setImageData(resp?.imageData);
@@ -194,6 +203,17 @@ export default function UserProfile({ navigation }) {
             source={require("../assets/accessButton.png")}
           />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("EditProfile");
+          }}
+        >
+          <Image
+            style={styles.editButton}
+            source={require("../assets/editprofile.png")}
+          />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -206,13 +226,21 @@ const styles = StyleSheet.create({
     right: -10,
     height: 455,
   },
+  editButton: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 410,
+    width: 160,
+    height: 30,
+    left: -15,
+  },
 
   displayname: {
     position: "absolute",
     height: 38,
     left: 75,
     right: 64.27,
-    top: 273,
+    top: 253,
     color: "white",
     fontWeight: "bold",
     fontSize: 22,
@@ -220,7 +248,7 @@ const styles = StyleSheet.create({
   username: {
     position: "absolute",
     color: "white",
-    top: 303,
+    top: 283,
     left: 75,
   },
 
@@ -229,7 +257,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 13,
     width: 400,
-    top: 345,
+    top: 325,
     left: 8,
   },
 
@@ -246,7 +274,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
-    top: 270,
+    top: 250,
     borderRadius: 100,
   },
   backButton: {
