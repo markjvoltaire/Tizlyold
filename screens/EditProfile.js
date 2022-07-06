@@ -22,32 +22,48 @@ export default function EditProfile({ navigation }) {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <Image
-        style={styles.verticleDiv}
-        source={require("../assets/verticleDiv.png")}
-      />
+      <Text style={styles.pageTitle}>Edit Profile</Text>
+
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton.png")}
+        />
+      </TouchableOpacity>
 
       <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
 
-      <View style={styles.userImages}>
-        <Image
-          style={styles.profileImage}
-          source={{
-            uri: user.profileimage,
-          }}
-        />
+      <View style={styles.imagesAndInputs}>
+        <Text style={styles.profileImageText}>Change Profile Image</Text>
+
+        <Text style={styles.profileBannerText}>Change Profile Banner</Text>
 
         <Image
-          style={styles.userBanner}
-          source={{
-            uri: user.bannerImage,
-          }}
+          style={styles.verticleDiv}
+          source={require("../assets/verticleDiv.png")}
         />
-      </View>
 
-      <View style={styles.inputs}>
-        <TextInput placeholder="Username" style={styles.username} />
-        <TextInput placeholder="Display Name" style={styles.displayName} />
+        <View style={styles.userImages}>
+          <Image
+            style={styles.profileImage}
+            source={{
+              uri: user.profileimage,
+            }}
+          />
+
+          <Image
+            style={styles.userBanner}
+            source={{
+              uri: user.bannerImage,
+            }}
+          />
+        </View>
+
+        <View style={styles.inputs}>
+          <TextInput placeholder="Username" style={styles.username} />
+          <TextInput placeholder="Display Name" style={styles.displayName} />
+          <TextInput placeholder="Bio" style={styles.bio} />
+        </View>
       </View>
 
       <Image
@@ -72,14 +88,9 @@ const styles = StyleSheet.create({
     Bordercolor: "red",
   },
 
-  // fullSeperator: {
-  //   borderBottomColor: "grey",
-  //   borderBottomWidth: 0.8,
-  //   opacity: 0.2,
-  //   width: 900,
-  //   left: 1,
-  //   top: 70,
-  // },
+  imagesAndInputs: {
+    bottom: 10,
+  },
 
   logo: {
     position: "absolute",
@@ -92,9 +103,9 @@ const styles = StyleSheet.create({
 
   pageTitle: {
     position: "absolute",
-    fontSize: 40,
-    top: 50,
-    left: 80,
+    fontSize: 25,
+    top: 140,
+    left: 30,
   },
 
   verticleDiv: {
@@ -121,6 +132,22 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     top: 150,
     borderRadius: 200,
+  },
+
+  profileImageText: {
+    position: "absolute",
+    top: 356,
+    fontSize: 13,
+    color: "#A1A1B3",
+    left: 45,
+  },
+
+  profileBannerText: {
+    position: "absolute",
+    top: 356,
+    fontSize: 13,
+    color: "#A1A1B3",
+    left: 240,
   },
 
   backButton: {
@@ -157,6 +184,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     width: 311,
     height: 50,
+    paddingLeft: 30,
+  },
+
+  bio: {
+    top: 410,
+    left: 55,
+    borderRadius: 25,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    width: 311,
+    height: 100,
     paddingLeft: 30,
   },
 });
