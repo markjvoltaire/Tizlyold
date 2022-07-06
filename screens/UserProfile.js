@@ -25,6 +25,8 @@ export default function UserProfile({ navigation }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  const HalfSeperator = () => <View style={styles.halfSep} />;
+
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
 
@@ -79,14 +81,6 @@ export default function UserProfile({ navigation }) {
         .eq("user_id", userId);
 
       console.log("error", error);
-
-      useEffect(() => {
-        const getUserProfile = async () => {
-          await getUserById();
-          setLoading(false);
-        };
-        getUserProfile();
-      }, [photo]);
 
       if (error) throw new Error(error.message);
 
@@ -171,6 +165,7 @@ export default function UserProfile({ navigation }) {
       </TouchableOpacity>
       <ProfileNav />
       <FullSeperator />
+      {/* <HalfSeperator style={styles.halfSep} /> */}
 
       <View style={styles.paywall}>
         <View style={styles.photosDiv}>
@@ -197,6 +192,7 @@ export default function UserProfile({ navigation }) {
           <Text style={styles.wrapsTextTitle}>Wraps</Text>
           <Text style={styles.wrapsLength}>9</Text>
         </View>
+
         <TouchableOpacity>
           <Image
             style={styles.accessButton}
@@ -226,6 +222,14 @@ const styles = StyleSheet.create({
     right: -10,
     height: 455,
   },
+  halfSep: {
+    top: 655,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.6,
+    width: 300,
+    left: 60,
+  },
   editButton: {
     position: "absolute",
     resizeMode: "contain",
@@ -235,6 +239,14 @@ const styles = StyleSheet.create({
     left: -15,
   },
 
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 470,
+  },
   displayname: {
     position: "absolute",
     height: 38,
@@ -255,9 +267,9 @@ const styles = StyleSheet.create({
   bio: {
     position: "absolute",
     color: "white",
-    fontSize: 13,
+    fontSize: 12,
     width: 400,
-    top: 325,
+    top: 320,
     left: 8,
   },
 
@@ -284,14 +296,6 @@ const styles = StyleSheet.create({
     height: 30,
     left: 41,
     top: 90,
-  },
-  fullSeperator: {
-    borderBottomColor: "grey",
-    borderBottomWidth: 0.8,
-    opacity: 0.2,
-    width: 900,
-    left: 1,
-    top: 470,
   },
   photoBox: {
     position: "absolute",

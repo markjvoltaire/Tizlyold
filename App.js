@@ -22,6 +22,8 @@ import Post from "./screens/Post";
 import SignUpSuccess from "./screens/SignUpSuccess";
 import EditProfile from "./screens/EditProfile";
 import ProfileDetail from "./screens/ProfileDetail";
+import BioScreen from "./screens/BioScreen";
+import ProfileImage from "./screens/ProfileImage";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,10 +39,23 @@ export default function App() {
           />
 
           <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
             name="Username"
             component={UserNames}
             options={{ headerShown: false }}
           />
+
           <Stack.Screen
             name="HomeScreen"
             component={BottomTabNavigator}
@@ -52,21 +67,16 @@ export default function App() {
             component={SignUpSuccess}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-
-          <Stack.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{ headerShown: false }}
-          />
 
           <Stack.Screen
             name="Explore"
             component={Explore}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Bio"
+            component={BioScreen}
             options={{ headerShown: false }}
           />
 

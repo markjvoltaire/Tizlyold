@@ -32,7 +32,7 @@ export default function UserNames({ navigation }) {
         source={require("../assets/Tizlymed.png")}
       />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+      <TouchableOpacity onPress={() => navigation.navigate("ProfileImage")}>
         <Image
           style={styles.backButton}
           source={require("../assets/backButton.png")}

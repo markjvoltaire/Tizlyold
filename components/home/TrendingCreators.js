@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
+import { useLinkTo } from "@react-navigation/native";
 
 export default function TrendingCreators({ navigation }) {
+  const linkTo = useLinkTo();
   return (
     <View style={styles.container}>
       <Text style={styles.trendTitle}>Trending Creator 🔥</Text>
       <View style={styles.iconContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => linkTo("/HomeScreen/me")}>
           <Image
             style={styles.userIcon}
             source={require("../../assets/druski.jpg")}
