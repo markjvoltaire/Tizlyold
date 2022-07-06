@@ -22,6 +22,7 @@ export default function UserProfile({ navigation }) {
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [stateImage, setStateImage] = useState(false);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -138,9 +139,13 @@ export default function UserProfile({ navigation }) {
       >
         <Image
           style={styles.profileImage}
-          source={{
-            uri: user.profileimage,
-          }}
+          source={
+            user.profileimage
+              ? {
+                  uri: user.profileimage,
+                }
+              : require("../assets/noImage.png")
+          }
         />
       </TouchableOpacity>
 
