@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button,
   Alert,
+  ErrorAlert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
@@ -91,6 +92,14 @@ export default function UserProfile({ navigation }) {
     }
   };
 
+  if (user === undefined) {
+    navigation.navigate("Username");
+  }
+
+  if (user.bannerImage === undefined) {
+    navigation.navigate("Username");
+  }
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let photo = await ImagePicker.launchImageLibraryAsync({
@@ -117,9 +126,14 @@ export default function UserProfile({ navigation }) {
     >
       <Image
         style={styles.userBanner}
-        source={{
-          uri: user.bannerImage,
-        }}
+        u
+        source={
+          user.bannerImage
+            ? {
+                uri: user.bannerImage,
+              }
+            : require("../assets/noImage.png")
+        }
       />
 
       <Image

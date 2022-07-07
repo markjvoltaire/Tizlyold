@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
-import { getUserById, signIn, signInUser } from "../services/user";
+import { signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 
@@ -49,8 +49,9 @@ export default function Login({ navigation }) {
       await getUserById();
     };
     getUserProfile();
-    console.log("user", user);
   }, []);
+
+  console.log("user", user);
 
   return (
     <ScrollView

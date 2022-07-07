@@ -11,11 +11,14 @@ import { supabase } from "../services/supabase";
 import Header from "../components/home/Header";
 import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
+import { useLinkTo } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
   const [image, setImage] = useState(null);
+  const linkTo = useLinkTo();
 
+  console.log("linkTo", linkTo);
   async function getUser() {
     const userId = supabase.auth.currentUser.id;
 
@@ -25,6 +28,10 @@ export default function HomeScreen({ navigation }) {
       .eq("user_id", userId)
       .single();
     setUser(data);
+
+    console.log("data", data);
+
+    console.log("userId", userId);
   }
 
   useEffect(() => {

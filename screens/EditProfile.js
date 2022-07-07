@@ -6,14 +6,145 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Pressable,
+  ErrorAlert,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
+import * as ImagePicker from "expo-image-picker";
 
 export default function EditProfile({ navigation }) {
+  const [image, setImage] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const { user, setUser } = useUser();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  const uploadProfileFromUri = async (photo) => {
+    const userId = supabase.auth.currentUser.id;
+
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`${fileName}`);
+
+      const resp = await supabase
+        .from("profiles")
+        .update({ profileimage: publicURL })
+        .eq("user_id", userId);
+
+      console.log("error", error);
+
+      if (error) throw new Error(error.message);
+
+      return { ...photo, imageData: data };
+    } else {
+      return photo;
+    }
+  };
+
+  const uploadBannerFromUri = async (photo) => {
+    const userId = supabase.auth.currentUser.id;
+
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`${fileName}`);
+
+      const resp = await supabase
+        .from("profiles")
+        .update({ bannerImage: publicURL })
+        .eq("user_id", userId);
+
+      console.log("error", error);
+
+      if (error) throw new Error(error.message);
+
+      return { ...photo, imageData: data };
+    } else {
+      return photo;
+    }
+  };
+
+  if (user === undefined) {
+    navigation.navigate("Username");
+  }
+
+  if (user.bannerImage === undefined) {
+    navigation.navigate("Username");
+  }
+
+  const pickProfileImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    try {
+      console.log(photo);
+      return await uploadProfileFromUri(photo);
+    } catch (e) {
+      ErrorAlert({ title: "image upload", message: e.message });
+      return null;
+    }
+  };
+
+  const pickBannerImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    try {
+      console.log(photo);
+      return await uploadBannerFromUri(photo);
+    } catch (e) {
+      ErrorAlert({ title: "image upload", message: e.message });
+      return null;
+    }
+  };
 
   return (
     <SafeAreaView
@@ -43,27 +174,66 @@ export default function EditProfile({ navigation }) {
           source={require("../assets/verticleDiv.png")}
         />
 
-        <View style={styles.userImages}>
-          <Image
-            style={styles.profileImage}
-            source={{
-              uri: user.profileimage,
-            }}
-          />
-
-          <Image
-            style={styles.userBanner}
-            source={{
-              uri: user.bannerImage,
-            }}
-          />
-        </View>
-
         <View style={styles.inputs}>
           <TextInput placeholder="Username" style={styles.username} />
           <TextInput placeholder="Display Name" style={styles.displayName} />
           <TextInput placeholder="Bio" style={styles.bio} />
         </View>
+      </View>
+
+      <View style={styles.userProfileImages}>
+        <TouchableOpacity
+          onPress={async () => {
+            const resp = await pickProfileImage();
+
+            if (resp?.imageData) {
+              setImage(resp.uri);
+              setImageData(resp?.imageData);
+            }
+          }}
+        >
+          <Image
+            style={styles.profileImage}
+            source={
+              user.profileimage
+                ? {
+                    uri: user.profileimage,
+                  }
+                : require("../assets/noImage.png")
+            }
+          />
+          <Image
+            style={styles.bluePlusProfile}
+            source={require("../assets/bluePlus.png")}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={async () => {
+            const resp = await pickBannerImage();
+
+            if (resp?.imageData) {
+              setImage(resp.uri);
+              setImageData(resp?.imageData);
+            }
+          }}
+        >
+          <Image
+            style={styles.userBanner}
+            u
+            source={
+              user.bannerImage
+                ? {
+                    uri: user.bannerImage,
+                  }
+                : require("../assets/noImage.png")
+            }
+          />
+          <Image
+            style={styles.bluePlusBanner}
+            source={require("../assets/bluePlus.png")}
+          />
+        </TouchableOpacity>
       </View>
 
       <Image
@@ -83,13 +253,26 @@ const styles = StyleSheet.create({
     top: 790,
   },
 
-  holder: {
-    height: 52,
-    Bordercolor: "red",
+  imagesAndInputs: {
+    position: "absolute",
   },
 
-  imagesAndInputs: {
-    bottom: 10,
+  bluePlusProfile: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 228,
+    height: 30,
+    width: 30,
+    left: 114,
+  },
+
+  bluePlusBanner: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 228,
+    height: 30,
+    width: 30,
+    left: 325,
   },
 
   logo: {
@@ -119,7 +302,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 140,
   },
-  userImages: {
+  userProfileImages: {
     position: "absolute",
     top: 60,
   },
