@@ -34,7 +34,7 @@ export default function Explore({ navigation }) {
         <FullSeperator />
         <HomeBoard />
         <HalfSeperator />
-        <TrendingCreators />
+        <TrendingCreators navigation={navigation} />
         <HalfSeperator2 />
         <TrendingTag />
       </SafeAreaView>

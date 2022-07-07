@@ -127,7 +127,6 @@ export default function UserProfile({ navigation }) {
     >
       <Image
         style={styles.userBanner}
-        u
         source={
           user.bannerImage
             ? {

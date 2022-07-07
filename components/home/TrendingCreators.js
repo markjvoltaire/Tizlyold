@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLinkTo } from "@react-navigation/native";
 import { getUserEmail, getUsers } from "../../services/user";
+import ProfileDetail from "../../screens/ProfileDetail";
 
 export default function TrendingCreators({ navigation }) {
   const [profiles, setProfiles] = useState([]);
@@ -42,11 +43,23 @@ export default function TrendingCreators({ navigation }) {
         return (
           <>
             <View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProfileDetail", {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    profileimage: user.profileimage,
+                    bannerImage: user.bannerImage,
+                    bio: user.bio,
+                    displayName: user.displayName,
+                  })
+                }
+              >
                 <Image
                   style={{
-                    height: 80,
-                    width: 80,
+                    height: 93,
+                    width: 93,
                     borderRadius: 5,
 
                     marginHorizontal: 15,
@@ -54,7 +67,7 @@ export default function TrendingCreators({ navigation }) {
                   }}
                   source={{ uri: user.profileimage }}
                 />
-                <Text style={styles.username}>@{user.username}</Text>
+                <Text style={styles.username}>{user.username}</Text>
               </TouchableOpacity>
             </View>
           </>
