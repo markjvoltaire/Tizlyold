@@ -27,13 +27,36 @@ export default function TrendingCreators({ navigation }) {
       style={{
         justifyContent: "center",
         alignItems: "center",
+        position: "absolute",
+        flexDirection: "row",
+        display: "flex",
+        flexWrap: "wrap",
+        flexBasis: 33.333333,
+        width: 400,
+        left: 10,
+        top: 20,
+        height: 100,
       }}
     >
       {users.map((user) => {
         return (
           <>
-            <Text>{user.email}</Text>
-            <Image source={{ uri: user.profileimage }} />
+            <View>
+              <TouchableOpacity>
+                <Image
+                  style={{
+                    height: 80,
+                    width: 80,
+                    borderRadius: 5,
+
+                    marginHorizontal: 15,
+                    marginVertical: 8,
+                  }}
+                  source={{ uri: user.profileimage }}
+                />
+                <Text style={styles.username}>@{user.username}</Text>
+              </TouchableOpacity>
+            </View>
           </>
         );
       })}
@@ -56,19 +79,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
+  username: {
+    fontWeight: "bold",
+    color: "#5C5C5C",
+    textAlign: "center",
+  },
+
   userIcon: {
-    marginLeft: 10,
-    resizeMode: "contain",
-    marginHorizontal: 2,
-    top: 50,
-    width: 127,
-    height: 123,
-    right: 20,
+    position: "absolute",
+    height: 40,
+    width: 40,
   },
 
   trendTitle: {
     position: "absolute",
-    top: 3,
+
     fontWeight: "bold",
   },
 
