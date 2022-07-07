@@ -97,8 +97,8 @@ export default function UserProfile({ navigation }) {
     navigation.navigate("Username");
   }
 
-  if (user.bannerImage === undefined) {
-    navigation.navigate("Username");
+  if (user.profileimage === null) {
+    console.log("hello");
   }
 
   const pickImage = async () => {
@@ -276,6 +276,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 22,
+    width: 400,
   },
   username: {
     position: "absolute",

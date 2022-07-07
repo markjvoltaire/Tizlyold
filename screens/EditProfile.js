@@ -33,7 +33,7 @@ export default function EditProfile({ navigation }) {
       setLoading(false);
     };
     getUserProfile();
-  }, [user.profileimage]);
+  }, []);
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -285,7 +285,7 @@ export default function EditProfile({ navigation }) {
       <TouchableOpacity
         onPress={() =>
           editProfile(username, displayName, bio).then(() => {
-            navigation.navigate("UserProfile");
+            navigation.navigate("UserScreen");
           })
         }
       >

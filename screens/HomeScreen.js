@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
@@ -42,6 +43,10 @@ export default function HomeScreen({ navigation }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  if (user === null) {
+    navigation.navigate("Username");
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -53,6 +58,8 @@ export default function HomeScreen({ navigation }) {
         />
       </TouchableOpacity>
       {/* <Text> user is {user.username}</Text> */}
+
+      <Button title="pressme" onPress={() => console.log(user)} />
     </ScrollView>
   );
 }

@@ -1,37 +1,42 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLinkTo } from "@react-navigation/native";
+import { getUserEmail, getUsers } from "../../services/user";
 
 export default function TrendingCreators({ navigation }) {
-  const linkTo = useLinkTo();
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getProfiles = async () => {
+      const resp = await getUsers();
+
+      setProfiles(resp);
+      setLoading(false);
+    };
+    getProfiles();
+  }, []);
+  if (loading) {
+    return <Text> loading</Text>;
+  }
+
+  const users = profiles.body;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.trendTitle}>Trending Creator 🔥</Text>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => linkTo("/HomeScreen/me")}>
-          <Image
-            style={styles.userIcon}
-            source={require("../../assets/druski.jpg")}
-          />
-          <Text style={styles.userName1}>Druski</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image
-            style={styles.userIcon}
-            source={require("../../assets/wallo.jpg")}
-          />
-          <Text style={styles.userName2}>Millon Dollar Worth of Game </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image
-            style={styles.userIcon}
-            source={require("../../assets/taylor.jpg")}
-          />
-          <Text style={styles.userName3}>DJ Taylor</Text>
-        </TouchableOpacity>
-      </View>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {users.map((user) => {
+        return (
+          <>
+            <Text>{user.email}</Text>
+            <Image source={{ uri: user.profileimage }} />
+          </>
+        );
+      })}
     </View>
   );
 }

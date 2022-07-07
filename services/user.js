@@ -36,7 +36,9 @@ export async function addUser(username, displayName) {
 }
 
 export async function getUsers() {
-  const { data: profiles, error } = await supabase.from("profiles").select("*");
+  const resp = await supabase.from("profiles").select("*");
+
+  return resp;
 }
 
 export async function getUserByIds() {

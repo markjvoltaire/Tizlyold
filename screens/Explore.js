@@ -15,7 +15,7 @@ import HomeBoard from "../components/home/HomeBoard";
 import TrendingCreators from "../components/home/TrendingCreators";
 import TrendingTag from "../components/home/TrendingTag";
 import MainStackNavigator from "../navigation/StackNavigator";
-import { getUsername, getUser } from "../services/user";
+import { getUsername, getUsers } from "../services/user";
 
 export default function Explore({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -24,9 +24,8 @@ export default function Explore({ navigation }) {
 
   const HalfSeperator2 = () => <View style={styles.halfSeperator2} />;
 
-  const [username, setUsername] = useState("");
-  const [user, setUser] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
