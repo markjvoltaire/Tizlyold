@@ -39,7 +39,7 @@ export async function getUsers() {
   const { data: profiles, error } = await supabase.from("profiles").select("*");
 }
 
-export async function getUserById() {
+export async function getUserByIds() {
   const { user, setUser } = useUser();
   const userId = supabase.auth.currentUser.id;
   console.log("user", userId);
@@ -67,12 +67,12 @@ export async function signUp(email, password) {
   return { user, error };
 }
 
-export async function editProfile() {
+export async function editProfile(username, displayName, bio) {
   const userId = supabase.auth.currentUser.id;
 
   const { data, error } = await supabase
     .from("profiles")
-    .update({ username: username, displayName: displayName })
+    .update({ username: username, displayName: displayName, bio: bio })
     .eq("user_id", userId);
 }
 

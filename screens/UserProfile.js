@@ -24,6 +24,7 @@ export default function UserProfile({ navigation }) {
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [stateImage, setStateImage] = useState(false);
+  const userProfileImage = user.profileimage;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -46,7 +47,7 @@ export default function UserProfile({ navigation }) {
       setLoading(false);
     };
     getUserProfile();
-  }, []);
+  }, [user.profileimage]);
 
   if (loading) {
     return <Text> Please Wait</Text>;

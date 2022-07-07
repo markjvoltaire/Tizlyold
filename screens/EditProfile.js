@@ -10,15 +10,43 @@ import {
   ErrorAlert,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
+import { getUserByIds } from "../services/user";
+import { editProfile } from "../services/user";
 
 export default function EditProfile({ navigation }) {
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
   const { user, setUser } = useUser();
+  const [loading, setLoading] = useState(true);
+
+  const [username, setUsername] = useState(user.username);
+  const [displayName, setDisplayName] = useState(user.displayName);
+  const [bio, setBio] = useState(user.bio);
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      await getUserById();
+      setLoading(false);
+    };
+    getUserProfile();
+  }, [user.profileimage]);
+
+  async function getUserById() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    setUser(data);
+  }
+
+  console.log("userdsd", user);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -91,6 +119,8 @@ export default function EditProfile({ navigation }) {
         .from("profiles")
         .update({ bannerImage: publicURL })
         .eq("user_id", userId);
+
+      getUserByIds();
 
       console.log("error", error);
 
@@ -175,9 +205,25 @@ export default function EditProfile({ navigation }) {
         />
 
         <View style={styles.inputs}>
-          <TextInput placeholder="Username" style={styles.username} />
-          <TextInput placeholder="Display Name" style={styles.displayName} />
-          <TextInput placeholder="Bio" style={styles.bio} />
+          <TextInput
+            placeholder="Username"
+            style={styles.username}
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
+          <TextInput
+            placeholder="Display Name"
+            style={styles.displayName}
+            value={displayName}
+            onChangeText={(text) => setDisplayName(text)}
+          />
+
+          <TextInput
+            placeholder="Bio"
+            style={styles.bio}
+            value={bio}
+            onChangeText={(text) => setBio(text)}
+          />
         </View>
       </View>
 
@@ -236,10 +282,18 @@ export default function EditProfile({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Image
-        style={styles.button}
-        source={require("../assets/continueButton.png")}
-      />
+      <TouchableOpacity
+        onPress={() =>
+          editProfile(username, displayName, bio).then(() => {
+            navigation.navigate("UserProfile");
+          })
+        }
+      >
+        <Image
+          style={styles.button}
+          source={require("../assets/continueButton.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -250,7 +304,7 @@ const styles = StyleSheet.create({
     width: 311,
     height: 50,
     left: 52,
-    top: 790,
+    top: 750,
   },
 
   imagesAndInputs: {

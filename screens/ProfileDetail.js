@@ -5,7 +5,6 @@ import React from "react";
 export default function ProfileDetail({ navigation }) {
   const linkTo = useLinkTo();
 
-  console.log("linkTo", linkTo);
   return (
     <View>
       <Text>Profile</Text>

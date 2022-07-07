@@ -18,7 +18,6 @@ export default function HomeScreen({ navigation }) {
   const [image, setImage] = useState(null);
   const linkTo = useLinkTo();
 
-  console.log("linkTo", linkTo);
   async function getUser() {
     const userId = supabase.auth.currentUser.id;
 
