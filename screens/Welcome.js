@@ -19,6 +19,7 @@ export default function Welcome({ navigation }) {
     >
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
       <Image style={styles.tagLine} source={require("../assets/word.png")} />
+
       <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
 
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>

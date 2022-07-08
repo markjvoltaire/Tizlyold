@@ -11,6 +11,7 @@ import Settings from "../screens/Settings";
 import Welcome from "../screens/Welcome";
 import UserProfile from "../screens/UserProfile";
 import Post from "../screens/Post";
+import UserProfileSubscribers from "../screens/UserProfileSubscribers";
 
 const Stack = createStackNavigator();
 
@@ -95,6 +96,14 @@ const MainStackNavigator = () => {
   );
 };
 
+const ProfileSubscriberStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="UserSubcriber" component={UserProfileSubscribers} />
+    </Stack.Navigator>
+  );
+};
+
 export {
   HomeStackNavigator,
   ExploreStackNavigator,
@@ -105,4 +114,5 @@ export {
   MainStackNavigator,
   UsernameStackNavigator,
   PostStackNavigator,
+  ProfileSubscriberStackNavigator,
 };

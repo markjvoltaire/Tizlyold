@@ -46,7 +46,6 @@ export default function EditProfile({ navigation }) {
     setUser(data);
   }
 
-  console.log("userdsd", user);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 

@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useLinkTo } from "@react-navigation/native";
 import { getUserEmail, getUsers } from "../../services/user";
 import ProfileDetail from "../../screens/ProfileDetail";
+import { useUser } from "../../context/UserContext";
 
-export default function TrendingCreators({ navigation }) {
+export default function TrendingCreators({ navigation, route }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const getProfiles = async () => {
@@ -33,16 +35,19 @@ export default function TrendingCreators({ navigation }) {
         display: "flex",
         flexWrap: "wrap",
         flexBasis: 33.333333,
-        width: 400,
-        left: 10,
-        top: 20,
+        width: 500,
+        right: -40,
+        top: 50,
         height: 100,
       }}
     >
+      <View>
+        <Text style={styles.trendTitle}> TrendingCreators </Text>
+      </View>
       {users.map((user) => {
         return (
           <>
-            <View>
+            <View style={styles.trendingUsers}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProfileDetail", {
@@ -53,17 +58,18 @@ export default function TrendingCreators({ navigation }) {
                     bannerImage: user.bannerImage,
                     bio: user.bio,
                     displayName: user.displayName,
+                    path: user.username,
                   })
                 }
               >
                 <Image
                   style={{
-                    height: 93,
-                    width: 93,
+                    height: 70,
+                    width: 70,
                     borderRadius: 5,
 
-                    marginHorizontal: 15,
-                    marginVertical: 8,
+                    marginHorizontal: 35,
+                    marginVertical: 10,
                   }}
                   source={{ uri: user.profileimage }}
                 />
@@ -96,6 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#5C5C5C",
     textAlign: "center",
+    fontSize: 12,
   },
 
   userIcon: {
@@ -106,30 +113,9 @@ const styles = StyleSheet.create({
 
   trendTitle: {
     position: "absolute",
+    bottom: 70,
+    left: 20,
 
     fontWeight: "bold",
-  },
-
-  userName1: {
-    position: "absolute",
-    top: 189,
-    left: 25,
-    fontWeight: "bold",
-    color: "#5C5C5C",
-  },
-  userName2: {
-    position: "absolute",
-    top: 185,
-    left: 6,
-    width: 110,
-    fontWeight: "bold",
-    color: "#5C5C5C",
-  },
-  userName3: {
-    position: "absolute",
-    top: 189,
-    left: 15,
-    fontWeight: "bold",
-    color: "#5C5C5C",
   },
 });

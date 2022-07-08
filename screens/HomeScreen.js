@@ -17,7 +17,6 @@ import { useLinkTo } from "@react-navigation/native";
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
   const [image, setImage] = useState(null);
-  const linkTo = useLinkTo();
 
   async function getUser() {
     const userId = supabase.auth.currentUser.id;
@@ -28,10 +27,6 @@ export default function HomeScreen({ navigation }) {
       .eq("user_id", userId)
       .single();
     setUser(data);
-
-    console.log("data", data);
-
-    console.log("userId", userId);
   }
 
   useEffect(() => {
@@ -57,8 +52,6 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
-      {/* <Text> user is {user.username}</Text> */}
-
       <Button title="pressme" onPress={() => console.log(user)} />
     </ScrollView>
   );
@@ -70,6 +63,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
   },
+
+  profileimage: {
+    width: 100,
+  },
+
   fullSeperator: {
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,

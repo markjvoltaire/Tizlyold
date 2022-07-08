@@ -18,7 +18,7 @@ import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
 
-export default function UserProfile({ navigation }) {
+export default function UserProfile({ navigation, route }) {
   const { user, setUser } = useUser();
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
@@ -29,6 +29,8 @@ export default function UserProfile({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const HalfSeperator = () => <View style={styles.halfSep} />;
+
+  console.log("route from user profile", route.params);
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -186,50 +188,16 @@ export default function UserProfile({ navigation }) {
       <FullSeperator />
       {/* <HalfSeperator style={styles.halfSep} /> */}
 
-      <View style={styles.paywall}>
-        <View style={styles.photosDiv}>
-          <Image
-            style={styles.photoBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.photosTextTitle}>Photos</Text>
-          <Text style={styles.photosLength}>18</Text>
-        </View>
-        <View style={styles.videosDiv}>
-          <Image
-            style={styles.videosBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.videosTextTitle}>Videos</Text>
-          <Text style={styles.videosLength}>32</Text>
-        </View>
-        <View style={styles.wrapsDiv}>
-          <Image
-            style={styles.wrapBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.wrapsTextTitle}>Wraps</Text>
-          <Text style={styles.wrapsLength}>9</Text>
-        </View>
-
-        <TouchableOpacity>
-          <Image
-            style={styles.accessButton}
-            source={require("../assets/accessButton.png")}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("EditProfile");
-          }}
-        >
-          <Image
-            style={styles.editButton}
-            source={require("../assets/editprofile.png")}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("EditProfile");
+        }}
+      >
+        <Image
+          style={styles.editButton}
+          source={require("../assets/editprofile.png")}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -252,7 +220,7 @@ const styles = StyleSheet.create({
   editButton: {
     position: "absolute",
     resizeMode: "contain",
-    top: 410,
+    top: 355,
     width: 160,
     height: 30,
     left: -15,
@@ -287,10 +255,11 @@ const styles = StyleSheet.create({
   bio: {
     position: "absolute",
     color: "white",
-    fontSize: 12,
+    fontSize: 15,
     width: 400,
     top: 320,
     left: 8,
+    fontWeight: "800",
   },
 
   followbutton: {

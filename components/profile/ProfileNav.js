@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
 
-export default function ProfileNav() {
+export default function ProfileNav({ navigation }) {
   return (
     <View style={styles.profileNav}>
       <TouchableOpacity>
         <Text style={styles.home}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("UserSubscriber")}>
         <Text style={styles.subscribers}>Subscribers</Text>
       </TouchableOpacity>
 

@@ -51,7 +51,7 @@ export default function Login({ navigation }) {
     getUserProfile();
   }, []);
 
-  console.log("user", user);
+
 
   return (
     <ScrollView

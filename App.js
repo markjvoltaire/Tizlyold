@@ -24,6 +24,7 @@ import EditProfile from "./screens/EditProfile";
 import ProfileDetail from "./screens/ProfileDetail";
 import BioScreen from "./screens/BioScreen";
 import ProfileImage from "./screens/ProfileImage";
+import UserProfileSubscribers from "./screens/UserProfileSubscribers";
 
 const Stack = createNativeStackNavigator();
 
@@ -119,6 +120,12 @@ export default function App() {
           <Stack.Screen
             name="ProfileDetail"
             component={ProfileDetail}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="UserSubscriber"
+            component={UserProfileSubscribers}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
