@@ -22,7 +22,17 @@ export default function Subscriptions({ navigation }) {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
-      <Text style={{ paddingLeft: 155 }}>Subscriptions</Text>
+      <View style={styles.pageTitle}>
+        <Text
+          style={{
+            position: "absolute",
+            fontSize: 20,
+            fontWeight: "600",
+          }}
+        >
+          Subscriptions
+        </Text>
+      </View>
     </ScrollView>
   );
 }
@@ -47,5 +57,9 @@ const styles = StyleSheet.create({
     bottom: 270.7,
     width: 29,
     height: 29,
+  },
+  pageTitle: {
+    alignItems: "center",
+    bottom: 200,
   },
 });
