@@ -15,7 +15,6 @@ import UserProfile from "../screens/UserProfile";
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = (route) => {
-  console.log("route tab", route);
   return (
     <Tab.Navigator
       initialRouteName="Home"

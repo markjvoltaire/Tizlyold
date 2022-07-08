@@ -67,6 +67,13 @@ const styles = StyleSheet.create({
     height: 26,
     backgroundColor: "white",
   },
+  settingIcon: {
+    position: "absolute",
+    left: 368,
+    bottom: 270.7,
+    width: 29,
+    height: 29,
+  },
 
   drawer: {
     position: "absolute",

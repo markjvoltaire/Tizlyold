@@ -30,8 +30,6 @@ export default function UserProfile({ navigation, route }) {
 
   const HalfSeperator = () => <View style={styles.halfSep} />;
 
-  console.log("route from user profile", route.params);
-
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
 
