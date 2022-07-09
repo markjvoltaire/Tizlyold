@@ -35,6 +35,29 @@ export async function addUser(username, displayName) {
   ]);
 }
 
+export async function createPost(
+  title,
+  post,
+  description,
+  profileimage,
+  username,
+  displayName
+) {
+  const userId = supabase.auth.currentUser.id;
+  const { data, error } = await supabase.from("post").insert([
+    {
+      user_id: userId,
+      title: title,
+      post: post,
+      description: description,
+      profileimage: profileimage,
+      username: username,
+      email: supabase.auth.currentUser.email,
+      displayName: displayName,
+    },
+  ]);
+}
+
 export async function getUsers() {
   const resp = await supabase.from("profiles").select("*");
 

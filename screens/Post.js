@@ -15,30 +15,21 @@ import { supabase } from "../services/supabase";
 import { useLinkTo } from "@react-navigation/native";
 import Header from "../components/home/Header";
 import PostForm from "../components/post/PostForm";
+import { useUser } from "../context/UserContext";
 
 export default function Post({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [profileImage, setProfileImage] = useState("");
-  const [user, setUser] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [test, setTest] = useState("");
-
-  const linkTo = useLinkTo();
+  const { user, setUser } = useUser();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  async function getUserById() {
-    const userId = supabase.auth.currentUser.id;
+  // async function getUserById() {
+  //   const userId = supabase.auth.currentUser.id;
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    setTest(data);
-  }
+  console.log("user from post", user);
 
   useEffect(() => {
     const getUserProfile = async () => {

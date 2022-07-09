@@ -5,21 +5,32 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { createPost } from "../../services/user";
+import { useUser } from "../../context/UserContext";
 export default function PostForm({ navigation }) {
+  const [postTitle, setPostTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [post, setPost] = useState("");
+  const { user, setUser } = useUser();
+
+  console.log("user from post from", user.username);
+
+  const username = user.username;
+  const profileImage = user.profileimage;
+  const email = user.email;
+  const displayName = user.displayName;
+
   return (
     <View style={styles.postHeader}>
-      <Image
-        style={styles.postButton}
-        source={require("../../assets/post.png")}
-      />
-
       <TextInput
         style={styles.postTitle}
         fontWeight="600"
         placeholder="Post Title"
         placeholderTextColor="#393939"
+        value={postTitle}
       />
 
       <Text style={styles.postText}>Post</Text>
@@ -35,6 +46,7 @@ export default function PostForm({ navigation }) {
         style={styles.postDescription}
         placeholder="Post Description"
         placeholderTextColor="#393939"
+        value={description}
       />
 
       <Text style={styles.subHead}>Select From Gallery</Text>
@@ -43,6 +55,13 @@ export default function PostForm({ navigation }) {
         <Image
           style={styles.plusButton}
           source={require("../../assets/plusButton.png")}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => createPost(ti)}>
+        <Image
+          style={styles.postButton}
+          source={require("../../assets/post.png")}
         />
       </TouchableOpacity>
     </View>
@@ -62,7 +81,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 59,
     height: 32,
-    left: 320,
+    left: 120,
+    bottom: -5,
   },
 
   subHead: {
