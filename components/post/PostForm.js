@@ -8,20 +8,20 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
+
 import { createPost } from "../../services/user";
 import { useUser } from "../../context/UserContext";
+import { supabase } from "../../services/supabase";
 export default function PostForm({ navigation }) {
-  const [postTitle, setPostTitle] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [post, setPost] = useState("");
   const { user, setUser } = useUser();
 
-  console.log("user from post from", user.username);
-
   const username = user.username;
-  const profileImage = user.profileimage;
-  const email = user.email;
+  // const email = user.email;
   const displayName = user.displayName;
+  const profileImage = user.profileimage;
 
   return (
     <View style={styles.postHeader}>
@@ -30,7 +30,8 @@ export default function PostForm({ navigation }) {
         fontWeight="600"
         placeholder="Post Title"
         placeholderTextColor="#393939"
-        value={postTitle}
+        value={title}
+        onChangeText={(text) => setTitle(text)}
       />
 
       <Text style={styles.postText}>Post</Text>
@@ -47,6 +48,7 @@ export default function PostForm({ navigation }) {
         placeholder="Post Description"
         placeholderTextColor="#393939"
         value={description}
+        onChangeText={(text) => setDescription(text)}
       />
 
       <Text style={styles.subHead}>Select From Gallery</Text>
@@ -58,7 +60,11 @@ export default function PostForm({ navigation }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => createPost(ti)}>
+      <TouchableOpacity
+        onPress={() =>
+          createPost(title, description, username, displayName, profileImage)
+        }
+      >
         <Image
           style={styles.postButton}
           source={require("../../assets/post.png")}
