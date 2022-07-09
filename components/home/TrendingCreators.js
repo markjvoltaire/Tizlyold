@@ -8,7 +8,6 @@ import { useUser } from "../../context/UserContext";
 export default function TrendingCreators({ navigation, route }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useUser();
 
   useEffect(() => {
     const getProfiles = async () => {
@@ -24,6 +23,7 @@ export default function TrendingCreators({ navigation, route }) {
   }
 
   const users = profiles.body;
+  console.log("users", users);
 
   return (
     <View

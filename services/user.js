@@ -61,6 +61,11 @@ export async function getUsers() {
   return resp;
 }
 
+export async function getPosts() {
+  const resp = await supabase.from("post").select("*");
+  return resp;
+}
+
 export async function getUserByIds() {
   const { user, setUser } = useUser();
   const userId = supabase.auth.currentUser.id;

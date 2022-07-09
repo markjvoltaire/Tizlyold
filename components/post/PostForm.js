@@ -62,7 +62,13 @@ export default function PostForm({ navigation }) {
 
       <TouchableOpacity
         onPress={() =>
-          createPost(title, description, username, displayName, profileImage)
+          createPost(
+            title,
+            description,
+            username,
+            displayName,
+            profileImage
+          ).then(() => navigation.navigate("Home"))
         }
       >
         <Image
