@@ -27,28 +27,37 @@ export default function PostFeed({ posts }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
-    <View style={{ position: "absolute" }}>
+    <View style={{ position: "absolute", left: 60 }}>
       {posts.map((post) => {
         return (
           <View style={styles.post} key={post.id}>
             <Image
               style={{
+                position: "absolute",
                 marginHorizontal: 35,
                 borderRadius: 100,
-                height: 80,
-                width: 80,
+                height: 37,
+                width: 37,
+                top: 50,
+                right: 150,
               }}
               source={{ uri: post.profileImage }}
             />
-            <Text>{post.DisplayName}</Text>
-            <Text>@{post.username}</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+              {post.DisplayName}
+            </Text>
+            <Text
+              style={{ fontWeight: "600", color: "#73738B", paddingBottom: 10 }}
+            >
+              @{post.username}
+            </Text>
 
             <Image
               style={{ height: 200, width: 200, borderRadius: 12 }}
               source={{ uri: post.media }}
             />
 
-            <Text>{post.title}</Text>
+            <Text style={{ fontWeight: "800" }}>{post.title}</Text>
             <Text>{post.description}</Text>
           </View>
         );
