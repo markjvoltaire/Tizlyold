@@ -12,17 +12,77 @@ import React, { useState } from "react";
 import { createPost } from "../../services/user";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
+import * as ImagePicker from "expo-image-picker";
 export default function PostForm({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [post, setPost] = useState("");
-  const { user, setUser } = useUser();
+  const { user, setUser, userPost, setUserPost } = useUser();
 
   const username = user.username;
   // const email = user.email;
   const displayName = user.displayName;
   const profileImage = user.profileimage;
   const bio = user.bio;
+  console.log("userPost", userPost);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    try {
+      console.log(photo);
+      return await uploadProfileFromUri(photo);
+    } catch (e) {
+      ErrorAlert({ title: "image upload", message: e.message });
+      return null;
+    }
+  };
+
+  const uploadProfileFromUri = async (photo) => {
+    const userId = supabase.auth.currentUser.id;
+
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`${fileName}`);
+
+      const resp = await supabase
+        .from("post")
+        .update({ media: publicURL })
+        .eq("user_id", userId);
+
+      console.log("error", error);
+
+      if (error) throw new Error(error.message);
+
+      return { ...photo, imageData: data };
+    } else {
+      return photo;
+    }
+  };
 
   return (
     <View style={styles.postHeader}>
@@ -54,7 +114,16 @@ export default function PostForm({ navigation }) {
 
       <Text style={styles.subHead}>Select From Gallery</Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          const resp = await pickImage();
+
+          if (resp?.imageData) {
+            setImage(resp.uri);
+            setImageData(resp?.imageData);
+          }
+        }}
+      >
         <Image
           style={styles.plusButton}
           source={require("../../assets/plusButton.png")}
@@ -69,7 +138,8 @@ export default function PostForm({ navigation }) {
             username,
             displayName,
             profileImage,
-            bio
+            bio,
+            media
           ).then(() => navigation.navigate("Home"))
         }
       >

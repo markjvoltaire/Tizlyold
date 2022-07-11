@@ -18,11 +18,14 @@ import React from "react";
 export default function PostFeedFlatList({ posts, route, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  console.log("posts", posts);
-
   return (
     <View
-      style={{ backgroundColor: "#FFFFFF", top: 200, paddingBottom: 100 }}
+      style={{
+        backgroundColor: "#FFFFFF",
+        top: 200,
+        paddingBottom: 100,
+        left: 7,
+      }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
@@ -38,7 +41,7 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
           <>
             <View style={{ paddingBottom: 60, alignItems: "center" }}>
               <FullSeperator />
-              <View style={{ alignItems: "center", top: 10 }}>
+              <View style={{ alignItems: "center", top: 19 }}>
                 <View style={{ alignItems: "flex-start" }}>
                   <TouchableOpacity
                     onPress={() =>

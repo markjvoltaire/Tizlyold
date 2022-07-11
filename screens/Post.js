@@ -16,6 +16,7 @@ import { useLinkTo } from "@react-navigation/native";
 import Header from "../components/home/Header";
 import PostForm from "../components/post/PostForm";
 import { useUser } from "../context/UserContext";
+import * as ImagePicker from "expo-image-picker";
 
 export default function Post({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,106 @@ export default function Post({ navigation }) {
     };
     getUserProfile();
   }, []);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    try {
+      console.log(photo);
+      return await uploadProfileFromUri(photo);
+    } catch (e) {
+      ErrorAlert({ title: "image upload", message: e.message });
+      return null;
+    }
+  };
+
+  const uploadProfileFromUri = async (photo) => {
+    const userId = supabase.auth.currentUser.id;
+
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`${fileName}`);
+
+      const resp = await supabase
+        .from("profiles")
+        .update({ profileimage: publicURL })
+        .eq("user_id", userId);
+
+      console.log("error", error);
+
+      if (error) throw new Error(error.message);
+
+      return { ...photo, imageData: data };
+    } else {
+      return photo;
+    }
+  };
+
+  const uploadBannerFromUri = async (photo) => {
+    const userId = supabase.auth.currentUser.id;
+
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`${fileName}`);
+
+      const resp = await supabase
+        .from("profiles")
+        .update({ bannerImage: publicURL })
+        .eq("user_id", userId);
+
+      getUserByIds();
+
+      console.log("error", error);
+
+      if (error) throw new Error(error.message);
+
+      return { ...photo, imageData: data };
+    } else {
+      return photo;
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

@@ -41,7 +41,8 @@ export async function createPost(
   username,
   displayName,
   profileimage,
-  bio
+  bio,
+  media
 ) {
   const userId = supabase.auth.currentUser.id;
   const { data, error } = await supabase.from("post").insert([
@@ -53,6 +54,7 @@ export async function createPost(
       DisplayName: displayName,
       profileImage: profileimage,
       bio: bio,
+      media: media,
     },
   ]);
 }

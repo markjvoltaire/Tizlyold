@@ -23,6 +23,7 @@ import Header from "./components/home/Header";
 import { useState } from "react";
 
 import { UserProvider } from "./context/UserContext";
+
 import UserProfile from "./screens/UserProfile";
 import BottomTabNavigator from "./navigation/TabNavigator";
 import { ProfileStackNavigator } from "./navigation/StackNavigator";
@@ -35,111 +36,114 @@ import ProfileDetail from "./screens/ProfileDetail";
 import BioScreen from "./screens/BioScreen";
 import ProfileImage from "./screens/ProfileImage";
 import UserProfileSubscribers from "./screens/UserProfileSubscribers";
+import { PostProvider } from "./context/PostContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <UserProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Welcome"
-            component={Welcome}
-            options={{ headerShown: false }}
-          />
+      <PostProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Welcome"
+              component={Welcome}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Username"
-            component={UserNames}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Username"
+              component={UserNames}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="HomeScreen"
-            component={BottomTabNavigator}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="HomeScreen"
+              component={BottomTabNavigator}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="SignupSuccess"
-            component={SignUpSuccess}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="SignupSuccess"
+              component={SignUpSuccess}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Explore"
-            component={Explore}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Explore"
+              component={Explore}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Bio"
-            component={BioScreen}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Bio"
+              component={BioScreen}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Settings"
-            component={Settings}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Subscriptions"
-            component={Subscriptions}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Subscriptions"
+              component={Subscriptions}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="UserProfile"
-            component={UserProfile}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="UserProfile"
+              component={UserProfile}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Post"
-            component={Post}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Post"
+              component={Post}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Root"
-            component={ProfileStackNavigator}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="Root"
+              component={ProfileStackNavigator}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="ProfileDetail"
-            component={ProfileDetail}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="ProfileDetail"
+              component={ProfileDetail}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="UserSubscriber"
-            component={UserProfileSubscribers}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name="UserSubscriber"
+              component={UserProfileSubscribers}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PostProvider>
     </UserProvider>
   );
 }

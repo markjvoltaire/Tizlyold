@@ -17,12 +17,12 @@ import { getPosts } from "../services/user";
 import PostFeed from "../components/home/PostFeed";
 import PostFeedFlatList from "../components/home/PostFeedFlatList";
 import Header from "../components/home/Header";
+import { usePosts } from "../context/PostContext";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
+  const { post, setPost } = usePosts();
   const [image, setImage] = useState(null);
-
-  const [userPost, setuserPost] = useState([]);
 
   async function getUser() {
     const userId = supabase.auth.currentUser.id;
@@ -38,13 +38,13 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
-      setuserPost(resp);
+      setPost(resp);
     };
     getUserPost();
   }, []);
 
-  const posts = userPost.body;
-  console.log("posts", posts);
+  const posts = post.body;
+  console.log("posts from context", posts);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -61,6 +61,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" />
       <PostFeedFlatList posts={posts} />
       <View style={{ top: 45 }}>
         <Header navigation={navigation} />
