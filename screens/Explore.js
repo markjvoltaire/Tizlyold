@@ -30,7 +30,9 @@ export default function Explore({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView>
-        <Header />
+        <View style={{ top: 45 }}>
+          <Header navigation={navigation} />
+        </View>
         <FullSeperator />
         <HomeBoard />
         <HalfSeperator />

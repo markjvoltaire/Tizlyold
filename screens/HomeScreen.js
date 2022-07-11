@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
+import { StatusBar } from "expo-status-bar";
 
 import { useUser } from "../context/UserContext";
 import { getPosts } from "../services/user";

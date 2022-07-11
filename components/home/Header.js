@@ -9,11 +9,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { supabase } from "../../services/supabase";
+import { StatusBar } from "expo-status-bar";
 
 export default function Header({ navigation }) {
   const [query, setQuery] = useState("");
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" />
       <Image
         style={styles.logo}
         source={require("../../assets/tizlyicon.jpg")}
