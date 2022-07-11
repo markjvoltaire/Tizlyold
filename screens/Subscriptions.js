@@ -6,11 +6,19 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/home/Header";
 import HomeBoard from "../components/home/HomeBoard";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function Subscriptions({ navigation }) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana" },
+  ]);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -32,6 +40,16 @@ export default function Subscriptions({ navigation }) {
         >
           Subscriptions
         </Text>
+
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          placeholder="category"
+        />
       </View>
     </ScrollView>
   );

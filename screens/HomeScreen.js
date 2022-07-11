@@ -13,6 +13,7 @@ import Header from "../components/home/Header";
 import { useUser } from "../context/UserContext";
 import { getPosts } from "../services/user";
 import PostFeed from "../components/home/PostFeed";
+import PostFeedFlatList from "../components/home/PostFeedFlatList";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
@@ -57,7 +58,6 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Header />
       <FullSeperator />
       <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
         <Image
@@ -65,7 +65,9 @@ export default function HomeScreen({ navigation }) {
           source={require("../assets/Setting.jpg")}
         />
       </TouchableOpacity>
-      <PostFeed posts={posts} />
+      {/* <PostFeed posts={posts} /> */}
+      <Header />
+      <PostFeedFlatList posts={posts} />
     </ScrollView>
   );
 }
