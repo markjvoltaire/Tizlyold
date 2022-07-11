@@ -22,6 +22,7 @@ export default function PostForm({ navigation }) {
   // const email = user.email;
   const displayName = user.displayName;
   const profileImage = user.profileimage;
+  const bio = user.bio;
 
   return (
     <View style={styles.postHeader}>
@@ -67,7 +68,8 @@ export default function PostForm({ navigation }) {
             description,
             username,
             displayName,
-            profileImage
+            profileImage,
+            bio
           ).then(() => navigation.navigate("Home"))
         }
       >

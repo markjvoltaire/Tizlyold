@@ -1,5 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { useHeaderHeight } from "@react-navigation/elements";
 import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -11,6 +20,7 @@ import Explore from "./screens/Explore";
 import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Subscriptions";
 import Header from "./components/home/Header";
+import { useState } from "react";
 
 import { UserProvider } from "./context/UserContext";
 import UserProfile from "./screens/UserProfile";
@@ -140,5 +150,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  logo: {
+    position: "absolute",
+    height: 60,
+    width: 60,
+    resizeMode: "contain",
+    bottom: -20,
   },
 });

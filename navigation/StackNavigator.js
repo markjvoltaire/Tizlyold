@@ -27,7 +27,14 @@ const screenOptionStyle = {
 const HomeStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
     </Stack.Navigator>
   );
 };

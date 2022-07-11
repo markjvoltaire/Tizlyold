@@ -6,14 +6,16 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
-import Header from "../components/home/Header";
+
 import { useUser } from "../context/UserContext";
 import { getPosts } from "../services/user";
 import PostFeed from "../components/home/PostFeed";
 import PostFeedFlatList from "../components/home/PostFeedFlatList";
+import Header from "../components/home/Header";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
@@ -41,7 +43,7 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = userPost.body;
-  // console.log("posts", posts);
+  console.log("posts", posts);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -57,18 +59,12 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <FullSeperator />
-      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-        <Image
-          style={styles.settingIcon}
-          source={require("../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
-      {/* <PostFeed posts={posts} /> */}
-      <Header />
+    <View style={styles.container}>
       <PostFeedFlatList posts={posts} />
-    </ScrollView>
+      <View style={{ top: 45 }}>
+        <Header navigation={navigation} />
+      </View>
+    </View>
   );
 }
 
@@ -77,12 +73,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
+    bottom: 60,
   },
 
-  header: {
-    alignItems: "center",
-    bottom: 200,
-  },
   whyHeader: {
     position: "absolute",
     left: 88,

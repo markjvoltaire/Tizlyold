@@ -10,10 +10,10 @@ import {
 import React, { useState } from "react";
 import { supabase } from "../../services/supabase";
 
-export default function Header({ navigation }) {
+export default function HomeHeader() {
   const [query, setQuery] = useState("");
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
         style={styles.logo}
         source={require("../../assets/tizlyicon.jpg")}
@@ -25,7 +25,6 @@ export default function Header({ navigation }) {
           autoCapitalize="none"
           autoCorrect={false}
           onChangeText={(text) => setQuery(text)}
-          value={query}
         />
 
         <Image
@@ -47,22 +46,15 @@ export default function Header({ navigation }) {
           source={require("../../assets/noti.png")}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-        <Image
-          style={styles.settingIcon}
-          source={require("../../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    top: 30,
     backgroundColor: "white",
     left: 180,
-    bottom: 380,
   },
 
   logo: {
@@ -76,8 +68,8 @@ const styles = StyleSheet.create({
   },
   settingIcon: {
     position: "absolute",
-    left: 185,
-    bottom: 300,
+    left: 368,
+    bottom: 270.7,
     width: 29,
     height: 29,
   },

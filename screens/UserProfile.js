@@ -26,6 +26,8 @@ export default function UserProfile({ navigation, route }) {
   const [stateImage, setStateImage] = useState(false);
   const userProfileImage = user.profileimage;
 
+  console.log("route", route);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const HalfSeperator = () => <View style={styles.halfSep} />;
