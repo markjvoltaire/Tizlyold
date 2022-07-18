@@ -18,6 +18,7 @@ import PostFeed from "../components/home/PostFeed";
 import PostFeedFlatList from "../components/home/PostFeedFlatList";
 import Header from "../components/home/Header";
 import { usePosts } from "../context/PostContext";
+import ListEnd from "../components/home/ListEnd";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
@@ -60,13 +61,20 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark" />
-      <PostFeedFlatList posts={posts} />
-      <View style={{ top: 125 }}>
-        <Header navigation={navigation} />
+    <>
+      <View style={styles.container}>
+        <StatusBar style="dark" />
+        <View style={{ bottom: 57, marginBottom: -57.5 }}>
+          <PostFeedFlatList posts={posts} />
+        </View>
       </View>
-    </View>
+      <View style={{ top: 110 }}>
+        <View style={{ top: 120 }}>
+          <View style={{ height: 200, width: 200 }}></View>
+          <Header navigation={navigation} />
+        </View>
+      </View>
+    </>
   );
 }
 
@@ -75,7 +83,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
-    bottom: 85,
   },
 
   whyHeader: {

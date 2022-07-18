@@ -29,10 +29,6 @@ export default function PostForm({ navigation }) {
   const displayName = user.displayName;
   const profileImage = user.profileimage;
 
-  const clearState = () => {
-    setImage({ ...initialState });
-  };
-
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
 
@@ -184,7 +180,9 @@ export default function PostForm({ navigation }) {
       >
         <Image
           style={styles.plusButton}
-          source={require("../../assets/plusButton.png")}
+          source={
+            image ? { uri: image } : require("../../assets/plusButton.png")
+          }
         />
       </TouchableOpacity>
 
@@ -227,10 +225,10 @@ const styles = StyleSheet.create({
 
   plusButton: {
     position: "absolute",
-    width: 105,
-    height: 105,
+    width: 125,
+    height: 125,
     top: 500,
-    right: 85,
+    right: 60,
   },
 
   postTitle: {

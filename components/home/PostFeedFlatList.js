@@ -31,114 +31,99 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
   }, []);
 
   return (
-    <View
-      style={{
-        backgroundColor: "#FFFFFF",
-        top: 235,
-        paddingBottom: 100,
-        left: 7,
-      }}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      refreshing={loading}
-      // onRefresh={}
-    >
-      <FlatList
-        keyExtractor={(item) => item.id}
-        data={posts}
-        contentContainerStyle={{
-          borderBottomWidth: 0.8,
-          borderBottomColor: "#EDEDED",
-          paddingTop: 8,
+    <>
+      <View
+        style={{
+          backgroundColor: "white",
+          top: 200,
         }}
-        renderItem={({ item }) => (
-          <>
-            <View style={{ paddingBottom: 155, alignItems: "center" }}>
-              <FullSeperator />
-              <View style={{ alignItems: "center", top: 19 }}>
-                <View style={{ alignItems: "flex-start" }}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("ProfileDetail", {
-                        id: item.user_id,
-                        username: item.username,
-                        email: item.email,
-                        profileimage: item.profileimage,
-                        bannerImage: item.bannerImage,
-                        bio: item.bio,
-                        displayName: item.displayName,
-                        path: item.username,
-                      })
-                    }
-                    style={{ alignItems: "flex-start" }}
-                  >
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        refreshing={loading}
+      >
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={posts}
+          initialNumToRender={4}
+          contentContainerStyle={{
+            borderBottomWidth: 0.8,
+            borderBottomColor: "#EDEDED",
+          }}
+          renderItem={({ item }) => (
+            <>
+              <View style={{ paddingBottom: 100, alignItems: "center" }}>
+                <FullSeperator />
+                <View style={{ alignItems: "center", top: 19 }}>
+                  <View style={{ alignItems: "flex-start" }}>
+                    <TouchableOpacity style={{ alignItems: "flex-start" }}>
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 20,
+                          textAlign: "center",
+                        }}
+                      >
+                        {item.DisplayName}
+                      </Text>
+                      <Text
+                        style={{
+                          fontWeight: "600",
+                          color: "#73738B",
+                          textAlign: "center",
+                        }}
+                      >
+                        @{item.username}
+                      </Text>
+                      <Image
+                        style={{
+                          borderRadius: 100,
+                          height: 37,
+                          width: 37,
+                          right: 40,
+                          bottom: 36,
+                        }}
+                        source={{ uri: item.profileImage }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View>
+                  <Image
+                    style={{
+                      height: 392,
+                      width: 343,
+                      borderRadius: 12,
+                    }}
+                    source={{ uri: item.media }}
+                  />
+
+                  <View style={{ top: 10 }}>
                     <Text
                       style={{
-                        fontWeight: "bold",
-                        fontSize: 20,
-                        textAlign: "center",
+                        fontWeight: "800",
+                        fontSize: 12,
+                        paddingBottom: 12,
                       }}
                     >
-                      {item.DisplayName}
+                      {item.title}
                     </Text>
+
                     <Text
                       style={{
-                        fontWeight: "600",
-                        color: "#73738B",
-                        textAlign: "center",
+                        fontWeight: "400",
+                        color: "#5C5C5C",
                       }}
                     >
-                      @{item.username}
+                      {item.description}
                     </Text>
-                    <Image
-                      style={{
-                        borderRadius: 100,
-                        height: 37,
-                        width: 37,
-                        right: 40,
-                        bottom: 36,
-                      }}
-                      source={{ uri: item.profileImage }}
-                    />
-                  </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-              <View>
-                <Image
-                  style={{
-                    height: 392,
-                    width: 343,
-                    borderRadius: 12,
-                  }}
-                  source={{ uri: item.media }}
-                />
-
-                <View style={{ top: 10 }}>
-                  <Text
-                    style={{
-                      fontWeight: "800",
-                      fontSize: 12,
-                      paddingBottom: 12,
-                    }}
-                  >
-                    {item.title}
-                  </Text>
-
-                  <Text
-                    style={{
-                      fontWeight: "400",
-                      color: "#5C5C5C",
-                    }}
-                  >
-                    {item.description}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </>
-        )}
-      />
-    </View>
+            </>
+          )}
+        />
+      </View>
+    </>
   );
 }
 
@@ -148,7 +133,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
   },
   fullSeperator: {
     borderBottomColor: "#EDEDED",
