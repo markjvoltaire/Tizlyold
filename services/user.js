@@ -35,28 +35,19 @@ export async function addUser(username, displayName) {
   ]);
 }
 
-export async function createPost(
-  title,
-  description,
-  username,
-  displayName,
-  profileimage,
-  bio,
-  media
-) {
+export async function addPost(username, displayName, title, description) {
   const userId = supabase.auth.currentUser.id;
-  const { data, error } = await supabase.from("post").insert([
+  const resp = await supabase.from("post").insert([
     {
+      username: username,
       user_id: userId,
+      DisplayName: displayName,
       title: title,
       description: description,
-      username: username,
-      DisplayName: displayName,
-      profileImage: profileimage,
-      bio: bio,
-      media: media,
     },
   ]);
+  console.log("resp", resp);
+  return resp;
 }
 
 export async function getUsers() {
@@ -105,6 +96,29 @@ export async function editProfile(username, displayName, bio) {
     .from("profiles")
     .update({ username: username, displayName: displayName, bio: bio })
     .eq("user_id", userId);
+}
+
+export async function createPost(
+  username,
+  displayName,
+  title,
+  publicURL,
+  description
+) {
+  const userId = supabase.auth.currentUser.id;
+
+  const resp = await supabase.from("post").insert([
+    {
+      username: username,
+      user_id: userId,
+      DisplayName: displayName,
+      title: title,
+      media: publicURL,
+      description: description,
+    },
+  ]);
+  console.log("resp", resp);
+  return resp;
 }
 
 export async function createProfileImage(photo) {

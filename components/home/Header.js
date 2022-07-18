@@ -13,6 +13,7 @@ import { StatusBar } from "expo-status-bar";
 
 export default function Header({ navigation }) {
   const [query, setQuery] = useState("");
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -55,6 +56,7 @@ export default function Header({ navigation }) {
           source={require("../../assets/Setting.jpg")}
         />
       </TouchableOpacity>
+      <FullSeperator />
     </View>
   );
 }
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     left: 180,
-    bottom: 380,
+    bottom: 420,
   },
 
   logo: {
@@ -125,5 +127,14 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     left: 80,
+  },
+  fullSeperator: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 0.3,
+    width: 900,
+    right: 500,
+    bottom: 287,
+    height: 3,
   },
 });

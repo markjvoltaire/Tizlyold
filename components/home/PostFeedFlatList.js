@@ -13,21 +13,34 @@ import {
 import { useFonts } from "expo-font";
 import Header from "../home/Header";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function PostFeedFlatList({ posts, route, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const [refreshing, setRefreshing] = useState();
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    const resp = await supabase.from("post").select("*");
+    return resp;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <View
       style={{
         backgroundColor: "#FFFFFF",
-        top: 200,
+        top: 235,
         paddingBottom: 100,
         left: 7,
       }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
+      refreshing={loading}
+      // onRefresh={}
     >
       <FlatList
         keyExtractor={(item) => item.id}
@@ -39,7 +52,7 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
         }}
         renderItem={({ item }) => (
           <>
-            <View style={{ paddingBottom: 60, alignItems: "center" }}>
+            <View style={{ paddingBottom: 155, alignItems: "center" }}>
               <FullSeperator />
               <View style={{ alignItems: "center", top: 19 }}>
                 <View style={{ alignItems: "flex-start" }}>
@@ -114,7 +127,6 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
                     style={{
                       fontWeight: "400",
                       color: "#5C5C5C",
-                      fontfamily: "Work Sans",
                     }}
                   >
                     {item.description}

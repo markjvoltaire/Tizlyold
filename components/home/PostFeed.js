@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { getPosts } from "../../services/user";
-import PostButtons from "../post/postButtons/PostButtons";
 
 export default function PostFeed({ posts }) {
   const { user, setUser } = useUser();

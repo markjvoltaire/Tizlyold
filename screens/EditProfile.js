@@ -46,7 +46,6 @@ export default function EditProfile({ navigation }) {
     setUser(data);
   }
 
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const uploadProfileFromUri = async (photo) => {

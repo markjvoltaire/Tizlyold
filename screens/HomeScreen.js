@@ -63,7 +63,7 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar style="dark" />
       <PostFeedFlatList posts={posts} />
-      <View style={{ top: 45 }}>
+      <View style={{ top: 125 }}>
         <Header navigation={navigation} />
       </View>
     </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
-    bottom: 60,
+    bottom: 85,
   },
 
   whyHeader: {

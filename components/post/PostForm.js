@@ -6,45 +6,50 @@ import {
   Image,
   TouchableOpacity,
   Pressable,
+  Button,
 } from "react-native";
 import React, { useState } from "react";
 
-import { createPost } from "../../services/user";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
+import { createPost } from "../../services/user";
 import * as ImagePicker from "expo-image-picker";
+import { usePosts } from "../../context/PostContext";
+import Post from "../../screens/Post";
+import PostButtons from "./PostButtons";
 export default function PostForm({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [post, setPost] = useState("");
-  const { user, setUser, userPost, setUserPost } = useUser();
+
+  const { user, setUser } = useUser();
+  const [image, setImage] = useState("");
+  const [imageData, setImageData] = useState(null);
 
   const username = user.username;
-  // const email = user.email;
-  const displayName = user.displayName;
+  const displayName = user.DisplayName;
   const profileImage = user.profileimage;
-  const bio = user.bio;
-  console.log("userPost", userPost);
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  async function addPost(username, displayName, title, description) {
+    const userId = supabase.auth.currentUser.id;
 
-    try {
-      console.log(photo);
-      return await uploadProfileFromUri(photo);
-    } catch (e) {
-      ErrorAlert({ title: "image upload", message: e.message });
-      return null;
-    }
-  };
+    const resp = await supabase.from("post").insert([
+      {
+        username: username,
+        user_id: userId,
+        DisplayName: displayName,
+        title: title,
+        description: description,
+        profileImage: profileImage,
+      },
+    ]);
 
-  const uploadProfileFromUri = async (photo) => {
+    console.log("resp", resp);
+    console.log("image", image);
+
+    return resp;
+  }
+
+  const uploadPostFromUri = async (photo) => {
     const userId = supabase.auth.currentUser.id;
 
     if (!photo.cancelled) {
@@ -60,19 +65,25 @@ export default function PostForm({ navigation }) {
       });
 
       const { data, error } = await supabase.storage
-        .from("profile-images")
+        .from("posts")
         .upload(fileName, formData, {
-          upsert: false,
+          upsert: true,
         });
 
       const { publicURL } = await supabase.storage
-        .from("profile-images")
+        .from("posts")
         .getPublicUrl(`${fileName}`);
+      console.log("publicURL", publicURL);
+
+      const url = publicURL;
+      console.log("url", url);
 
       const resp = await supabase
         .from("post")
-        .update({ media: publicURL })
-        .eq("user_id", userId);
+        .insert({ user_id: userId, media: publicURL })
+        .eq("id", resp.id);
+
+      getUserByIds();
 
       console.log("error", error);
 
@@ -81,6 +92,48 @@ export default function PostForm({ navigation }) {
       return { ...photo, imageData: data };
     } else {
       return photo;
+    }
+  };
+
+  const pickPost = async () => {
+    // No permissions request is necessary for launching the image library
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!photo.cancelled) {
+      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
+      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: photo.uri,
+        name: fileName,
+        type: photo.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      try {
+        const { data, error } = await supabase.storage
+          .from("posts")
+          .upload(fileName, formData, {
+            upsert: true,
+          });
+
+        const { publicURL } = await supabase.storage
+          .from("posts")
+          .getPublicUrl(`${fileName}`);
+        let imageLink = publicURL;
+        console.log("imageLink", imageLink);
+        setImage(imageLink);
+
+        console.log(photo);
+      } catch (e) {
+        ErrorAlert({ title: "image upload", message: e.message });
+        return null;
+      }
     }
   };
 
@@ -116,7 +169,7 @@ export default function PostForm({ navigation }) {
 
       <TouchableOpacity
         onPress={async () => {
-          const resp = await pickImage();
+          const resp = await pickPost();
 
           if (resp?.imageData) {
             setImage(resp.uri);
@@ -131,17 +184,13 @@ export default function PostForm({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() =>
-          createPost(
-            title,
-            description,
-            username,
-            displayName,
-            profileImage,
-            bio,
-            media
-          ).then(() => navigation.navigate("Home"))
-        }
+        onPress={() => {
+          // addPost(username, displayName, title, description).then(() =>
+          console.log(description);
+          console.log(title);
+          console.log("image", image);
+          // );
+        }}
       >
         <Image
           style={styles.postButton}
