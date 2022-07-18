@@ -22,14 +22,18 @@ export default function PostForm({ navigation }) {
   const [description, setDescription] = useState("");
 
   const { user, setUser } = useUser();
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState();
   const [imageData, setImageData] = useState(null);
 
   const username = user.username;
-  const displayName = user.DisplayName;
+  const displayName = user.displayName;
   const profileImage = user.profileimage;
 
-  async function addPost(username, displayName, title, description) {
+  const clearState = () => {
+    setImage({ ...initialState });
+  };
+
+  async function addPost() {
     const userId = supabase.auth.currentUser.id;
 
     const resp = await supabase.from("post").insert([
@@ -40,6 +44,7 @@ export default function PostForm({ navigation }) {
         title: title,
         description: description,
         profileImage: profileImage,
+        media: image,
       },
     ]);
 
@@ -185,11 +190,7 @@ export default function PostForm({ navigation }) {
 
       <TouchableOpacity
         onPress={() => {
-          // addPost(username, displayName, title, description).then(() =>
-          console.log(description);
-          console.log(title);
-          console.log("image", image);
-          // );
+          addPost();
         }}
       >
         <Image

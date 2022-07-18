@@ -14,6 +14,7 @@ import { useFonts } from "expo-font";
 import Header from "../home/Header";
 
 import React, { useEffect, useState } from "react";
+import { supabase } from "../../services/supabase";
 
 export default function PostFeedFlatList({ posts, route, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
