@@ -66,7 +66,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.container}>
           <StatusBar style="dark" />
           <View style={{ bottom: 57 }}>
-            <PostFeedFlatList posts={posts} />
+            <PostFeedFlatList navigation={navigation} posts={posts} />
           </View>
         </View>
         <View style={{ top: 280, backgroundColor: "white" }}>

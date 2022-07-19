@@ -64,7 +64,7 @@ export default function Header({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "red",
     left: 180,
     bottom: 780,
   },

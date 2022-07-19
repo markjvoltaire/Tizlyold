@@ -32,6 +32,8 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
     fetchData();
   }, []);
 
+  console.log("posts", posts);
+
   return (
     <>
       <View
@@ -101,12 +103,26 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
                         source={{ uri: item.media }}
                       />
                     ) : (
-                      <TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("Player", {
+                            id: item.id,
+                            username: item.username,
+                            profileimage: item.profileImage,
+                            displayName: item.DisplayName,
+                            path: item.username,
+                            title: item.title,
+                            mediaType: item.mediaType,
+                            media: item.media,
+                            description: item.description,
+                            route: item.id,
+                          });
+                        }}
+                      >
                         <Video
                           source={{ uri: item.media }}
                           ref={video}
                           style={{ height: 209, width: 367 }}
-                          useNativeControls
                           resizeMode="cover"
                           onPlaybackStatusUpdate={(status) =>
                             setStatus(() => status)
