@@ -1,9 +1,28 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import React from "react";
+import Header from "./Header";
 
 export default function NoPost() {
-  return {
-    /* <View style={styles.header}>
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Header />
+      <FullSeperator />
+      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+        <Image
+          style={styles.settingIcon}
+          source={require("../../assets/Setting.jpg")}
+        />
+      </TouchableOpacity>
+
+      <View style={styles.header}>
         <Text style={styles.pageHeader}>Don't See Any Content ?</Text>
       </View>
 
@@ -32,17 +51,21 @@ export default function NoPost() {
         <TouchableOpacity onPress={() => navigation.navigate("ExploreScreen")}>
           <Image
             style={styles.exploreButton}
-            source={require("../assets/exploreCreators.png")}
+            source={require("../../assets/exploreCreators.png")}
           />
         </TouchableOpacity>
       </View>
 
       <Image
         style={styles.whyIcon}
-        source={require("../assets/bottomtab/SubscribersLight.jpg")}
+        source={require("../../assets/bottomtab/SubscribersLight.jpg")}
       />
-      <Image style={styles.howIcon} source={require("../assets/Search.png")} /> */
-  };
+      <Image
+        style={styles.howIcon}
+        source={require("../../assets/Search.png")}
+      />
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({});

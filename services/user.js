@@ -22,6 +22,12 @@ export function getUserEmail() {
   return userEmail;
 }
 
+export async function getType() {
+  const resp = await supabase.storage.extension().from("posts");
+  console.log("resp", resp);
+  return resp;
+}
+
 export async function addUser(username, displayName) {
   const userId = supabase.auth.currentUser.id;
 

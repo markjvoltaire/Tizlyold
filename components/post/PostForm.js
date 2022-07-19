@@ -23,6 +23,7 @@ export default function PostForm({ navigation }) {
 
   const { user, setUser } = useUser();
   const [image, setImage] = useState();
+  const [mediaType, setMediaType] = useState();
   const [imageData, setImageData] = useState(null);
 
   const username = user.username;
@@ -41,6 +42,7 @@ export default function PostForm({ navigation }) {
         description: description,
         profileImage: profileImage,
         media: image,
+        type: mediaType,
       },
     ]);
 
@@ -124,13 +126,17 @@ export default function PostForm({ navigation }) {
           });
 
         const { publicURL } = await supabase.storage
+
           .from("posts")
           .getPublicUrl(`${fileName}`);
+
         let imageLink = publicURL;
+        let type = photo.type;
         console.log("imageLink", imageLink);
         setImage(imageLink);
+        setMediaType(type);
 
-        console.log(photo);
+        console.log(photo.type);
       } catch (e) {
         ErrorAlert({ title: "image upload", message: e.message });
         return null;

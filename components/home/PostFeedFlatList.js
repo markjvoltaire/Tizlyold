@@ -35,7 +35,7 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
       <View
         style={{
           backgroundColor: "white",
-          top: 200,
+          top: 257,
         }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}

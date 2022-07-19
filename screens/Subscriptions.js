@@ -5,54 +5,19 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/home/Header";
 import HomeBoard from "../components/home/HomeBoard";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Video, AVPlaybackStatus } from "expo-av";
+import { supabase } from "../services/supabase";
 
 export default function Subscriptions({ navigation }) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" },
-  ]);
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Header />
-      <FullSeperator />
-      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-        <Image
-          style={styles.settingIcon}
-          source={require("../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
-      <View style={styles.pageTitle}>
-        <Text
-          style={{
-            position: "absolute",
-            fontSize: 20,
-            fontWeight: "600",
-          }}
-        >
-          Subscriptions
-        </Text>
 
-        <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          placeholder="category"
-        />
-      </View>
-    </ScrollView>
-  );
+  return <View style={styles.container}></View>;
 }
 
 const styles = StyleSheet.create({
@@ -79,5 +44,9 @@ const styles = StyleSheet.create({
   pageTitle: {
     alignItems: "center",
     bottom: 200,
+  },
+  video: {
+    flex: 1,
+    alignSelf: "stretch",
   },
 });
