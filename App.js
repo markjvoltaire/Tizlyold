@@ -37,6 +37,7 @@ import BioScreen from "./screens/BioScreen";
 import ProfileImage from "./screens/ProfileImage";
 import UserProfileSubscribers from "./screens/UserProfileSubscribers";
 import { PostProvider } from "./context/PostContext";
+import Player from "./screens/Player";
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,12 @@ export default function App() {
             <Stack.Screen
               name="Welcome"
               component={Welcome}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="Player"
+              component={Player}
               options={{ headerShown: false }}
             />
 

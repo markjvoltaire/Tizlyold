@@ -42,7 +42,7 @@ export default function PostForm({ navigation }) {
         description: description,
         profileImage: profileImage,
         media: image,
-        type: mediaType,
+        mediaType: mediaType,
       },
     ]);
 

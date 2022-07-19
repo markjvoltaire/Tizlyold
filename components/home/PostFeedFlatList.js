@@ -15,12 +15,14 @@ import Header from "../home/Header";
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function PostFeedFlatList({ posts, route, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const [refreshing, setRefreshing] = useState();
   const [loading, setLoading] = useState(true);
-
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
   const fetchData = async () => {
     const resp = await supabase.from("post").select("*");
     return resp;
@@ -88,14 +90,31 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
                   </View>
                 </View>
                 <View>
-                  <Image
-                    style={{
-                      height: 392,
-                      width: 343,
-                      borderRadius: 12,
-                    }}
-                    source={{ uri: item.media }}
-                  />
+                  <View>
+                    {item.mediaType === "image" ? (
+                      <Image
+                        style={{
+                          height: 392,
+                          width: 343,
+                          borderRadius: 12,
+                        }}
+                        source={{ uri: item.media }}
+                      />
+                    ) : (
+                      <TouchableOpacity>
+                        <Video
+                          source={{ uri: item.media }}
+                          ref={video}
+                          style={{ height: 209, width: 367 }}
+                          useNativeControls
+                          resizeMode="cover"
+                          onPlaybackStatusUpdate={(status) =>
+                            setStatus(() => status)
+                          }
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
 
                   <View style={{ top: 10 }}>
                     <Text
@@ -142,5 +161,9 @@ const styles = StyleSheet.create({
     left: 1,
     bottom: 10,
     height: 3,
+  },
+  video: {
+    flex: 1,
+    alignSelf: "stretch",
   },
 });

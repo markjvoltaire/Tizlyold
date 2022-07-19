@@ -7,17 +7,22 @@ import {
   Image,
   Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../components/home/Header";
 import HomeBoard from "../components/home/HomeBoard";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Video, AVPlaybackStatus } from "expo-av";
-import { supabase } from "../services/supabase";
 
 export default function Subscriptions({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
 
-  return <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      <Text>Subscriptions</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -47,6 +52,7 @@ const styles = StyleSheet.create({
   },
   video: {
     flex: 1,
+    backgroundColor: "white",
     alignSelf: "stretch",
   },
 });
