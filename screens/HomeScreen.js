@@ -7,6 +7,7 @@ import {
   Image,
   Button,
   SafeAreaView,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
@@ -19,11 +20,15 @@ import PostFeedFlatList from "../components/home/PostFeedFlatList";
 import Header from "../components/home/Header";
 import { usePosts } from "../context/PostContext";
 import NoPost from "../components/home/NoPost";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
   const { post, setPost } = usePosts();
   const [image, setImage] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
 
   async function getUser() {
     const userId = supabase.auth.currentUser.id;
@@ -45,7 +50,7 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = post.body;
-  console.log("posts from context", posts);
+  // console.log("posts from context", posts);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -60,14 +65,157 @@ export default function HomeScreen({ navigation }) {
     navigation.navigate("Username");
   }
 
+  const pullMe = async () => {
+    const resp = await getPosts();
+    setPost(resp);
+    console.log("resp", resp);
+  };
+
   return (
     <>
       <>
         <View style={styles.container}>
           <StatusBar style="dark" />
-          <View style={{ bottom: 57 }}>
+          {/* <View style={{ bottom: 57 }}>
             <PostFeedFlatList navigation={navigation} posts={posts} />
-          </View>
+          </View> */}
+
+          <>
+            <View
+              style={{
+                backgroundColor: "white",
+                top: 257,
+              }}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+            >
+              <FlatList
+                keyExtractor={(item) => item.id}
+                data={posts}
+                refreshing={refreshing}
+                onRefresh={() => pullMe()}
+                initialNumToRender={4}
+                contentContainerStyle={{
+                  borderBottomWidth: 0.8,
+                  borderBottomColor: "#EDEDED",
+                }}
+                renderItem={({ item }) => (
+                  <>
+                    <View style={{ paddingBottom: 100, alignItems: "center" }}>
+                      <FullSeperator />
+                      <View style={{ alignItems: "center", top: 19 }}>
+                        <View style={{ alignItems: "flex-start" }}>
+                          <TouchableOpacity
+                            style={{ alignItems: "flex-start" }}
+                          >
+                            <Text
+                              style={{
+                                fontWeight: "bold",
+                                fontSize: 20,
+                                textAlign: "center",
+                              }}
+                            >
+                              {item.DisplayName}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: "600",
+                                color: "#73738B",
+                                textAlign: "center",
+                              }}
+                            >
+                              @{item.username}
+                            </Text>
+                            <Image
+                              style={{
+                                borderRadius: 100,
+                                height: 37,
+                                width: 37,
+                                right: 40,
+                                bottom: 36,
+                              }}
+                              source={{ uri: item.profileImage }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                      <View>
+                        <View>
+                          {item.mediaType === "image" ? (
+                            <Image
+                              style={{
+                                height: 392,
+                                width: 343,
+                                borderRadius: 12,
+                              }}
+                              source={{ uri: item.media }}
+                            />
+                          ) : (
+                            <TouchableOpacity
+                              onPress={() => {
+                                navigation.navigate("Player", {
+                                  id: item.id,
+                                  username: item.username,
+                                  profileimage: item.profileImage,
+                                  displayName: item.DisplayName,
+                                  path: item.username,
+                                  title: item.title,
+                                  mediaType: item.mediaType,
+                                  media: item.media,
+                                  description: item.description,
+                                  route: item.id,
+                                });
+                              }}
+                            >
+                              <View>
+                                <Video
+                                  source={{ uri: item.media }}
+                                  ref={video}
+                                  style={{
+                                    height: 239,
+                                    width: 397,
+                                    borderBottomLeftRadius: 20,
+                                    borderBottomRightRadius: 20,
+                                    borderTopLeftRadius: 20,
+                                    borderTopRightRadius: 20,
+                                  }}
+                                  resizeMode="cover"
+                                  onPlaybackStatusUpdate={(status) =>
+                                    setStatus(() => status)
+                                  }
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+
+                        <View style={{ top: 10 }}>
+                          <Text
+                            style={{
+                              fontWeight: "800",
+                              fontSize: 12,
+                              paddingBottom: 12,
+                            }}
+                          >
+                            {item.title}
+                          </Text>
+
+                          <Text
+                            style={{
+                              fontWeight: "400",
+                              color: "#5C5C5C",
+                            }}
+                          >
+                            {item.description}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </>
+                )}
+              />
+            </View>
+          </>
         </View>
         <View style={{ top: 280, backgroundColor: "white" }}>
           <View style={{ top: 120 }}>

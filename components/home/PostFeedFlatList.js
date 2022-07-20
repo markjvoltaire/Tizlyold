@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 
 import { useFonts } from "expo-font";
@@ -16,23 +17,35 @@ import Header from "../home/Header";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { Video, AVPlaybackStatus } from "expo-av";
+import { getPosts } from "../../services/user";
+import { usePosts } from "../../context/PostContext";
 
 export default function PostFeedFlatList({ posts, route, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  const [refreshing, setRefreshing] = useState();
+  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const video = React.useRef(null);
+  const { post, setPost } = usePosts();
   const [status, setStatus] = React.useState({});
-  const fetchData = async () => {
-    const resp = await supabase.from("post").select("*");
-    return resp;
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   console.log("posts", posts);
+
+  const pullMe = () => {
+    setRefreshing(true);
+
+    useEffect(() => {
+      const getUserPost = async () => {
+        const resp = await getPosts();
+        setPost(resp);
+      };
+      getUserPost();
+    }, []);
+
+    console.log("hello");
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 4000);
+  };
 
   return (
     <>
@@ -48,6 +61,8 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
         <FlatList
           keyExtractor={(item) => item.id}
           data={posts}
+          refreshing={refreshing}
+          onRefresh={() => pullMe()}
           initialNumToRender={4}
           contentContainerStyle={{
             borderBottomWidth: 0.8,
@@ -119,15 +134,24 @@ export default function PostFeedFlatList({ posts, route, navigation }) {
                           });
                         }}
                       >
-                        <Video
-                          source={{ uri: item.media }}
-                          ref={video}
-                          style={{ height: 209, width: 367 }}
-                          resizeMode="cover"
-                          onPlaybackStatusUpdate={(status) =>
-                            setStatus(() => status)
-                          }
-                        />
+                        <View>
+                          <Video
+                            source={{ uri: item.media }}
+                            ref={video}
+                            style={{
+                              height: 239,
+                              width: 397,
+                              borderBottomLeftRadius: 20,
+                              borderBottomRightRadius: 20,
+                              borderTopLeftRadius: 20,
+                              borderTopRightRadius: 20,
+                            }}
+                            resizeMode="cover"
+                            onPlaybackStatusUpdate={(status) =>
+                              setStatus(() => status)
+                            }
+                          />
+                        </View>
                       </TouchableOpacity>
                     )}
                   </View>
