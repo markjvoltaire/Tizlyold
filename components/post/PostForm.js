@@ -39,15 +39,42 @@ export default function PostForm({ navigation }) {
   console.log("selected", selected);
 
   const data = [
-    { key: "Entertainment", value: "Entertainment" },
-    { key: "Fitness", value: "Fitness" },
-    { key: "Podcast", value: "Podcast" },
-    { key: "Music", value: "Music" },
-    { key: "Sports", value: "Sports" },
-    { key: "Cooking", value: "Cooking" },
-    { key: "Gaming", value: "Gaming" },
-    { key: "Beauty", value: "Beauty" },
-    { key: "Content Creation", value: "Content Creation" },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png",
+      value: "Entertainment",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/fitnessBean.png",
+      value: "Fitness",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/podcastBean.png",
+      value: "Podcast",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/musicBean.png",
+      value: "Music",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/sportsBean.png",
+      value: "Spor",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/cookingBean.png",
+      value: "Cooking",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/gamingBean.png",
+      value: "Gaming",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/beautyBean.png",
+      value: "Beauty",
+    },
+    {
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/contentBean.png",
+      value: "Content Creation",
+    },
   ];
 
   const Seperator = () => <View style={styles.fullSeperator} />;

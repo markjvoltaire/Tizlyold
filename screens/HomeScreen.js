@@ -31,7 +31,7 @@ export default function HomeScreen({ navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
-  console.log("user", user);
+  console.log("user", user.user_id);
 
   useEffect(() => {
     const getUserPost = async () => {
@@ -43,7 +43,6 @@ export default function HomeScreen({ navigation }) {
 
   const posts = post.body;
   console.log("posts", posts);
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
@@ -57,6 +56,8 @@ export default function HomeScreen({ navigation }) {
     setPost(resp);
     console.log("resp", resp);
   };
+
+  console.log("posts.length", posts.length);
 
   return (
     <View style={styles.homeScreenContainer}>
@@ -106,6 +107,17 @@ export default function HomeScreen({ navigation }) {
                               borderRadius: 12,
                             }}
                             source={{ uri: item.media }}
+                          />
+                          <Image
+                            style={{
+                              top: 457,
+                              right: 210,
+                              height: 54,
+                              width: 64,
+                              resizeMode: "contain",
+                              position: "absolute",
+                            }}
+                            source={{ uri: item.category }}
                           />
                           <TouchableOpacity>
                             <Image
