@@ -9,6 +9,7 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
+import SelectList from "react-native-dropdown-select-list";
 
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
@@ -17,6 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import { usePosts } from "../../context/PostContext";
 import Post from "../../screens/Post";
 import PostButtons from "./PostButtons";
+import AddCategory from "../AddCategory";
 export default function PostForm({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -31,6 +33,22 @@ export default function PostForm({ navigation }) {
   const profileImage = user.profileimage;
   const bannerImage = user.bannerImage;
   const bio = user.bio;
+
+  const [selected, setSelected] = useState("");
+
+  console.log("selected", selected);
+
+  const data = [
+    { key: "Entertainment", value: "Entertainment" },
+    { key: "Fitness", value: "Fitness" },
+    { key: "Podcast", value: "Podcast" },
+    { key: "Music", value: "Music" },
+    { key: "Sports", value: "Sports" },
+    { key: "Cooking", value: "Cooking" },
+    { key: "Gaming", value: "Gaming" },
+    { key: "Beauty", value: "Beauty" },
+    { key: "Content Creation", value: "Content Creation" },
+  ];
 
   const Seperator = () => <View style={styles.fullSeperator} />;
 
@@ -49,6 +67,7 @@ export default function PostForm({ navigation }) {
         mediaType: mediaType,
         bannerImage: bannerImage,
         bio: bio,
+        category: selected,
       },
     ]);
 
@@ -178,9 +197,23 @@ export default function PostForm({ navigation }) {
         onChangeText={(text) => setDescription(text)}
       />
 
-      <View style={{ top: 80 }}>
+      <View style={{ bottom: 50 }}>
         <Text style={styles.subHead}>Select From Gallery</Text>
-
+        <Text style={styles.subHeadCategory}>Select a category</Text>
+        <View style={styles.addCategory}>
+          <TouchableOpacity>
+            <View>
+              <SelectList
+                placeholder="Select a category"
+                data={data}
+                setSelected={setSelected}
+                inputStyles={{ fontWeight: "600" }}
+                dropdownStyles={{ height: 130 }}
+                search={false}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           onPress={async () => {
             const resp = await pickPost();
@@ -199,6 +232,7 @@ export default function PostForm({ navigation }) {
           />
         </TouchableOpacity>
       </View>
+
       <TouchableOpacity
         onPress={() => {
           addPost().then(() => {
@@ -221,6 +255,27 @@ const styles = StyleSheet.create({
     top: 345,
     right: 183,
   },
+  categoryText: {
+    fontWeight: "700",
+    fontSize: 17,
+    top: 8,
+  },
+
+  arrow: {
+    position: "absolute",
+    top: 12,
+    width: 12,
+    height: 12,
+    left: 300,
+    resizeMode: "contain",
+  },
+
+  hashtag: {
+    width: 35,
+    height: 35,
+    bottom: 21,
+    right: 50,
+  },
 
   postHeader: {
     alignItems: "center",
@@ -237,33 +292,47 @@ const styles = StyleSheet.create({
     left: 120,
     bottom: -5,
   },
+  addCategory: {
+    position: "absolute",
+    top: 580,
+    right: -8,
+    backgroundColor: "white",
+    width: 200,
+  },
 
   subHead: {
     position: "absolute",
-    top: 400,
-    right: 60,
+    top: 335,
+    right: 50,
+    fontWeight: "700",
+  },
+
+  subHeadCategory: {
+    position: "absolute",
+    top: 535,
+    right: 70,
+    fontWeight: "700",
   },
 
   plusButton: {
     position: "absolute",
-    width: 125,
-    height: 125,
-    top: 450,
-    right: 60,
+    width: 105,
+    height: 105,
+    top: 380,
+    right: 80,
   },
 
   postTitle: {
     position: "absolute",
-    top: 90,
+    top: 50,
     right: 320,
     borderColor: "grey",
     height: 80,
     paddingLeft: 10,
     width: 380,
-    left: 20,
-    fontSize: 16,
+    left: 13,
+    fontSize: 25,
     borderRadius: 8,
-    backgroundColor: "#EBEBF1",
   },
   exitButton: {
     position: "absolute",
@@ -274,13 +343,14 @@ const styles = StyleSheet.create({
   },
   postDescription: {
     position: "absolute",
-    top: 200,
-    height: 215,
+    top: 130,
+    height: 115,
     width: 380,
     borderRadius: 8,
     fontSize: 16,
-    paddingBottom: 140,
-    paddingLeft: 10,
+    paddingBottom: 120,
+
+    paddingTop: 40,
     backgroundColor: "#EBEBF1",
     fontWeight: "500",
   },
@@ -289,8 +359,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
-    width: 900,
-    left: 1,
-    bottom: 250,
+    width: 340,
+    right: 10,
   },
 });

@@ -31,6 +31,8 @@ export default function HomeScreen({ navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
+  console.log("user", user);
+
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
@@ -40,6 +42,7 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = post.body;
+  console.log("posts", posts);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -94,14 +97,40 @@ export default function HomeScreen({ navigation }) {
                 {item.mediaType === "image" ? (
                   <View>
                     <View>
-                      <Image
-                        style={{
-                          height: 392,
-                          width: 343,
-                          borderRadius: 12,
-                        }}
-                        source={{ uri: item.media }}
-                      />
+                      {item.user_id === user.user_id ? (
+                        <>
+                          <Image
+                            style={{
+                              height: 392,
+                              width: 343,
+                              borderRadius: 12,
+                            }}
+                            source={{ uri: item.media }}
+                          />
+                          <TouchableOpacity>
+                            <Image
+                              style={{
+                                position: "absolute",
+                                height: 22,
+                                width: 22,
+                                left: 300,
+                                bottom: 418,
+                                resizeMode: "contain",
+                              }}
+                              source={require("../assets/optionsButton.png")}
+                            />
+                          </TouchableOpacity>
+                        </>
+                      ) : (
+                        <Image
+                          style={{
+                            height: 392,
+                            width: 343,
+                            borderRadius: 12,
+                          }}
+                          source={{ uri: item.media }}
+                        />
+                      )}
                     </View>
 
                     <View style={styles.postInfoContainer}>

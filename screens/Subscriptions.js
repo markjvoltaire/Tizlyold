@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
+import TopHeader from "../components/TopHeader";
 
 export default function Subscriptions({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -15,8 +16,9 @@ export default function Subscriptions({ navigation }) {
   const [status, setStatus] = React.useState({});
 
   return (
-    <View style={styles.container}>
-      <Text>Subscriptions</Text>
+    <View>
+      <TopHeader />
+      <View style={styles.container}></View>
     </View>
   );
 }
@@ -24,7 +26,7 @@ export default function Subscriptions({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "red",
     justifyContent: "center",
   },
   fullSeperator: {

@@ -16,6 +16,7 @@ import TrendingCreators from "../components/home/TrendingCreators";
 import TrendingTag from "../components/home/TrendingTag";
 import MainStackNavigator from "../navigation/StackNavigator";
 import { getUsername, getUsers } from "../services/user";
+import TopHeader from "../components/TopHeader";
 
 export default function Explore({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -28,30 +29,21 @@ export default function Explore({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <SafeAreaView>
-        <View style={{ top: 45 }}></View>
-        <FullSeperator />
+    <View style={styles.container}>
+      <View>
+        <TopHeader />
         <HomeBoard />
-        <HalfSeperator />
         <TrendingCreators navigation={navigation} />
-        <HalfSeperator2 />
-        <TrendingTag />
-      </SafeAreaView>
-      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-        <Image
-          style={styles.settingIcon}
-          source={require("../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
-    </ScrollView>
+        <View>
+          <TrendingTag />
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
     justifyContent: "center",
   },
   settingIcon: {
@@ -84,5 +76,11 @@ const styles = StyleSheet.create({
     width: 298,
     left: 70,
     top: 235,
+  },
+  homeBoardContainer: {
+    backgroundColor: "white",
+  },
+  explorePageContainer: {
+    flex: 1,
   },
 });

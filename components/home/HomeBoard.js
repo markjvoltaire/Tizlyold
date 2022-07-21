@@ -12,46 +12,42 @@ import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
   const { user } = useUser();
+  console.log("user", user);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}> Welcome {user.username} </Text>
-      <TouchableOpacity>
-        <Image
-          style={styles.homeboard}
-          source={require("../../assets/homeBanner.png")}
-        />
-      </TouchableOpacity>
-
-      <TextInput />
+      <View style={{ alignItems: "center" }}>
+        <TouchableOpacity>
+          <View style={styles.homeboardContainer}>
+            <Text style={styles.username}> Welcome {user.displayName} </Text>
+            <Image
+              style={styles.homeboard}
+              source={require("../../assets/homeBanner.png")}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    left: 180,
-    top: 20,
-  },
-  header: {
-    position: "absolute",
-    top: -300,
-    color: "black",
-    width: 500,
-    left: -160,
-    fontWeight: "bold",
+    height: 300,
+    backgroundColor: "white",
   },
 
   homeboard: {
-    position: "absolute",
-    top: -230,
-    left: -188,
     height: 200,
-    width: 430,
+    width: 420,
   },
   username: {
-    bottom: 250,
-    right: 175,
     fontWeight: "bold",
+    fontSize: 14,
+    bottom: 13,
+    left: 9,
+  },
+  homeboardContainer: {
+    top: 40,
   },
 });

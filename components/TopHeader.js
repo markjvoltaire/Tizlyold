@@ -33,6 +33,7 @@ export default function TopHeader() {
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
+            placeholder="Still Looking?"
             autoCapitalize="none"
             autoCorrect={false}
             onChangeText={(text) => setQuery(text)}
@@ -81,6 +82,7 @@ const styles = StyleSheet.create({
   searchInput: {
     position: "absolute",
     top: 57,
+    paddingLeft: 63,
 
     borderColor: "grey",
     borderWidth: 0.1,

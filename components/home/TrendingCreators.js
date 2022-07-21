@@ -28,6 +28,7 @@ export default function TrendingCreators({ navigation, route }) {
   return (
     <View
       style={{
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         position: "absolute",
@@ -37,8 +38,9 @@ export default function TrendingCreators({ navigation, route }) {
         flexBasis: 33.333333,
         width: 500,
         right: -40,
-        top: 50,
-        height: 100,
+        top: 450,
+        height: 400,
+        backgroundColor: "white",
       }}
     >
       <View>
@@ -64,10 +66,9 @@ export default function TrendingCreators({ navigation, route }) {
               >
                 <Image
                   style={{
-                    height: 70,
-                    width: 70,
-                    borderRadius: 5,
-
+                    height: 80,
+                    width: 80,
+                    borderRadius: 50,
                     marginHorizontal: 35,
                     marginVertical: 10,
                   }}
