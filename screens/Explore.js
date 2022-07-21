@@ -10,7 +10,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Header from "../components/home/Header";
+
 import HomeBoard from "../components/home/HomeBoard";
 import TrendingCreators from "../components/home/TrendingCreators";
 import TrendingTag from "../components/home/TrendingTag";
@@ -30,9 +30,7 @@ export default function Explore({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <SafeAreaView>
-        <View style={{ top: 45 }}>
-          <Header navigation={navigation} />
-        </View>
+        <View style={{ top: 45 }}></View>
         <FullSeperator />
         <HomeBoard />
         <HalfSeperator />

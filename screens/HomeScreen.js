@@ -16,11 +16,12 @@ import { StatusBar } from "expo-status-bar";
 import { useUser } from "../context/UserContext";
 import { getPosts } from "../services/user";
 import PostFeed from "../components/home/PostFeed";
-import PostFeedFlatList from "../components/home/PostFeedFlatList";
-import Header from "../components/home/Header";
+
 import { usePosts } from "../context/PostContext";
 import NoPost from "../components/home/NoPost";
 import { Video, AVPlaybackStatus } from "expo-av";
+import UserButtons from "../components/home/UserButtons";
+import TopHeader from "../components/TopHeader";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
@@ -29,17 +30,6 @@ export default function HomeScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
-
-  async function getUser() {
-    const userId = supabase.auth.currentUser.id;
-
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    setUser(data);
-  }
 
   useEffect(() => {
     const getUserPost = async () => {
@@ -50,188 +40,198 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = post.body;
-  // console.log("posts from context", posts);
-
-  useEffect(() => {
-    const getUserProfile = async () => {
-      await getUser();
-    };
-    getUserProfile();
-  }, []);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
 
   if (user === null) {
     navigation.navigate("Username");
   }
 
-  const pullMe = async () => {
+  const refreshFeed = async () => {
     const resp = await getPosts();
     setPost(resp);
     console.log("resp", resp);
   };
 
   return (
-    <>
-      <>
-        <View style={styles.container}>
-          <StatusBar style="dark" />
-          {/* <View style={{ bottom: 57 }}>
-            <PostFeedFlatList navigation={navigation} posts={posts} />
-          </View> */}
+    <View style={styles.homeScreenContainer}>
+      <TopHeader />
 
-          <>
-            <View
-              style={{
-                backgroundColor: "white",
-                top: 257,
-              }}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-            >
-              <FlatList
-                keyExtractor={(item) => item.id}
-                data={posts}
-                refreshing={refreshing}
-                onRefresh={() => pullMe()}
-                initialNumToRender={4}
-                contentContainerStyle={{
-                  borderBottomWidth: 0.8,
-                  borderBottomColor: "#EDEDED",
-                }}
-                renderItem={({ item }) => (
-                  <>
-                    <View style={{ paddingBottom: 100, alignItems: "center" }}>
-                      <FullSeperator />
-                      <View style={{ alignItems: "center", top: 19 }}>
-                        <View style={{ alignItems: "flex-start" }}>
-                          <TouchableOpacity
-                            style={{ alignItems: "flex-start" }}
-                          >
-                            <Text
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: 20,
-                                textAlign: "center",
-                              }}
-                            >
-                              {item.DisplayName}
-                            </Text>
-                            <Text
-                              style={{
-                                fontWeight: "600",
-                                color: "#73738B",
-                                textAlign: "center",
-                              }}
-                            >
-                              @{item.username}
-                            </Text>
-                            <Image
-                              style={{
-                                borderRadius: 100,
-                                height: 37,
-                                width: 37,
-                                right: 40,
-                                bottom: 36,
-                              }}
-                              source={{ uri: item.profileImage }}
-                            />
-                          </TouchableOpacity>
+      <View style={styles.feedContainer}>
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={posts}
+          refreshing={refreshing}
+          onRefresh={() => refreshFeed()}
+          initialNumToRender={4}
+          contentContainerStyle={{
+            borderBottomWidth: 2.8,
+            borderBottomColor: "#EDEDED",
+          }}
+          renderItem={({ item }) => (
+            <View style={styles.feedContainer}>
+              <View style={styles.userInfo}>
+                <View>
+                  <TouchableOpacity>
+                    <Image
+                      style={styles.postFeedUserProfilePic}
+                      source={{ uri: item.profileImage }}
+                    />
+                    <View style={styles.userProfileInfo}>
+                      <Text style={styles.postFeedUserDisplayName}>
+                        {item.displayName}
+                      </Text>
+                      <Text style={styles.postFeedUsername}>
+                        @{item.username}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.userContentContainer}>
+                {item.mediaType === "image" ? (
+                  <View>
+                    <View>
+                      <Image
+                        style={{
+                          height: 392,
+                          width: 343,
+                          borderRadius: 12,
+                        }}
+                        source={{ uri: item.media }}
+                      />
+                    </View>
+
+                    <View style={styles.postInfoContainer}>
+                      <View style={styles.postInfo}>
+                        <View style={styles.postTitleContainer}>
+                          <Text style={styles.postTitle}>{item.title}</Text>
                         </View>
-                      </View>
-                      <View>
-                        <View>
-                          {item.mediaType === "image" ? (
-                            <Image
-                              style={{
-                                height: 392,
-                                width: 343,
-                                borderRadius: 12,
-                              }}
-                              source={{ uri: item.media }}
-                            />
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() => {
-                                navigation.navigate("Player", {
-                                  id: item.id,
-                                  username: item.username,
-                                  profileimage: item.profileImage,
-                                  displayName: item.DisplayName,
-                                  path: item.username,
-                                  title: item.title,
-                                  mediaType: item.mediaType,
-                                  media: item.media,
-                                  description: item.description,
-                                  route: item.id,
-                                });
-                              }}
-                            >
-                              <View>
-                                <Video
-                                  source={{ uri: item.media }}
-                                  ref={video}
-                                  style={{
-                                    height: 239,
-                                    width: 397,
-                                    borderBottomLeftRadius: 20,
-                                    borderBottomRightRadius: 20,
-                                    borderTopLeftRadius: 20,
-                                    borderTopRightRadius: 20,
-                                  }}
-                                  resizeMode="cover"
-                                  onPlaybackStatusUpdate={(status) =>
-                                    setStatus(() => status)
-                                  }
-                                />
-                              </View>
-                            </TouchableOpacity>
-                          )}
-                        </View>
-
-                        <View style={{ top: 10 }}>
-                          <Text
-                            style={{
-                              fontWeight: "800",
-                              fontSize: 12,
-                              paddingBottom: 12,
-                            }}
-                          >
-                            {item.title}
-                          </Text>
-
-                          <Text
-                            style={{
-                              fontWeight: "400",
-                              color: "#5C5C5C",
-                            }}
-                          >
+                        <View style={styles.descriptionContainer}>
+                          <Text style={styles.description}>
                             {item.description}
                           </Text>
                         </View>
                       </View>
+                      <View style={styles.photoBeanContainer}>
+                        <Image
+                          style={{
+                            top: 30,
+                            right: 2,
+                            height: 54,
+                            width: 64,
+                            resizeMode: "contain",
+                          }}
+                          source={require("../assets/photoBean.png")}
+                        />
+
+                        <View style={styles.engagementButtons}>
+                          <UserButtons />
+                        </View>
+                      </View>
                     </View>
-                  </>
+                  </View>
+                ) : (
+                  <View style={styles.feedContainer}>
+                    <Video
+                      source={{ uri: item.media }}
+                      ref={video}
+                      style={{
+                        position: "absolute",
+                        maxHeight: 392,
+                        maxWidth: 338,
+                        height: "100%",
+                        width: "100%",
+                        borderRadius: 12,
+                        alignItems: "center",
+                      }}
+                      resizeMode="cover"
+                      onPlaybackStatusUpdate={(status) =>
+                        setStatus(() => status)
+                      }
+                    />
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("Player", {
+                            id: item.id,
+                            username: item.username,
+                            profileimage: item.profileImage,
+                            displayName: item.displayName,
+                            path: item.username,
+                            title: item.title,
+                            mediaType: item.mediaType,
+                            media: item.media,
+                            description: item.description,
+                            route: item.id,
+                          });
+                        }}
+                      >
+                        <Image
+                          style={{
+                            height: 392,
+                            width: 343,
+                            borderRadius: 12,
+                          }}
+                          source={{ uri: item.media }}
+                        />
+
+                        <Image
+                          style={{
+                            position: "absolute",
+                            width: 50,
+                            top: 160,
+                            alignSelf: "center",
+                            resizeMode: "contain",
+                          }}
+                          source={require("../assets/playButton.png")}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.postInfoContainer}>
+                        <View style={styles.postInfo}>
+                          <View style={styles.postTitleContainer}>
+                            <Text style={styles.postTitle}>{item.title}</Text>
+                          </View>
+                          <View style={styles.descriptionContainer}>
+                            <Text style={styles.description}>
+                              {item.description}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.photoBeanContainer}>
+                          <Image
+                            style={{
+                              top: 30,
+                              right: 2,
+                              height: 54,
+                              width: 64,
+                              resizeMode: "contain",
+                            }}
+                            source={require("../assets/videoBean.png")}
+                          />
+
+                          <View style={styles.engagementButtons}>
+                            <UserButtons />
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
                 )}
-              />
+              </View>
             </View>
-          </>
-        </View>
-        <View style={{ top: 280, backgroundColor: "white" }}>
-          <View style={{ top: 120 }}>
-            <View style={{ height: 200, width: 200 }}></View>
-            <Header navigation={navigation} />
-          </View>
-        </View>
-      </>
-    </>
+          )}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
+  homeScreenContainer: {
+    backgroundColor: "white",
     justifyContent: "center",
   },
 
@@ -325,13 +325,24 @@ const styles = StyleSheet.create({
   },
 
   fullSeperator: {
+    position: "absolute",
+    borderBottomColor: "grey",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    opacity: 0.5,
+    width: 1600,
+
+    bottom: 650,
+  },
+
+  fullSeperator2: {
+    position: "absolute",
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
     width: 900,
-    left: 1,
-    bottom: 250,
+    top: 50,
   },
+
   settingIcon: {
     position: "absolute",
     left: 368,
@@ -348,5 +359,69 @@ const styles = StyleSheet.create({
     width: 455,
     right: -10,
     height: 455,
+  },
+  headerContainer: {},
+  homeScreenContainer: {
+    flex: 1,
+    top: 6,
+  },
+  feedContainer: {
+    flex: 1,
+
+    backgroundColor: "white",
+  },
+  userInfo: {
+    alignItems: "center",
+    paddingBottom: 10,
+    bottom: 10,
+  },
+  postFeedUserProfilePic: {
+    borderRadius: 100,
+    height: 30,
+    width: 30,
+    right: 37,
+    top: 40,
+  },
+  postFeedUserDisplayName: {
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  postFeedUsername: {
+    fontWeight: "500",
+    color: "#5F5F69",
+    fontSize: 12,
+    right: 2,
+  },
+
+  userContentContainer: {
+    alignItems: "center",
+  },
+
+  postTitle: {
+    fontWeight: "800",
+    fontSize: 15,
+  },
+  description: {
+    fontWeight: "600",
+    color: "#5F5F69",
+    top: 5,
+  },
+  photoBeanContainer: {
+    paddingBottom: 100,
+  },
+
+  engagementButtons: {
+    alignItems: "center",
+    top: 12,
+  },
+  postInfo: {
+    top: 10,
+  },
+  userProfileInfo: {
+    flex: "row",
+    top: 8,
+  },
+  descriptionContainer: {
+    top: 3,
   },
 });

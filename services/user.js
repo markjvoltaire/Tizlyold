@@ -63,7 +63,10 @@ export async function getUsers() {
 }
 
 export async function getPosts() {
-  const resp = await supabase.from("post").select("*");
+  const resp = await supabase
+    .from("post")
+    .select("*")
+    .order("id", { ascending: false });
   return resp;
 }
 

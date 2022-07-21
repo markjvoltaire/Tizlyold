@@ -14,7 +14,6 @@ export default function ProfileDetail({ navigation, route }) {
   const currentUserId = user.id;
   const profileDetailUser = route.params.id;
 
-
   if (currentUserId === profileDetailUser) {
     navigation.navigate("UserProfile");
   }
@@ -34,7 +33,7 @@ export default function ProfileDetail({ navigation, route }) {
       <View style={styles.userinfoContainer}>
         <Image
           style={styles.profileImage}
-          source={{ uri: route.params.profileimage }}
+          source={{ uri: route.params.profileImage }}
         />
         <Text style={styles.displayname}>{route.params.displayName}</Text>
         <Text style={styles.username}>@{route.params.username}</Text>

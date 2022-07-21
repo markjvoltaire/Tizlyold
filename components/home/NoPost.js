@@ -7,13 +7,11 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import Header from "./Header";
 
 export default function NoPost() {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Header />
       <FullSeperator />
       <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
         <Image

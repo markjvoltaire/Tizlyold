@@ -29,6 +29,10 @@ export default function PostForm({ navigation }) {
   const username = user.username;
   const displayName = user.displayName;
   const profileImage = user.profileimage;
+  const bannerImage = user.bannerImage;
+  const bio = user.bio;
+
+  const Seperator = () => <View style={styles.fullSeperator} />;
 
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
@@ -37,12 +41,14 @@ export default function PostForm({ navigation }) {
       {
         username: username,
         user_id: userId,
-        DisplayName: displayName,
+        displayName: displayName,
         title: title,
         description: description,
         profileImage: profileImage,
         media: image,
         mediaType: mediaType,
+        bannerImage: bannerImage,
+        bio: bio,
       },
     ]);
 
@@ -172,29 +178,32 @@ export default function PostForm({ navigation }) {
         onChangeText={(text) => setDescription(text)}
       />
 
-      <Text style={styles.subHead}>Select From Gallery</Text>
+      <View style={{ top: 80 }}>
+        <Text style={styles.subHead}>Select From Gallery</Text>
 
-      <TouchableOpacity
-        onPress={async () => {
-          const resp = await pickPost();
+        <TouchableOpacity
+          onPress={async () => {
+            const resp = await pickPost();
 
-          if (resp?.imageData) {
-            setImage(resp.uri);
-            setImageData(resp?.imageData);
-          }
-        }}
-      >
-        <Image
-          style={styles.plusButton}
-          source={
-            image ? { uri: image } : require("../../assets/plusButton.png")
-          }
-        />
-      </TouchableOpacity>
-
+            if (resp?.imageData) {
+              setImage(resp.uri);
+              setImageData(resp?.imageData);
+            }
+          }}
+        >
+          <Image
+            style={styles.plusButton}
+            source={
+              image ? { uri: image } : require("../../assets/plusButton.png")
+            }
+          />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         onPress={() => {
-          addPost();
+          addPost().then(() => {
+            navigation.navigate("HomeScreen");
+          });
         }}
       >
         <Image
@@ -207,6 +216,12 @@ export default function PostForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  category: {
+    position: "absolute",
+    top: 345,
+    right: 183,
+  },
+
   postHeader: {
     alignItems: "center",
     bottom: 330,
@@ -225,15 +240,15 @@ const styles = StyleSheet.create({
 
   subHead: {
     position: "absolute",
-    top: 460,
-    left: 20,
+    top: 400,
+    right: 60,
   },
 
   plusButton: {
     position: "absolute",
     width: 125,
     height: 125,
-    top: 500,
+    top: 450,
     right: 60,
   },
 
@@ -268,5 +283,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     backgroundColor: "#EBEBF1",
     fontWeight: "500",
+  },
+
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    opacity: 0.5,
+    width: 900,
+    left: 1,
+    bottom: 250,
   },
 });

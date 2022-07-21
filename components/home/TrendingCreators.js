@@ -54,7 +54,7 @@ export default function TrendingCreators({ navigation, route }) {
                     id: user.id,
                     username: user.username,
                     email: user.email,
-                    profileimage: user.profileimage,
+                    profileImage: user.profileimage,
                     bannerImage: user.bannerImage,
                     bio: user.bio,
                     displayName: user.displayName,

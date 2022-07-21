@@ -8,10 +8,6 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
-import Header from "../components/home/Header";
-import HomeBoard from "../components/home/HomeBoard";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function Subscriptions({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;

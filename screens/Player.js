@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
-import Header from "../components/home/Header";
 
 export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
-  console.log("route", route);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <SafeAreaView style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
@@ -74,6 +73,7 @@ export default function Player({ route, navigation }) {
             source={{ uri: route.params.media }}
             ref={video}
             useNativeControls
+            shouldPlay={true}
             style={{
               height: 209,
               width: 413.5,
