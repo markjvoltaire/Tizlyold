@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import TopHeader from "../components/TopHeader";
+import NoPost from "../components/home/NoPost";
 
 export default function Subscriptions({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -17,8 +18,7 @@ export default function Subscriptions({ navigation }) {
 
   return (
     <View>
-      <TopHeader />
-      <View style={styles.container}></View>
+      <NoPost />
     </View>
   );
 }

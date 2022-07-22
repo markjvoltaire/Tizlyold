@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { useUser } from "../context/UserContext";
 
-export default function TopHeader() {
+export default function TopHeader({ navigation }) {
   const { user } = useUser();
   const [query, setQuery] = useState();
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -24,12 +24,6 @@ export default function TopHeader() {
         />
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity>
-          <Image
-            style={styles.drawer}
-            source={require("../assets/drawer.png")}
-          />
-        </TouchableOpacity>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
@@ -51,6 +45,18 @@ export default function TopHeader() {
           />
         </TouchableOpacity>
       </View>
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Settings");
+          }}
+        >
+          <Image
+            style={styles.setting}
+            source={require("../assets/Setting.jpg")}
+          />
+        </TouchableOpacity>
+      </View>
       <Image style={styles.profileimage} source={{ uri: user.profileimage }} />
       <FullSeperator />
     </SafeAreaView>
@@ -62,10 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 150,
   },
-  drawer: {
+  setting: {
     position: "absolute",
-    top: 65,
-    left: 14,
+    height: 29,
+    width: 29,
+    left: 368,
+    top: 13,
   },
 
   logo: {
@@ -110,7 +118,7 @@ const styles = StyleSheet.create({
     height: 34,
     width: 34,
     borderRadius: 100,
-    left: 370,
-    top: 10,
+    left: 26,
+    top: 12,
   },
 });
