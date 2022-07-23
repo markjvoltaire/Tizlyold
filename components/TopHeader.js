@@ -72,6 +72,8 @@ const styles = StyleSheet.create({
   componentContainer: {
     backgroundColor: "white",
     height: 150,
+    borderBottomWidth: 1.0,
+    borderBottomColor: "#EDEDED",
   },
   setting: {
     position: "absolute",
