@@ -85,6 +85,10 @@ export default function HomeScreen({ navigation }) {
                       navigation.navigate("ProfileDetail", {
                         user_id: item.user_id,
                         bannerImage: item.bannerImage,
+                        username: item.username,
+                        displayName: item.displayName,
+                        profileImage: item.profileImage,
+                        bio: item.bio,
                       })
                     }
                   >

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { useLinkTo } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
@@ -13,11 +14,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import UserProfile from "../screens/UserProfile";
 import ProfileNav from "../components/profile/ProfileNav";
+import UserButtons from "../components/home/UserButtons";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { getCurrentUserPosts } from "../services/user";
-import ProfileFeedDetails from "../components/profile/ProfileFeedDetails";
+import ProfileFeed from "../components/profile/ProfileFeed";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -49,57 +51,78 @@ export default function ProfileDetail({ navigation, route }) {
     getFeed();
   }, []);
 
-  console.log("userPosts", userPosts);
-
   if (loading) {
     return <Text>Please Wait</Text>;
   }
 
+  console.log("userPosts", userPosts);
+
   return (
-    <ScrollView style={styles.container}>
-      <Image
-        style={styles.userBanner}
-        source={{ uri: route.params.bannerImage }}
-      />
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <ScrollView>
+        <View style={styles.profileHeader}>
+          <Image
+            style={styles.userBanner}
+            source={{ uri: route.params.bannerImage }}
+          />
 
-      <Image
-        style={styles.userBanner}
-        source={require("../assets/fader.png")}
-      />
-
-      <View style={styles.userinfoContainer}>
-        {userPosts.map((post) => (
-          <View style={styles.userinfoContainer} key={post.id}>
+          <Image
+            style={styles.userBannerFader}
+            source={require("../assets/fader.png")}
+          />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image
-              style={styles.profileImage}
-              source={{ uri: post.profileImage }}
+              style={styles.backButton}
+              source={require("../assets/backButton2.png")}
             />
-            <Text style={styles.displayname}>{post.displayName}</Text>
-            <Text style={styles.username}>@{post.username}</Text>
-            <Text style={styles.bio}>{post.bio}</Text>
-          </View>
-        ))}
-      </View>
-      <ProfileNav />
+          </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton2.png")}
-        />
-      </TouchableOpacity>
-    </ScrollView>
+          <Text style={styles.displayname}>{route.params.displayName}</Text>
+          <Text style={styles.username}>@{route.params.username}</Text>
+          <Text style={styles.bio}> {route.params.bio}</Text>
+          <Image
+            style={styles.profileImage}
+            source={{ uri: route.params.profileImage }}
+          />
+        </View>
+        <ProfileNav />
+        <ProfileFeed />
+      </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
+  flatListContainer: {
+    top: 600,
+  },
+  postUserInfo: {
+    alignItems: "center",
+  },
+
+  postProfileImage: {
+    position: "absolute",
+    borderRadius: 100,
+    height: 30,
+    width: 30,
+    top: 520,
+    left: 140,
+  },
+
+  postUsername: {
+    position: "absolute",
+    top: 535,
+    alignSelf: "center",
   },
 
   userBanner: {
-    position: "absolute",
     width: 455,
-    right: -10,
+    bottom: 50,
+    height: 455,
+  },
+
+  userBannerFader: {
+    width: 455,
+    bottom: 500,
     height: 455,
   },
   profileImage: {
@@ -161,7 +184,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    top: 90,
+    bottom: 750,
   },
   photoBox: {
     position: "absolute",

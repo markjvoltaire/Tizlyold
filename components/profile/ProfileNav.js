@@ -24,7 +24,7 @@ export default function ProfileNav({ navigation }) {
 const styles = StyleSheet.create({
   profileNav: {
     position: "absolute",
-    top: 87,
+    top: 39,
     width: 4000,
   },
   home: {
