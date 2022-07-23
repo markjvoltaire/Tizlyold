@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import React from "react";
 import firebase from "firebase/compat";
+import { useUser } from "../context/UserContext";
 
 export default function Welcome({ navigation }) {
+  const { user } = useUser();
   return (
     <SafeAreaView
       style={{
@@ -20,7 +22,9 @@ export default function Welcome({ navigation }) {
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
       <Image style={styles.tagLine} source={require("../assets/word.png")} />
 
-      <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
+      <TouchableOpacity onPress={() => console.log("user", user)}>
+        <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Image

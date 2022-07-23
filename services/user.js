@@ -62,10 +62,29 @@ export async function getUsers() {
   return resp;
 }
 
+export async function getCurrentUserPosts() {
+  const resp = await supabase
+    .from("post")
+    .select("*")
+    .eq("user_id", userId)
+    .order("id", { ascending: false });
+
+  return resp;
+}
+
 export async function getPosts() {
   const resp = await supabase
     .from("post")
     .select("*")
+    .order("id", { ascending: false });
+  return resp;
+}
+
+export async function getPostsById(user_id) {
+  const resp = await supabase
+    .from("post")
+    .select("*")
+    .eq("user_id", user_id)
     .order("id", { ascending: false });
   return resp;
 }

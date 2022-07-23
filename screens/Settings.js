@@ -15,8 +15,7 @@ import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
 
 export default function Settings({ navigation }) {
-  const { user } = useUser();
-
+  const { user, setUser } = useUser();
   async function signOutUser() {
     await supabase.auth
       .signOut()

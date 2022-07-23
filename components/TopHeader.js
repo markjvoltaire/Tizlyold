@@ -57,7 +57,12 @@ export default function TopHeader({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-      <Image style={styles.profileimage} source={{ uri: user.profileimage }} />
+      <TouchableOpacity onPress={() => console.log(user)}>
+        <Image
+          style={styles.profileimage}
+          source={{ uri: user.profileimage }}
+        />
+      </TouchableOpacity>
       <FullSeperator />
     </SafeAreaView>
   );
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
     left: 320,
   },
   profileimage: {
+    position: "absolute",
     height: 34,
     width: 34,
     borderRadius: 100,

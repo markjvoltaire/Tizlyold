@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
 
 export default function ProfileNav({ navigation }) {
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <View style={styles.profileNav}>
       <TouchableOpacity>
@@ -15,6 +16,7 @@ export default function ProfileNav({ navigation }) {
       <TouchableOpacity>
         <Text style={styles.shop}>Shop</Text>
       </TouchableOpacity>
+      <FullSeperator />
     </View>
   );
 }
@@ -54,11 +56,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   fullSeperator: {
-    borderBottomColor: "red",
+    borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
     width: 900,
     left: 1,
-    bottom: 70,
+    top: 430,
   },
 });

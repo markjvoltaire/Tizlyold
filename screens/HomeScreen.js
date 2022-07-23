@@ -31,7 +31,9 @@ export default function HomeScreen({ navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
-  console.log("user", user.user_id);
+  console.log("user", user);
+  console.log("posts", posts);
+  console.log("supabase", supabase.auth.currentUser.id);
 
   useEffect(() => {
     const getUserPost = async () => {
@@ -42,7 +44,7 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = post.body;
-  console.log("posts", posts);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
@@ -56,6 +58,8 @@ export default function HomeScreen({ navigation }) {
     setPost(resp);
     console.log("resp", resp);
   };
+
+  console.log("posts", posts);
 
   return (
     <View style={styles.homeScreenContainer}>
@@ -76,7 +80,14 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.feedContainer}>
               <View style={styles.userInfo}>
                 <View>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("ProfileDetail", {
+                        user_id: item.user_id,
+                        bannerImage: item.bannerImage,
+                      })
+                    }
+                  >
                     <Image
                       style={styles.postFeedUserProfilePic}
                       source={{ uri: item.profileImage }}
@@ -270,7 +281,7 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   homeScreenContainer: {
-    backgroundColor: "white",
+    backgroundColor: "grey",
     justifyContent: "center",
   },
 
@@ -291,12 +302,12 @@ const styles = StyleSheet.create({
 
   fullSeperator: {
     position: "absolute",
+    alignSelf: "center",
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
-    width: 1600,
-
-    bottom: 650,
+    width: 300,
+    bottom: 460,
   },
 
   fullSeperator2: {
@@ -339,6 +350,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 10,
     bottom: 10,
+    left: 12,
   },
   postFeedUserProfilePic: {
     borderRadius: 100,

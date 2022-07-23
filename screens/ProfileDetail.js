@@ -1,6 +1,14 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import { useLinkTo } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import UserProfile from "../screens/UserProfile";
@@ -8,18 +16,47 @@ import ProfileNav from "../components/profile/ProfileNav";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
+import { getCurrentUserPosts } from "../services/user";
+import ProfileFeedDetails from "../components/profile/ProfileFeedDetails";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
-  const currentUserId = user.id;
-  const profileDetailUser = route.params.id;
+  const [userPosts, setUserPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [yId, setPostsById] = useState([]);
 
-  if (currentUserId === profileDetailUser) {
-    navigation.navigate("UserProfile");
+  console.log("route", route);
+
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  const user_id = route.params.user_id;
+
+  async function getUserPostsById() {
+    let { data: post, error } = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("id", { ascending: false });
+    return post;
+  }
+
+  useEffect(() => {
+    const getFeed = () => {
+      getUserPostsById().then((res) => setUserPosts(res));
+      setLoading(false);
+    };
+    getFeed();
+  }, []);
+
+  console.log("userPosts", userPosts);
+
+  if (loading) {
+    return <Text>Please Wait</Text>;
   }
 
   return (
-    <View>
+    <ScrollView style={styles.container}>
       <Image
         style={styles.userBanner}
         source={{ uri: route.params.bannerImage }}
@@ -31,13 +68,17 @@ export default function ProfileDetail({ navigation, route }) {
       />
 
       <View style={styles.userinfoContainer}>
-        <Image
-          style={styles.profileImage}
-          source={{ uri: route.params.profileImage }}
-        />
-        <Text style={styles.displayname}>{route.params.displayName}</Text>
-        <Text style={styles.username}>@{route.params.username}</Text>
-        <Text style={styles.bio}>{route.params.bio}</Text>
+        {userPosts.map((post) => (
+          <View style={styles.userinfoContainer} key={post.id}>
+            <Image
+              style={styles.profileImage}
+              source={{ uri: post.profileImage }}
+            />
+            <Text style={styles.displayname}>{post.displayName}</Text>
+            <Text style={styles.username}>@{post.username}</Text>
+            <Text style={styles.bio}>{post.bio}</Text>
+          </View>
+        ))}
       </View>
       <ProfileNav />
 
@@ -47,57 +88,14 @@ export default function ProfileDetail({ navigation, route }) {
           source={require("../assets/backButton2.png")}
         />
       </TouchableOpacity>
-      <View style={styles.paywall}>
-        <View style={styles.photosDiv}>
-          <Image
-            style={styles.photoBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.photosTextTitle}>Photos</Text>
-          <Text style={styles.photosLength}>18</Text>
-        </View>
-        <View style={styles.videosDiv}>
-          <Image
-            style={styles.videosBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.videosTextTitle}>Videos</Text>
-          <Text style={styles.videosLength}>32</Text>
-        </View>
-        <View style={styles.wrapsDiv}>
-          <Image
-            style={styles.wrapBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.wrapsTextTitle}>Audio</Text>
-          <Text style={styles.wrapsLength}>9</Text>
-        </View>
-
-        <TouchableOpacity>
-          <Image
-            style={styles.followbutton}
-            source={require("../assets/followbutton.png")}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image
-            style={styles.subscribeButton}
-            source={require("../assets/subscribe.png")}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => console.log(route.path)}>
-          <Image
-            style={styles.accessButton}
-            source={require("../assets/accessButton.png")}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+  },
+
   userBanner: {
     position: "absolute",
     width: 455,
@@ -262,5 +260,12 @@ const styles = StyleSheet.create({
   },
   userinfoContainer: {
     top: 30,
+  },
+
+  postFeedUserProfilePic: {
+    position: "absolute",
+    borderRadius: 100,
+    height: 30,
+    width: 30,
   },
 });

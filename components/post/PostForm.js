@@ -236,7 +236,6 @@ export default function PostForm({ navigation }) {
                 setSelected={setSelected}
                 inputStyles={{ fontWeight: "600" }}
                 dropdownStyles={{ height: 130 }}
-                search={false}
               />
             </View>
           </TouchableOpacity>

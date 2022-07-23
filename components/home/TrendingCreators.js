@@ -49,7 +49,7 @@ export default function TrendingCreators({ navigation, route }) {
       {users.map((user) => {
         return (
           <>
-            <View style={styles.trendingUsers}>
+            <View style={styles.trendingUsers} key={user.id}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ProfileDetail", {
