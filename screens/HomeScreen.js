@@ -31,7 +31,6 @@ export default function HomeScreen({ navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
-  console.log("user", user);
   console.log("posts", posts);
   console.log("supabase", supabase.auth.currentUser.id);
 

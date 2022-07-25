@@ -76,7 +76,6 @@ export default function PostFeed({ posts }) {
           </View>
         );
       })}
-      <PostButtons />
     </View>
   );
 }
