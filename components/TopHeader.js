@@ -38,7 +38,7 @@ export default function TopHeader({ navigation }) {
             source={require("../assets/Search.png")}
           />
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
           <Image
             style={styles.notification}
             source={require("../assets/noti.png")}

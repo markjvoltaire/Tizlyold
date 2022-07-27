@@ -16,7 +16,10 @@ export default function ProfileFeed({ userPosts }) {
     <View style={styles.feedContainer}>
       {userPosts.map((post) => {
         return (
-          <View style={{ top: 80, paddingBottom: 660, alignItems: "center" }}>
+          <View
+            key={post.id}
+            style={{ top: 80, paddingBottom: 660, alignItems: "center" }}
+          >
             <View
               style={{
                 alignItems: "center",

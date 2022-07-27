@@ -20,6 +20,7 @@ import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { getCurrentUserPosts } from "../services/user";
 import ProfileFeed from "../components/profile/ProfileFeed";
+import { eq } from "react-native-reanimated";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -28,11 +29,23 @@ export default function ProfileDetail({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [yId, setPostsById] = useState([]);
 
+  // console.log("user", user);
   console.log("route", route);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const user_id = route.params.user_id;
+
+  async function subscribe() {
+    const resp = await supabase
+      .from("profiles")
+      .upsert([{ subscribers: "yooo" }])
+      .eq("user_id", user_id);
+
+    console.log(resp);
+
+    return resp;
+  }
 
   async function getUserPostsById() {
     let { data: post, error } = await supabase
@@ -55,8 +68,6 @@ export default function ProfileDetail({ navigation, route }) {
     return <Text>Please Wait</Text>;
   }
 
-  console.log("userPosts", userPosts);
-
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView>
@@ -77,6 +88,18 @@ export default function ProfileDetail({ navigation, route }) {
             />
           </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => subscribe()}>
+            <Image
+              style={{
+                resizeMode: "contain",
+                width: 100,
+                bottom: 480,
+                left: 10,
+                position: "absolute",
+              }}
+              source={require("../assets/subscribe.png")}
+            />
+          </TouchableOpacity>
           <Text style={styles.displayname}>{route.params.displayName}</Text>
           <Text style={styles.username}>@{route.params.username}</Text>
           <Text style={styles.bio}> {route.params.bio}</Text>

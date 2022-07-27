@@ -42,6 +42,8 @@ export default function HomeScreen({ navigation }) {
     getUserPost();
   }, []);
 
+  console.log("env", process.env.PUBLISHABLE_KEY);
+
   const posts = post.body;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
