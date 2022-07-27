@@ -7,6 +7,7 @@ import {
   FlatList,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { useLinkTo } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
@@ -21,6 +22,11 @@ import { useUser } from "../context/UserContext";
 import { getCurrentUserPosts } from "../services/user";
 import ProfileFeed from "../components/profile/ProfileFeed";
 import { eq } from "react-native-reanimated";
+import {
+  CardField,
+  useConfirmPayment,
+  useStripe,
+} from "@stripe/stripe-react-native";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -35,17 +41,48 @@ export default function ProfileDetail({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const user_id = route.params.user_id;
+  const stripe = useStripe();
 
-  async function subscribe() {
-    const resp = await supabase
-      .from("profiles")
-      .upsert([{ subscribers: "yooo" }])
-      .eq("user_id", user_id);
+  const sellerUserId = route.params.user_id;
 
-    console.log(resp);
+  const email = user.email;
+  const username = user.username;
+  const buyerUserId = user.user_id;
 
-    return resp;
-  }
+  console.log(user);
+
+  const subscribe = async () => {
+    try {
+      // sending request
+      const response = await fetch("http://localhost:5000/pay", {
+        method: "POST",
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          buyerUserId: buyerUserId,
+          sellerUserId: sellerUserId,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) return Alert.alert(data.message);
+      const clientSecret = data.clientSecret;
+      const initSheet = await stripe.initPaymentSheet({
+        paymentIntentClientSecret: clientSecret,
+      });
+      if (initSheet.error) return Alert.alert(initSheet.error.message);
+      const presentSheet = await stripe.presentPaymentSheet({
+        clientSecret,
+      });
+      if (presentSheet.error) return Alert.alert(presentSheet.error.message);
+      Alert.alert("Payment complete, thank you!");
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Something went wrong, try again later!");
+    }
+  };
 
   async function getUserPostsById() {
     let { data: post, error } = await supabase

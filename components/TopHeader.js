@@ -122,11 +122,10 @@ const styles = StyleSheet.create({
     left: 320,
   },
   profileimage: {
-    position: "absolute",
     height: 34,
     width: 34,
     borderRadius: 100,
-    left: 26,
+    left: 16,
     top: 12,
   },
 });
