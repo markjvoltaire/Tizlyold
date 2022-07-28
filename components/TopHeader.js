@@ -57,12 +57,9 @@ export default function TopHeader({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => console.log(user)}>
-        <Image
-          style={styles.profileimage}
-          source={{ uri: user.profileimage }}
-        />
-      </TouchableOpacity>
+
+      <Image style={styles.profileimage} source={{ uri: user.profileimage }} />
+
       <FullSeperator />
     </SafeAreaView>
   );

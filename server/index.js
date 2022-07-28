@@ -63,8 +63,13 @@ app.post("/stripe", async (req, res) => {
   }
   // Event when a payment is succeeded
   if (event.type === "payment_intent.succeeded") {
-    console.log(`${event.data.object.metadata.name} succeeded payment!`);
+    console.log(`${event.data.object.metadata.buyerUserId} succeeded payment!`);
+    console.log("event id", event.id);
     // fulfilment
   }
+
   res.json({ ok: true });
 });
+
+//event id evt_3LQbf8CvtaY6dxcG10ZvEzeV
+//event id evt_3LQbfqCvtaY6dxcG16z8zqY1
