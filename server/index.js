@@ -2,6 +2,9 @@ import express from "express";
 import Stripe from "stripe";
 import cors from "cors";
 
+const STRIPE_WEBHOOK_SECRET =
+  "whsec_4e5c9ca7d161896f6ad566a52507f767e107a881bf3d9ede7f45c4f4136242b6";
+
 const PUBLISHABLE_KEY =
   "pk_test_51LPUTtCvtaY6dxcGIxHX3dtf4hLy3UDzy57Wbjm3zcELFJHoqFWoEaAwOVmieZgkCyoSwimcyqjTsypnfJATHNFJ00kjY5AbSg";
 
@@ -13,6 +16,7 @@ const port = 5000;
 
 const stripe = Stripe(SECRET_KEY, { apiVersion: "2020-08-27" });
 
+app.use("/stripe", express.raw({ type: "*/*" }));
 app.use(express.json());
 app.use(cors());
 
@@ -46,7 +50,7 @@ app.post("/stripe", async (req, res) => {
     event = await stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
     console.error(err);
@@ -55,7 +59,7 @@ app.post("/stripe", async (req, res) => {
 
   // Event when a payment is initiated
   if (event.type === "payment_intent.created") {
-    console.log(`${event.data.object.metadata.name} initated payment!`);
+    console.log(`${event.data.object.metadata.buyerUserId} initated payment!`);
   }
   // Event when a payment is succeeded
   if (event.type === "payment_intent.succeeded") {
