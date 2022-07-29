@@ -36,7 +36,7 @@ export default function ProfileDetail({ navigation, route }) {
   const [yId, setPostsById] = useState([]);
 
   // console.log("user", user);
-  console.log("route", route);
+  // console.log("route", route.params.user_id);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 

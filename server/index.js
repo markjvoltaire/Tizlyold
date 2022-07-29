@@ -1,6 +1,7 @@
 import express from "express";
 import Stripe from "stripe";
 import cors from "cors";
+import { supabase } from "../services/supabase";
 
 const STRIPE_WEBHOOK_SECRET =
   "whsec_4e5c9ca7d161896f6ad566a52507f767e107a881bf3d9ede7f45c4f4136242b6";
@@ -44,6 +45,7 @@ app.post("/pay", async (req, res) => {
 });
 
 app.post("/stripe", async (req, res) => {
+  const { sellerUserId } = req.body;
   const sig = req.headers["stripe-signature"];
   let event;
   try {
@@ -64,8 +66,24 @@ app.post("/stripe", async (req, res) => {
   // Event when a payment is succeeded
   if (event.type === "payment_intent.succeeded") {
     console.log(`${event.data.object.metadata.buyerUserId} succeeded payment!`);
-    console.log("event id", event.id);
+
     // fulfilment
+    async function addPaymentDetails() {
+      // const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase.from("subscriptions").insert([
+        {
+          customerid: event.data.object.metadata.buyerUserId,
+          sellerid: event.data.object.metadata.sellerUserId,
+          paymentComfirmation: event.data.object.id,
+        },
+      ]);
+
+      console.log(resp);
+
+      return resp;
+    }
+    addPaymentDetails();
   }
 
   res.json({ ok: true });
