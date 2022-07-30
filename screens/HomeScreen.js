@@ -9,16 +9,14 @@ import {
   SafeAreaView,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "../services/supabase";
-import { StatusBar } from "expo-status-bar";
 
 import { useUser } from "../context/UserContext";
 import { getPosts } from "../services/user";
-import PostFeed from "../components/home/PostFeed";
 
 import { usePosts } from "../context/PostContext";
-import NoPost from "../components/home/NoPost";
+
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../components/home/UserButtons";
 import TopHeader from "../components/TopHeader";
@@ -26,13 +24,9 @@ import TopHeader from "../components/TopHeader";
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
   const { post, setPost } = usePosts();
-  const [image, setImage] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
-
-  console.log("posts", posts);
-  console.log("supabase", supabase.auth.currentUser.id);
 
   useEffect(() => {
     const getUserPost = async () => {
@@ -41,8 +35,6 @@ export default function HomeScreen({ navigation }) {
     };
     getUserPost();
   }, []);
-
-  console.log("env", process.env.PUBLISHABLE_KEY);
 
   const posts = post.body;
 
@@ -57,10 +49,7 @@ export default function HomeScreen({ navigation }) {
   const refreshFeed = async () => {
     const resp = await getPosts();
     setPost(resp);
-    console.log("resp", resp);
   };
-
-  console.log("posts", posts);
 
   return (
     <View style={styles.homeScreenContainer}>
@@ -133,6 +122,7 @@ export default function HomeScreen({ navigation }) {
                             }}
                             source={{ uri: item.category }}
                           />
+
                           <TouchableOpacity>
                             <Image
                               style={{

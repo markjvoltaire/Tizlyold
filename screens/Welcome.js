@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import firebase from "firebase/compat";
+
 import { useUser } from "../context/UserContext";
 
 export default function Welcome({ navigation }) {
