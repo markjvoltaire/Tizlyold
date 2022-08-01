@@ -26,14 +26,6 @@ export default function Post({ navigation }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const resp = await getUserById();
-      setUser(resp);
-    };
-    getUserProfile();
-  }, []);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <PostForm navigation={navigation} />

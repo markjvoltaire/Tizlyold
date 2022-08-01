@@ -28,43 +28,6 @@ import Animated, {
 import { PanGestureHandler } from "react-native-gesture-handler";
 
 export default function HomeScreen({ navigation }) {
-  const SPING_CONFIG = {
-    damping: 80,
-    overshootClamping: true,
-    restDisplacementThreshold: 0.1,
-    restSpeedThreshold: 0.1,
-    stiffness: 500,
-  };
-  const dimensions = useWindowDimensions();
-
-  console.log(dimensions.height * 0);
-
-  const top = useSharedValue(dimensions.height);
-
-  const style = useAnimatedStyle(() => {
-    return {
-      top: withSpring(top.value, SPING_CONFIG),
-    };
-  });
-
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart(_, context) {
-      context.startTop = top.value;
-    },
-
-    onActive(event, context) {
-      top.value = context.startTop + event.translationY;
-    },
-
-    onEnd() {
-      if (top.value > dimensions.height / 2 + 200) {
-        top.value = dimensions.height;
-      } else {
-        top.value = dimensions.height / 2;
-      }
-    },
-  });
-
   const { user, setUser } = useUser();
   const { post, setPost } = usePosts();
   const [refreshing, setRefreshing] = useState(false);
@@ -80,6 +43,8 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = post.body;
+
+  console.log("posts", posts);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -108,7 +73,7 @@ export default function HomeScreen({ navigation }) {
           onRefresh={() => refreshFeed()}
           initialNumToRender={4}
           contentContainerStyle={{
-            borderBottomWidth: 2.8,
+            borderBottomWidth: 0.8,
             borderBottomColor: "#EDEDED",
           }}
           renderItem={({ item }) => (
@@ -243,10 +208,9 @@ export default function HomeScreen({ navigation }) {
                       ref={video}
                       style={{
                         position: "absolute",
-                        maxHeight: 392,
-                        maxWidth: 338,
-                        height: "100%",
-                        width: "100%",
+                        height: 392,
+                        width: 338,
+
                         borderRadius: 12,
                         alignItems: "center",
                       }}
@@ -269,6 +233,7 @@ export default function HomeScreen({ navigation }) {
                             media: item.media,
                             description: item.description,
                             route: item.id,
+                            creatAt: item.creatAt,
                           });
                         }}
                       >
@@ -328,35 +293,6 @@ export default function HomeScreen({ navigation }) {
           )}
         />
       </View>
-      <PanGestureHandler onGestureEvent={gestureHandler}>
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderTopRightRadius: 20,
-              borderTopLeftRadius: 20,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 10.25,
-              shadowRadius: 3.84,
-              elevation: 50,
-              padding: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            },
-            style,
-          ]}
-        >
-          <Button title="hello" onPress={() => console.log(posts)} />
-        </Animated.View>
-      </PanGestureHandler>
     </View>
   );
 }

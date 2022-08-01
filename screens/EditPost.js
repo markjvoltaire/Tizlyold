@@ -107,6 +107,7 @@ export default function EditPost({ route, navigation }) {
         {post.map((item) => {
           return (
             <Image
+              key={item.id}
               source={{ uri: item.media }}
               style={{
                 height: 220,

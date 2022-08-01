@@ -36,8 +36,6 @@ export default function PostForm({ navigation }) {
 
   const [selected, setSelected] = useState("");
 
-  console.log("selected", selected);
-
   const data = [
     {
       key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png",
@@ -103,52 +101,6 @@ export default function PostForm({ navigation }) {
 
     return resp;
   }
-
-  const uploadPostFromUri = async (photo) => {
-    const userId = supabase.auth.currentUser.id;
-
-    if (!photo.cancelled) {
-      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
-
-      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: photo.uri,
-        name: fileName,
-        type: photo.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      const { data, error } = await supabase.storage
-        .from("posts")
-        .upload(fileName, formData, {
-          upsert: true,
-        });
-
-      const { publicURL } = await supabase.storage
-        .from("posts")
-        .getPublicUrl(`${fileName}`);
-      console.log("publicURL", publicURL);
-
-      const url = publicURL;
-      console.log("url", url);
-
-      const resp = await supabase
-        .from("post")
-        .insert({ user_id: userId, media: publicURL })
-        .eq("id", resp.id);
-
-      getUserByIds();
-
-      console.log("error", error);
-
-      if (error) throw new Error(error.message);
-
-      return { ...photo, imageData: data };
-    } else {
-      return photo;
-    }
-  };
 
   const pickPost = async () => {
     // No permissions request is necessary for launching the image library
@@ -366,11 +318,12 @@ const styles = StyleSheet.create({
   postDescription: {
     position: "absolute",
     top: 130,
-    height: 115,
+    height: 155,
     width: 380,
     borderRadius: 8,
     fontSize: 16,
-    paddingBottom: 120,
+    paddingBottom: 62,
+    paddingLeft: 20,
 
     paddingTop: 40,
     backgroundColor: "#EBEBF1",

@@ -9,10 +9,14 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
+import PostNavigator from "../components/post/PostNavigator";
+import PostDetailButtons from "../components/post/PostDetailButtons";
 
 export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
+
+  const videoDetails = route.params;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
@@ -79,18 +83,19 @@ export default function Player({ route, navigation }) {
               width: 413.5,
               top: 181,
             }}
-            resizeMode="cover"
+            resizeMode="contain"
             onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
         </View>
         <View>
-          <Text style={{ position: "absolute", top: 220 }}>
+          <Text style={{ position: "absolute", top: 220, fontWeight: "700" }}>
             {route.params.title}
           </Text>
         </View>
-        <Text style={{ position: "absolute", top: 480 }}>
+        <Text style={{ position: "absolute", top: 470, fontWeight: "400" }}>
           {route.params.description}
         </Text>
+        <Text style={{ top: 300 }}>{route.params.creatAt}</Text>
       </View>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image
@@ -98,6 +103,10 @@ export default function Player({ route, navigation }) {
           source={require("../assets/backButton2.png")}
         />
       </TouchableOpacity>
+      <View style={{ top: 270 }}>
+        <PostDetailButtons />
+      </View>
+      <PostNavigator />
     </SafeAreaView>
   );
 }
