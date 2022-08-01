@@ -8,20 +8,63 @@ import {
   Button,
   SafeAreaView,
   FlatList,
+  useWindowDimensions,
 } from "react-native";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
-
 import { useUser } from "../context/UserContext";
 import { getPosts } from "../services/user";
-
 import { usePosts } from "../context/PostContext";
-
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../components/home/UserButtons";
 import TopHeader from "../components/TopHeader";
 
+import Animated, {
+  useAnimatedGestureHandler,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
+import { PanGestureHandler } from "react-native-gesture-handler";
+
 export default function HomeScreen({ navigation }) {
+  const SPING_CONFIG = {
+    damping: 80,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.1,
+    restSpeedThreshold: 0.1,
+    stiffness: 500,
+  };
+  const dimensions = useWindowDimensions();
+
+  console.log(dimensions.height * 0);
+
+  const top = useSharedValue(dimensions.height);
+
+  const style = useAnimatedStyle(() => {
+    return {
+      top: withSpring(top.value, SPING_CONFIG),
+    };
+  });
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart(_, context) {
+      context.startTop = top.value;
+    },
+
+    onActive(event, context) {
+      top.value = context.startTop + event.translationY;
+    },
+
+    onEnd() {
+      if (top.value > dimensions.height / 2 + 200) {
+        top.value = dimensions.height;
+      } else {
+        top.value = dimensions.height / 2;
+      }
+    },
+  });
+
   const { user, setUser } = useUser();
   const { post, setPost } = usePosts();
   const [refreshing, setRefreshing] = useState(false);
@@ -51,6 +94,8 @@ export default function HomeScreen({ navigation }) {
     setPost(resp);
   };
 
+  console.log("posts", posts);
+
   return (
     <View style={styles.homeScreenContainer}>
       <TopHeader navigation={navigation} />
@@ -79,6 +124,10 @@ export default function HomeScreen({ navigation }) {
                         displayName: item.displayName,
                         profileImage: item.profileImage,
                         bio: item.bio,
+                        media: item.media,
+                        description: item.description,
+                        title: item.title,
+                        id: item.id,
                       })
                     }
                   >
@@ -123,7 +172,16 @@ export default function HomeScreen({ navigation }) {
                             source={{ uri: item.category }}
                           />
 
-                          <TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate("EditPost", {
+                                user_id: item.user_id,
+                                description: item.description,
+                                title: item.title,
+                                id: item.id,
+                              })
+                            }
+                          >
                             <Image
                               style={{
                                 position: "absolute",
@@ -270,13 +328,42 @@ export default function HomeScreen({ navigation }) {
           )}
         />
       </View>
+      <PanGestureHandler onGestureEvent={gestureHandler}>
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderTopRightRadius: 20,
+              borderTopLeftRadius: 20,
+              backgroundColor: "white",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 10.25,
+              shadowRadius: 3.84,
+              elevation: 50,
+              padding: 20,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            style,
+          ]}
+        >
+          <Button title="hello" onPress={() => console.log(posts)} />
+        </Animated.View>
+      </PanGestureHandler>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   homeScreenContainer: {
-    backgroundColor: "grey",
+    backgroundColor: "white",
     justifyContent: "center",
   },
 
@@ -338,7 +425,6 @@ const styles = StyleSheet.create({
   },
   feedContainer: {
     flex: 1,
-
     backgroundColor: "white",
   },
   userInfo: {

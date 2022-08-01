@@ -153,10 +153,6 @@ export default function ProfileDetail({ navigation, route }) {
   );
 }
 const styles = StyleSheet.create({
-  flatListContainer: {
-    top: 600,
-    flex: 1,
-  },
   postUserInfo: {
     alignItems: "center",
   },

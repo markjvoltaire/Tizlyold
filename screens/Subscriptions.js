@@ -90,23 +90,7 @@ export default function Subscriptions({ navigation }) {
             },
             style,
           ]}
-        >
-          <Button title="Edit" />
-          <Button title="Share" />
-          <Button
-            onPress={() => {
-              top.value = withSpring(dimensions.height, {
-                damping: 80,
-                overshootClamping: true,
-                restDisplacementThreshold: 0.1,
-                restSpeedThreshold: 0.1,
-                stiffness: 500,
-              });
-            }}
-            title="Cancel"
-            color="red"
-          />
-        </Animated.View>
+        ></Animated.View>
       </PanGestureHandler>
     </View>
   );

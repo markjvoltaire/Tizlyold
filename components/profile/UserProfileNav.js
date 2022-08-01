@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function ProfileNav({ navigation }) {
+export default function UserProfileNav() {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <View style={styles.profileNav}>
@@ -24,7 +24,7 @@ export default function ProfileNav({ navigation }) {
 const styles = StyleSheet.create({
   profileNav: {
     position: "absolute",
-    top: 39,
+    top: 85,
     width: 4000,
   },
   home: {

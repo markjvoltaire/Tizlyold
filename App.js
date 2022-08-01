@@ -40,6 +40,8 @@ import UserProfileSubscribers from "./screens/UserProfileSubscribers";
 import { PostProvider } from "./context/PostContext";
 import Player from "./screens/Player";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import UserProfilePostDetail from "./screens/UserProfilePostDetail";
+import EditPost from "./screens/EditPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +62,18 @@ export default function App() {
               <Stack.Screen
                 name="Player"
                 component={Player}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="EditPost"
+                component={EditPost}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="UserProfilePostDetail"
+                component={UserProfilePostDetail}
                 options={{ headerShown: false }}
               />
 

@@ -12,6 +12,8 @@ import Welcome from "../screens/Welcome";
 import UserProfile from "../screens/UserProfile";
 import Post from "../screens/Post";
 import UserProfileSubscribers from "../screens/UserProfileSubscribers";
+import UserProfilePostDetail from "../screens/UserProfilePostDetail";
+import EditPost from "../screens/EditPost";
 
 const Stack = createStackNavigator();
 
@@ -87,10 +89,26 @@ const UsernameStackNavigator = () => {
   );
 };
 
+const UserProfilePostDetailStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="UserProfilePost" component={UserProfilePostDetail} />
+    </Stack.Navigator>
+  );
+};
+
 const PostStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="PostScreen" component={Post} />
+    </Stack.Navigator>
+  );
+};
+
+const EditPostStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="EditPostScreen" component={EditPost} />
     </Stack.Navigator>
   );
 };
@@ -122,4 +140,6 @@ export {
   UsernameStackNavigator,
   PostStackNavigator,
   ProfileSubscriberStackNavigator,
+  UserProfilePostDetail,
+  EditPostStackNavigator,
 };

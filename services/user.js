@@ -126,6 +126,13 @@ export async function editProfile(username, displayName, bio) {
     .eq("user_id", userId);
 }
 
+export async function editPost(title, description, id) {
+  const { data, error } = await supabase
+    .from("post")
+    .update({ title: title, description: description })
+    .eq("id", id);
+}
+
 export async function createPost(
   username,
   displayName,

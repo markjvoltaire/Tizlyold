@@ -57,7 +57,7 @@ export default function PostForm({ navigation }) {
     },
     {
       key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/sportsBean.png",
-      value: "Spor",
+      value: "Sports",
     },
     {
       key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/cookingBean.png",
@@ -260,11 +260,7 @@ export default function PostForm({ navigation }) {
       </View>
 
       <TouchableOpacity
-        onPress={() => {
-          addPost().then(() => {
-            navigation.navigate("HomeScreen");
-          });
-        }}
+        onPress={() => addPost().then(() => navigation.navigate("HomeScreen"))}
       >
         <Image
           style={styles.postButton}
