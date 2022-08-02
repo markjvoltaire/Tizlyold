@@ -17,8 +17,6 @@ export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
 
-  console.log("route", route);
-
   const postUserId = route.params.user_id;
   const creatorDisplayName = route.params.displayName;
 
@@ -144,11 +142,11 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    bottom: 160,
+    bottom: 175,
   },
   logo: {
     position: "absolute",
-    top: 5,
+    top: 15,
     resizeMode: "contain",
     width: 52,
     height: 26,

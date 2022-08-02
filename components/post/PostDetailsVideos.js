@@ -24,8 +24,6 @@ export default function PostDetailsVideos({ creatorDisplayName, postUserId }) {
     return resp.body;
   }
 
-  console.log("posts", posts);
-
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
