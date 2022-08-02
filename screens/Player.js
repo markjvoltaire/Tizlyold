@@ -6,6 +6,7 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
@@ -16,97 +17,122 @@ export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
 
-  const videoDetails = route.params;
+  console.log("route", route);
+
+  const postUserId = route.params.user_id;
+  const creatorDisplayName = route.params.displayName;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <SafeAreaView style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
-      <View style={{ alignItems: "center" }}>
-        <Image
-          style={styles.logo}
-          source={require("../assets/tizlyicon.jpg")}
-        />
-        <FullSeperator />
-      </View>
-      <View style={{ bottom: 40 }}>
-        <Image
-          style={{
-            position: "absolute",
-            width: 100,
-            height: 80,
-            resizeMode: "contain",
-            top: 120,
-            left: 300,
-          }}
-          source={require("../assets/goToProfile.png")}
-        />
-        <Image
-          style={{
-            position: "absolute",
-            width: 26,
-            height: 26,
-            top: 147,
-            borderRadius: 100,
-            left: 10,
-          }}
-          source={{ uri: route.params.profileimage }}
-        />
-        <Text
-          style={{
-            position: "absolute",
-            top: 143,
-            left: 41,
-            fontWeight: "700",
-          }}
-        >
-          {route.params.displayName}
-        </Text>
-        <Text
-          style={{
-            position: "absolute",
-            top: 157,
-            left: 41,
-            fontWeight: "500",
-            color: "grey",
-          }}
-        >
-          @{route.params.username}
-        </Text>
+      <ScrollView>
         <View style={{ alignItems: "center" }}>
-          <Video
-            source={{ uri: route.params.media }}
-            ref={video}
-            useNativeControls
-            shouldPlay={true}
-            style={{
-              height: 209,
-              width: 413.5,
-              top: 181,
-            }}
-            resizeMode="contain"
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          <Image
+            style={styles.logo}
+            source={require("../assets/tizlyicon.jpg")}
           />
+          <FullSeperator />
         </View>
-        <View>
-          <Text style={{ position: "absolute", top: 220, fontWeight: "700" }}>
-            {route.params.title}
+        <View style={{ bottom: 40 }}>
+          <Image
+            style={{
+              position: "absolute",
+              width: 100,
+              height: 80,
+              resizeMode: "contain",
+              top: 120,
+              left: 300,
+            }}
+            source={require("../assets/goToProfile.png")}
+          />
+          <Image
+            style={{
+              position: "absolute",
+              width: 26,
+              height: 26,
+              top: 147,
+              borderRadius: 100,
+              left: 10,
+            }}
+            source={{ uri: route.params.profileimage }}
+          />
+          <Text
+            style={{
+              position: "absolute",
+              top: 143,
+              left: 41,
+              fontWeight: "700",
+            }}
+          >
+            {route.params.displayName}
+          </Text>
+          <Text
+            style={{
+              position: "absolute",
+              top: 157,
+              left: 41,
+              fontWeight: "500",
+              color: "grey",
+            }}
+          >
+            @{route.params.username}
+          </Text>
+          <View style={{ alignItems: "center" }}>
+            <Video
+              source={{ uri: route.params.media }}
+              ref={video}
+              useNativeControls
+              shouldPlay={true}
+              style={{
+                height: 209,
+                width: 413.5,
+                top: 181,
+              }}
+              resizeMode="contain"
+              onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                position: "absolute",
+                top: 220,
+                fontWeight: "700",
+                left: 10,
+              }}
+            >
+              {route.params.title}
+            </Text>
+          </View>
+          <Text
+            style={{
+              position: "absolute",
+              top: 460,
+              fontWeight: "400",
+              left: 10,
+            }}
+          >
+            {route.params.description}
+          </Text>
+          <Text style={{ top: 300, left: 10, color: "#73738B" }}>
+            {route.params.creatAt}
           </Text>
         </View>
-        <Text style={{ position: "absolute", top: 470, fontWeight: "400" }}>
-          {route.params.description}
-        </Text>
-        <Text style={{ top: 300 }}>{route.params.creatAt}</Text>
-      </View>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton2.png")}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            style={styles.backButton}
+            source={require("../assets/backButton2.png")}
+          />
+        </TouchableOpacity>
+        <View style={{ top: 270 }}>
+          <PostDetailButtons />
+        </View>
+
+        <PostNavigator
+          postUserId={postUserId}
+          creatorDisplayName={creatorDisplayName}
         />
-      </TouchableOpacity>
-      <View style={{ top: 270 }}>
-        <PostDetailButtons />
-      </View>
-      <PostNavigator />
+      </ScrollView>
     </SafeAreaView>
   );
 }

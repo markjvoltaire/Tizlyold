@@ -43,6 +43,7 @@ export default function PostDetailButtons() {
 
 const styles = StyleSheet.create({
   userButtonsContainer: {
+    flex: 1,
     position: "absolute",
     flexDirection: "row",
     display: "flex",

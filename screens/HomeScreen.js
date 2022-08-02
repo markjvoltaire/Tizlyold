@@ -234,6 +234,7 @@ export default function HomeScreen({ navigation }) {
                             description: item.description,
                             route: item.id,
                             creatAt: item.creatAt,
+                            user_id: item.user_id,
                           });
                         }}
                       >
