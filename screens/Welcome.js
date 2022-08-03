@@ -12,6 +12,7 @@ import { useUser } from "../context/UserContext";
 
 export default function Welcome({ navigation }) {
   const { user } = useUser();
+
   return (
     <SafeAreaView
       style={{

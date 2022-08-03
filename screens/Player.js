@@ -7,131 +7,83 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
+  FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import PostNavigator from "../components/post/PostNavigator";
 import PostDetailButtons from "../components/post/PostDetailButtons";
+import { supabase } from "../services/supabase";
+import UserPostDetails from "../components/post/UserPostDetails";
+import VideoHeader from "../components/post/VideoHeader";
+import BottomTabNavigator from "../navigation/TabNavigator";
+import Comment from "../components/post/Comment";
 
 export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
+  const [post, setPost] = useState([]);
+
+  const windowWidth = Dimensions.get("window").width;
 
   const postUserId = route.params.user_id;
-  const creatorDisplayName = route.params.displayName;
+  const postId = route.params.id;
+  const displayName = route.params.displayName;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  return (
-    <SafeAreaView style={{ backgroundColor: "#FFFFFF", flex: 1 }}>
-      <ScrollView>
-        <View style={{ alignItems: "center" }}>
-          <Image
-            style={styles.logo}
-            source={require("../assets/tizlyicon.jpg")}
-          />
-          <FullSeperator />
-        </View>
-        <View style={{ bottom: 40 }}>
-          <Image
-            style={{
-              position: "absolute",
-              width: 100,
-              height: 80,
-              resizeMode: "contain",
-              top: 120,
-              left: 300,
-            }}
-            source={require("../assets/goToProfile.png")}
-          />
-          <Image
-            style={{
-              position: "absolute",
-              width: 26,
-              height: 26,
-              top: 147,
-              borderRadius: 100,
-              left: 10,
-            }}
-            source={{ uri: route.params.profileimage }}
-          />
-          <Text
-            style={{
-              position: "absolute",
-              top: 143,
-              left: 41,
-              fontWeight: "700",
-            }}
-          >
-            {route.params.displayName}
-          </Text>
-          <Text
-            style={{
-              position: "absolute",
-              top: 157,
-              left: 41,
-              fontWeight: "500",
-              color: "grey",
-            }}
-          >
-            @{route.params.username}
-          </Text>
-          <View style={{ alignItems: "center" }}>
-            <Video
-              source={{ uri: route.params.media }}
-              ref={video}
-              useNativeControls
-              shouldPlay={true}
-              style={{
-                height: 209,
-                width: 413.5,
-                top: 181,
-              }}
-              resizeMode="contain"
-              onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-            />
-          </View>
-          <View>
-            <Text
-              style={{
-                position: "absolute",
-                top: 220,
-                fontWeight: "700",
-                left: 10,
-              }}
-            >
-              {route.params.title}
-            </Text>
-          </View>
-          <Text
-            style={{
-              position: "absolute",
-              top: 460,
-              fontWeight: "400",
-              left: 10,
-            }}
-          >
-            {route.params.description}
-          </Text>
-          <Text style={{ top: 300, left: 10, color: "#73738B" }}>
-            {route.params.creatAt}
-          </Text>
-        </View>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            style={styles.backButton}
-            source={require("../assets/backButton2.png")}
-          />
-        </TouchableOpacity>
-        <View style={{ top: 270 }}>
-          <PostDetailButtons />
-        </View>
 
-        <PostNavigator
-          postUserId={postUserId}
-          creatorDisplayName={creatorDisplayName}
+  async function getPosts() {
+    const resp = await supabase
+      .from("post")
+      .select("*")
+      .eq("mediaType", "video")
+      .eq("id", postId)
+      .order("id", { ascending: false });
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getUserPost = async () => {
+      const resp = await getPosts();
+      setPost(resp);
+    };
+    getUserPost();
+  }, []);
+
+  return (
+    <View style={{ backgroundColor: "white", flex: 1 }}>
+      <VideoHeader navigation={navigation} route={route} />
+      <View>
+        {post.map((item) => {
+          return (
+            <View key={item.id} style={{ top: 80, position: "absolute" }}>
+              <Video
+                source={{ uri: item.media }}
+                useNativeControls
+                shouldPlay={true}
+                style={{ height: 229, width: 415 }}
+              />
+            </View>
+          );
+        })}
+      </View>
+      <View style={{ top: 149, flex: 1, marginVertical: 190 }}>
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={post}
+          renderItem={({ item }) => (
+            <UserPostDetails
+              displayName={displayName}
+              postUserId={postUserId}
+              navigation={navigation}
+              post={item}
+            />
+          )}
         />
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+      <Comment />
+    </View>
   );
 }
 
@@ -142,15 +94,15 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    bottom: 175,
+    top: 40,
   },
   logo: {
     position: "absolute",
-    top: 15,
+    alignSelf: "center",
+    top: 60,
     resizeMode: "contain",
     width: 52,
     height: 26,
-    backgroundColor: "white",
   },
   fullSeperator: {
     borderBottomColor: "#EDEDED",
@@ -158,7 +110,51 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     width: 900,
     left: 1,
-    top: 55,
+    top: 105,
+    height: 3,
+  },
+  fullSeperator2: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 0.8,
+    width: 900,
+    left: 1,
+    top: 155,
     height: 3,
   },
 });
+
+{
+  /* <Video
+source={{ uri: route.params.media }}
+ref={video}
+useNativeControls
+shouldPlay={true}
+style={{
+  height: 259,
+  width: 415,
+  top: 56,
+}}
+resizeMode="contain"
+onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+/> */
+}
+
+// <Image
+// style={styles.logo}
+// source={require("../assets/tizlyicon.jpg")}
+// />
+// <FullSeperator />
+// </View>
+// <Image
+// style={{
+// position: "absolute",
+// width: 100,
+// height: 80,
+// resizeMode: "contain",
+// top: 120,
+// left: 300,
+// }}
+// source={require("../assets/goToProfile.png")}
+// />
+// <View>

@@ -1,15 +1,17 @@
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { Video, AVPlaybackStatus } from "expo-av";
 
-export default function PostDetailsVideos({ creatorDisplayName, postUserId }) {
+export default function PostDetailsVideos({ displayName, postUserId }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [posts, setPost] = useState([]);
@@ -32,38 +34,25 @@ export default function PostDetailsVideos({ creatorDisplayName, postUserId }) {
     getUserPost();
   }, []);
 
+  console.log("postUserId", postUserId);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}> Videos By {creatorDisplayName} </Text>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          display: "flex",
-          flexWrap: "wrap",
-
-          width: 330,
-        }}
-      >
-        {posts.map((post) => {
-          return (
-            <View>
-              <TouchableOpacity>
-                <Video
-                  resizeMode="cover"
-                  style={{
-                    height: 102,
-                    width: 164,
-                    borderRadius: 6,
-                  }}
-                  source={{ uri: post.media }}
-                />
-                <Text>{post.title}</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </View>
+      <Text style={styles.header}> Videos By {displayName} </Text>
+      <FlatList
+        keyExtractor={(item) => item.id}
+        data={posts}
+        initialNumToRender={4}
+        renderItem={({ item }) => (
+          <View>
+            <Video
+              style={{ height: 100 }}
+              resizeMode="cover"
+              source={{ uri: item.media }}
+            />
+          </View>
+        )}
+      />
     </View>
   );
 }

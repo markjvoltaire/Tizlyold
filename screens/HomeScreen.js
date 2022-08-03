@@ -19,14 +19,6 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../components/home/UserButtons";
 import TopHeader from "../components/TopHeader";
 
-import Animated, {
-  useAnimatedGestureHandler,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
-import { PanGestureHandler } from "react-native-gesture-handler";
-
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
   const { post, setPost } = usePosts();
@@ -44,8 +36,6 @@ export default function HomeScreen({ navigation }) {
 
   const posts = post.body;
 
-  console.log("posts", posts);
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
@@ -58,8 +48,6 @@ export default function HomeScreen({ navigation }) {
     const resp = await getPosts();
     setPost(resp);
   };
-
-  console.log("posts", posts);
 
   return (
     <View style={styles.homeScreenContainer}>
@@ -227,13 +215,6 @@ export default function HomeScreen({ navigation }) {
                             username: item.username,
                             profileimage: item.profileImage,
                             displayName: item.displayName,
-                            path: item.username,
-                            title: item.title,
-                            mediaType: item.mediaType,
-                            media: item.media,
-                            description: item.description,
-                            route: item.id,
-                            creatAt: item.creatAt,
                             user_id: item.user_id,
                           });
                         }}

@@ -51,8 +51,6 @@ export default function Login({ navigation }) {
     getUserProfile();
   }, []);
 
-
-
   return (
     <ScrollView
       style={{

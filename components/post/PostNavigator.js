@@ -5,15 +5,16 @@ import PostDetailsVideos from "./PostDetailsVideos";
 import PostDetailsPhotos from "./PostDetailsPhotos";
 import PostDetailsComments from "./PostDetailsComments";
 
-export default function PostNavigator({ creatorDisplayName, postUserId }) {
+export default function PostNavigator({ postUserId, displayName }) {
   const [navigator, setNavigator] = useState("videos");
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperatorBottom = () => <View style={styles.fullSeperatorBottom} />;
 
+  console.log("postUserId from navigator", postUserId);
+
   return (
     <View style={styles.container}>
-      <FullSeperator />
       <View style={{ right: 60 }}>
         <Button
           color="#707790"
@@ -38,24 +39,23 @@ export default function PostNavigator({ creatorDisplayName, postUserId }) {
 
       {navigator === "videos" ? (
         <PostDetailsVideos
+          displayName={displayName}
           postUserId={postUserId}
-          creatorDisplayName={creatorDisplayName}
           navigator={navigator}
         />
       ) : navigator === "photos" ? (
         <PostDetailsPhotos
+          displayName={displayName}
           postUserId={postUserId}
-          creatorDisplayName={creatorDisplayName}
           navigator={navigator}
         />
       ) : (
         <PostDetailsComments
+          displayName={displayName}
           postUserId={postUserId}
-          creatorDisplayName={creatorDisplayName}
           navigator={navigator}
         />
       )}
-      <FullSeperatorBottom />
     </View>
   );
 }
@@ -63,7 +63,6 @@ export default function PostNavigator({ creatorDisplayName, postUserId }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    top: 370,
     justifyContent: "center",
     flexDirection: "row",
   },
