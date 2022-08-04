@@ -13,10 +13,10 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../../services/supabase";
 import { Video, AVPlaybackStatus } from "expo-av";
 
-export default function UserPostDetails({ post }) {
+export default function UserPostDetails({ post, commentList }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  console.log("post", post);
+  console.log("commentList", commentList);
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,18 @@ export default function UserPostDetails({ post }) {
         <Text style={styles.postDescription}>{post.description}</Text>
         <Text style={styles.date}>{post.creatAt}</Text>
         <Image
-          style={{ height: 20, resizeMode: "contain", top: 50, right: 165 }}
+          style={{
+            top: 85,
+            right: 350,
+            height: 54,
+            width: 64,
+            resizeMode: "contain",
+            position: "absolute",
+          }}
+          source={require("../../assets/videoBean.png")}
+        />
+        <Image
+          style={{ height: 20, resizeMode: "contain", top: 48, right: 85 }}
           source={{ uri: post.category }}
         />
       </View>
@@ -67,38 +78,29 @@ export default function UserPostDetails({ post }) {
       </View>
       <View>
         <Text style={styles.commentsHeader}>Comments</Text>
-        <FullSeperator />
+
         <View style={styles.commentSection}>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>hello</Text>
-          <Text>bottom</Text>
-          <Text>bottom</Text>
-          <Text>YUPP</Text>
+          <FlatList
+            keyExtractor={(item) => item.id}
+            data={commentList}
+            contentContainerStyle={{
+              borderBottomWidth: 0.8,
+              borderBottomColor: "#EDEDED",
+            }}
+            renderItem={({ item }) => (
+              <View>
+                <Image
+                  style={{ height: 50, width: 50, borderRadius: 40 }}
+                  source={{ uri: item.userProfileImage }}
+                />
+                <View style={{ left: 60, bottom: 50 }}>
+                  <Text>{item.userDisplayName}</Text>
+                  <Text>@{item.userUsername}</Text>
+                  <Text>{item.comment}</Text>
+                </View>
+              </View>
+            )}
+          />
         </View>
       </View>
     </View>
@@ -154,17 +156,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
-  fullSeperator: {
-    borderBottomColor: "#EDEDED",
-    borderBottomWidth: 3.0,
-    opacity: 1.8,
-    width: 900,
-    left: 1,
-    top: 115,
-    height: 3,
-  },
+
   commentSection: {
-    alignItems: "center",
     paddingTop: 170,
+    left: 10,
+  },
+  fullSeperator: {
+    position: "absolute",
+    alignSelf: "center",
+    borderBottomColor: "grey",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    opacity: 0.5,
+    width: 300,
   },
 });

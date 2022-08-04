@@ -9,10 +9,28 @@ import {
   Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import { supabase } from "../../services/supabase";
+import { useUser } from "../../context/UserContext";
 
-export default function Comment() {
+export default function Comment({ route }) {
   const [comment, setComment] = useState("");
+  const { user, setUser } = useUser();
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  async function createComment() {
+    const resp = await supabase.from("comments").insert([
+      {
+        creatorId: route.params.user_id,
+        userId: user.user_id,
+        comment: comment,
+        userProfileImage: user.profileimage,
+        postId: route.params.id,
+        userDisplayName: user.displayName,
+        userUsername: user.username,
+      },
+    ]);
+  }
+
   return (
     <SafeAreaView style={{ left: 40 }}>
       <FullSeperator />
@@ -24,7 +42,7 @@ export default function Comment() {
         style={styles.commentInput}
       />
       <View style={{ left: 170, position: "absolute" }}>
-        <TouchableOpacity onPress={() => console.log(comment)}>
+        <TouchableOpacity onPress={() => createComment()}>
           <Image
             style={{ height: 33, resizeMode: "contain", bottom: 30 }}
             source={require("../../assets/commentPost.png")}

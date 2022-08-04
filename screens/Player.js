@@ -24,6 +24,7 @@ export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
   const [post, setPost] = useState([]);
+  const [commentList, setCommentList] = useState([]);
 
   const windowWidth = Dimensions.get("window").width;
 
@@ -50,6 +51,24 @@ export default function Player({ route, navigation }) {
     };
     getUserPost();
   }, []);
+
+  useEffect(() => {
+    const getPostComments = async () => {
+      const resp = await getComments();
+      setCommentList(resp);
+    };
+    getPostComments();
+  }, []);
+
+  async function getComments() {
+    const resp = await supabase
+      .from("comments")
+      .select("*")
+      .eq("postId", postId);
+
+    return resp.body;
+  }
+  console.log("commentList", commentList);
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -78,11 +97,13 @@ export default function Player({ route, navigation }) {
               postUserId={postUserId}
               navigation={navigation}
               post={item}
+              commentList={commentList}
             />
           )}
         />
       </View>
-      <Comment />
+      <Comment route={route} />
+      <FullSeperator />
     </View>
   );
 }
@@ -107,10 +128,10 @@ const styles = StyleSheet.create({
   fullSeperator: {
     borderBottomColor: "#EDEDED",
     borderBottomWidth: 2.0,
-    opacity: 0.8,
+    opacity: 7.8,
     width: 900,
     left: 1,
-    top: 105,
+
     height: 3,
   },
   fullSeperator2: {

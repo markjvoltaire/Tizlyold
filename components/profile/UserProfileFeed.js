@@ -4,7 +4,7 @@ import React from "react";
 export default function UserProfileFeed({ posts }) {
   return (
     <View style={styles.feedContainer}>
-      {posts.map((post) => {
+      {/* {posts.map((post) => {
         return (
           <View
             key={post.id}
@@ -74,7 +74,9 @@ export default function UserProfileFeed({ posts }) {
             </View>
           </View>
         );
-      })}
+      })} */}
+
+      <Text>hello</Text>
     </View>
   );
 }

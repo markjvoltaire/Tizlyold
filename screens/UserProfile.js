@@ -172,7 +172,7 @@ export default function UserProfile({ navigation, route }) {
           />
         </View>
         <UserProfileNav />
-        <UserProfileFeed posts={posts} />
+        <UserProfileFeed />
       </ScrollView>
     </View>
   );
