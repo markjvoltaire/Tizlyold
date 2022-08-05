@@ -11,21 +11,22 @@ import { supabase } from "../../services/supabase";
 import { useUser } from "../../context/UserContext";
 
 export default function HomeBoard() {
+  const HalfSeperator = () => <View style={styles.halfSeperator} />;
   const { user } = useUser();
-  console.log("user", user);
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Discovery</Text>
       <View style={{ alignItems: "center" }}>
         <TouchableOpacity>
           <View style={styles.homeboardContainer}>
-            <Text style={styles.username}> Welcome {user.displayName} </Text>
             <Image
               style={styles.homeboard}
-              source={require("../../assets/homeBanner.png")}
+              source={require("../../assets/Banner.png")}
             />
           </View>
         </TouchableOpacity>
+        <HalfSeperator />
       </View>
     </View>
   );
@@ -36,10 +37,25 @@ const styles = StyleSheet.create({
     height: 300,
     backgroundColor: "white",
   },
+  halfSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.3,
+    width: 298,
+    top: 70,
+  },
+
+  title: {
+    fontWeight: "600",
+    fontSize: 15,
+    position: "absolute",
+    left: 20,
+    top: 20,
+  },
 
   homeboard: {
-    height: 200,
-    width: 420,
+    height: 214,
+    resizeMode: "contain",
   },
   username: {
     fontWeight: "bold",
@@ -48,6 +64,6 @@ const styles = StyleSheet.create({
     left: 9,
   },
   homeboardContainer: {
-    top: 40,
+    top: 50,
   },
 });

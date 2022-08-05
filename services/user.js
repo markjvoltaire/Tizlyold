@@ -103,6 +103,24 @@ export async function getUserByIds() {
   console.log("currentUserContext", user);
 }
 
+export async function getTrendingCreators() {
+  const resp = await supabase
+    .from("profiles")
+    .select(" id,username, displayName, profileimage, bannerImage, bio")
+    .in("id", [135, 133, 140]);
+
+  return resp.body;
+}
+
+export async function getNewTrendingCreators() {
+  const resp = await supabase
+    .from("profiles")
+    .select(" id,username, displayName, profileimage, bannerImage, bio")
+    .in("id", [155, 154, 156]);
+
+  return resp.body;
+}
+
 export async function signUp(email, password) {
   let { user } = await supabase.auth
     .signUp({

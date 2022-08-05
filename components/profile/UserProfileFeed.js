@@ -75,8 +75,6 @@ export default function UserProfileFeed({ posts }) {
           </View>
         );
       })} */}
-
-      <Text>hello</Text>
     </View>
   );
 }

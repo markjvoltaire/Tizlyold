@@ -32,24 +32,30 @@ export default function Comment({ route }) {
   }
 
   return (
-    <SafeAreaView style={{ left: 40 }}>
-      <FullSeperator />
+    <View style={{ left: 30 }}>
+      <TouchableOpacity
+        onPress={() => {
+          createComment();
+        }}
+      >
+        <Image
+          style={{
+            height: 33,
+            resizeMode: "contain",
+            bottom: 35,
+            left: 160,
+          }}
+          source={require("../../assets/commentPost.png")}
+        />
+      </TouchableOpacity>
       <TextInput
         autoCapitalize="none"
-        autoCorrect={false}
+        autoCorrect={true}
         placeholder="Leave A Comment"
         onChangeText={(text) => setComment(text)}
         style={styles.commentInput}
       />
-      <View style={{ left: 170, position: "absolute" }}>
-        <TouchableOpacity onPress={() => createComment()}>
-          <Image
-            style={{ height: 33, resizeMode: "contain", bottom: 30 }}
-            source={require("../../assets/commentPost.png")}
-          />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -61,8 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E1E1EA",
     width: 230,
     height: 33,
-    position: "absolute",
-    bottom: 35,
+    bottom: 67,
     paddingLeft: 20,
   },
   fullSeperator: {
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
     opacity: 9.8,
     width: 900,
     right: 40,
-    bottom: 42,
+    top: 19,
     height: 3,
   },
 });

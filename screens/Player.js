@@ -19,12 +19,14 @@ import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import Comment from "../components/post/Comment";
+import BottomNav from "../navigation/BottomNav";
 
 export default function Player({ route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
   const [post, setPost] = useState([]);
   const [commentList, setCommentList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const windowWidth = Dimensions.get("window").width;
 
@@ -68,7 +70,11 @@ export default function Player({ route, navigation }) {
 
     return resp.body;
   }
-  console.log("commentList", commentList);
+
+  const refreshFeed = async () => {
+    const resp = await getComments();
+    setCommentList(resp);
+  };
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -87,8 +93,10 @@ export default function Player({ route, navigation }) {
           );
         })}
       </View>
-      <View style={{ top: 149, flex: 1, marginVertical: 190 }}>
+      <View style={{ top: 165, flex: 1, marginVertical: 150 }}>
         <FlatList
+          refreshing={refreshing}
+          onRefresh={() => refreshFeed()}
           keyExtractor={(item) => item.id}
           data={post}
           renderItem={({ item }) => (
@@ -98,12 +106,11 @@ export default function Player({ route, navigation }) {
               navigation={navigation}
               post={item}
               commentList={commentList}
+              route={route}
             />
           )}
         />
       </View>
-      <Comment route={route} />
-      <FullSeperator />
     </View>
   );
 }

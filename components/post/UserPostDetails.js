@@ -12,9 +12,11 @@ import {
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../services/supabase";
 import { Video, AVPlaybackStatus } from "expo-av";
+import Comment from "../../components/post/Comment";
 
-export default function UserPostDetails({ post, commentList }) {
+export default function UserPostDetails({ post, commentList, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
 
   console.log("commentList", commentList);
 
@@ -34,10 +36,6 @@ export default function UserPostDetails({ post, commentList }) {
             position: "absolute",
           }}
           source={require("../../assets/videoBean.png")}
-        />
-        <Image
-          style={{ height: 20, resizeMode: "contain", top: 48, right: 85 }}
-          source={{ uri: post.category }}
         />
       </View>
 
@@ -79,7 +77,10 @@ export default function UserPostDetails({ post, commentList }) {
       <View>
         <Text style={styles.commentsHeader}>Comments</Text>
 
+        <FullSeperator />
+
         <View style={styles.commentSection}>
+          <Comment route={route} />
           <FlatList
             keyExtractor={(item) => item.id}
             data={commentList}
@@ -90,13 +91,32 @@ export default function UserPostDetails({ post, commentList }) {
             renderItem={({ item }) => (
               <View>
                 <Image
-                  style={{ height: 50, width: 50, borderRadius: 40 }}
+                  style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
                   source={{ uri: item.userProfileImage }}
                 />
-                <View style={{ left: 60, bottom: 50 }}>
-                  <Text>{item.userDisplayName}</Text>
-                  <Text>@{item.userUsername}</Text>
-                  <Text>{item.comment}</Text>
+                <View style={{ left: 35, bottom: 35 }}>
+                  <Text style={{ fontWeight: "600" }}>
+                    {item.userDisplayName}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#4F4E4E",
+                      fontWeight: "500",
+                      fontSize: 12,
+                    }}
+                  >
+                    @{item.userUsername}
+                  </Text>
+                  <Text
+                    style={{
+                      right: 35,
+                      fontWeight: "600",
+                      paddingTop: 10,
+                      paddingBottom: 10,
+                    }}
+                  >
+                    {item.comment}
+                  </Text>
                 </View>
               </View>
             )}
@@ -151,14 +171,15 @@ const styles = StyleSheet.create({
   },
   commentsHeader: {
     alignSelf: "center",
-    top: 155,
+    top: 185,
     color: "#73738B",
     fontSize: 20,
     fontWeight: "600",
+    paddingBottom: 70,
   },
 
   commentSection: {
-    paddingTop: 170,
+    paddingTop: 200,
     left: 10,
   },
   fullSeperator: {
@@ -167,6 +188,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
-    width: 300,
+    width: 600,
+    top: 165,
   },
 });

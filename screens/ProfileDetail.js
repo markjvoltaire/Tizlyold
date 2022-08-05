@@ -41,48 +41,8 @@ export default function ProfileDetail({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const user_id = route.params.user_id;
-  const stripe = useStripe();
 
-  const sellerUserId = route.params.user_id;
-
-  const email = user.email;
-  const username = user.username;
-  const buyerUserId = user.user_id;
-
-  console.log(user);
-
-  const subscribe = async () => {
-    try {
-      // sending request
-      const response = await fetch("http://localhost:5000/pay", {
-        method: "POST",
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          buyerUserId: buyerUserId,
-          sellerUserId: sellerUserId,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (!response.ok) return Alert.alert(data.message);
-      const clientSecret = data.clientSecret;
-      const initSheet = await stripe.initPaymentSheet({
-        paymentIntentClientSecret: clientSecret,
-      });
-      if (initSheet.error) return Alert.alert(initSheet.error.message);
-      const presentSheet = await stripe.presentPaymentSheet({
-        clientSecret,
-      });
-      if (presentSheet.error) return Alert.alert(presentSheet.error.message);
-      Alert.alert("Payment complete, thank you!");
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Something went wrong, try again later!");
-    }
-  };
+  console.log("route", route);
 
   async function getUserPostsById() {
     let { data: post, error } = await supabase
@@ -142,12 +102,10 @@ export default function ProfileDetail({ navigation, route }) {
           <Text style={styles.bio}> {route.params.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: route.params.profileImage }}
+            source={{ uri: route.params.profileimage }}
           />
         </View>
         <ProfileNav />
-
-        <ProfileFeed userPosts={userPosts} />
       </ScrollView>
     </View>
   );

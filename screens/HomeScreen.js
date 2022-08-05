@@ -26,6 +26,10 @@ export default function HomeScreen({ navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
+
+
+  
+
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
@@ -35,10 +39,6 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const posts = post.body;
-
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
-
-  const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
 
   if (user === null) {
     navigation.navigate("Username");

@@ -12,11 +12,12 @@ import {
 import React, { useEffect, useState } from "react";
 
 import HomeBoard from "../components/home/HomeBoard";
-import TrendingCreators from "../components/home/TrendingCreators";
+import TrendingCreators from "../components/explore/TrendingCreators";
 import TrendingTag from "../components/home/TrendingTag";
 import MainStackNavigator from "../navigation/StackNavigator";
 import { getUsername, getUsers } from "../services/user";
 import TopHeader from "../components/TopHeader";
+import NewToTizly from "../components/explore/NewToTizly";
 
 export default function Explore({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -29,23 +30,17 @@ export default function Explore({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <View style={styles.container}>
-      <View>
-        <TopHeader />
-        <HomeBoard />
-        <TrendingCreators navigation={navigation} />
-        <View>
-          <TrendingTag />
-        </View>
-      </View>
-    </View>
+    <ScrollView style={styles.container}>
+      <TopHeader navigation={navigation} />
+      <HomeBoard />
+      <TrendingCreators navigation={navigation} />
+      <NewToTizly navigation={navigation} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-  },
+  container: {},
   settingIcon: {
     position: "absolute",
     left: 368,
