@@ -15,6 +15,8 @@ export default function TopHeader({ navigation }) {
   const [query, setQuery] = useState();
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  console.log("user from header", user);
+
   return (
     <SafeAreaView style={styles.componentContainer}>
       <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />

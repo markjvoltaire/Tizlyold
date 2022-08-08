@@ -9,6 +9,7 @@ import {
   Image,
   SafeAreaView,
   TextInput,
+  useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -20,6 +21,7 @@ import { getUsername, getUsers } from "../services/user";
 import TopHeader from "../components/TopHeader";
 import NewToTizly from "../components/explore/NewToTizly";
 import Search from "../components/explore/Search";
+import { Dimensions } from "react-native";
 
 export default function Explore({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -34,9 +36,7 @@ export default function Explore({ navigation }) {
   return (
     <View style={styles.container}>
       <TopHeader navigation={navigation} />
-
       <Search />
-
       <ScrollView>
         <View>
           <HomeBoard />

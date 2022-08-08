@@ -103,10 +103,21 @@ export async function getUserByIds() {
   console.log("currentUserContext", user);
 }
 
+export async function getProfileDetail(user_id) {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", user_id);
+
+  return resp;
+}
+
 export async function getTrendingCreators() {
   const resp = await supabase
     .from("profiles")
-    .select(" id,username, displayName, profileimage, bannerImage, bio")
+    .select(
+      " user_id, id,username, displayName, profileimage, bannerImage, bio"
+    )
     .in("id", [135, 133, 140]);
 
   return resp.body;
@@ -115,7 +126,9 @@ export async function getTrendingCreators() {
 export async function getNewTrendingCreators() {
   const resp = await supabase
     .from("profiles")
-    .select(" id,username, displayName, profileimage, bannerImage, bio")
+    .select(
+      "  user_id,id,username, displayName, profileimage, bannerImage, bio"
+    )
     .in("id", [155, 154, 156]);
 
   return resp.body;

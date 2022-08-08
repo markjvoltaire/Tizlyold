@@ -25,8 +25,6 @@ export default function TrendingCreators({ navigation, route }) {
     loadTrendingCreators();
   }, []);
 
-  console.log("profiles", profiles);
-
   return (
     <View style={styles.container}>
       <Text style={{ position: "absolute", fontWeight: "600", fontSize: 15 }}>

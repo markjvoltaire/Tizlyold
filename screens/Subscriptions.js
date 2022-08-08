@@ -15,29 +15,41 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useRef } from "react";
+import { supabase } from "../services/supabase";
+import { useUser } from "../context/UserContext";
 
 export default function Subscriptions({ navigation }) {
+  const { user, setUser } = useUser();
+  async function signOutUser() {
+    await supabase.auth
+      .signOut()
+      .then(() =>
+        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
+      );
+  }
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.inner}>
-          <Text style={styles.header}>Header</Text>
-          <TextInput placeholder="Username" style={styles.textInput} />
-          <View style={styles.btnContainer}>
-            <Button title="Submit" onPress={() => null} />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() =>
+          signOutUser()
+            .then(() => setUser({}))
+            .then(() => navigation.navigate("Welcome"))
+        }
+      >
+        <Image
+          style={styles.signoutButton}
+          source={require("../assets/signoutButton.png")}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    top: 300,
   },
   inner: {
     padding: 24,

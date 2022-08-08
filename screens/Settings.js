@@ -60,7 +60,11 @@ export default function Settings({ navigation }) {
       </View>
 
       <TouchableOpacity
-        onPress={() => signOutUser().then(() => navigation.navigate("Welcome"))}
+        onPress={() =>
+          signOutUser()
+            .then(() => setUser({}))
+            .then(() => navigation.navigate("Welcome"))
+        }
       >
         <Image
           style={styles.signoutButton}

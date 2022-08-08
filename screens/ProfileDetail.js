@@ -19,14 +19,7 @@ import UserButtons from "../components/home/UserButtons";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
-import { getCurrentUserPosts } from "../services/user";
-import ProfileFeed from "../components/profile/ProfileFeed";
-import { eq } from "react-native-reanimated";
-import {
-  CardField,
-  useConfirmPayment,
-  useStripe,
-} from "@stripe/stripe-react-native";
+import { getCurrentUserPosts, getProfileDetail } from "../services/user";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -34,6 +27,7 @@ export default function ProfileDetail({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [yId, setPostsById] = useState([]);
+  const [profile, setProfile] = useState([]);
 
   // console.log("user", user);
   // console.log("route", route.params.user_id);
@@ -42,7 +36,7 @@ export default function ProfileDetail({ navigation, route }) {
 
   const user_id = route.params.user_id;
 
-  console.log("route", route);
+  // console.log("route", route);
 
   async function getUserPostsById() {
     let { data: post, error } = await supabase
@@ -52,6 +46,24 @@ export default function ProfileDetail({ navigation, route }) {
       .order("id", { ascending: false });
     return post;
   }
+
+  async function getProfileDetail() {
+    const resp = await supabase
+      .from("posts")
+      .select("*")
+      .eq("user_id", user_id);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const resp = await getProfileDetail();
+      setProfile(resp);
+      console.log("resp", resp);
+    };
+    getUserInfo();
+  }, []);
 
   useEffect(() => {
     const getFeed = () => {

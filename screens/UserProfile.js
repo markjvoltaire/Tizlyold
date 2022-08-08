@@ -34,23 +34,23 @@ export default function UserProfile({ navigation, route }) {
   const [posts, setPosts] = useState();
   console.log("user", user);
 
-  async function getCurrentUserPosts() {
-    let { data: post, error } = await supabase
-      .from("post")
-      .select("*")
-      .eq("user_id", user.user_id)
-      .order("id", { ascending: false });
+  // async function getCurrentUserPosts() {
+  //   let { data: post, error } = await supabase
+  //     .from("post")
+  //     .select("*")
+  //     .eq("user_id", user.user_id)
+  //     .order("id", { ascending: false });
 
-    return post;
-  }
+  //   return post;
+  // }
 
-  useEffect(() => {
-    const getPost = async () => {
-      const resp = await getCurrentUserPosts();
-      setPosts(resp);
-    };
-    getPost();
-  }, []);
+  // useEffect(() => {
+  //   const getPost = async () => {
+  //     const resp = await getCurrentUserPosts();
+  //     setPosts(resp);
+  //   };
+  //   getPost();
+  // }, []);
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -69,7 +69,7 @@ export default function UserProfile({ navigation, route }) {
       setLoading(false);
     };
     getUserProfile();
-  }, [user.profileimage]);
+  }, []);
 
   if (loading) {
     return <Text> Please Wait</Text>;

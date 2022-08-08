@@ -19,37 +19,36 @@ import { useUser } from "../context/UserContext";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser();
 
   async function loginWithEmail() {
-    const { user, session, error } = await supabase.auth
-      .signIn({
-        email,
-        password,
-      })
-      .then(() => navigation.navigate("HomeScreen"))
-      .then(() =>
-        console.log("current user after log in ", supabase.auth.currentUser)
-      );
+    await supabase.auth.signIn({
+      email,
+      password,
+    });
   }
 
-  async function getUserById() {
-    const userId = supabase.auth.currentUser.id;
+  // async function getUserById() {
+  //   const userId = supabase.auth.currentUser.id;
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    setUser(data);
-  }
+  //   const resp = await supabase
+  //     .from("profiles")
+  //     .select("*")
+  //     .eq("user_id", userId)
+  //     .single();
+  //   console.log("resp from useEffect", resp);
 
-  useEffect(() => {
-    const getUserProfile = async () => {
-      await getUserById();
-    };
-    getUserProfile();
-  }, []);
+  //   return resp;
+  // }
+
+  // useEffect(() => {
+  //   const getUserProfile = async () => {
+  //     await getUserById();
+  //     setLoading(false);
+  //   };
+  //   getUserProfile();
+  // }, []);
 
   return (
     <ScrollView
@@ -99,7 +98,11 @@ export default function Login({ navigation }) {
         value={password}
       />
 
-      <TouchableOpacity onPress={() => loginWithEmail()}>
+      <TouchableOpacity
+        onPress={() =>
+          loginWithEmail().then(() => navigation.navigate("HomeScreen"))
+        }
+      >
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}

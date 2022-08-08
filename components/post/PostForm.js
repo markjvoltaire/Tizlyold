@@ -36,41 +36,43 @@ export default function PostForm({ navigation }) {
 
   const [selected, setSelected] = useState("");
 
+  // entertainment📺   fitness🏋️   podcast🎙    music 🎤  sports 🏆  music 🍽  gaming 🎮  beauty 💄  content creation 🎬
+
   const data = [
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png?t=2022-08-08T04%3A36%3A36.230Z",
       value: "Entertainment",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/fitnessBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/fitnessBean.png?t=2022-08-08T04%3A38%3A09.071Z",
       value: "Fitness",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/podcastBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/podcastBean.png?t=2022-08-08T04%3A18%3A17.495Z",
       value: "Podcast",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/musicBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/musicBean.png?t=2022-08-08T04%3A18%3A41.104Z",
       value: "Music",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/sportsBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/sportsBean.png?t=2022-08-08T04%3A18%3A58.688Z",
       value: "Sports",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/cookingBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/cookingBean.png?t=2022-08-08T04%3A19%3A14.026Z",
       value: "Cooking",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/gamingBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/gamingBean.png?t=2022-08-08T04%3A19%3A29.450Z",
       value: "Gaming",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/beautyBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/beautyBean.png?t=2022-08-08T04%3A19%3A41.911Z",
       value: "Beauty",
     },
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/contentBean.png",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/contentCreationBean.png?t=2022-08-08T04%3A19%3A56.347Z",
       value: "Content Creation",
     },
   ];

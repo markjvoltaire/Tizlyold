@@ -35,7 +35,7 @@ export default function UserPostDetails({ post, commentList, route }) {
             resizeMode: "contain",
             position: "absolute",
           }}
-          source={require("../../assets/videoBean.png")}
+          source={require("../../assets/blueVideoButton.png")}
         />
       </View>
 
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
   commentSection: {
     paddingTop: 160,
     left: 10,
+    width: 405,
   },
   fullSeperator: {
     position: "absolute",

@@ -10,6 +10,7 @@ import {
   FlatList,
   useWindowDimensions,
 } from "react-native";
+
 import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
@@ -25,6 +26,8 @@ export default function HomeScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     const getUserPost = async () => {
@@ -36,9 +39,30 @@ export default function HomeScreen({ navigation }) {
 
   const posts = post.body;
 
-  if (user === null) {
-    navigation.navigate("Username");
+  async function getUserById() {
+    const userId = supabase.auth.currentUser.id;
+
+    const resp = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    setUser(resp.body);
   }
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      await getUserById();
+      setLoading(false);
+    };
+    getUserProfile();
+  }, []);
+
+  if (loading) {
+    return <Text> Please Wait</Text>;
+  }
+
+  console.log("user from home screen", user);
 
   const refreshFeed = async () => {
     const resp = await getPosts();
@@ -110,7 +134,7 @@ export default function HomeScreen({ navigation }) {
                             }}
                             source={{ uri: item.media }}
                           />
-                          <Image
+                          {/* <Image
                             style={{
                               top: 507,
                               right: 210,
@@ -120,7 +144,7 @@ export default function HomeScreen({ navigation }) {
                               position: "absolute",
                             }}
                             source={{ uri: item.category }}
-                          />
+                          /> */}
 
                           <TouchableOpacity
                             onPress={() =>
@@ -177,7 +201,7 @@ export default function HomeScreen({ navigation }) {
                             width: 64,
                             resizeMode: "contain",
                           }}
-                          source={require("../assets/photoBean.png")}
+                          source={require("../assets/bluePhotoButton.png")}
                         />
 
                         <View style={styles.engagementButtons}>
@@ -200,19 +224,29 @@ export default function HomeScreen({ navigation }) {
                       }}
                     >
                       <View style={{ alignItems: "center" }}>
-                        <Video
-                          source={{ uri: item.media }}
-                          ref={video}
+                        <View
                           style={{
-                            height: 220,
-                            width: 398,
+                            backgroundColor: "black",
                             borderRadius: 12,
+                            height: 220,
+                            width: 388,
                           }}
-                          resizeMode="cover"
-                          onPlaybackStatusUpdate={(status) =>
-                            setStatus(() => status)
-                          }
-                        />
+                        >
+                          <Video
+                            source={{ uri: item.media }}
+                            ref={video}
+                            style={{
+                              height: 220,
+                              width: 388,
+                              borderRadius: 12,
+                              alignSelf: "center",
+                            }}
+                            resizeMode="contain"
+                            onPlaybackStatusUpdate={(status) =>
+                              setStatus(() => status)
+                            }
+                          />
+                        </View>
                       </View>
 
                       <Image
@@ -246,7 +280,7 @@ export default function HomeScreen({ navigation }) {
                             width: 64,
                             resizeMode: "contain",
                           }}
-                          source={require("../assets/videoBean.png")}
+                          source={require("../assets/blueVideoButton.png")}
                         />
 
                         <View style={styles.engagementButtons}>
