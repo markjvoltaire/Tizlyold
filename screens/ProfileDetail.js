@@ -29,22 +29,26 @@ export default function ProfileDetail({ navigation, route }) {
   const [yId, setPostsById] = useState([]);
   const [profile, setProfile] = useState([]);
 
-  // console.log("user", user);
-  // console.log("route", route.params.user_id);
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const user_id = route.params.user_id;
 
-  // console.log("route", route);
+  console.log("user", user);
+
+  console.log("route", route);
+
+  if (route.params.user_id === user.user_id) {
+    navigation.navigate("Profile");
+  }
 
   async function getUserPostsById() {
-    let { data: post, error } = await supabase
+    const items = await supabase
       .from("post")
       .select("*")
       .eq("user_id", user_id)
       .order("id", { ascending: false });
-    return post;
+    console.log("items", items.body);
+    return items.body;
   }
 
   async function getProfileDetail() {
@@ -55,15 +59,6 @@ export default function ProfileDetail({ navigation, route }) {
 
     return resp.body;
   }
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const resp = await getProfileDetail();
-      setProfile(resp);
-      console.log("resp", resp);
-    };
-    getUserInfo();
-  }, []);
 
   useEffect(() => {
     const getFeed = () => {
@@ -114,7 +109,7 @@ export default function ProfileDetail({ navigation, route }) {
           <Text style={styles.bio}> {route.params.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: route.params.profileimage }}
+            source={{ uri: route.params.profileImage }}
           />
         </View>
         <ProfileNav />

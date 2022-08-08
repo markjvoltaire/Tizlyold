@@ -146,7 +146,9 @@ export default function Player({ route, navigation }) {
               style={styles.commentInput}
             />
             <View style={{ position: "absolute", top: 207, left: 80 }}>
-              <TouchableOpacity onPress={() => createComment()}>
+              <TouchableOpacity
+                onPress={() => createComment().then(() => refreshFeed())}
+              >
                 <Image
                   style={{
                     width: 100,

@@ -20,6 +20,119 @@ export default function UserPostDetails({ post, commentList, route }) {
 
   console.log("commentList", commentList);
 
+  if (commentList.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={{ left: 10 }}>
+          <Text style={styles.postTitle}>{post.title}</Text>
+          <Text style={styles.postDescription}>{post.description}</Text>
+          <Text style={styles.date}>{post.creatAt}</Text>
+          <Image
+            style={{
+              top: 85,
+              right: 350,
+              height: 54,
+              width: 64,
+              resizeMode: "contain",
+              position: "absolute",
+            }}
+            source={require("../../assets/blueVideoButton.png")}
+          />
+        </View>
+
+        <View style={styles.userButtonsContainer}>
+          <View>
+            <TouchableOpacity>
+              <Image
+                style={{
+                  height: 52,
+                  width: 112,
+                }}
+                source={require("../../assets/likeButton.png")}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity>
+              <Image
+                style={{
+                  height: 52,
+                  width: 112,
+                }}
+                source={require("../../assets/commentButton.png")}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity>
+              <Image
+                style={{
+                  height: 52,
+                  width: 112,
+                }}
+                source={require("../../assets/saveButton.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View>
+          <Text style={styles.commentsHeader}>Comments</Text>
+          <Text style={styles.commentsHeader}>Be the first to comment</Text>
+
+          <FullSeperator />
+
+          <View style={styles.commentSection}>
+            <FlatList
+              keyExtractor={(item) => item.id}
+              data={commentList}
+              contentContainerStyle={{
+                borderBottomWidth: 0.8,
+                borderBottomColor: "#EDEDED",
+              }}
+              renderItem={({ item }) => (
+                <View>
+                  <Image
+                    style={{
+                      height: 30,
+                      width: 30,
+                      borderRadius: 40,
+                      bottom: 4,
+                    }}
+                    source={{ uri: item.userProfileImage }}
+                  />
+                  <View style={{ left: 35, bottom: 35 }}>
+                    <Text style={{ fontWeight: "600" }}>
+                      {item.userDisplayName}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#4F4E4E",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      @{item.userUsername}
+                    </Text>
+                    <Text
+                      style={{
+                        right: 35,
+                        fontWeight: "600",
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                      }}
+                    >
+                      {item.comment}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ left: 10 }}>
@@ -80,7 +193,6 @@ export default function UserPostDetails({ post, commentList, route }) {
         <FullSeperator />
 
         <View style={styles.commentSection}>
-          {/* <Comment route={route} /> */}
           <FlatList
             keyExtractor={(item) => item.id}
             data={commentList}

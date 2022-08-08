@@ -15,32 +15,11 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useRef } from "react";
-import { supabase } from "../services/supabase";
-import { useUser } from "../context/UserContext";
 
 export default function Subscriptions({ navigation }) {
-  const { user, setUser } = useUser();
-  async function signOutUser() {
-    await supabase.auth
-      .signOut()
-      .then(() =>
-        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-      );
-  }
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() =>
-          signOutUser()
-            .then(() => setUser({}))
-            .then(() => navigation.navigate("Welcome"))
-        }
-      >
-        <Image
-          style={styles.signoutButton}
-          source={require("../assets/signoutButton.png")}
-        />
-      </TouchableOpacity>
+      <Text>Subscriptions</Text>
     </View>
   );
 }
