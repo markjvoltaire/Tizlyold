@@ -17,17 +17,15 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
-import PostNavigator from "../components/post/PostNavigator";
-import PostDetailButtons from "../components/post/PostDetailButtons";
+
 import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
-import BottomTabNavigator from "../navigation/TabNavigator";
-import Comment from "../components/post/Comment";
-import BottomNav from "../navigation/BottomNav";
+import { useUser } from "../context/UserContext";
 
 export default function Player({ route, navigation }) {
   const [comment, setComment] = useState("");
+  const { user, setUser } = useUser();
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
   const [post, setPost] = useState([]);
@@ -59,6 +57,22 @@ export default function Player({ route, navigation }) {
     };
     getUserPost();
   }, []);
+
+  async function createComment() {
+    const resp = await supabase.from("comments").insert([
+      {
+        creatorId: route.params.user_id,
+        userId: user.user_id,
+        comment: comment,
+        userProfileImage: user.profileimage,
+        postId: route.params.id,
+        userDisplayName: user.displayName,
+        userUsername: user.username,
+      },
+    ]);
+
+    return resp;
+  }
 
   useEffect(() => {
     const getPostComments = async () => {
@@ -131,17 +145,21 @@ export default function Player({ route, navigation }) {
               onChangeText={(text) => setComment(text)}
               style={styles.commentInput}
             />
-            <TouchableOpacity>
-              <Image
-                style={{
-                  height: 33,
-                  resizeMode: "contain",
-                  bottom: 47,
-                  left: 190,
-                }}
-                source={require("../assets/commentPost.png")}
-              />
-            </TouchableOpacity>
+            <View style={{ position: "absolute", top: 207, left: 80 }}>
+              <TouchableOpacity onPress={() => createComment()}>
+                <Image
+                  style={{
+                    width: 100,
+                    bottom: 117,
+                    left: 200,
+                    resizeMode: "contain",
+
+                    position: "absolute",
+                  }}
+                  source={require("../assets/commentPost.png")}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
