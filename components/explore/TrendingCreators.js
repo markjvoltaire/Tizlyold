@@ -42,6 +42,7 @@ export default function TrendingCreators({ navigation, route }) {
                   bannerImage: item.bannerImage,
                   bio: item.bio,
                   id: item.id,
+                  user_id: item.user_id,
                 })
               }
             >
