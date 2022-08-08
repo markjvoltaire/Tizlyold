@@ -26,10 +26,6 @@ export default function HomeScreen({ navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
-
-
-  
-
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
@@ -59,7 +55,7 @@ export default function HomeScreen({ navigation }) {
           data={posts}
           refreshing={refreshing}
           onRefresh={() => refreshFeed()}
-          initialNumToRender={4}
+          initialNumToRender={6}
           contentContainerStyle={{
             borderBottomWidth: 0.8,
             borderBottomColor: "#EDEDED",
@@ -107,15 +103,16 @@ export default function HomeScreen({ navigation }) {
                         <>
                           <Image
                             style={{
-                              height: 392,
+                              height: 442,
                               width: 343,
                               borderRadius: 12,
+                              position: "relative",
                             }}
                             source={{ uri: item.media }}
                           />
                           <Image
                             style={{
-                              top: 457,
+                              top: 507,
                               right: 210,
                               height: 54,
                               width: 64,
@@ -141,7 +138,7 @@ export default function HomeScreen({ navigation }) {
                                 height: 22,
                                 width: 22,
                                 left: 300,
-                                bottom: 418,
+                                bottom: 468,
                                 resizeMode: "contain",
                               }}
                               source={require("../assets/optionsButton.png")}
@@ -191,80 +188,69 @@ export default function HomeScreen({ navigation }) {
                   </View>
                 ) : (
                   <View style={styles.feedContainer}>
-                    <Video
-                      source={{ uri: item.media }}
-                      ref={video}
-                      style={{
-                        position: "absolute",
-                        height: 392,
-                        width: 338,
-
-                        borderRadius: 12,
-                        alignItems: "center",
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("Player", {
+                          id: item.id,
+                          username: item.username,
+                          profileimage: item.profileImage,
+                          displayName: item.displayName,
+                          user_id: item.user_id,
+                        });
                       }}
-                      resizeMode="cover"
-                      onPlaybackStatusUpdate={(status) =>
-                        setStatus(() => status)
-                      }
-                    />
-                    <View>
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate("Player", {
-                            id: item.id,
-                            username: item.username,
-                            profileimage: item.profileImage,
-                            displayName: item.displayName,
-                            user_id: item.user_id,
-                          });
-                        }}
-                      >
-                        <Image
+                    >
+                      <View style={{ alignItems: "center" }}>
+                        <Video
+                          source={{ uri: item.media }}
+                          ref={video}
                           style={{
-                            height: 392,
-                            width: 343,
+                            height: 220,
+                            width: 398,
                             borderRadius: 12,
                           }}
-                          source={{ uri: item.media }}
+                          resizeMode="cover"
+                          onPlaybackStatusUpdate={(status) =>
+                            setStatus(() => status)
+                          }
                         />
+                      </View>
 
+                      <Image
+                        style={{
+                          position: "absolute",
+                          width: 50,
+                          bottom: 60,
+                          alignSelf: "center",
+                          resizeMode: "contain",
+                        }}
+                        source={require("../assets/playButton.png")}
+                      />
+                    </TouchableOpacity>
+                    <View style={styles.postInfoContainer}>
+                      <View style={styles.postInfo}>
+                        <View style={styles.postTitleContainer}>
+                          <Text style={styles.postTitle}>{item.title}</Text>
+                        </View>
+                        <View style={styles.descriptionContainer}>
+                          <Text style={styles.description}>
+                            {item.description}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.photoBeanContainer}>
                         <Image
                           style={{
-                            position: "absolute",
-                            width: 50,
-                            top: 160,
-                            alignSelf: "center",
+                            top: 30,
+                            right: 2,
+                            height: 54,
+                            width: 64,
                             resizeMode: "contain",
                           }}
-                          source={require("../assets/playButton.png")}
+                          source={require("../assets/videoBean.png")}
                         />
-                      </TouchableOpacity>
-                      <View style={styles.postInfoContainer}>
-                        <View style={styles.postInfo}>
-                          <View style={styles.postTitleContainer}>
-                            <Text style={styles.postTitle}>{item.title}</Text>
-                          </View>
-                          <View style={styles.descriptionContainer}>
-                            <Text style={styles.description}>
-                              {item.description}
-                            </Text>
-                          </View>
-                        </View>
-                        <View style={styles.photoBeanContainer}>
-                          <Image
-                            style={{
-                              top: 30,
-                              right: 2,
-                              height: 54,
-                              width: 64,
-                              resizeMode: "contain",
-                            }}
-                            source={require("../assets/videoBean.png")}
-                          />
 
-                          <View style={styles.engagementButtons}>
-                            <UserButtons />
-                          </View>
+                        <View style={styles.engagementButtons}>
+                          <UserButtons />
                         </View>
                       </View>
                     </View>
@@ -380,7 +366,7 @@ const styles = StyleSheet.create({
   description: {
     fontWeight: "600",
     color: "#5F5F69",
-    top: 5,
+    top: 7,
   },
   photoBeanContainer: {
     paddingBottom: 100,

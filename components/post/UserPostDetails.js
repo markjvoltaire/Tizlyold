@@ -80,7 +80,7 @@ export default function UserPostDetails({ post, commentList, route }) {
         <FullSeperator />
 
         <View style={styles.commentSection}>
-          <Comment route={route} />
+          {/* <Comment route={route} /> */}
           <FlatList
             keyExtractor={(item) => item.id}
             data={commentList}
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
 
   commentSection: {
-    paddingTop: 200,
+    paddingTop: 160,
     left: 10,
   },
   fullSeperator: {

@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 100,
     height: 100,
-    left: 168,
+    alignSelf: "center",
     top: 180,
     resizeMode: "contain",
   },
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
 
   emailInput: {
     position: "absolute",
-    left: 55,
+    alignSelf: "center",
     top: 300,
     borderColor: "grey",
     borderWidth: 0.5,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     position: "absolute",
-    left: 55,
+    alignSelf: "center",
     top: 370,
     borderColor: "grey",
     borderWidth: 0.5,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     width: 311,
     height: 50,
     top: 450,
-    left: 55,
+    alignSelf: "center",
   },
   userPic: {
     resizeMode: "contain",

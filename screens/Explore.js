@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -18,6 +19,7 @@ import MainStackNavigator from "../navigation/StackNavigator";
 import { getUsername, getUsers } from "../services/user";
 import TopHeader from "../components/TopHeader";
 import NewToTizly from "../components/explore/NewToTizly";
+import Search from "../components/explore/Search";
 
 export default function Explore({ navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -30,17 +32,31 @@ export default function Explore({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <TopHeader navigation={navigation} />
-      <HomeBoard />
-      <TrendingCreators navigation={navigation} />
-      <NewToTizly navigation={navigation} />
-    </ScrollView>
+
+      <Search />
+
+      <ScrollView>
+        <View>
+          <HomeBoard />
+        </View>
+        <View>
+          <TrendingCreators navigation={navigation} />
+        </View>
+        <View>
+          <NewToTizly navigation={navigation} />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   settingIcon: {
     position: "absolute",
     left: 368,

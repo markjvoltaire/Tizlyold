@@ -23,57 +23,59 @@ export default function NewToTizly({ navigation }) {
       </Text>
       {profiles.map((item) => {
         return (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("ProfileDetail", {
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bannerImage: item.bannerImage,
-                bio: item.bio,
-                id: item.id,
-              })
-            }
-          >
-            <View>
-              <Image
-                style={{ width: 124, height: 130, borderRadius: 13 }}
-                source={{ uri: item.profileimage }}
-              />
-              <Image
-                style={{
-                  width: 124,
-                  height: 93,
-                  top: 37,
-                  borderRadius: 13,
-                  position: "absolute",
-                }}
-                source={require("../../assets/fader.png")}
-              />
-              <Text
-                style={{
-                  position: "absolute",
-                  top: 90,
-                  color: "white",
-                  fontWeight: "800",
-                  left: 2,
-                }}
-              >
-                {item.displayName}
-              </Text>
-              <Text
-                style={{
-                  position: "absolute",
-                  top: 105,
-                  color: "#D7D8DA",
-                  fontWeight: "600",
-                  left: 2,
-                }}
-              >
-                @{item.username}
-              </Text>
-            </View>
-          </TouchableOpacity>
+          <View key={item.id}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("ProfileDetail", {
+                  username: item.username,
+                  displayName: item.displayName,
+                  profileimage: item.profileimage,
+                  bannerImage: item.bannerImage,
+                  bio: item.bio,
+                  id: item.id,
+                })
+              }
+            >
+              <View>
+                <Image
+                  style={{ width: 124, height: 130, borderRadius: 13 }}
+                  source={{ uri: item.profileimage }}
+                />
+                <Image
+                  style={{
+                    width: 124,
+                    height: 93,
+                    top: 37,
+                    borderRadius: 13,
+                    position: "absolute",
+                  }}
+                  source={require("../../assets/fader.png")}
+                />
+                <Text
+                  style={{
+                    position: "absolute",
+                    top: 90,
+                    color: "white",
+                    fontWeight: "800",
+                    left: 2,
+                  }}
+                >
+                  {item.displayName}
+                </Text>
+                <Text
+                  style={{
+                    position: "absolute",
+                    top: 105,
+                    color: "#D7D8DA",
+                    fontWeight: "600",
+                    left: 2,
+                  }}
+                >
+                  @{item.username}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         );
       })}
     </View>

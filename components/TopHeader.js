@@ -17,50 +17,26 @@ export default function TopHeader({ navigation }) {
 
   return (
     <SafeAreaView style={styles.componentContainer}>
-      <View style={styles.logoContainer}>
+      <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />
+
+      <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
         <Image
-          style={styles.logo}
-          source={require("../assets/tizlyicon.jpg")}
+          style={styles.notification}
+          source={require("../assets/noti.png")}
         />
-      </View>
-      <View style={styles.buttonsContainer}>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Still Looking?"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(text) => setQuery(text)}
-            value={query}
-          />
-          <Image
-            style={styles.searchIcon}
-            source={require("../assets/Search.png")}
-          />
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
-          <Image
-            style={styles.notification}
-            source={require("../assets/noti.png")}
-          />
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Settings");
-          }}
-        >
-          <Image
-            style={styles.setting}
-            source={require("../assets/Setting.jpg")}
-          />
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Settings");
+        }}
+      >
+        <Image
+          style={styles.setting}
+          source={require("../assets/Setting.jpg")}
+        />
+      </TouchableOpacity>
 
       <Image style={styles.profileimage} source={{ uri: user.profileimage }} />
-
-      <FullSeperator />
     </SafeAreaView>
   );
 }
@@ -68,8 +44,8 @@ export default function TopHeader({ navigation }) {
 const styles = StyleSheet.create({
   componentContainer: {
     backgroundColor: "white",
-    height: 150,
-    borderBottomWidth: 1.0,
+    height: 100,
+    borderBottomWidth: 2.0,
     borderBottomColor: "#EDEDED",
   },
   setting: {
@@ -77,31 +53,20 @@ const styles = StyleSheet.create({
     height: 29,
     width: 29,
     left: 368,
-    top: 13,
+    top: 17,
   },
 
   logo: {
     position: "absolute",
-
     resizeMode: "contain",
     width: 52,
     height: 26,
     backgroundColor: "white",
+    alignSelf: "center",
+    top: 60,
   },
   logoContainer: {
     alignItems: "center",
-  },
-  searchInput: {
-    position: "absolute",
-    top: 57,
-    paddingLeft: 63,
-
-    borderColor: "grey",
-    borderWidth: 0.1,
-    borderRadius: 25,
-    backgroundColor: "#F3F3F9",
-    width: 200,
-    height: 35,
   },
   searchContainer: {
     alignItems: "center",
@@ -113,9 +78,10 @@ const styles = StyleSheet.create({
     right: 75,
   },
   notification: {
+    position: "absolute",
     height: 24,
     width: 24,
-    top: 40,
+    top: 20,
     left: 320,
   },
   profileimage: {
@@ -126,3 +92,16 @@ const styles = StyleSheet.create({
     top: 12,
   },
 });
+
+// searchInput: {
+//   position: "absolute",
+//   top: 57,
+//   paddingLeft: 63,
+
+//   borderColor: "grey",
+//   borderWidth: 0.1,
+//   borderRadius: 25,
+//   backgroundColor: "#F3F3F9",
+//   width: 200,
+//   height: 35,
+// },

@@ -16,7 +16,6 @@ export default function HomeBoard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Discovery</Text>
       <View style={{ alignItems: "center" }}>
         <TouchableOpacity>
           <View style={styles.homeboardContainer}>
@@ -35,12 +34,11 @@ export default function HomeBoard() {
 const styles = StyleSheet.create({
   container: {
     height: 300,
-    backgroundColor: "white",
   },
   halfSeperator: {
     borderBottomColor: "grey",
     borderBottomWidth: 0.8,
-    opacity: 0.3,
+    opacity: 0,
     width: 298,
     top: 70,
   },
@@ -64,6 +62,6 @@ const styles = StyleSheet.create({
     left: 9,
   },
   homeboardContainer: {
-    top: 50,
+    top: 30,
   },
 });

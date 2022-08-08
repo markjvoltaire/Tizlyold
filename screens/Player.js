@@ -9,6 +9,11 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
@@ -22,6 +27,7 @@ import Comment from "../components/post/Comment";
 import BottomNav from "../navigation/BottomNav";
 
 export default function Player({ route, navigation }) {
+  const [comment, setComment] = useState("");
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
   const [post, setPost] = useState([]);
@@ -111,11 +117,57 @@ export default function Player({ route, navigation }) {
           )}
         />
       </View>
+      <FullSeperator />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={true}
+              placeholder="Leave A Comment"
+              onChangeText={(text) => setComment(text)}
+              style={styles.commentInput}
+            />
+            <TouchableOpacity>
+              <Image
+                style={{
+                  height: 33,
+                  resizeMode: "contain",
+                  bottom: 47,
+                  left: 190,
+                }}
+                source={require("../assets/commentPost.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  commentInput: {
+    borderColor: "grey",
+    borderWidth: 0.1,
+    borderRadius: 10,
+    backgroundColor: "#E1E1EA",
+    width: 230,
+    height: 33,
+    paddingLeft: 20,
+    alignSelf: "center",
+    right: 60,
+    margin: 15,
+  },
+  inner: {
+    padding: 14,
+    justifyContent: "space-around",
+
+    position: "relative",
+  },
   backButton: {
     position: "absolute",
     resizeMode: "contain",
@@ -138,7 +190,7 @@ const styles = StyleSheet.create({
     opacity: 7.8,
     width: 900,
     left: 1,
-
+    top: 15,
     height: 3,
   },
   fullSeperator2: {

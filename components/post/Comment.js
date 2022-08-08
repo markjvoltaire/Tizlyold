@@ -48,13 +48,6 @@ export default function Comment({ route }) {
           source={require("../../assets/commentPost.png")}
         />
       </TouchableOpacity>
-      <TextInput
-        autoCapitalize="none"
-        autoCorrect={true}
-        placeholder="Leave A Comment"
-        onChangeText={(text) => setComment(text)}
-        style={styles.commentInput}
-      />
     </View>
   );
 }
