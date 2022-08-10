@@ -19,7 +19,7 @@ import React, { useState, useRef } from "react";
 export default function Subscriptions({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text>Subscriptions</Text>
+      <Text style={{ top: 400 }}>Subscriptions</Text>
     </View>
   );
 }
@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    top: 300,
+
+    backgroundColor: "white",
   },
   inner: {
     padding: 24,

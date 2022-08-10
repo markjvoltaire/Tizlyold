@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { supabase } from "../../services/supabase";
 
 export default function UserProfileFeed({ posts }) {
+ 
+
   return (
     <View style={styles.feedContainer}>
       {/* {posts.map((post) => {
         return (
-          <View
-            key={post.id}
-            style={{ top: 80, paddingBottom: 660, alignItems: "center" }}
-          >
+          <View key={post.id} style={{ top: 80, alignItems: "center" }}>
             <View
               style={{
                 alignItems: "center",
@@ -61,16 +61,6 @@ export default function UserProfileFeed({ posts }) {
               <Text style={{ top: 29, fontWeight: "600", color: "#5F5F69" }}>
                 {post.description}
               </Text>
-              <Image
-                style={{
-                  height: 54,
-                  width: 64,
-                  resizeMode: "contain",
-                  position: "absolute",
-                  top: 457,
-                }}
-                source={{ uri: post.category }}
-              />
             </View>
           </View>
         );

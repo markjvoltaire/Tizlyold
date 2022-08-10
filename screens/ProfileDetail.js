@@ -16,6 +16,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import UserProfile from "../screens/UserProfile";
 import ProfileNav from "../components/profile/ProfileNav";
 import UserButtons from "../components/home/UserButtons";
+import UserProfileFeed from "../components/profile/UserProfileFeed";
+import UserProfileNav from "../components/profile/UserProfileNav";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
@@ -75,89 +77,89 @@ export default function ProfileDetail({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView>
-        <View style={styles.profileHeader}>
-          <Image
-            style={styles.userBanner}
-            source={{ uri: route.params.bannerImage }}
-          />
+        <Image
+          style={styles.userBanner}
+          source={{ uri: route.params.bannerImage }}
+        />
 
-          <Image
-            style={styles.userBannerFader}
-            source={require("../assets/fader.png")}
-          />
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image
-              style={styles.backButton}
-              source={require("../assets/backButton2.png")}
-            />
-          </TouchableOpacity>
+        <Image
+          style={styles.userBannerFader}
+          source={require("../assets/fader.png")}
+        />
 
-          <TouchableOpacity onPress={() => subscribe()}>
-            <Image
-              style={{
-                resizeMode: "contain",
-                width: 100,
-                bottom: 480,
-                left: 10,
-                position: "absolute",
-              }}
-              source={require("../assets/subscribe.png")}
-            />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            style={styles.backButton}
+            source={require("../assets/backButton2.png")}
+          />
+        </TouchableOpacity>
+
+        <View style={{ bottom: 410 }}>
           <Text style={styles.displayname}>{route.params.displayName}</Text>
           <Text style={styles.username}>@{route.params.username}</Text>
           <Text style={styles.bio}> {route.params.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: route.params.profileImage }}
+            source={{ uri: route.params.profileimage }}
           />
+          <TouchableOpacity>
+            <Image
+              style={styles.subButton}
+              source={require("../assets/subscribe.png")}
+            />
+          </TouchableOpacity>
         </View>
-        <ProfileNav />
+        <UserProfileNav />
+        <UserProfileFeed />
       </ScrollView>
     </View>
   );
 }
 const styles = StyleSheet.create({
-  postUserInfo: {
-    alignItems: "center",
-  },
-
-  postProfileImage: {
+  userBanner: {
     position: "absolute",
-    borderRadius: 100,
-    height: 30,
-    width: 30,
-    top: 520,
-    left: 140,
-  },
-
-  postUsername: {
-    position: "absolute",
-    top: 535,
+    width: 455,
+    height: 455,
     alignSelf: "center",
   },
 
-  userBanner: {
-    width: 455,
-    bottom: 50,
-    height: 455,
+  feedContainer: {
+    alignItems: "center",
+    top: 130,
+    flex: 1,
   },
-
-  userBannerFader: {
-    width: 455,
-    bottom: 500,
-    height: 455,
+  displayNameContainer: {
+    left: 40,
+    bottom: 33,
   },
-  profileImage: {
-    position: "absolute",
-    left: 10,
-    width: 50,
-    height: 50,
+  usernameContainer: {
+    left: 40,
+    bottom: 33,
+  },
+  halfSep: {
+    top: 655,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.6,
+    width: 300,
+    left: 60,
+  },
+  subButton: {
     resizeMode: "contain",
-    top: 250,
-    borderRadius: 100,
+    top: 360,
+    width: 160,
+    height: 30,
+    right: 15,
   },
 
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 470,
+  },
   displayname: {
     position: "absolute",
     height: 38,
@@ -185,12 +187,13 @@ const styles = StyleSheet.create({
     left: 8,
     fontWeight: "800",
   },
+
   followbutton: {
     position: "absolute",
     resizeMode: "contain",
     width: 100,
     left: 10,
-    top: 360,
+    top: 320,
   },
   profileImage: {
     position: "absolute",
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    bottom: 750,
+    bottom: 300,
   },
   photoBox: {
     position: "absolute",
@@ -245,15 +248,6 @@ const styles = StyleSheet.create({
   wrapsDiv: {
     position: "absolute",
   },
-
-  subscribeButton: {
-    position: "absolute",
-    resizeMode: "contain",
-    top: 360,
-    width: 120,
-    left: 130,
-  },
-
   photosTextTitle: {
     fontWeight: "bold",
     color: "white",
@@ -304,14 +298,9 @@ const styles = StyleSheet.create({
     top: 720,
     left: 120,
   },
-  userinfoContainer: {
-    top: 30,
-  },
+  userBannerFader: {
+    width: 455,
 
-  postFeedUserProfilePic: {
-    position: "absolute",
-    borderRadius: 100,
-    height: 30,
-    width: 30,
+    height: 455,
   },
 });

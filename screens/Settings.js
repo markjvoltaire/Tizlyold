@@ -33,14 +33,16 @@ export default function Settings({ navigation }) {
         backgroundColor: "white",
       }}
     >
-      <Text style={styles.username}>{user.username}</Text>
-
-      <Image
-        style={styles.img}
-        source={{
-          uri: user.profileimage,
-        }}
-      />
+      <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />
+      <View style={styles.userInfoContainer}>
+        <Image
+          style={styles.img}
+          source={{
+            uri: user.profileimage,
+          }}
+        />
+        <Text style={styles.username}>{user.username}</Text>
+      </View>
 
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image
@@ -48,6 +50,7 @@ export default function Settings({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
+
       <View style={styles.accountSettings}>
         <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
@@ -76,6 +79,15 @@ export default function Settings({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 52,
+    height: 26,
+    backgroundColor: "white",
+    alignSelf: "center",
+    top: 60,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -115,13 +127,6 @@ const styles = StyleSheet.create({
     width: 300,
     left: -150,
   },
-  username: {
-    position: "absolute",
-    bottom: 600,
-    fontWeight: "bold",
-    fontSize: 23,
-    right: 290,
-  },
   accountSettingsText: {
     left: 39,
     bottom: 20,
@@ -140,11 +145,18 @@ const styles = StyleSheet.create({
     bottom: 500,
   },
   img: {
-    position: "absolute",
     height: 60,
     width: 60,
-    top: 150,
-    right: 320,
     borderRadius: 100,
+  },
+  username: {
+    fontWeight: "bold",
+    fontSize: 23,
+    left: 75,
+    bottom: 45,
+  },
+  userInfoContainer: {
+    bottom: 200,
+    right: 100,
   },
 });

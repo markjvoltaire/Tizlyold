@@ -7,19 +7,14 @@ import {
   Image,
 } from "react-native";
 import React from "react";
+import TopHeader from "../TopHeader";
 
-export default function NoPost() {
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+export default function NoPost({ navigation }) {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <FullSeperator />
-      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-        <Image
-          style={styles.settingIcon}
-          source={require("../../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
-
+    <View style={styles.container}>
+      <View style={{ bottom: 350 }}>
+        <TopHeader />
+      </View>
       <View style={styles.header}>
         <Text style={styles.pageHeader}>Don't See Any Content ?</Text>
       </View>
@@ -62,19 +57,25 @@ export default function NoPost() {
         style={styles.howIcon}
         source={require("../../assets/Search.png")}
       />
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
   },
 
+  header: {
+    alignItems: "center",
+    bottom: 300,
+  },
   whyHeader: {
     position: "absolute",
     left: 88,
-    top: 321,
+    top: 221,
   },
 
   howHeader: {
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: "#4A90E2",
     fontSize: 20,
+    bottom: 100,
   },
 
   whyDiv: {
@@ -108,13 +110,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     width: 252,
     left: 88,
-    top: 540,
+    top: 440,
   },
   whyIcon: {
     position: "absolute",
     height: 24,
     width: 24,
-    bottom: 425,
+    bottom: 525,
     left: 40,
   },
   howIcon: {
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     left: 40,
-    bottom: 230,
+    bottom: 330,
   },
 
   whyText: {
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 20,
     color: "#686877",
+    bottom: 100,
   },
 
   howText: {
@@ -143,5 +146,47 @@ const styles = StyleSheet.create({
     position: "absolute",
     fontWeight: "800",
     fontSize: 20,
+  },
+
+  profileimage: {
+    width: 100,
+  },
+  exploreButton: {
+    position: "absolute",
+    width: 213,
+    height: 40,
+    bottom: 30,
+  },
+
+  exploreButtonDiv: {
+    right: 105,
+    alignItems: "center",
+    top: 300,
+  },
+
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    opacity: 0.5,
+    width: 900,
+    left: 1,
+    bottom: 250,
+  },
+  settingIcon: {
+    position: "absolute",
+    left: 368,
+    bottom: 270.7,
+    width: 29,
+    height: 29,
+  },
+  image: {
+    width: 900,
+    height: 900,
+  },
+  userBanner: {
+    position: "absolute",
+    width: 455,
+    right: -10,
+    height: 455,
   },
 });

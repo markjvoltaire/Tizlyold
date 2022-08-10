@@ -6,6 +6,8 @@ export default function NewToTizly({ navigation }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  console.log("profiles", profiles);
+
   useEffect(() => {
     const loadTrendingCreators = async () => {
       const creators = await getNewTrendingCreators();

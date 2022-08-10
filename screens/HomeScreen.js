@@ -19,6 +19,7 @@ import { usePosts } from "../context/PostContext";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../components/home/UserButtons";
 import TopHeader from "../components/TopHeader";
+import NoPost from "../components/home/NoPost";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
@@ -62,12 +63,16 @@ export default function HomeScreen({ navigation }) {
     return <Text> Please Wait</Text>;
   }
 
-  console.log("user from home screen", user);
-
   const refreshFeed = async () => {
     const resp = await getPosts();
     setPost(resp);
   };
+
+  // console.log("posts", posts.length);
+
+  // if (posts.length === 0) {
+  //   return <NoPost navigation={navigation} />;
+  // }
 
   return (
     <View style={styles.homeScreenContainer}>
