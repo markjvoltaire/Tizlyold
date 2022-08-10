@@ -157,6 +157,6 @@ const styles = StyleSheet.create({
   },
   userInfoContainer: {
     bottom: 200,
-    right: 100,
+    right: 140,
   },
 });

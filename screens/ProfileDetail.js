@@ -163,6 +163,9 @@ export default function ProfileDetail({ navigation, route }) {
                         <View style={{paddingBottom: 180}}>
 
                         <UserButtons />
+                        <View>
+                          <FullSeperator />
+                        </View>
                         </View>
             
           </View>
@@ -249,10 +252,10 @@ const styles = StyleSheet.create({
   fullSeperator: {
     borderBottomColor: "grey",
     borderBottomWidth: 0.8,
-    opacity: 0.2,
+    opacity: .8,
     width: 900,
     left: 1,
-    top: 470,
+    top: 130
   },
   displayname: {
     position: "absolute",

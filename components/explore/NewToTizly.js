@@ -33,6 +33,7 @@ export default function NewToTizly({ navigation }) {
                   bannerImage: item.bannerImage,
                   bio: item.bio,
                   id: item.id,
+                  user_id: item.user_id,
                 })
               }
             >
