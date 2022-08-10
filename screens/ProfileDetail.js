@@ -9,11 +9,7 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { useLinkTo } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import UserProfile from "../screens/UserProfile";
 import ProfileNav from "../components/profile/ProfileNav";
 import UserButtons from "../components/home/UserButtons";
 import UserProfileFeed from "../components/profile/UserProfileFeed";
@@ -22,22 +18,45 @@ import UserProfileNav from "../components/profile/UserProfileNav";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { getCurrentUserPosts, getProfileDetail } from "../services/user";
+import ProfileDetailSub from "../components/profile/ProfileDetailSub";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPosts, setUserPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [yId, setPostsById] = useState([]);
-  const [profile, setProfile] = useState([]);
+  const [posts, setPosts] = useState([]);
+
+
+  // console.log('route', route)
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  async function getPosts() {
+    let { data: post, error } = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("id", { ascending: false });
+
+    return post;
+  }
+
+  useEffect(() => {
+    const getPost = async () => {
+      const resp = await getPosts();
+      setPosts(resp);
+      setLoading(false);
+      // console.log("resp from curren user Post", resp);
+    };
+    getPost();
+  }, []);
+
   const user_id = route.params.user_id;
 
-  console.log("user", user);
+  // console.log("user", user);
 
-  console.log("route", route);
+  // console.log("route", route);
 
   if (route.params.user_id === user.user_id) {
     navigation.navigate("Profile");
@@ -49,7 +68,7 @@ export default function ProfileDetail({ navigation, route }) {
       .select("*")
       .eq("user_id", user_id)
       .order("id", { ascending: false });
-    console.log("items", items.body);
+
     return items.body;
   }
 
@@ -75,8 +94,8 @@ export default function ProfileDetail({ navigation, route }) {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <ScrollView>
+    <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+      
         <Image
           style={styles.userBanner}
           source={{ uri: route.params.bannerImage }}
@@ -100,7 +119,7 @@ export default function ProfileDetail({ navigation, route }) {
           <Text style={styles.bio}> {route.params.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: route.params.profileimage }}
+            source={{ uri: route.params.profileImage }}
           />
           <TouchableOpacity>
             <Image
@@ -110,9 +129,49 @@ export default function ProfileDetail({ navigation, route }) {
           </TouchableOpacity>
         </View>
         <UserProfileNav />
-        <UserProfileFeed />
-      </ScrollView>
-    </View>
+
+       {posts.map((post) => {
+        return (
+          <View  style={{  top: 60}} key={post.id}>
+            <View style={{ alignContent: 'center', alignSelf: 'center', left: 15}} >
+            <Image style={{ borderRadius: 100, height: 30, width: 30, top: 5, right: 35}} 
+            source={{uri: post.profileImage}}
+            />
+            
+
+            <Text style={styles.postDisplayname}>{post.displayName}</Text>
+            <Text style={styles.postUsername}>@{post.username} </Text>
+           
+            </View>
+
+            <Image style={styles.media} source={{uri: post.media}} />
+
+            <View>
+            <Text style={styles.title}>{post.title}</Text>
+            <Text style={styles.description}>{post.description}</Text>
+            </View>
+            <Image  
+                          style={{
+                            
+                            left: 32,
+                            height: 54,
+                            width: 64,
+                            resizeMode: "contain",
+                          }}
+                          source={require("../assets/bluePhotoButton.png")}
+                        />
+                        <View style={{paddingBottom: 180}}>
+
+                        <UserButtons />
+                        </View>
+            
+          </View>
+        )
+       })}
+        
+       
+
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -121,6 +180,41 @@ const styles = StyleSheet.create({
     width: 455,
     height: 455,
     alignSelf: "center",
+  },
+
+  title: {
+    left: 35,
+    fontWeight: "800",
+    fontSize: 15,
+    paddingBottom: 15,
+    top: 8
+  },
+  description: {
+    left: 35,
+    fontWeight: "600",
+    color: "#5F5F69",
+  },
+
+  media: {
+    height: 392,
+    width: 343,
+    borderRadius: 12,
+    alignSelf: 'center',
+    
+  },
+
+  postUsername: {
+    bottom: 26,
+    fontWeight: "500",
+    color: "#5F5F69",
+    fontSize: 12, 
+   
+  },
+
+  postDisplayname: {
+    fontWeight: "600",
+    fontSize: 16,
+    bottom: 27
   },
 
   feedContainer: {

@@ -89,26 +89,7 @@ export default function UserProfile({ navigation, route }) {
       </View>
       <UserProfileNav />
       <UserProfileFeed posts={posts} />
-      <View style={{ flex: 1, top: 45 }}>
-        <FlatList
-          keyExtractor={(item) => item.id}
-          data={posts}
-          renderItem={({ item }) => (
-            <View style={{ alignItems: "center", paddingBottom: 65 }}>
-              <Image
-                style={{ height: 50, width: 50, borderRadius: 50 }}
-                source={{ uri: item.profileImage }}
-              />
-              <Text>{item.displayName}</Text>
-              <Text>@{item.username}</Text>
-              <Image
-                style={{ height: 442, width: 343, borderRadius: 12 }}
-                source={{ uri: item.media }}
-              />
-            </View>
-          )}
-        />
-      </View>
+     
     </ScrollView>
   );
 }
