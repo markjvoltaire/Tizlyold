@@ -28,7 +28,7 @@ export default function ProfileDetail({ navigation, route }) {
   const [posts, setPosts] = useState([]);
 
 
-  // console.log('route', route)
+  console.log('route', route)
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -119,7 +119,7 @@ export default function ProfileDetail({ navigation, route }) {
           <Text style={styles.bio}> {route.params.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: route.params.profileImage }}
+            source={{ uri: route.params.profileimage }}
           />
           <TouchableOpacity>
             <Image
@@ -162,7 +162,7 @@ export default function ProfileDetail({ navigation, route }) {
                         />
                         <View style={{paddingBottom: 180}}>
 
-                        <UserButtons />
+                        
                         <View>
                           <FullSeperator />
                         </View>

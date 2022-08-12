@@ -7,6 +7,15 @@ export async function signInUser(email, password) {
   return user;
 }
 
+
+export async function getLikes() {
+  const resp = await supabase.from('likes').select("*")
+  console.log('resp', resp.body)
+  return resp.body
+}
+
+
+
 export function getUser() {
   return supabase.auth.user();
 }

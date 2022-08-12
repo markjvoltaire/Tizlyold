@@ -20,6 +20,7 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../components/home/UserButtons";
 import TopHeader from "../components/TopHeader";
 import NoPost from "../components/home/NoPost";
+import HomeFeedList from "../components/home/HomeFeedList";
 
 export default function HomeScreen({ navigation }) {
   const { user, setUser } = useUser();
@@ -29,11 +30,13 @@ export default function HomeScreen({ navigation }) {
   const [status, setStatus] = React.useState({});
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState([]);
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
       setPost(resp);
+   
     };
     getUserPost();
   }, []);
@@ -68,239 +71,37 @@ export default function HomeScreen({ navigation }) {
     setPost(resp);
   };
 
-  // console.log("posts", posts.length);
 
-  // if (posts.length === 0) {
-  //   return <NoPost navigation={navigation} />;
-  // }
+
+
+
+
+
+  
 
   return (
     <View style={styles.homeScreenContainer}>
       <TopHeader navigation={navigation} />
-
       <View style={styles.feedContainer}>
-        <FlatList
-          keyExtractor={(item) => item.id}
-          data={posts}
-          refreshing={refreshing}
-          onRefresh={() => refreshFeed()}
-          initialNumToRender={6}
-          contentContainerStyle={{
-            borderBottomWidth: 0.8,
-            borderBottomColor: "#EDEDED",
-          }}
-          renderItem={({ item }) => (
-            <View style={styles.feedContainer}>
-              <View style={styles.userInfo}>
-                <View>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("ProfileDetail", {
-                        user_id: item.user_id,
-                        bannerImage: item.bannerImage,
-                        username: item.username,
-                        displayName: item.displayName,
-                        profileImage: item.profileImage,
-                        bio: item.bio,
-                        media: item.media,
-                        description: item.description,
-                        title: item.title,
-                        id: item.id,
-                      })
-                    }
-                  >
-                    <Image
-                      style={styles.postFeedUserProfilePic}
-                      source={{ uri: item.profileImage }}
-                    />
-                    <View style={styles.userProfileInfo}>
-                      <Text style={styles.postFeedUserDisplayName}>
-                        {item.displayName}
-                      </Text>
-                      <Text style={styles.postFeedUsername}>
-                        @{item.username}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={styles.userContentContainer}>
-                {item.mediaType === "image" ? (
-                  <View>
-                    <View>
-                      {item.user_id === user.user_id ? (
-                        <>
-                          <Image
-                            style={{
-                              height: 442,
-                              width: 343,
-                              borderRadius: 12,
-                              position: "relative",
-                            }}
-                            source={{ uri: item.media }}
-                          />
-                          {/* <Image
-                            style={{
-                              top: 507,
-                              right: 210,
-                              height: 54,
-                              width: 64,
-                              resizeMode: "contain",
-                              position: "absolute",
-                            }}
-                            source={{ uri: item.category }}
-                          /> */}
+        <FlatList 
+           keyExtractor={(item) => item.id} 
+           data={posts}
+           refreshing={refreshing}
+           onRefresh={() => refreshFeed()}
+           initialNumToRender={6}
+           contentContainerStyle={{
+             borderBottomWidth: 0.8,
+             borderBottomColor: "#EDEDED",
 
-                          <TouchableOpacity
-                            onPress={() =>
-                              navigation.navigate("EditPost", {
-                                user_id: item.user_id,
-                                description: item.description,
-                                title: item.title,
-                                id: item.id,
-                              })
-                            }
-                          >
-                            <Image
-                              style={{
-                                position: "absolute",
-                                height: 22,
-                                width: 22,
-                                left: 300,
-                                bottom: 468,
-                                resizeMode: "contain",
-                              }}
-                              source={require("../assets/optionsButton.png")}
-                            />
-                          </TouchableOpacity>
-                        </>
-                      ) : (
-                        <Image
-                          style={{
-                            height: 392,
-                            width: 343,
-                            borderRadius: 12,
-                          }}
-                          source={{ uri: item.media }}
-                        />
-                      )}
-                    </View>
-
-                    <View style={styles.postInfoContainer}>
-                      <View style={styles.postInfo}>
-                        <View style={styles.postTitleContainer}>
-                          <Text style={styles.postTitle}>{item.title}</Text>
-                        </View>
-                        <View style={styles.descriptionContainer}>
-                          <Text style={styles.description}>
-                            {item.description}
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.photoBeanContainer}>
-                        <Image
-                          style={{
-                            top: 30,
-                            right: 2,
-                            height: 54,
-                            width: 64,
-                            resizeMode: "contain",
-                          }}
-                          source={require("../assets/bluePhotoButton.png")}
-                        />
-
-                        <View style={styles.engagementButtons}>
-                          <UserButtons />
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                ) : (
-                  <View style={styles.feedContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Player", {
-                          id: item.id,
-                          username: item.username,
-                          profileimage: item.profileImage,
-                          displayName: item.displayName,
-                          user_id: item.user_id,
-                        });
-                      }}
-                    >
-                      <View style={{ alignItems: "center" }}>
-                        <View
-                          style={{
-                            backgroundColor: "black",
-                            borderRadius: 12,
-                            height: 220,
-                            width: 388,
-                          }}
-                        >
-                          <Video
-                            source={{ uri: item.media }}
-                            ref={video}
-                            style={{
-                              height: 220,
-                              width: 388,
-                              borderRadius: 12,
-                              alignSelf: "center",
-                            }}
-                            resizeMode="contain"
-                            onPlaybackStatusUpdate={(status) =>
-                              setStatus(() => status)
-                            }
-                          />
-                        </View>
-                      </View>
-
-                      <Image
-                        style={{
-                          position: "absolute",
-                          width: 50,
-                          bottom: 60,
-                          alignSelf: "center",
-                          resizeMode: "contain",
-                        }}
-                        source={require("../assets/playButton.png")}
-                      />
-                    </TouchableOpacity>
-                    <View style={styles.postInfoContainer}>
-                      <View style={styles.postInfo}>
-                        <View style={styles.postTitleContainer}>
-                          <Text style={styles.postTitle}>{item.title}</Text>
-                        </View>
-                        <View style={styles.descriptionContainer}>
-                          <Text style={styles.description}>
-                            {item.description}
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.photoBeanContainer}>
-                        <Image
-                          style={{
-                            top: 30,
-                            right: 2,
-                            height: 54,
-                            width: 64,
-                            resizeMode: "contain",
-                          }}
-                          source={require("../assets/blueVideoButton.png")}
-                        />
-
-                        <View style={styles.engagementButtons}>
-                          <UserButtons />
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                )}
-              </View>
-            </View>
-          )}
-        />
+           }}
+           renderItem={({ item }) => (
+            <HomeFeedList item={item}  />
+           )}
+        
+           />
       </View>
-    </View>
+     </View>
+        
   );
 }
 
@@ -331,8 +132,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
-    width: 300,
-    bottom: 460,
+    width: 600,
+   top: 370
   },
 
   fullSeperator2: {
@@ -408,7 +209,7 @@ const styles = StyleSheet.create({
     top: 7,
   },
   photoBeanContainer: {
-    paddingBottom: 100,
+    paddingBottom: 70,
   },
 
   engagementButtons: {

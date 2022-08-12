@@ -11,6 +11,11 @@ import UserButtons from "../../components/home/UserButtons";
 import ProfileUserButtons from "../home/ProfileUserButtons";
 
 export default function ProfileFeed({ userPosts }) {
+
+
+
+
+  
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <View style={styles.feedContainer}>

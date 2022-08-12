@@ -18,8 +18,8 @@ const BottomTabNavigator = (route) => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={{ headerShown: false }}
-      tabBarOptions={{ showLabel: false }}
+      screenOptions={{ headerShown: false, tabBarShowLabel: false }}
+     
     >
       <Tab.Screen
         options={{

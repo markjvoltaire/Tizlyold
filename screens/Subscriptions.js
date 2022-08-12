@@ -14,13 +14,45 @@ import {
   Keyboard,
   TextInput,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import {getLikes} from "../services/user"
+import { supabase } from "../services/supabase";
+import HomeFeedList from "../components/home/HomeFeedList";
+
 
 export default function Subscriptions({ navigation }) {
+  const [likes, setLikes] = useState()
+
+    async function getLikes() {
+    const resp = await supabase.from('likes').select("*")
+
+    return resp.body
+  }
+
+
+
+  useEffect(() => {
+    const getLikesById = async () => {
+      const resp = await getLikes();
+      setLikes(resp);
+    };
+    getLikesById();
+  }, []);
+
+
+console.log('likes', likes)
+
+
+
+ 
+
+
+
+
   return (
-    <View style={styles.container}>
-      <Text style={{ top: 400 }}>Subscriptions</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <HomeFeedList />
+    </SafeAreaView>
   );
 }
 
