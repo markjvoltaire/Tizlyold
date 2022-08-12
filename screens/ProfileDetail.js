@@ -27,9 +27,7 @@ export default function ProfileDetail({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
-
-  console.log('route', route)
-
+console.log('posts', posts)
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   async function getPosts() {
@@ -93,6 +91,8 @@ export default function ProfileDetail({ navigation, route }) {
     return <Text>Please Wait</Text>;
   }
 
+  console.log('route', route)
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
       
@@ -135,7 +135,7 @@ export default function ProfileDetail({ navigation, route }) {
           <View  style={{  top: 60}} key={post.id}>
             <View style={{ alignContent: 'center', alignSelf: 'center', left: 15}} >
             <Image style={{ borderRadius: 100, height: 30, width: 30, top: 5, right: 35}} 
-            source={{uri: post.profileImage}}
+            source={{uri: post.profileimage}}
             />
             
 

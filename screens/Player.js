@@ -96,6 +96,8 @@ export default function Player({ route, navigation }) {
     setCommentList(resp);
   };
 
+  
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <VideoHeader navigation={navigation} route={route} />

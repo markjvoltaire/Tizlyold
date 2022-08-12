@@ -7,7 +7,12 @@ import { FlatList } from "react-native-gesture-handler";
 export default function UserButtons({item}) {
   const [likedPosts, setLikedPosts] = useState()
   const [loading, setLoading] = useState(true);
+  const [isPressed, setIsPressed] = useState(false)
   
+
+
+
+
   const { user } = useUser();
 
   const creatorId = item.user_id
@@ -27,6 +32,13 @@ export default function UserButtons({item}) {
         creatorUsername: creatorUsername
       },
     ]);
+    
+    return resp;
+  }
+
+
+  async function deletePost() {
+    const resp = await supabase.from("likes").delete().eq('postId', item.id)
     
     return resp;
   }
@@ -62,20 +74,29 @@ export default function UserButtons({item}) {
 
   
 
+console.log('isPressed', isPressed)
 
+const handlePress = () => {
+  setIsPressed(current => !current)
+
+  isPressed === false ? likePost() : deletePost()
+ 
+ 
+}
 
 
 
   return (
     <View style={styles.userButtonsContainer}>
       <View style={styles.likeButtonContainer}>
-        <TouchableOpacity onPress={() => likePost()}>
+        <TouchableOpacity onPress={() => handlePress()}>
           <Image
             style={{
-              height: 72,
-              width: 132,
+              top: 30,
+              height: 32,
+              aspectRatio: 1
             }}
-            source={require("../../assets/likeButton.png")}
+            source={ isPressed === false ? require("../../assets/Heart.png") : require("../../assets/likedHeart.png")}
           />
         </TouchableOpacity>
       </View>
@@ -83,10 +104,13 @@ export default function UserButtons({item}) {
         <TouchableOpacity onPress={() => getLikes()}>
           <Image
             style={{
-              height: 72,
-              width: 132,
+              top: 30,
+              height: 32,
+              aspectRatio: 1,
+              resizeMode: 'contain'
+              
             }}
-            source={require("../../assets/commentButton.png")}
+            source={require("../../assets/Chat.png")}
           />
         </TouchableOpacity>
       </View>
@@ -94,10 +118,12 @@ export default function UserButtons({item}) {
         <TouchableOpacity  onPress={() => console.log(item)} >
           <Image
             style={{
-              height: 72,
-              width: 132,
+              top: 30,
+              height: 32,
+              aspectRatio: 1,
+              resizeMode: 'contain'
             }}
-            source={require("../../assets/saveButton.png")}
+            source={require("../../assets/Bookmark.png")}
           />
         </TouchableOpacity>
       </View>
@@ -111,5 +137,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     display: "flex",
     justifyContent: "space-evenly",
+    paddingBottom: 20
   },
 });

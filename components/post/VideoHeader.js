@@ -17,18 +17,21 @@ export default function VideoHeader({ route, navigation }) {
         />
       </TouchableOpacity>
 
-      <View style={{ bottom: 40 }}>
+        <TouchableOpacity>
+          
         <Image
           style={{
             position: "absolute",
             width: 100,
             height: 80,
             resizeMode: "contain",
-            top: 118,
+           top: 80,
             left: 300,
           }}
           source={require("../../assets/goToProfile.png")}
         />
+        </TouchableOpacity>
+      <View style={{ bottom: 40 }}>
         <Image
           style={{
             top: 142,

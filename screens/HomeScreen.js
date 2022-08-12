@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }) {
 
            }}
            renderItem={({ item }) => (
-            <HomeFeedList item={item}  />
+            <HomeFeedList item={item} navigation={navigation} />
            )}
         
            />

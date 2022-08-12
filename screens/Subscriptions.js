@@ -22,36 +22,19 @@ import HomeFeedList from "../components/home/HomeFeedList";
 
 export default function Subscriptions({ navigation }) {
   const [likes, setLikes] = useState()
-
-    async function getLikes() {
-    const resp = await supabase.from('likes').select("*")
-
-    return resp.body
+  const [isPressed, setIsPressed] = useState(false)
+  
+  const handlePress = () => {
+    setIsPressed(current => !current)
+    console.log('isPressed', isPressed)
   }
-
-
-
-  useEffect(() => {
-    const getLikesById = async () => {
-      const resp = await getLikes();
-      setLikes(resp);
-    };
-    getLikesById();
-  }, []);
-
-
-console.log('likes', likes)
-
-
-
- 
 
 
 
 
   return (
     <SafeAreaView style={styles.container}>
-      <HomeFeedList />
+   <Button onPress={() => handlePress()} title="press me"/>
     </SafeAreaView>
   );
 }
