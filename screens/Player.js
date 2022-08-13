@@ -138,7 +138,7 @@ export default function Player({ route, navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        
           <View style={styles.inner}>
             <TextInput
               autoCapitalize="none"
@@ -149,7 +149,7 @@ export default function Player({ route, navigation }) {
             />
             <View style={{ position: "absolute", top: 207, left: 80 }}>
               <TouchableOpacity
-                onPress={() => createComment().then(() => refreshFeed())}
+                onPress={() => createComment().then(() => refreshFeed().then(() => Keyboard.dismiss()))}
               >
                 <Image
                   style={{
@@ -165,7 +165,7 @@ export default function Player({ route, navigation }) {
               </TouchableOpacity>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        
       </KeyboardAvoidingView>
     </View>
   );

@@ -20,8 +20,7 @@ export default function HomeFeedList({item, navigation}) {
 
         <View style={{ alignSelf: 'center' , paddingBottom: 25, left: 25,}}>
        
-    <TouchableOpacity onPress={() =>
-                      navigation.navigate("ProfileDetail", {
+    <TouchableOpacity onPress={() => navigation.navigate("ProfileDetail", {
                         user_id: item.user_id,
                         bannerImage: item.bannerImage,
                         username: item.username,

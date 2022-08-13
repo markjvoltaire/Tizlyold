@@ -18,10 +18,6 @@ export default function UserButtons({item}) {
   const postId = item.id
 
 
-
-
-
-
   async function likePost() {
     const resp = await supabase.from("likes").insert([
       {
@@ -41,7 +37,6 @@ export default function UserButtons({item}) {
 
   async function deletePost() {
     const resp = await supabase.from("likes").delete().eq('postId', postId)
-    
     return resp;
   }
   
@@ -56,27 +51,13 @@ export default function UserButtons({item}) {
     .eq('postId', item.id)
     .eq('liked_Id', item.likeId)
    
-  
     return resp.body
-    
   }
-
-  // async function getLikes() {
-   
-  //   const resp = await supabase
-  //   .from("likes")
-  //   .select("*")
-  //   .eq("userId", userId)
-   
-  //   return resp.body
-  // }
-
 
   useEffect(() => {
     const seeLikes = async () => {
      const res =  await getLikes();
      res.map((post) => setIsPressed(post.liked))
-     
     };
     seeLikes()
   
@@ -97,9 +78,6 @@ const handlePress = () => {
   isPressed === true ? deletePost() : likePost() 
 
 }
-
-// console.log('isPressed', isPressed)
-
 
   return (
     <View style={styles.userButtonsContainer}>
