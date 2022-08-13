@@ -144,12 +144,13 @@ export default function Player({ route, navigation }) {
               autoCapitalize="none"
               autoCorrect={true}
               placeholder="Leave A Comment"
+              value={comment}
               onChangeText={(text) => setComment(text)}
               style={styles.commentInput}
             />
             <View style={{ position: "absolute", top: 207, left: 80 }}>
               <TouchableOpacity
-                onPress={() => createComment().then(() => refreshFeed().then(() => Keyboard.dismiss()))}
+                onPress={() => createComment().then(() => refreshFeed().then(() => Keyboard.dismiss())).then(() => setComment())}
               >
                 <Image
                   style={{
