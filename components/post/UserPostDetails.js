@@ -13,12 +13,11 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../../services/supabase";
 import { Video, AVPlaybackStatus } from "expo-av";
 import Comment from "../../components/post/Comment";
+import UserButtons from "../home/UserButtons";
 
 export default function UserPostDetails({ post, commentList, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
-
-  console.log("commentList", commentList);
 
   if (commentList.length === 0) {
     return (
@@ -139,53 +138,7 @@ export default function UserPostDetails({ post, commentList, route }) {
         <Text style={styles.postTitle}>{post.title}</Text>
         <Text style={styles.postDescription}>{post.description}</Text>
         <Text style={styles.date}>{post.creatAt}</Text>
-        <Image
-          style={{
-            top: 85,
-            right: 350,
-            height: 54,
-            width: 64,
-            resizeMode: "contain",
-            position: "absolute",
-          }}
-          source={require("../../assets/blueVideoButton.png")}
-        />
-      </View>
-
-      <View style={styles.userButtonsContainer}>
-        <View>
-          <TouchableOpacity>
-            <Image
-              style={{
-                height: 52,
-                width: 112,
-              }}
-              source={require("../../assets/likeButton.png")}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity>
-            <Image
-              style={{
-                height: 52,
-                width: 112,
-              }}
-              source={require("../../assets/commentButton.png")}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity>
-            <Image
-              style={{
-                height: 52,
-                width: 112,
-              }}
-              source={require("../../assets/saveButton.png")}
-            />
-          </TouchableOpacity>
-        </View>
+        <UserButtons item={route.params} />
       </View>
       <View>
         <Text style={styles.commentsHeader}>Comments</Text>

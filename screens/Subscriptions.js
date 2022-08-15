@@ -15,26 +15,17 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import {getLikes} from "../services/user"
+import { getLikes } from "../services/user";
 import { supabase } from "../services/supabase";
 import HomeFeedList from "../components/home/HomeFeedList";
-
+import { StackActions } from "@react-navigation/native";
 
 export default function Subscriptions({ navigation }) {
-  const [likes, setLikes] = useState()
-  const [isPressed, setIsPressed] = useState(false)
-  
-  const handlePress = () => {
-    setIsPressed(current => !current)
-    console.log('isPressed', isPressed)
-  }
-
-
-
+  const pushAction = StackActions.replace("Explore");
 
   return (
     <SafeAreaView style={styles.container}>
-   <Button onPress={() => handlePress()} title="press me"/>
+      <Button onPress={() => navigation.dispatch(pushAction)} title="push" />
     </SafeAreaView>
   );
 }

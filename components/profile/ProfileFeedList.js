@@ -1,22 +1,18 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import UserButtons from "./UserButtons";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import UserButtons from "../home/UserButtons";
 import { Video, AVPlaybackStatus } from "expo-av";
-import { StackActions } from "@react-navigation/native";
-import { getPosts } from "../../services/user";
-import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
+import { useUser } from "../../context/UserContext";
+import ProfileUserButtons from "./ProfileUserButtons";
 
-export default function HomeFeedList({ item, navigation }) {
+export default function ProfileFeedList({ item, route, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
-  const { user, setUser } = useUser();
-  const pushAction = StackActions.replace("HomeScreen");
-  const [isPressed, setIsPressed] = useState(false);
-  const [like, setLike] = useState();
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  const userId = supabase.auth.currentUser.id;
+  const { user } = useUser();
+  const userId = user.user_id;
+  const [isPressed, setIsPressed] = useState(false);
 
   if (item.mediaType === "image") {
     useEffect(() => {
@@ -31,16 +27,20 @@ export default function HomeFeedList({ item, navigation }) {
 
           res.body.map((like) => setIsPressed(like.liked));
 
+          if (isPressed === undefined || false) {
+            setIsPressed(false);
+          }
+
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from Home Feed List", isPressed);
+        console.log("isPressed from", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
 
     return (
-      <View style={{ paddingBottom: 40 }}>
+      <View style={{ paddingBottom: 130 }}>
         <View style={{ alignSelf: "center", paddingBottom: 25, left: 25 }}>
           <TouchableOpacity
             onPress={() =>
@@ -51,7 +51,6 @@ export default function HomeFeedList({ item, navigation }) {
                 displayName: item.displayName,
                 profileimage: item.profileimage,
                 bio: item.bio,
-                likeId: item.likeId,
               })
             }
           >
@@ -124,12 +123,12 @@ export default function HomeFeedList({ item, navigation }) {
           />
         </View>
         <View>
-          <UserButtons
+          <ProfileUserButtons
             isPressed={isPressed}
             setIsPressed={setIsPressed}
+            route={route}
             item={item}
           />
-          <FullSeperator />
         </View>
       </View>
     );
@@ -148,10 +147,14 @@ export default function HomeFeedList({ item, navigation }) {
 
           res.body.map((like) => setIsPressed(like.liked));
 
+          if (isPressed === undefined || false) {
+            setIsPressed(false);
+          }
+
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from Home Feed List", isPressed);
+        console.log("isPressed from", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -160,7 +163,7 @@ export default function HomeFeedList({ item, navigation }) {
     }
 
     return (
-      <View style={{ paddingBottom: 40 }}>
+      <View style={{ paddingBottom: 130 }}>
         <View></View>
         <View
           style={{
@@ -262,13 +265,12 @@ export default function HomeFeedList({ item, navigation }) {
           </View>
         </View>
         <View style={{ top: 20, paddingBottom: 20 }}>
-          <UserButtons
+          <ProfileUserButtons
             isPressed={isPressed}
             setIsPressed={setIsPressed}
             item={item}
           />
         </View>
-        <FullSeperator />
       </View>
     );
   }
@@ -286,16 +288,19 @@ export default function HomeFeedList({ item, navigation }) {
 
           res.body.map((like) => setIsPressed(like.liked));
 
+          if (isPressed === undefined || false) {
+            setIsPressed(false);
+          }
+
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from Home Feed List", isPressed);
+        console.log("isPressed from", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
-
     return (
-      <View style={{ paddingBottom: 40 }}>
+      <View style={{ paddingBottom: 130 }}>
         <View style={{ alignSelf: "center", paddingBottom: 45, left: 25 }}>
           <TouchableOpacity
             onPress={() =>
@@ -348,12 +353,11 @@ export default function HomeFeedList({ item, navigation }) {
             {item.description}
           </Text>
         </View>
-        <UserButtons
+        <ProfileUserButtons
           isPressed={isPressed}
           setIsPressed={setIsPressed}
           item={item}
         />
-        <FullSeperator />
       </View>
     );
   }
@@ -365,8 +369,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    left: 1,
-    top: 40,
     height: 3,
   },
 });

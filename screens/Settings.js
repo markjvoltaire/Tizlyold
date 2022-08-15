@@ -13,9 +13,12 @@ import React, { useState } from "react";
 import { supabase } from "../services/supabase";
 import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
+import { StackActions } from "@react-navigation/native";
 
 export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
+  const pushActionLogin = StackActions.replace("Login");
+
   async function signOutUser() {
     await supabase.auth
       .signOut()
@@ -66,7 +69,7 @@ export default function Settings({ navigation }) {
         onPress={() =>
           signOutUser()
             .then(() => setUser({}))
-            .then(() => navigation.navigate("Welcome"))
+            .then(() => navigation.dispatch(pushActionLogin))
         }
       >
         <Image

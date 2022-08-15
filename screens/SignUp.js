@@ -14,10 +14,13 @@ import React, { useState, useEffect } from "react";
 
 import { supabase } from "../services/supabase";
 import { signUp } from "../services/user";
+import { StackActions } from "@react-navigation/native";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const pushActionLogin = StackActions.replace("Login");
 
   const signUpWithEmail = async () => {
     let { user } = await supabase.auth
@@ -46,13 +49,6 @@ export default function SignUp({ navigation }) {
         source={require("../assets/Tizlymed.png")}
       />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
-        />
-      </TouchableOpacity>
-
       <TextInput
         style={styles.emailInput}
         placeholder="Email"
@@ -80,6 +76,18 @@ export default function SignUp({ navigation }) {
           source={require("../assets/buttonBlue.png")}
         />
       </TouchableOpacity>
+
+      <View>
+        <Text style={styles.signupRedirect}>Already have an account?</Text>
+        <TouchableOpacity>
+          <Text
+            onPress={() => navigation.dispatch(pushActionLogin)}
+            style={styles.signupButton}
+          >
+            Sign in Here
+          </Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }

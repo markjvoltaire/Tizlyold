@@ -25,7 +25,7 @@ export default function TrendingCreators({ navigation, route }) {
     loadTrendingCreators();
   }, []);
 
-  console.log('route', route)
+  console.log("route", route);
 
   return (
     <View style={styles.container}>

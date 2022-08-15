@@ -9,8 +9,11 @@ import {
 import React from "react";
 
 import { useUser } from "../context/UserContext";
+import { StackActions } from "@react-navigation/native";
 
 export default function Welcome({ navigation }) {
+  const replaceActionLogin = StackActions.replace("Login");
+  const replaceActionSignUp = StackActions.replace("SignUp");
   const { user } = useUser();
 
   return (
@@ -29,7 +32,9 @@ export default function Welcome({ navigation }) {
       </TouchableOpacity>
 
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity
+          onPress={() => navigation.dispatch(replaceActionLogin)}
+        >
           <Image
             style={styles.signIn}
             source={require("../assets/signInButton.png")}

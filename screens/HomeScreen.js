@@ -22,7 +22,7 @@ import TopHeader from "../components/TopHeader";
 import NoPost from "../components/home/NoPost";
 import HomeFeedList from "../components/home/HomeFeedList";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
   const { post, setPost } = usePosts();
   const [refreshing, setRefreshing] = useState(false);
@@ -36,7 +36,6 @@ export default function HomeScreen({ navigation }) {
     const getUserPost = async () => {
       const resp = await getPosts();
       setPost(resp);
-   
     };
     getUserPost();
   }, []);
@@ -52,6 +51,17 @@ export default function HomeScreen({ navigation }) {
       .eq("user_id", userId)
       .single();
     setUser(resp.body);
+  }
+
+  async function getLikes() {
+    const resp = await supabase
+      .from("likes")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("liked_Id", item.likeId);
+
+    return resp.body;
   }
 
   useEffect(() => {
@@ -71,37 +81,26 @@ export default function HomeScreen({ navigation }) {
     setPost(resp);
   };
 
-
-
-
-
-
-
-  
-
   return (
     <View style={styles.homeScreenContainer}>
       <TopHeader navigation={navigation} />
       <View style={styles.feedContainer}>
-        <FlatList 
-           keyExtractor={(item) => item.id} 
-           data={posts}
-           refreshing={refreshing}
-           onRefresh={() => refreshFeed()}
-           initialNumToRender={6}
-           contentContainerStyle={{
-             borderBottomWidth: 0.8,
-             borderBottomColor: "#EDEDED",
-
-           }}
-           renderItem={({ item }) => (
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={posts}
+          refreshing={refreshing}
+          onRefresh={() => refreshFeed()}
+          initialNumToRender={6}
+          contentContainerStyle={{
+            borderBottomWidth: 0.8,
+            borderBottomColor: "#EDEDED",
+          }}
+          renderItem={({ item }) => (
             <HomeFeedList item={item} navigation={navigation} />
-           )}
-        
-           />
+          )}
+        />
       </View>
-     </View>
-        
+    </View>
   );
 }
 
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
     width: 600,
-   top: 370
+    top: 370,
   },
 
   fullSeperator2: {

@@ -19,15 +19,16 @@ import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { getCurrentUserPosts, getProfileDetail } from "../services/user";
 import ProfileDetailSub from "../components/profile/ProfileDetailSub";
+import ProfileFeedList from "../components/profile/ProfileFeedList";
+import { StackActions } from "@react-navigation/native";
 
-export default function ProfileDetail({ navigation, route }) {
+export default function ProfileDetail({ navigation, route, item }) {
   const { user, setUser } = useUser();
   const [userPosts, setUserPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
-console.log('posts', posts)
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   async function getPosts() {
@@ -91,89 +92,71 @@ console.log('posts', posts)
     return <Text>Please Wait</Text>;
   }
 
-  console.log('route', route)
+  // console.log("route", route);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-      
-        <Image
-          style={styles.userBanner}
-          source={{ uri: route.params.bannerImage }}
-        />
+      <Image
+        style={styles.userBanner}
+        source={{ uri: route.params.bannerImage }}
+      />
 
-        <Image
-          style={styles.userBannerFader}
-          source={require("../assets/fader.png")}
-        />
+      <Image
+        style={styles.userBannerFader}
+        source={require("../assets/fader.png")}
+      />
 
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton2.png")}
+        />
+      </TouchableOpacity>
+
+      <View style={{ bottom: 410 }}>
+        <Text style={styles.displayname}>{route.params.displayName}</Text>
+        <Text style={styles.username}>@{route.params.username}</Text>
+        <Text style={styles.bio}> {route.params.bio}</Text>
+        <Image
+          style={styles.profileImage}
+          source={{ uri: route.params.profileimage }}
+        />
+        <TouchableOpacity>
           <Image
-            style={styles.backButton}
-            source={require("../assets/backButton2.png")}
+            style={styles.subButton}
+            source={require("../assets/subscribe.png")}
           />
         </TouchableOpacity>
+      </View>
+      <UserProfileNav />
+      <View style={styles.feedContainer}>
+        {/* <FlatList 
+          keyExtractor={(item) => item.id}  
+          data={posts} 
+          refreshing={refreshing}
+          initialNumToRender={6}
+          contentContainerStyle={{
+            borderBottomWidth: 0.8,
+            borderBottomColor: "#EDEDED",
+          }}
 
-        <View style={{ bottom: 410 }}>
-          <Text style={styles.displayname}>{route.params.displayName}</Text>
-          <Text style={styles.username}>@{route.params.username}</Text>
-          <Text style={styles.bio}> {route.params.bio}</Text>
-          <Image
-            style={styles.profileImage}
-            source={{ uri: route.params.profileimage }}
-          />
-          <TouchableOpacity>
-            <Image
-              style={styles.subButton}
-              source={require("../assets/subscribe.png")}
-            />
-          </TouchableOpacity>
-        </View>
-        <UserProfileNav />
+          renderItem={({ item }) => (
+            <ProfileFeedList item={item} navigation={navigation} />
+          )}
+          /> */}
 
-       {posts.map((post) => {
-        return (
-          <View  style={{  top: 60}} key={post.id}>
-            <View style={{ alignContent: 'center', alignSelf: 'center', left: 15}} >
-            <Image style={{ borderRadius: 100, height: 30, width: 30, top: 5, right: 35}} 
-            source={{uri: post.profileimage}}
-            />
-            
-
-            <Text style={styles.postDisplayname}>{post.displayName}</Text>
-            <Text style={styles.postUsername}>@{post.username} </Text>
-           
+        {posts.map((item) => {
+          return (
+            <View key={item.id}>
+              <ProfileFeedList
+                navigation={navigation}
+                route={route}
+                item={item}
+              />
             </View>
-
-            <Image style={styles.media} source={{uri: post.media}} />
-
-            <View>
-            <Text style={styles.title}>{post.title}</Text>
-            <Text style={styles.description}>{post.description}</Text>
-            </View>
-            <Image  
-                          style={{
-                            
-                            left: 32,
-                            height: 54,
-                            width: 64,
-                            resizeMode: "contain",
-                          }}
-                          source={require("../assets/bluePhotoButton.png")}
-                        />
-                        <View style={{paddingBottom: 180}}>
-
-                        
-                        <View>
-                          <FullSeperator />
-                        </View>
-                        </View>
-            
-          </View>
-        )
-       })}
-        
-       
-
+          );
+        })}
+      </View>
     </ScrollView>
   );
 }
@@ -190,7 +173,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 15,
     paddingBottom: 15,
-    top: 8
+    top: 8,
   },
   description: {
     left: 35,
@@ -202,27 +185,25 @@ const styles = StyleSheet.create({
     height: 392,
     width: 343,
     borderRadius: 12,
-    alignSelf: 'center',
-    
+    alignSelf: "center",
   },
 
   postUsername: {
     bottom: 26,
     fontWeight: "500",
     color: "#5F5F69",
-    fontSize: 12, 
-   
+    fontSize: 12,
   },
 
   postDisplayname: {
     fontWeight: "600",
     fontSize: 16,
-    bottom: 27
+    bottom: 27,
   },
 
   feedContainer: {
     alignItems: "center",
-    top: 130,
+    top: 20,
     flex: 1,
   },
   displayNameContainer: {
@@ -252,10 +233,10 @@ const styles = StyleSheet.create({
   fullSeperator: {
     borderBottomColor: "grey",
     borderBottomWidth: 0.8,
-    opacity: .8,
+    opacity: 0.8,
     width: 900,
     left: 1,
-    top: 130
+    top: 130,
   },
   displayname: {
     position: "absolute",

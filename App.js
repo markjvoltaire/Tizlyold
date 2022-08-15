@@ -54,25 +54,25 @@ export default function App() {
             <Stack.Screen
               name="Welcome"
               component={Welcome}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Player"
               component={Player}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="EditPost"
               component={EditPost}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="UserProfilePostDetail"
               component={UserProfilePostDetail}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
@@ -84,91 +84,91 @@ export default function App() {
             <Stack.Screen
               name="Login"
               component={Login}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Username"
               component={UserNames}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="HomeScreen"
               component={BottomTabNavigator}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="SignupSuccess"
               component={SignUpSuccess}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Explore"
               component={Explore}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Bio"
               component={BioScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Settings"
               component={Settings}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Subscriptions"
               component={Subscriptions}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="UserProfile"
               component={UserProfile}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Post"
               component={Post}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Root"
               component={ProfileStackNavigator}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="EditProfile"
               component={EditProfile}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="ProfileDetail"
               component={ProfileDetail}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="UserSubscriber"
               component={UserProfileSubscribers}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
 
             <Stack.Screen
               name="Checkout"
               component={Checkout}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>

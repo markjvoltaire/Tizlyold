@@ -8,13 +8,6 @@ export async function signInUser(email, password) {
 }
 
 
-export async function getLikes() {
-  const resp = await supabase.from('likes').select("*")
-  console.log('resp', resp.body)
-  return resp.body
-}
-
-
 
 export function getUser() {
   return supabase.auth.user();
@@ -209,4 +202,18 @@ export async function createProfileImage(photo) {
     profileimage: publicURL,
   });
   return error(resp);
+}
+
+
+
+export async function getLikes(item) {
+   
+  const resp = await supabase
+  .from("likes")
+  .select("*")
+  .eq("userId", userId)
+  .eq('postId', item.id)
+  .eq('liked_Id', item.likeId)
+ 
+  return resp.body
 }

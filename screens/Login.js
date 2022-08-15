@@ -15,12 +15,15 @@ import React, { useState, useEffect } from "react";
 import { signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
+import { StackActions } from "@react-navigation/native";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser();
+  const pushAction = StackActions.replace("HomeScreen");
+  const pushActionSignUp = StackActions.replace("SignUp");
 
   async function loginWithEmail() {
     await supabase.auth.signIn({
@@ -64,13 +67,6 @@ export default function Login({ navigation }) {
         source={require("../assets/Tizlymed.png")}
       />
 
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
-        />
-      </TouchableOpacity>
-
       <Image
         style={styles.headerIcon}
         source={require("../assets/Tizlymed.png")}
@@ -100,7 +96,7 @@ export default function Login({ navigation }) {
 
       <TouchableOpacity
         onPress={() =>
-          loginWithEmail().then(() => navigation.navigate("HomeScreen"))
+          loginWithEmail().then(() => navigation.dispatch(pushAction))
         }
       >
         <Image
@@ -112,7 +108,7 @@ export default function Login({ navigation }) {
         <Text style={styles.signupRedirect}>Don't have an account?</Text>
         <TouchableOpacity>
           <Text
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => navigation.dispatch(pushActionSignUp)}
             style={styles.signupButton}
           >
             Sign Up Here

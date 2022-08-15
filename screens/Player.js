@@ -17,13 +17,15 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
-
 import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import { useUser } from "../context/UserContext";
 
+
 export default function Player({ route, navigation }) {
+
+
   const [comment, setComment] = useState("");
   const { user, setUser } = useUser();
   const video = React.useRef(null);
@@ -31,14 +33,31 @@ export default function Player({ route, navigation }) {
   const [post, setPost] = useState([]);
   const [commentList, setCommentList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isPressed, setIsPressed] = useState(false)
 
   const windowWidth = Dimensions.get("window").width;
 
   const postUserId = route.params.user_id;
   const postId = route.params.id;
   const displayName = route.params.displayName;
+  const userId = user.user_id
+  
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+
+    
+  async function getLikes() {
+   
+    const resp = await supabase
+    .from("likes")
+    .select("*")
+    .eq("userId", userId)
+    .eq('postId', route.id)
+    .eq('liked_Id', route.likeId)
+   
+    return resp.body
+  }
 
   async function getPosts() {
     const resp = await supabase
@@ -82,6 +101,30 @@ export default function Player({ route, navigation }) {
     getPostComments();
   }, []);
 
+
+
+  useEffect(() => {
+    const seeLikes = async () => {
+     const res =  await getLikes();
+     res.map((post) => setIsPressed(post.liked))
+    };
+    seeLikes()
+  
+  }, []);
+  
+
+
+const handlePress = () => {
+
+  setIsPressed(current => !current)
+
+  isPressed === true ? deletePost() : likePost() 
+
+}
+
+
+
+
   async function getComments() {
     const resp = await supabase
       .from("comments")
@@ -100,8 +143,8 @@ export default function Player({ route, navigation }) {
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
-      <VideoHeader navigation={navigation} route={route} />
       <View>
+      <VideoHeader post={post} navigation={navigation} route={route} />
         {post.map((item) => {
           return (
             <View key={item.id} style={{ top: 80, position: "absolute" }}>
