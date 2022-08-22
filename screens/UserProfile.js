@@ -27,11 +27,25 @@ export default function UserProfile({ navigation, route }) {
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [stateImage, setStateImage] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const userProfileImage = user.profileimage;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const [posts, setPosts] = useState();
+  const [userPosts, setUserPosts] = useState();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      const getPost = async () => {
+        const resp = await getCurrentUserPosts();
+        setPosts(resp);
+        setLoading(false);
+      };
+      getPost();
+    });
+    return unsubscribe;
+  }, [navigation]);
   // console.log("user", user);
 
   async function getCurrentUserPosts() {
@@ -49,7 +63,6 @@ export default function UserProfile({ navigation, route }) {
       const resp = await getCurrentUserPosts();
       setPosts(resp);
       setLoading(false);
-      console.log("resp from curren user Post", resp);
     };
     getPost();
   }, []);
@@ -88,8 +101,21 @@ export default function UserProfile({ navigation, route }) {
         </TouchableOpacity>
       </View>
       <UserProfileNav />
-      <UserProfileFeed posts={posts} />
-     
+      <View style={styles.feedContainer}>
+        {posts.map((item) => {
+          return (
+            <View style={{ bottom: 90 }} key={item.id}>
+              <UserProfileFeed
+                navigation={navigation}
+                route={route}
+                item={item}
+                posts={posts}
+                setPosts={setPosts}
+              />
+            </View>
+          );
+        })}
+      </View>
     </ScrollView>
   );
 }

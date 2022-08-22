@@ -8,16 +8,15 @@ export default function ProfileUserButtons({
   route,
   isPressed,
   setIsPressed,
+  saveIsPressed,
+  setSaveIsPressed,
 }) {
   const [loading, setLoading] = useState(true);
-  //   const [isPressed, setIsPressed] = useState(false);
   const [like, setLike] = useState();
   const [likeFromSB, setLikeFromSB] = useState();
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const { user } = useUser();
-
-  //   console.log("item from profile user buttons", item);
-  //   console.log("route from profile user buttons", route);
 
   const creatorId = item.user_id;
   const creatorUsername = item.username;
@@ -34,6 +33,36 @@ export default function ProfileUserButtons({
     likes.body.map((i) => setLike(i));
 
     return like;
+  }
+
+  async function savePost() {
+    const resp = await supabase.from("saves").insert([
+      {
+        creatorId: item.user_id,
+        userId: user.user_id,
+        userProfileImage: user.profileimage,
+        postId: item.id,
+        userUsername: user.username,
+        creatorUsername: item.username,
+        saved_Id: item.saved_Id,
+        creatorDisplayname: item.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: item.profileimage,
+      },
+    ]);
+
+    console.log("resp", resp);
+
+    return resp;
+  }
+
+  async function unSavePost() {
+    const resp = await supabase
+      .from("saves")
+      .update({ saved: false })
+      .eq("postId", postId)
+      .eq("saved_Id", item.saved_Id);
+    return resp;
   }
 
   async function likePost() {
@@ -63,16 +92,6 @@ export default function ProfileUserButtons({
     return resp;
   }
 
-  async function likeOldPost() {
-    const resp = await supabase
-      .from("likes")
-      .update({ liked: true })
-      .eq("postId", postId)
-      .eq("liked_Id", item.likeId)
-      .eq("userId", userId);
-    return resp;
-  }
-
   async function getLikes() {
     const resp = await supabase
       .from("likes")
@@ -92,18 +111,37 @@ export default function ProfileUserButtons({
     seeLikes();
   }, []);
 
+  useEffect(() => {
+    const seeSaves = async () => {
+      const res = await getSaves();
+      res.map((post) => setSaveIsPressed(post.saved));
+    };
+    seeSaves();
+  }, []);
+
+  async function getSaves() {
+    const resp = await supabase
+      .from("saves")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("saved_Id", item.saved_Id);
+
+    return resp.body;
+  }
+
   const handlePress = async () => {
     setIsPressed((current) => !current);
 
     const resp = await getLikes();
-
     resp.map((i) => setLikeFromSB(i.liked));
-
-    console.log("likeFromSB", likeFromSB);
-
-    // if (likeFromSB ===)
-
     isPressed === true ? unlikePost() : likePost();
+  };
+
+  const handleSavePress = () => {
+    setSaveIsPressed((current) => !current);
+
+    saveIsPressed === true ? unSavePost() : savePost();
   };
 
   return (
@@ -125,7 +163,7 @@ export default function ProfileUserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.commentButtonContainer}>
-        <TouchableOpacity onPress={() => likeOldPost()}>
+        <TouchableOpacity>
           <Image
             style={{
               top: 30,
@@ -138,9 +176,7 @@ export default function ProfileUserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity
-          onPress={() => console.log("isPressed from Profile User", isPressed)}
-        >
+        <TouchableOpacity onPress={() => handleSavePress()}>
           <Image
             style={{
               top: 30,
@@ -148,7 +184,11 @@ export default function ProfileUserButtons({
               aspectRatio: 1,
               resizeMode: "contain",
             }}
-            source={require("../../assets/Bookmark.png")}
+            source={
+              saveIsPressed === true
+                ? require("../../assets/BookmarkSaved.png")
+                : require("../../assets/Bookmark.png")
+            }
           />
         </TouchableOpacity>
       </View>
@@ -161,6 +201,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     display: "flex",
     justifyContent: "space-evenly",
-    paddingBottom: 20,
+  },
+  fullSeperator: {
+    alignSelf: "center",
+    position: "absolute",
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.4,
+    width: 900,
+    top: 80,
   },
 });

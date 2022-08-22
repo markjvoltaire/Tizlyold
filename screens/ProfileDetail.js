@@ -161,6 +161,15 @@ export default function ProfileDetail({ navigation, route, item }) {
   );
 }
 const styles = StyleSheet.create({
+  logo: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 52,
+    height: 26,
+    backgroundColor: "white",
+    alignSelf: "center",
+    top: 60,
+  },
   userBanner: {
     position: "absolute",
     width: 455,
@@ -231,12 +240,12 @@ const styles = StyleSheet.create({
   },
 
   fullSeperator: {
+    position: "absolute",
     borderBottomColor: "grey",
     borderBottomWidth: 0.8,
     opacity: 0.8,
     width: 900,
     left: 1,
-    top: 130,
   },
   displayname: {
     position: "absolute",

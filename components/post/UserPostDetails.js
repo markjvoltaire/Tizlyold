@@ -18,6 +18,7 @@ import UserButtons from "../home/UserButtons";
 export default function UserPostDetails({ post, commentList, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
+  const [isPressed, setIsPressed] = useState(false);
 
   if (commentList.length === 0) {
     return (
@@ -39,41 +40,12 @@ export default function UserPostDetails({ post, commentList, route }) {
           />
         </View>
 
-        <View style={styles.userButtonsContainer}>
-          <View>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  height: 52,
-                  width: 112,
-                }}
-                source={require("../../assets/likeButton.png")}
-              />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  height: 52,
-                  width: 112,
-                }}
-                source={require("../../assets/commentButton.png")}
-              />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  height: 52,
-                  width: 112,
-                }}
-                source={require("../../assets/saveButton.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <UserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          item={post}
+        />
+
         <View>
           <Text style={styles.commentsHeader}>Comments</Text>
           <Text style={styles.commentsHeader}>Be the first to comment</Text>
@@ -134,17 +106,33 @@ export default function UserPostDetails({ post, commentList, route }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ left: 10 }}>
+      <View style={{ left: 10, top: 10 }}>
         <Text style={styles.postTitle}>{post.title}</Text>
         <Text style={styles.postDescription}>{post.description}</Text>
         <Text style={styles.date}>{post.creatAt}</Text>
-        <UserButtons item={route.params} />
       </View>
+      <Image
+        style={{
+          top: 85,
+          right: 335,
+          height: 54,
+          width: 64,
+          resizeMode: "contain",
+          position: "absolute",
+        }}
+        source={require("../../assets/blueVideoButton.png")}
+      />
       <View>
         <Text style={styles.commentsHeader}>Comments</Text>
 
         <FullSeperator />
-
+        <View style={{ bottom: 20 }}>
+          <UserButtons
+            item={post}
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+          />
+        </View>
         <View style={styles.commentSection}>
           <FlatList
             keyExtractor={(item) => item.id}
@@ -193,16 +181,6 @@ export default function UserPostDetails({ post, commentList, route }) {
 }
 
 const styles = StyleSheet.create({
-  userButtonsContainer: {
-    position: "absolute",
-    top: 140,
-    flexDirection: "row",
-    display: "flex",
-    justifyContent: "space-evenly",
-
-    alignSelf: "center",
-  },
-
   header: {
     fontWeight: "800",
     color: "#4F4E4E",

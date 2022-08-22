@@ -21,11 +21,9 @@ import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import { useUser } from "../context/UserContext";
-
+import UserButtons from "../components/home/UserButtons";
 
 export default function Player({ route, navigation }) {
-
-
   const [comment, setComment] = useState("");
   const { user, setUser } = useUser();
   const video = React.useRef(null);
@@ -33,30 +31,26 @@ export default function Player({ route, navigation }) {
   const [post, setPost] = useState([]);
   const [commentList, setCommentList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [isPressed, setIsPressed] = useState(false)
+  const [isPressed, setIsPressed] = useState(false);
 
   const windowWidth = Dimensions.get("window").width;
 
   const postUserId = route.params.user_id;
   const postId = route.params.id;
   const displayName = route.params.displayName;
-  const userId = user.user_id
-  
+  const userId = user.user_id;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-
-    
   async function getLikes() {
-   
     const resp = await supabase
-    .from("likes")
-    .select("*")
-    .eq("userId", userId)
-    .eq('postId', route.id)
-    .eq('liked_Id', route.likeId)
-   
-    return resp.body
+      .from("likes")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", route.id)
+      .eq("liked_Id", route.likeId);
+
+    return resp.body;
   }
 
   async function getPosts() {
@@ -101,29 +95,19 @@ export default function Player({ route, navigation }) {
     getPostComments();
   }, []);
 
-
-
   useEffect(() => {
     const seeLikes = async () => {
-     const res =  await getLikes();
-     res.map((post) => setIsPressed(post.liked))
+      const res = await getLikes();
+      res.map((post) => setIsPressed(post.liked));
     };
-    seeLikes()
-  
+    seeLikes();
   }, []);
-  
 
+  const handlePress = () => {
+    setIsPressed((current) => !current);
 
-const handlePress = () => {
-
-  setIsPressed(current => !current)
-
-  isPressed === true ? deletePost() : likePost() 
-
-}
-
-
-
+    isPressed === true ? deletePost() : likePost();
+  };
 
   async function getComments() {
     const resp = await supabase
@@ -139,17 +123,18 @@ const handlePress = () => {
     setCommentList(resp);
   };
 
-  
+  console.log("post", post);
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
-      <VideoHeader post={post} navigation={navigation} route={route} />
+        <VideoHeader post={post} navigation={navigation} route={route} />
         {post.map((item) => {
           return (
-            <View key={item.id} style={{ top: 80, position: "absolute" }}>
+            <View key={item.id} style={{ top: 160, position: "absolute" }}>
               <Video
                 source={{ uri: item.media }}
+                isLooping
                 useNativeControls
                 shouldPlay={true}
                 style={{ height: 229, width: 415 }}
@@ -165,14 +150,16 @@ const handlePress = () => {
           keyExtractor={(item) => item.id}
           data={post}
           renderItem={({ item }) => (
-            <UserPostDetails
-              displayName={displayName}
-              postUserId={postUserId}
-              navigation={navigation}
-              post={item}
-              commentList={commentList}
-              route={route}
-            />
+            <View>
+              <UserPostDetails
+                displayName={displayName}
+                postUserId={postUserId}
+                navigation={navigation}
+                post={item}
+                commentList={commentList}
+                route={route}
+              />
+            </View>
           )}
         />
       </View>
@@ -181,35 +168,37 @@ const handlePress = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
-        
-          <View style={styles.inner}>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={true}
-              placeholder="Leave A Comment"
-              value={comment}
-              onChangeText={(text) => setComment(text)}
-              style={styles.commentInput}
-            />
-            <View style={{ position: "absolute", top: 207, left: 80 }}>
-              <TouchableOpacity
-                onPress={() => createComment().then(() => refreshFeed().then(() => Keyboard.dismiss())).then(() => setComment())}
-              >
-                <Image
-                  style={{
-                    width: 100,
-                    bottom: 117,
-                    left: 200,
-                    resizeMode: "contain",
+        <View style={styles.inner}>
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={true}
+            placeholder="Leave A Comment"
+            value={comment}
+            onChangeText={(text) => setComment(text)}
+            style={styles.commentInput}
+          />
+          <View style={{ position: "absolute", top: 207, left: 80 }}>
+            <TouchableOpacity
+              onPress={() =>
+                createComment()
+                  .then(() => refreshFeed().then(() => Keyboard.dismiss()))
+                  .then(() => setComment())
+              }
+            >
+              <Image
+                style={{
+                  width: 100,
+                  bottom: 117,
+                  left: 200,
+                  resizeMode: "contain",
 
-                    position: "absolute",
-                  }}
-                  source={require("../assets/commentPost.png")}
-                />
-              </TouchableOpacity>
-            </View>
+                  position: "absolute",
+                }}
+                source={require("../assets/commentPost.png")}
+              />
+            </TouchableOpacity>
           </View>
-        
+        </View>
       </KeyboardAvoidingView>
     </View>
   );

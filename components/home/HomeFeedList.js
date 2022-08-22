@@ -13,12 +13,12 @@ export default function HomeFeedList({ item, navigation }) {
   const { user, setUser } = useUser();
   const pushAction = StackActions.replace("HomeScreen");
   const [isPressed, setIsPressed] = useState(false);
-  const [like, setLike] = useState();
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  const userId = supabase.auth.currentUser.id;
 
   if (item.mediaType === "image") {
+    const userId = supabase.auth.currentUser.id;
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         async function getAllLikes() {
@@ -127,6 +127,8 @@ export default function HomeFeedList({ item, navigation }) {
           <UserButtons
             isPressed={isPressed}
             setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
             item={item}
           />
           <FullSeperator />
@@ -136,6 +138,8 @@ export default function HomeFeedList({ item, navigation }) {
   }
 
   if (item.mediaType === "video") {
+    const userId = supabase.auth.currentUser.id;
+
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         async function getAllLikes() {
@@ -209,19 +213,40 @@ export default function HomeFeedList({ item, navigation }) {
         </View>
 
         <View>
-          <Video
-            source={{ uri: item.media }}
-            ref={video}
-            useNativeControls
-            style={{
-              height: 220,
-              width: 388,
-              borderRadius: 12,
-              alignSelf: "center",
-            }}
-            resizeMode="contain"
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Player", {
+                id: item.id,
+                username: item.username,
+                profileimage: item.profileimage,
+                displayName: item.displayName,
+                user_id: item.user_id,
+              })
+            }
+          >
+            <Video
+              source={{ uri: item.media }}
+              ref={video}
+              style={{
+                height: 220,
+                width: 388,
+                borderRadius: 12,
+                alignSelf: "center",
+              }}
+              resizeMode="contain"
+              onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+            />
+            <Image
+              style={{
+                position: "absolute",
+                width: 50,
+                top: 75,
+                alignSelf: "center",
+                resizeMode: "contain",
+              }}
+              source={require("../../assets/playButton.png")}
+            />
+          </TouchableOpacity>
         </View>
 
         <View>
@@ -266,6 +291,8 @@ export default function HomeFeedList({ item, navigation }) {
             isPressed={isPressed}
             setIsPressed={setIsPressed}
             item={item}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
           />
         </View>
         <FullSeperator />
@@ -274,6 +301,8 @@ export default function HomeFeedList({ item, navigation }) {
   }
 
   if (item.mediaType === "text") {
+    const userId = supabase.auth.currentUser.id;
+
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         async function getAllLikes() {
@@ -351,6 +380,8 @@ export default function HomeFeedList({ item, navigation }) {
         <UserButtons
           isPressed={isPressed}
           setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
           item={item}
         />
         <FullSeperator />

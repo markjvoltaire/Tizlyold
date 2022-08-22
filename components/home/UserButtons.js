@@ -5,12 +5,20 @@ import { useUser } from "../../context/UserContext";
 import { FlatList } from "react-native-gesture-handler";
 import { set } from "react-native-reanimated";
 
-export default function UserButtons({ item, isPressed, setIsPressed }) {
+export default function UserButtons({
+  item,
+  isPressed,
+  setIsPressed,
+  saveIsPressed,
+  setSaveIsPressed,
+}) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
   // const [isPressed, setIsPressed] = useState(false);
 
   const { user } = useUser();
+
+  console.log("item", item);
 
   const creatorId = item.user_id;
   const creatorUsername = item.username;
@@ -27,9 +35,42 @@ export default function UserButtons({ item, isPressed, setIsPressed }) {
         userUsername: user.username,
         creatorUsername: item.username,
         liked_Id: item.likeId,
+        creatorDisplayname: item.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: item.profileimage,
       },
     ]);
 
+    return resp;
+  }
+
+  async function savePost() {
+    const resp = await supabase.from("saves").insert([
+      {
+        creatorId: item.user_id,
+        userId: user.user_id,
+        userProfileImage: user.profileimage,
+        postId: item.id,
+        userUsername: user.username,
+        creatorUsername: item.username,
+        saved_Id: item.saved_Id,
+        creatorDisplayname: item.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: item.profileimage,
+      },
+    ]);
+
+    console.log("resp", resp);
+
+    return resp;
+  }
+
+  async function unSavePost() {
+    const resp = await supabase
+      .from("saves")
+      .update({ saved: false })
+      .eq("postId", postId)
+      .eq("saved_Id", item.saved_Id);
     return resp;
   }
 
@@ -53,6 +94,17 @@ export default function UserButtons({ item, isPressed, setIsPressed }) {
     return resp.body;
   }
 
+  async function getSaves() {
+    const resp = await supabase
+      .from("saves")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("saved_Id", item.saved_Id);
+
+    return resp.body;
+  }
+
   useEffect(() => {
     const seeLikes = async () => {
       const res = await getLikes();
@@ -61,10 +113,24 @@ export default function UserButtons({ item, isPressed, setIsPressed }) {
     seeLikes();
   }, []);
 
+  useEffect(() => {
+    const seeSaves = async () => {
+      const res = await getSaves();
+      res.map((post) => setSaveIsPressed(post.saved));
+    };
+    seeSaves();
+  }, []);
+
   const handlePress = () => {
     setIsPressed((current) => !current);
 
     isPressed === true ? unlikePost() : likePost();
+  };
+
+  const handleSavePress = () => {
+    setSaveIsPressed((current) => !current);
+
+    saveIsPressed === true ? unSavePost() : savePost();
   };
 
   return (
@@ -99,7 +165,7 @@ export default function UserButtons({ item, isPressed, setIsPressed }) {
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => console.log(isPressed)}>
+        <TouchableOpacity onPress={() => handleSavePress()}>
           <Image
             style={{
               top: 30,
@@ -107,7 +173,11 @@ export default function UserButtons({ item, isPressed, setIsPressed }) {
               aspectRatio: 1,
               resizeMode: "contain",
             }}
-            source={require("../../assets/Bookmark.png")}
+            source={
+              saveIsPressed === true
+                ? require("../../assets/BookmarkSaved.png")
+                : require("../../assets/Bookmark.png")
+            }
           />
         </TouchableOpacity>
       </View>

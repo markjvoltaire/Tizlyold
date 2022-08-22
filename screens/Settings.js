@@ -17,7 +17,6 @@ import { StackActions } from "@react-navigation/native";
 
 export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
-  const pushActionLogin = StackActions.replace("Login");
 
   async function signOutUser() {
     await supabase.auth
@@ -66,11 +65,7 @@ export default function Settings({ navigation }) {
       </View>
 
       <TouchableOpacity
-        onPress={() =>
-          signOutUser()
-            .then(() => setUser({}))
-            .then(() => navigation.dispatch(pushActionLogin))
-        }
+        onPress={() => signOutUser().then(() => navigation.navigate("Welcome"))}
       >
         <Image
           style={styles.signoutButton}

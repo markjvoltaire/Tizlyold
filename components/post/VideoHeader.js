@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
 export default function VideoHeader({ route, navigation }) {
+  console.log("route", route);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <View>
@@ -17,20 +19,19 @@ export default function VideoHeader({ route, navigation }) {
         />
       </TouchableOpacity>
 
-        <TouchableOpacity>
-          
+      <TouchableOpacity>
         <Image
           style={{
             position: "absolute",
             width: 100,
             height: 80,
             resizeMode: "contain",
-           top: 80,
+            top: 80,
             left: 300,
           }}
           source={require("../../assets/goToProfile.png")}
         />
-        </TouchableOpacity>
+      </TouchableOpacity>
       <View style={{ bottom: 40 }}>
         <Image
           style={{

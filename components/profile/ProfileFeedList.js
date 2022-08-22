@@ -13,6 +13,7 @@ export default function ProfileFeedList({ item, route, navigation }) {
   const { user } = useUser();
   const userId = user.user_id;
   const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
 
   if (item.mediaType === "image") {
     useEffect(() => {
@@ -34,7 +35,6 @@ export default function ProfileFeedList({ item, route, navigation }) {
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -126,6 +126,8 @@ export default function ProfileFeedList({ item, route, navigation }) {
           <ProfileUserButtons
             isPressed={isPressed}
             setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
             route={route}
             item={item}
           />
@@ -154,7 +156,6 @@ export default function ProfileFeedList({ item, route, navigation }) {
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -268,9 +269,12 @@ export default function ProfileFeedList({ item, route, navigation }) {
           <ProfileUserButtons
             isPressed={isPressed}
             setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
             item={item}
           />
         </View>
+        <FullSeperator />
       </View>
     );
   }
@@ -295,7 +299,6 @@ export default function ProfileFeedList({ item, route, navigation }) {
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -353,11 +356,15 @@ export default function ProfileFeedList({ item, route, navigation }) {
             {item.description}
           </Text>
         </View>
-        <ProfileUserButtons
-          isPressed={isPressed}
-          setIsPressed={setIsPressed}
-          item={item}
-        />
+        <View>
+          <ProfileUserButtons
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
+            item={item}
+          />
+        </View>
       </View>
     );
   }
@@ -365,10 +372,12 @@ export default function ProfileFeedList({ item, route, navigation }) {
 
 const styles = StyleSheet.create({
   fullSeperator: {
+    position: "absolute",
     borderBottomColor: "#EDEDED",
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
     height: 3,
+    top: 305,
   },
 });

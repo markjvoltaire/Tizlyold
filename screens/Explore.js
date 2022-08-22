@@ -30,9 +30,6 @@ export default function Explore({ navigation }) {
 
   const HalfSeperator2 = () => <View style={styles.halfSeperator2} />;
 
-  const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   return (
     <View style={styles.container}>
       <TopHeader navigation={navigation} />

@@ -7,8 +7,6 @@ export async function signInUser(email, password) {
   return user;
 }
 
-
-
 export function getUser() {
   return supabase.auth.user();
 }
@@ -71,6 +69,14 @@ export async function getCurrentUserPosts() {
     .eq("user_id", userId)
     .order("id", { ascending: false });
 
+  return resp;
+}
+
+export async function getAllUsers() {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .order("id", { ascending: false });
   return resp;
 }
 
@@ -204,16 +210,13 @@ export async function createProfileImage(photo) {
   return error(resp);
 }
 
-
-
 export async function getLikes(item) {
-   
   const resp = await supabase
-  .from("likes")
-  .select("*")
-  .eq("userId", userId)
-  .eq('postId', item.id)
-  .eq('liked_Id', item.likeId)
- 
-  return resp.body
+    .from("likes")
+    .select("*")
+    .eq("userId", userId)
+    .eq("postId", item.id)
+    .eq("liked_Id", item.likeId);
+
+  return resp.body;
 }
