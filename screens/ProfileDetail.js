@@ -28,6 +28,8 @@ export default function ProfileDetail({ navigation, route, item }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [profile, setProfile] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -41,6 +43,25 @@ export default function ProfileDetail({ navigation, route, item }) {
     return post;
   }
 
+  async function getFollowing() {
+    const resp = await supabase
+      .from("following")
+      .select("*")
+      .eq("creatorId", user_id);
+
+    console.log("resp.body", resp.body);
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const seeLikes = async () => {
+      const res = await getFollowing();
+      res.map((user) => setIsFollowing(user.following));
+      console.log("isFollowing", isFollowing);
+    };
+    seeLikes();
+  }, []);
+
   useEffect(() => {
     const getPost = async () => {
       const resp = await getPosts();
@@ -52,10 +73,6 @@ export default function ProfileDetail({ navigation, route, item }) {
   }, []);
 
   const user_id = route.params.user_id;
-
-  // console.log("user", user);
-
-  // console.log("route", route);
 
   if (route.params.user_id === user.user_id) {
     navigation.navigate("Profile");
@@ -72,13 +89,22 @@ export default function ProfileDetail({ navigation, route, item }) {
   }
 
   async function getProfileDetail() {
-    const resp = await supabase
-      .from("posts")
+    const { data } = await supabase
+      .from("profiles")
       .select("*")
-      .eq("user_id", user_id);
+      .eq("user_id", route.params.user_id)
+      .single();
 
-    return resp.body;
+    return data;
   }
+
+  useEffect(() => {
+    const getUser = async () => {
+      const resp = await getProfileDetail();
+      setProfile(resp);
+    };
+    getUser();
+  }, []);
 
   useEffect(() => {
     const getFeed = () => {
@@ -89,17 +115,52 @@ export default function ProfileDetail({ navigation, route, item }) {
   }, []);
 
   if (loading) {
-    return <Text>Please Wait</Text>;
+    return (
+      <SafeAreaView>
+        <View>
+          <Text style={{ fontSize: 300 }}>LOADING</Text>
+        </View>
+      </SafeAreaView>
+    );
   }
 
-  // console.log("route", route);
+  async function followUser() {
+    const resp = await supabase.from("following").insert([
+      {
+        creatorId: profile.user_id,
+        userId: user.user_id,
+        userProfileImage: user.profileimage,
+
+        userUsername: user.username,
+        creatorUsername: profile.username,
+        followingId: profile.followingId,
+        creatorDisplayname: profile.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: profile.profileimage,
+      },
+    ]);
+    console.log("resp", resp);
+    return resp;
+  }
+
+  async function unfollowUser() {
+    const resp = await supabase
+      .from("following")
+      .update({ following: false })
+      .eq("followingId", profile.followingId);
+
+    return resp;
+  }
+
+  const handleFollow = () => {
+    setIsFollowing((current) => !current);
+
+    isFollowing === true ? unfollowUser() : followUser();
+  };
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-      <Image
-        style={styles.userBanner}
-        source={{ uri: route.params.bannerImage }}
-      />
+      <Image style={styles.userBanner} source={{ uri: profile.bannerImage }} />
 
       <Image
         style={styles.userBannerFader}
@@ -114,37 +175,26 @@ export default function ProfileDetail({ navigation, route, item }) {
       </TouchableOpacity>
 
       <View style={{ bottom: 410 }}>
-        <Text style={styles.displayname}>{route.params.displayName}</Text>
-        <Text style={styles.username}>@{route.params.username}</Text>
-        <Text style={styles.bio}> {route.params.bio}</Text>
+        <Text style={styles.displayname}>{profile.displayName}</Text>
+        <Text style={styles.username}>@{profile.username}</Text>
+        <Text style={styles.bio}> {profile.bio}</Text>
         <Image
           style={styles.profileImage}
-          source={{ uri: route.params.profileimage }}
+          source={{ uri: profile.profileimage }}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => handleFollow()}>
           <Image
             style={styles.subButton}
-            source={require("../assets/subscribe.png")}
+            source={
+              isFollowing === true
+                ? require("../assets/followingbutton.png")
+                : require("../assets/followbutton.png")
+            }
           />
         </TouchableOpacity>
       </View>
       <UserProfileNav />
       <View style={styles.feedContainer}>
-        {/* <FlatList 
-          keyExtractor={(item) => item.id}  
-          data={posts} 
-          refreshing={refreshing}
-          initialNumToRender={6}
-          contentContainerStyle={{
-            borderBottomWidth: 0.8,
-            borderBottomColor: "#EDEDED",
-          }}
-
-          renderItem={({ item }) => (
-            <ProfileFeedList item={item} navigation={navigation} />
-          )}
-          /> */}
-
         {posts.map((item) => {
           return (
             <View key={item.id}>

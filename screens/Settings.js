@@ -14,9 +14,13 @@ import { supabase } from "../services/supabase";
 import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 
 export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
+  // const [loaded] = useFonts({
+  //   gilroy: require("../assets/fonts/gilroy.ttf"),
+  // });
 
   async function signOutUser() {
     await supabase.auth
@@ -25,6 +29,10 @@ export default function Settings({ navigation }) {
         console.log("supabase.auth.currentUser", supabase.auth.currentUser)
       );
   }
+
+  // if (!loaded) {
+  //   return null;
+  // }
 
   return (
     <SafeAreaView
@@ -148,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   username: {
-    fontWeight: "bold",
+    fontFamily: "gilroy",
     fontSize: 23,
     left: 75,
     bottom: 45,

@@ -25,7 +25,7 @@ export default function PostForm({ navigation }) {
 
   const { user, setUser } = useUser();
   const [image, setImage] = useState();
-  const [mediaType, setMediaType] = useState('text');
+  const [mediaType, setMediaType] = useState("text");
   const [imageData, setImageData] = useState(null);
 
   const username = user.username;
@@ -34,15 +34,13 @@ export default function PostForm({ navigation }) {
   const bannerImage = user.bannerImage;
   const bio = user.bio;
 
-
   const [selected, setSelected] = useState("");
-  
 
   // entertainment📺   fitness🏋️   podcast🎙    music 🎤  sports 🏆  music 🍽  gaming 🎮  beauty 💄  content creation 🎬
 
   const data = [
     {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png?t=2022-08-08T04%3A36%3A36.230Z",
+      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png?t=2022-08-23T00%3A51%3A11.199Z",
       value: "Entertainment",
     },
     {
@@ -84,7 +82,6 @@ export default function PostForm({ navigation }) {
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
 
-  
     const resp = await supabase.from("post").insert([
       {
         username: username,
@@ -116,7 +113,7 @@ export default function PostForm({ navigation }) {
       quality: 1,
     });
 
-    console.log('photo', photo)
+    console.log("photo", photo);
 
     if (!photo.cancelled) {
       const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
@@ -128,8 +125,6 @@ export default function PostForm({ navigation }) {
         name: fileName,
         type: photo.type ? `image/${ext}` : `video/${ext}`,
       });
-
-        
 
       try {
         const { data, error } = await supabase.storage
@@ -147,9 +142,9 @@ export default function PostForm({ navigation }) {
         let type = photo.type;
         console.log("imageLink", imageLink);
         setImage(imageLink);
-         type = null ? setMediaType('text') : setMediaType(type);
+        type = null ? setMediaType("text") : setMediaType(type);
 
-        console.log( photo.type);
+        console.log(photo.type);
       } catch (e) {
         ErrorAlert({ title: "image upload", message: e.message });
         return null;

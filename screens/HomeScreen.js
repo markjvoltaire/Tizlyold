@@ -91,6 +91,7 @@ export default function HomeScreen({ navigation, route }) {
           refreshing={refreshing}
           onRefresh={() => refreshFeed()}
           initialNumToRender={6}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             borderBottomWidth: 0.8,
             borderBottomColor: "#EDEDED",

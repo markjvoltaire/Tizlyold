@@ -6,6 +6,7 @@ import { StackActions } from "@react-navigation/native";
 import { getPosts } from "../../services/user";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
+import { useFonts } from "expo-font";
 
 export default function HomeFeedList({ item, navigation }) {
   const video = React.useRef(null);
@@ -14,6 +15,10 @@ export default function HomeFeedList({ item, navigation }) {
   const pushAction = StackActions.replace("HomeScreen");
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+  // const [loaded] = useFonts({
+  //   gilroy: require("../../assets/fonts/gilroy.ttf"),
+  //   SFUITextSemibold: require("../../assets/fonts/SFUITextSemibold.ttf"),
+  // });
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -34,7 +39,6 @@ export default function HomeFeedList({ item, navigation }) {
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from Home Feed List", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -46,12 +50,6 @@ export default function HomeFeedList({ item, navigation }) {
             onPress={() =>
               navigation.navigate("ProfileDetail", {
                 user_id: item.user_id,
-                bannerImage: item.bannerImage,
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bio: item.bio,
-                likeId: item.likeId,
               })
             }
           >
@@ -65,7 +63,14 @@ export default function HomeFeedList({ item, navigation }) {
               }}
               source={{ uri: item.profileimage }}
             />
-            <Text style={{ right: 6, fontWeight: "600", fontSize: 16 }}>
+            <Text
+              style={{
+                right: 6,
+                fontWeight: "600",
+                fontSize: 16,
+                fontFamily: "gilroy",
+              }}
+            >
               {item.displayName}
             </Text>
             <Text
@@ -74,6 +79,7 @@ export default function HomeFeedList({ item, navigation }) {
                 fontSize: 12,
                 color: "#73738B",
                 right: 5,
+                fontFamily: "SFUITextSemibold",
               }}
             >
               @{item.username}
@@ -93,9 +99,10 @@ export default function HomeFeedList({ item, navigation }) {
           <Text
             style={{
               left: 7,
-              fontWeight: "700",
+
               fontSize: 18,
               textAlign: "left",
+              fontFamily: "SFUITextSemibold",
             }}
           >
             {item.title}
@@ -108,6 +115,7 @@ export default function HomeFeedList({ item, navigation }) {
               color: "#4F4E4E",
               textAlign: "left",
               width: 400,
+              fontFamily: "SFUITextSemibold",
             }}
           >
             {item.description}
@@ -155,7 +163,6 @@ export default function HomeFeedList({ item, navigation }) {
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from Home Feed List", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -196,7 +203,14 @@ export default function HomeFeedList({ item, navigation }) {
               }}
               source={{ uri: item.profileimage }}
             />
-            <Text style={{ right: 6, fontWeight: "600", fontSize: 16 }}>
+            <Text
+              style={{
+                right: 6,
+                fontWeight: "600",
+                fontSize: 16,
+                fontFamily: "gilroy",
+              }}
+            >
               {item.displayName}
             </Text>
             <Text
@@ -205,6 +219,7 @@ export default function HomeFeedList({ item, navigation }) {
                 fontSize: 12,
                 color: "#73738B",
                 right: 5,
+                fontFamily: "SFUITextSemibold",
               }}
             >
               @{item.username}
@@ -270,6 +285,7 @@ export default function HomeFeedList({ item, navigation }) {
                 textAlign: "left",
                 width: 400,
                 lineHeight: 27,
+                fontFamily: "gilroy",
               }}
             >
               {item.description}
@@ -277,12 +293,24 @@ export default function HomeFeedList({ item, navigation }) {
             <Image
               style={{
                 top: 20,
-                left: 4,
+                left: 10,
                 height: 54,
                 width: 64,
                 resizeMode: "contain",
               }}
               source={require("../../assets/blueVideoButton.png")}
+            />
+
+            <Image
+              style={{
+                position: "absolute",
+                top: 58,
+                left: 84,
+                height: 74,
+                width: 85,
+                resizeMode: "contain",
+              }}
+              source={{ uri: item.category }}
             />
           </View>
         </View>
@@ -318,7 +346,6 @@ export default function HomeFeedList({ item, navigation }) {
           return res.body;
         }
         getAllLikes();
-        console.log("isPressed from Home Feed List", isPressed);
       });
       return unsubscribe;
     }, [navigation]);
@@ -348,7 +375,14 @@ export default function HomeFeedList({ item, navigation }) {
               }}
               source={{ uri: item.profileimage }}
             />
-            <Text style={{ right: 6, fontWeight: "600", fontSize: 16 }}>
+            <Text
+              style={{
+                right: 6,
+                fontWeight: "600",
+                fontSize: 16,
+                fontFamily: "gilroy",
+              }}
+            >
               {item.displayName}
             </Text>
             <Text
@@ -357,6 +391,7 @@ export default function HomeFeedList({ item, navigation }) {
                 fontSize: 12,
                 color: "#73738B",
                 right: 5,
+                fontFamily: "SFUITextSemibold",
               }}
             >
               @{item.username}
@@ -369,9 +404,9 @@ export default function HomeFeedList({ item, navigation }) {
               textAlign: "left",
               fontSize: 16,
               lineHeight: 27,
-              fontWeight: "600",
               paddingBottom: 40,
               alignSelf: "center",
+              fontFamily: "SFUITextSemibold",
             }}
           >
             {item.description}
