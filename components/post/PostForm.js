@@ -33,6 +33,7 @@ export default function PostForm({ navigation }) {
   const profileImage = user.profileimage;
   const bannerImage = user.bannerImage;
   const bio = user.bio;
+  const followingId = user.following_Id;
 
   const [selected, setSelected] = useState("");
 
@@ -95,6 +96,7 @@ export default function PostForm({ navigation }) {
         bannerImage: bannerImage,
         bio: bio,
         category: selected,
+        followingId: followingId,
       },
     ]);
 

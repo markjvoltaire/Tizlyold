@@ -35,144 +35,145 @@ import SignUpSuccess from "./screens/SignUpSuccess";
 import EditProfile from "./screens/EditProfile";
 import ProfileDetail from "./screens/ProfileDetail";
 import BioScreen from "./screens/BioScreen";
-import ProfileImage from "./screens/ProfileImage";
 import UserProfileSubscribers from "./screens/UserProfileSubscribers";
 import { PostProvider } from "./context/PostContext";
 import Player from "./screens/Player";
-import { StripeProvider } from "@stripe/stripe-react-native";
 import UserProfilePostDetail from "./screens/UserProfilePostDetail";
 import EditPost from "./screens/EditPost";
+import { FollowProvider } from "./context/FollowContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <UserProvider>
-      <PostProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Welcome"
-              component={Welcome}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+      <FollowProvider>
+        <PostProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Welcome"
+                component={Welcome}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Player"
-              component={Player}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Player"
+                component={Player}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="EditPost"
-              component={EditPost}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="EditPost"
+                component={EditPost}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="UserProfilePostDetail"
-              component={UserProfilePostDetail}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="UserProfilePostDetail"
+                component={UserProfilePostDetail}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="SignUp"
-              component={SignUp}
-              options={{ headerShown: false }}
-            />
+              <Stack.Screen
+                name="SignUp"
+                component={SignUp}
+                options={{ headerShown: false }}
+              />
 
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Username"
-              component={UserNames}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Username"
+                component={UserNames}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="HomeScreen"
-              component={BottomTabNavigator}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="HomeScreen"
+                component={BottomTabNavigator}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="SignupSuccess"
-              component={SignUpSuccess}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="SignupSuccess"
+                component={SignUpSuccess}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Explore"
-              component={Explore}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Explore"
+                component={Explore}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Bio"
-              component={BioScreen}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Bio"
+                component={BioScreen}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Settings"
-              component={Settings}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Subscriptions"
-              component={Subscriptions}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Subscriptions"
+                component={Subscriptions}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="UserProfile"
-              component={UserProfile}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="UserProfile"
+                component={UserProfile}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Post"
-              component={Post}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Post"
+                component={Post}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Root"
-              component={ProfileStackNavigator}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="Root"
+                component={ProfileStackNavigator}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="EditProfile"
+                component={EditProfile}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="ProfileDetail"
-              component={ProfileDetail}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="ProfileDetail"
+                component={ProfileDetail}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="UserSubscriber"
-              component={UserProfileSubscribers}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
+              <Stack.Screen
+                name="UserSubscriber"
+                component={UserProfileSubscribers}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
-            <Stack.Screen
-              name="Checkout"
-              component={Checkout}
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PostProvider>
+              <Stack.Screen
+                name="Checkout"
+                component={Checkout}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PostProvider>
+      </FollowProvider>
     </UserProvider>
   );
 }

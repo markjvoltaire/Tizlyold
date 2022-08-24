@@ -49,7 +49,6 @@ export default function ProfileDetail({ navigation, route, item }) {
       .select("*")
       .eq("creatorId", user_id);
 
-    console.log("resp.body", resp.body);
     return resp.body;
   }
 
@@ -57,7 +56,6 @@ export default function ProfileDetail({ navigation, route, item }) {
     const seeLikes = async () => {
       const res = await getFollowing();
       res.map((user) => setIsFollowing(user.following));
-      console.log("isFollowing", isFollowing);
     };
     seeLikes();
   }, []);
@@ -124,6 +122,8 @@ export default function ProfileDetail({ navigation, route, item }) {
     );
   }
 
+  console.log("profile", profile);
+
   async function followUser() {
     const resp = await supabase.from("following").insert([
       {
@@ -133,13 +133,15 @@ export default function ProfileDetail({ navigation, route, item }) {
 
         userUsername: user.username,
         creatorUsername: profile.username,
-        followingId: profile.followingId,
+        followingId: profile.following_Id,
         creatorDisplayname: profile.displayName,
         userDisplayname: user.displayName,
         creatorProfileImage: profile.profileimage,
       },
     ]);
+
     console.log("resp", resp);
+
     return resp;
   }
 
@@ -147,7 +149,7 @@ export default function ProfileDetail({ navigation, route, item }) {
     const resp = await supabase
       .from("following")
       .update({ following: false })
-      .eq("followingId", profile.followingId);
+      .eq("followingId", profile.following_Id);
 
     return resp;
   }

@@ -14,33 +14,72 @@ import {
 import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
-import { getPosts } from "../services/user";
+import { getPosts, getFollowing } from "../services/user";
 import { usePosts } from "../context/PostContext";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../components/home/UserButtons";
 import TopHeader from "../components/TopHeader";
 import NoPost from "../components/home/NoPost";
 import HomeFeedList from "../components/home/HomeFeedList";
+import { fromPairs } from "lodash";
+import { useFollow } from "../context/FollowContext";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
-  const { post, setPost } = usePosts();
+
   const [refreshing, setRefreshing] = useState(false);
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState([]);
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const [postList, setPostList] = useState([]);
+  const [post, setPost] = useState([]);
+  const [creatorIds, setCreatorIds] = useState();
+  const [check, setCheck] = useState();
+  const { follow, setFollow } = useFollow();
+
+  async function getPosts() {
+    const userId = supabase.auth.currentUser.id;
+    const posts = await supabase
+      .from("post")
+      .select("*")
+      .in("followingId", [follow]);
+
+    setPostList(posts.body);
+
+    const following = await supabase.from("profiles");
+  }
+
+  async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("following")
+      .select(" creatorId, followingId,creatorUsername")
+      .eq("following", true)
+      .eq("userId", userId);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getFollowingList = async () => {
+      const resp = await getFollowing();
+      const list = resp.map((i) => i.followingId);
+      setFollow(list);
+      console.log("follow!!!!", follow);
+    };
+    getFollowingList();
+  }, []);
+
+  // follow.map((i) =>
+  //   i === "45e13ff3-212b-410f-a2a2-48c7cdb3502e"
+  //     ? console.log("match")
+  //     : console.log("not a match")
+  // );
 
   useEffect(() => {
     const getUserPost = async () => {
       const resp = await getPosts();
-      setPost(resp);
     };
     getUserPost();
   }, []);
-
-  const posts = post.body;
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -86,8 +125,8 @@ export default function HomeScreen({ navigation, route }) {
       <TopHeader navigation={navigation} />
       <View style={styles.feedContainer}>
         <FlatList
+          data={postList}
           keyExtractor={(item) => item.id}
-          data={posts}
           refreshing={refreshing}
           onRefresh={() => refreshFeed()}
           initialNumToRender={6}

@@ -80,13 +80,24 @@ export async function getAllUsers() {
   return resp;
 }
 
-export async function getPosts() {
-  const resp = await supabase
-    .from("post")
-    .select("*")
-    .order("id", { ascending: false });
-  return resp;
-}
+// export async function getPosts() {
+//   const resp = await supabase.from("post");
+
+//   console.log("resp", resp.body);
+
+//   return resp;
+// }
+
+// export async function getFollowing() {
+//   const userId = supabase.auth.currentUser.id;
+//   const resp = await supabase
+//     .from("following")
+//     .select("*")
+//     .eq("userId", userId)
+//     .eq("following", true);
+
+//   return resp.body;
+// }
 
 export async function getPostsById(user_id) {
   const resp = await supabase

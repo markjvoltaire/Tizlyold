@@ -4,6 +4,7 @@ import { supabase } from "../../services/supabase";
 import { useUser } from "../../context/UserContext";
 import { FlatList } from "react-native-gesture-handler";
 import { set } from "react-native-reanimated";
+import { getPosts, getFollowing } from "../../services/user";
 
 export default function UserButtons({
   item,
@@ -17,8 +18,6 @@ export default function UserButtons({
   // const [isPressed, setIsPressed] = useState(false);
 
   const { user } = useUser();
-
-  console.log("item", item);
 
   const creatorId = item.user_id;
   const creatorUsername = item.username;
@@ -152,7 +151,7 @@ export default function UserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.commentButtonContainer}>
-        <TouchableOpacity onPress={() => console.log(isPressed)}>
+        <TouchableOpacity onPress={() => getFollowing()}>
           <Image
             style={{
               top: 30,
