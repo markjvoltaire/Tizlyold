@@ -8,12 +8,16 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import ProfileNav from "../components/profile/ProfileNav";
 import UserButtons from "../components/home/UserButtons";
 import UserProfileFeed from "../components/profile/UserProfileFeed";
 import UserProfileNav from "../components/profile/UserProfileNav";
+import HomeScreen from "../screens/HomeScreen";
+
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
@@ -21,6 +25,7 @@ import { getCurrentUserPosts, getProfileDetail } from "../services/user";
 import ProfileDetailSub from "../components/profile/ProfileDetailSub";
 import ProfileFeedList from "../components/profile/ProfileFeedList";
 import { StackActions } from "@react-navigation/native";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function ProfileDetail({ navigation, route, item }) {
   const { user, setUser } = useUser();
@@ -30,6 +35,28 @@ export default function ProfileDetail({ navigation, route, item }) {
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+
+  // const TabNav = () => (
+  //   <View
+  //     style={{
+  //       width: 500,
+  //       opacity: 1,
+  //       borderBottomWidth: 80,
+  //       top: 820,
+  //       position: "absolute",
+  //       borderBottomColor: "white",
+  //     }}
+  //   >
+  //     <Image
+  //       style={{ width: 24, height: 24, position: "absolute" }}
+  //       source={require("../assets/bottomtab/HomeLight.jpg")}
+  //     />
+  //   </View>
+  // );
+
+  console.log("route From Profile Detail", route);
+
+  const Tab = createBottomTabNavigator();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -44,10 +71,12 @@ export default function ProfileDetail({ navigation, route, item }) {
   }
 
   async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
     const resp = await supabase
       .from("following")
       .select("*")
-      .eq("creatorId", user_id);
+      .eq("creatorId", user_id)
+      .eq("userId", user.user_id);
 
     return resp.body;
   }
@@ -122,8 +151,6 @@ export default function ProfileDetail({ navigation, route, item }) {
     );
   }
 
-  console.log("profile", profile);
-
   async function followUser() {
     const resp = await supabase.from("following").insert([
       {
@@ -140,16 +167,17 @@ export default function ProfileDetail({ navigation, route, item }) {
       },
     ]);
 
-    console.log("resp", resp);
-
     return resp;
   }
 
   async function unfollowUser() {
     const resp = await supabase
       .from("following")
-      .update({ following: false })
-      .eq("followingId", profile.following_Id);
+      .delete()
+      .eq("userId", user.user_id)
+      .eq("creatorId", profile.user_id);
+    // .eq("userUsername", user.username)
+    // .eq("userDisplayname", user.displayname);
 
     return resp;
   }
@@ -160,56 +188,81 @@ export default function ProfileDetail({ navigation, route, item }) {
     isFollowing === true ? unfollowUser() : followUser();
   };
 
+  if (loading) {
+    return (
+      <View>
+        <Text>Loading</Text>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-      <Image style={styles.userBanner} source={{ uri: profile.bannerImage }} />
+    <>
+      <View style={{ width: 200, backgroundColor: "white" }}></View>
 
-      <Image
-        style={styles.userBannerFader}
-        source={require("../assets/fader.png")}
-      />
-
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
         <Image
-          style={styles.backButton}
-          source={require("../assets/backButton2.png")}
+          style={styles.userBanner}
+          source={{ uri: profile.bannerImage }}
         />
-      </TouchableOpacity>
 
-      <View style={{ bottom: 410 }}>
-        <Text style={styles.displayname}>{profile.displayName}</Text>
-        <Text style={styles.username}>@{profile.username}</Text>
-        <Text style={styles.bio}> {profile.bio}</Text>
-        <Image
-          style={styles.profileImage}
-          source={{ uri: profile.profileimage }}
+        <Video
+          source={{ uri: profile.bannerImage }}
+          isLooping
+          shouldPlay={true}
+          isMuted={true}
+          resizeMode="cover"
+          style={styles.userBanner}
         />
-        <TouchableOpacity onPress={() => handleFollow()}>
+
+        <Image
+          style={styles.userBannerFader}
+          source={require("../assets/fader.png")}
+        />
+
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            style={styles.subButton}
-            source={
-              isFollowing === true
-                ? require("../assets/followingbutton.png")
-                : require("../assets/followbutton.png")
-            }
+            style={styles.backButton}
+            source={require("../assets/backButton2.png")}
           />
         </TouchableOpacity>
-      </View>
-      <UserProfileNav />
-      <View style={styles.feedContainer}>
-        {posts.map((item) => {
-          return (
-            <View key={item.id}>
-              <ProfileFeedList
-                navigation={navigation}
-                route={route}
-                item={item}
-              />
-            </View>
-          );
-        })}
-      </View>
-    </ScrollView>
+
+        <View style={{ bottom: 410 }}>
+          <Text style={styles.displayname}>{profile.displayName}</Text>
+          <Text style={styles.username}>@{profile.username}</Text>
+          <Text style={styles.bio}> {profile.bio}</Text>
+          <Image
+            style={styles.profileImage}
+            source={{ uri: profile.profileimage }}
+          />
+          <TouchableOpacity onPress={() => handleFollow()}>
+            <Image
+              style={styles.subButton}
+              source={
+                isFollowing === true
+                  ? require("../assets/followingbutton.png")
+                  : require("../assets/followbutton.png")
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <UserProfileNav />
+
+        <View style={styles.feedContainer}>
+          {posts.map((item) => {
+            return (
+              <View key={item.id}>
+                <ProfileFeedList
+                  navigation={navigation}
+                  route={route}
+                  item={item}
+                />
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -288,7 +341,7 @@ const styles = StyleSheet.create({
     top: 360,
     width: 160,
     height: 30,
-    right: 15,
+    right: 30,
   },
 
   fullSeperator: {

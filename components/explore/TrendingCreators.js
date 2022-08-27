@@ -25,8 +25,6 @@ export default function TrendingCreators({ navigation, route }) {
     loadTrendingCreators();
   }, []);
 
-  console.log("route", route);
-
   return (
     <View style={styles.container}>
       <Text style={{ position: "absolute", fontWeight: "600", fontSize: 15 }}>
@@ -37,7 +35,7 @@ export default function TrendingCreators({ navigation, route }) {
           <View key={item.id}>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ProfileDetail", {
+                navigation.navigate("ProfileDetail2", {
                   username: item.username,
                   displayName: item.displayName,
                   profileimage: item.profileimage,

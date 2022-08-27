@@ -14,6 +14,7 @@ import Post from "../screens/Post";
 import UserProfileSubscribers from "../screens/UserProfileSubscribers";
 import UserProfilePostDetail from "../screens/UserProfilePostDetail";
 import EditPost from "../screens/EditPost";
+import ProfileDetail from "../screens/ProfileDetail";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,15 @@ const HomeStackNavigator = () => {
           headerTitle: () => <Header />,
         }}
       />
+
+      <Stack.Screen
+        name="ProfileDetail2"
+        component={ProfileDetail}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -45,6 +55,15 @@ const ExploreStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ExploreScreen" component={Explore} />
+
+      <Stack.Screen
+        name="ProfileDetail2"
+        component={ProfileDetail}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -113,18 +132,26 @@ const EditPostStackNavigator = () => {
   );
 };
 
-const MainStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
-    </Stack.Navigator>
-  );
-};
+// const MainStackNavigator = () => {
+//   return (
+//     <Stack.Navigator screenOptions={{ headerShown: false }}>
+//       <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+//     </Stack.Navigator>
+//   );
+// };
 
 const ProfileSubscriberStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="UserSubcriber" component={UserProfileSubscribers} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileDetailStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
     </Stack.Navigator>
   );
 };
@@ -136,10 +163,10 @@ export {
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
-  MainStackNavigator,
+  // MainStackNavigator,
   UsernameStackNavigator,
   PostStackNavigator,
-  ProfileSubscriberStackNavigator,
+  ProfileDetailStackNavigator,
   UserProfilePostDetail,
   EditPostStackNavigator,
 };

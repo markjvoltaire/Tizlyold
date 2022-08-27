@@ -11,6 +11,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 
+import { Link } from "@react-navigation/native";
+
 import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
@@ -23,6 +25,7 @@ import NoPost from "../components/home/NoPost";
 import HomeFeedList from "../components/home/HomeFeedList";
 import { fromPairs } from "lodash";
 import { useFollow } from "../context/FollowContext";
+import { useScreens } from "react-native-screens";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -30,56 +33,24 @@ export default function HomeScreen({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
-  const [post, setPost] = useState([]);
+
   const [creatorIds, setCreatorIds] = useState();
   const [check, setCheck] = useState();
-  const { follow, setFollow } = useFollow();
+  const [follow, setFollow] = useState([]);
 
-  async function getPosts() {
-    const userId = supabase.auth.currentUser.id;
-    const posts = await supabase
-      .from("post")
-      .select("*")
-      .in("followingId", [follow]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     async function updateFeed() {
+  //       // const resp = await getFollowing();
+  //       // const list = resp.map((i) => i.followingId);
+  //       // setFollow(list);
+  //       console.log("hello");
+  //     }
+  //     updateFeed();
+  //   });
 
-    setPostList(posts.body);
-
-    const following = await supabase.from("profiles");
-  }
-
-  async function getFollowing() {
-    const userId = supabase.auth.currentUser.id;
-    const resp = await supabase
-      .from("following")
-      .select(" creatorId, followingId,creatorUsername")
-      .eq("following", true)
-      .eq("userId", userId);
-
-    return resp.body;
-  }
-
-  useEffect(() => {
-    const getFollowingList = async () => {
-      const resp = await getFollowing();
-      const list = resp.map((i) => i.followingId);
-      setFollow(list);
-      console.log("follow!!!!", follow);
-    };
-    getFollowingList();
-  }, []);
-
-  // follow.map((i) =>
-  //   i === "45e13ff3-212b-410f-a2a2-48c7cdb3502e"
-  //     ? console.log("match")
-  //     : console.log("not a match")
-  // );
-
-  useEffect(() => {
-    const getUserPost = async () => {
-      const resp = await getPosts();
-    };
-    getUserPost();
-  }, []);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -90,17 +61,7 @@ export default function HomeScreen({ navigation, route }) {
       .eq("user_id", userId)
       .single();
     setUser(resp.body);
-  }
-
-  async function getLikes() {
-    const resp = await supabase
-      .from("likes")
-      .select("*")
-      .eq("userId", userId)
-      .eq("postId", item.id)
-      .eq("liked_Id", item.likeId);
-
-    return resp.body;
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -111,18 +72,68 @@ export default function HomeScreen({ navigation, route }) {
     getUserProfile();
   }, []);
 
+  async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("following")
+      .select(" creatorId, followingId, creatorUsername, userId")
+      .eq("following", true)
+      .eq("userId", userId);
+
+    setFollow(resp.body);
+
+    // const list = resp.map((i) => i.followingId);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getFollowingList = async () => {
+      const resp = await getFollowing();
+      // console.log("resp", resp);
+
+      setFollow(resp);
+    };
+    getFollowingList();
+  }, []);
+
+  async function getPosts() {
+    const userId = supabase.auth.currentUser.id;
+    const respon = await getFollowing();
+    const list = respon.map((item) => item.followingId);
+    const resp = await supabase
+      .from("post")
+      .select("*")
+      .in("followingId", [list, userId]);
+
+    setPostList(resp.body);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getUserPost = async () => {
+      await getPosts();
+    };
+    getUserPost();
+  }, []);
+
   if (loading) {
-    return <Text> Please Wait</Text>;
+    return (
+      <View>
+        <Text>Loading</Text>
+      </View>
+    );
   }
 
   const refreshFeed = async () => {
-    const resp = await getPosts();
-    setPost(resp);
+    getPosts();
   };
 
   return (
     <View style={styles.homeScreenContainer}>
-      <TopHeader navigation={navigation} />
+      <TopHeader user={user} navigation={navigation} />
+
       <View style={styles.feedContainer}>
         <FlatList
           data={postList}

@@ -11,13 +11,19 @@ import React, { useState } from "react";
 import { useUser } from "../context/UserContext";
 
 export default function TopHeader({ navigation }) {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [query, setQuery] = useState();
+  const [loading, setLoading] = useState(true);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
     <SafeAreaView style={styles.componentContainer}>
-      <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />
+      <TouchableOpacity onPress={() => navigation.navigate("ProfileDetail")}>
+        <Image
+          style={styles.logo}
+          source={require("../assets/tizlyicon.jpg")}
+        />
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
         <Image
@@ -63,7 +69,6 @@ const styles = StyleSheet.create({
     height: 26,
     backgroundColor: "white",
     alignSelf: "center",
-    top: 60,
   },
   logoContainer: {
     alignItems: "center",

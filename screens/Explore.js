@@ -24,12 +24,6 @@ import Search from "../components/explore/Search";
 import { Dimensions } from "react-native";
 
 export default function Explore({ navigation }) {
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
-
-  const HalfSeperator = () => <View style={styles.halfSeperator} />;
-
-  const HalfSeperator2 = () => <View style={styles.halfSeperator2} />;
-
   return (
     <View style={styles.container}>
       <TopHeader navigation={navigation} />

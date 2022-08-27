@@ -26,7 +26,7 @@ export default function NewToTizly({ navigation }) {
           <View key={item.id}>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ProfileDetail", {
+                navigation.navigate("ProfileDetail2", {
                   username: item.username,
                   displayName: item.displayName,
                   profileimage: item.profileimage,

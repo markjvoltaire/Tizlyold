@@ -283,7 +283,7 @@ export default function EditProfile({ navigation }) {
       <TouchableOpacity
         onPress={() =>
           editProfile(username, displayName, bio).then(() => {
-            navigation.navigate("UserScreen");
+            navigation.goBack();
           })
         }
       >

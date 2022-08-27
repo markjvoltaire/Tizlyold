@@ -6,6 +6,8 @@ import { StackActions } from "@react-navigation/native";
 import { getPosts, getFollowing } from "../../services/user";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
+import { fromPairs } from "lodash";
+import { useFollow } from "../../context/FollowContext";
 
 export default function HomeFeedList({ item, navigation }) {
   const video = React.useRef(null);
@@ -14,14 +16,16 @@ export default function HomeFeedList({ item, navigation }) {
   const pushAction = StackActions.replace("HomeScreen");
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const { follow, setFollow } = useFollow();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   if (item.mediaType === "image") {
-    const userId = supabase.auth.currentUser.id;
+    // const userId = supabase.auth.currentUser.id;
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         async function getAllLikes() {
+          const userId = supabase.auth.currentUser.id;
           const res = await supabase
             .from("likes")
             .select("*")
@@ -29,11 +33,34 @@ export default function HomeFeedList({ item, navigation }) {
             .eq("postId", item.id)
             .eq("liked_Id", item.likeId);
 
-          res.body.map((like) => setIsPressed(like.liked));
+          const resp = await supabase
+            .from("following")
+            .select(" creatorId, followingId,creatorUsername")
+            .eq("following", true)
+            .eq("userId", userId);
 
-          return res.body;
+          res.body.map((like) => setIsPressed(like.liked));
+          setFollow(resp.body.map((i) => i.followingId));
+
+          return res, resp;
+        }
+
+        async function getFollowing() {
+          const userId = supabase.auth.currentUser.id;
+          const resp = await supabase
+            .from("following")
+            .select(" creatorId, followingId,creatorUsername")
+            .eq("following", true)
+            .eq("userId", userId);
+          const res = await getFollowing();
+          setFollow(res.map((i) => i.followingId));
+
+          console.log("res", res);
+
+          return resp.body;
         }
         getAllLikes();
+        getFollowing();
       });
       return unsubscribe;
     }, [navigation]);
@@ -43,7 +70,7 @@ export default function HomeFeedList({ item, navigation }) {
         <View style={{ alignSelf: "center", paddingBottom: 25, left: 25 }}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("ProfileDetail", {
+              navigation.navigate("ProfileDetail2", {
                 user_id: item.user_id,
               })
             }
@@ -137,11 +164,10 @@ export default function HomeFeedList({ item, navigation }) {
   }
 
   if (item.mediaType === "video") {
-    const userId = supabase.auth.currentUser.id;
-
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
         async function getAllLikes() {
+          const userId = supabase.auth.currentUser.id;
           const res = await supabase
             .from("likes")
             .select("*")
@@ -174,7 +200,7 @@ export default function HomeFeedList({ item, navigation }) {
         >
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("ProfileDetail", {
+              navigation.navigate("ProfileDetail2", {
                 user_id: item.user_id,
                 bannerImage: item.bannerImage,
                 username: item.username,
@@ -305,10 +331,9 @@ export default function HomeFeedList({ item, navigation }) {
   }
 
   if (item.mediaType === "text") {
-    const userId = supabase.auth.currentUser.id;
-
     useEffect(() => {
       const unsubscribe = navigation.addListener("focus", () => {
+        const userId = supabase.auth.currentUser.id;
         async function getAllLikes() {
           const res = await supabase
             .from("likes")

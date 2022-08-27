@@ -231,3 +231,15 @@ export async function getLikes(item) {
 
   return resp.body;
 }
+
+// async function getPosts(fol) {
+//   const userId = supabase.auth.currentUser.id;
+//   const resp = await supabase.from("post").select("*");
+//   //   .in("followingId", [follow, userId]);
+
+//   // console.log("Follow FROM FUNCTION", follow);
+
+//   console.log("resp GET POSTS", resp);
+
+//   return resp.body;
+// }

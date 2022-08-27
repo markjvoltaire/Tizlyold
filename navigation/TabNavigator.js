@@ -9,6 +9,8 @@ import {
   SettingsStackNavigator,
   PostStackNavigator,
   ProfileStackNavigator,
+  ProfileSubscriberStackNavigator,
+  ProfileDetailStackNavigator,
 } from "./StackNavigator";
 import UserProfile from "../screens/UserProfile";
 
@@ -19,7 +21,6 @@ const BottomTabNavigator = (route) => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{ headerShown: false, tabBarShowLabel: false }}
-     
     >
       <Tab.Screen
         options={{
@@ -134,6 +135,12 @@ const BottomTabNavigator = (route) => {
         name="Subscriptions"
         component={SubscriptionStackNavigator}
       />
+
+      {/* <Tab.Screen
+        options={{ tabBarButton: () => null, tabBarVisible: false }}
+        name="UserSubscriber"
+        component={ProfileDetailStackNavigator}
+      /> */}
 
       <Tab.Screen
         options={{

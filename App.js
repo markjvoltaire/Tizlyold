@@ -56,6 +56,11 @@ export default function App() {
                 component={Welcome}
                 options={{ headerShown: false, gestureEnabled: false }}
               />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
 
               <Stack.Screen
                 name="Player"
@@ -82,32 +87,8 @@ export default function App() {
               />
 
               <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Username"
-                component={UserNames}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
                 name="HomeScreen"
                 component={BottomTabNavigator}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="SignupSuccess"
-                component={SignUpSuccess}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Explore"
-                component={Explore}
                 options={{ headerShown: false, gestureEnabled: false }}
               />
 
@@ -155,6 +136,18 @@ export default function App() {
 
               <Stack.Screen
                 name="ProfileDetail"
+                component={ProfileDetail}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+
+              <Stack.Screen
+                name="ProfileDetail2"
+                component={ProfileDetail}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+
+              <Stack.Screen
+                name="ProfileDetail3"
                 component={ProfileDetail}
                 options={{ headerShown: false, gestureEnabled: false }}
               />
