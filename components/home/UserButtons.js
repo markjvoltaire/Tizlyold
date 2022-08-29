@@ -137,7 +137,7 @@ export default function UserButtons({
           <Image
             style={{
               top: 30,
-              height: 32,
+              height: 28,
               aspectRatio: 1,
             }}
             source={
@@ -153,7 +153,7 @@ export default function UserButtons({
           <Image
             style={{
               top: 30,
-              height: 32,
+              height: 28,
               aspectRatio: 1,
               resizeMode: "contain",
             }}
@@ -166,7 +166,7 @@ export default function UserButtons({
           <Image
             style={{
               top: 30,
-              height: 32,
+              height: 28,
               aspectRatio: 1,
               resizeMode: "contain",
             }}

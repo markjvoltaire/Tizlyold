@@ -3,6 +3,7 @@ import React from "react";
 
 export default function UserProfileNav() {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperatorVert = () => <View style={styles.fullSeperatorVert} />;
   return (
     <View style={styles.profileNav}>
       <TouchableOpacity>
@@ -10,13 +11,11 @@ export default function UserProfileNav() {
       </TouchableOpacity>
 
       <TouchableOpacity>
-        <Text style={styles.subscribers}>Subscribers</Text>
+        <Text style={styles.subscribers}>Media</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
-        <Text style={styles.shop}>Shop</Text>
-      </TouchableOpacity>
       <FullSeperator />
+      <FullSeperatorVert />
     </View>
   );
 }
@@ -31,21 +30,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     fontWeight: "bold",
     top: 390,
-    left: 28,
+    left: 90,
     fontSize: 16,
   },
   media: {
     position: "absolute",
     fontWeight: "bold",
     top: 390,
-    left: 117,
+    left: 140,
     fontSize: 16,
   },
   subscribers: {
     position: "absolute",
     fontWeight: "bold",
     top: 390,
-    left: 165,
+    left: 245,
     fontSize: 16,
   },
   shop: {
@@ -62,5 +61,15 @@ const styles = StyleSheet.create({
     width: 900,
     left: 1,
     top: 430,
+  },
+  fullSeperatorVert: {
+    borderBottomColor: "grey",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    opacity: 1.5,
+    width: 60,
+    left: 170,
+    top: 400,
+    color: "red",
+    transform: [{ rotate: "90deg" }],
   },
 });

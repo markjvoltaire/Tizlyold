@@ -16,40 +16,6 @@ export default function VideoHeader({ route, navigation }) {
           source={require("../../assets/backButton.png")}
         />
       </TouchableOpacity>
-
-      <TouchableOpacity>
-        <Image
-          style={{
-            position: "absolute",
-            width: 100,
-            height: 80,
-            resizeMode: "contain",
-            top: 80,
-            left: 300,
-          }}
-          source={require("../../assets/goToProfile.png")}
-        />
-      </TouchableOpacity>
-      <View style={{ bottom: 40 }}>
-        <Image
-          style={{
-            top: 142,
-            left: 15,
-            height: 30,
-            width: 30,
-            borderRadius: 100,
-          }}
-          source={{ uri: route.params.profileimage }}
-        />
-        <Text style={{ top: 110, left: 50, fontWeight: "600" }}>
-          {route.params.displayName}
-        </Text>
-        <Text
-          style={{ top: 110, left: 50, color: "#4F4E4E", fontWeight: "500" }}
-        >
-          @{route.params.username}
-        </Text>
-      </View>
     </View>
   );
 }

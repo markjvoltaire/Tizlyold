@@ -103,7 +103,7 @@ export default function VideoPost({ item, navigation }) {
         </View>
       </TouchableOpacity>
 
-      <View>
+      <View style={{ paddingBottom: 30 }}>
         <Text
           style={{
             left: 15,
@@ -113,14 +113,19 @@ export default function VideoPost({ item, navigation }) {
             textAlign: "left",
             width: 390,
             paddingBottom: 30,
+            lineHeight: 20,
           }}
         >
           {item.description}
         </Text>
 
-        <Text style={{ left: 17, fontWeight: "600", color: "#4F4E4E" }}>
+        <Text style={{ left: 17, fontWeight: "400", color: "#4F4E4E" }}>
           {postDate}
         </Text>
+
+        <View>
+          <Text style={{ left: 17, fontWeight: "500", top: 15 }}>Video</Text>
+        </View>
       </View>
 
       <UserButtons

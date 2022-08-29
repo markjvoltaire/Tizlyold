@@ -55,40 +55,31 @@ export default function ProfileImagePost({ item }) {
         <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
       </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("ProfileDetail2", {
-            user_id: item.user_id,
-          });
-        }}
-        style={{ position: "absolute" }}
-      >
-        <View style={{ position: "absolute" }}>
-          <Image
-            style={{
-              height: 35,
-              width: 35,
-              borderRadius: 100,
-              position: "absolute",
-              left: 20,
-              top: 330,
-            }}
-            source={{ uri: item.profileimage }}
-          />
-          <Text
-            style={{
-              position: "absolute",
-              color: "white",
-              top: 342,
-              left: 60,
-              fontWeight: "500",
-              fontSize: 15,
-            }}
-          >
-            {item.username}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <View style={{ position: "absolute" }}>
+        <Image
+          style={{
+            height: 35,
+            width: 35,
+            borderRadius: 100,
+            position: "absolute",
+            left: 20,
+            top: 330,
+          }}
+          source={{ uri: item.profileimage }}
+        />
+        <Text
+          style={{
+            position: "absolute",
+            color: "white",
+            top: 342,
+            left: 60,
+            fontWeight: "500",
+            fontSize: 15,
+          }}
+        >
+          {item.username}
+        </Text>
+      </View>
 
       <View>
         <Text

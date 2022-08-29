@@ -20,6 +20,8 @@ export default function UserPostDetails({ post, commentList, route }) {
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
   const [isPressed, setIsPressed] = useState(false);
 
+  console.log("post", post);
+
   if (commentList.length === 0) {
     return (
       <View style={styles.container}>
@@ -27,17 +29,6 @@ export default function UserPostDetails({ post, commentList, route }) {
           <Text style={styles.postTitle}>{post.title}</Text>
           <Text style={styles.postDescription}>{post.description}</Text>
           <Text style={styles.date}>{post.creatAt}</Text>
-          <Image
-            style={{
-              top: 85,
-              right: 350,
-              height: 54,
-              width: 64,
-              resizeMode: "contain",
-              position: "absolute",
-            }}
-            source={require("../../assets/blueVideoButton.png")}
-          />
         </View>
 
         <UserButtons
@@ -111,17 +102,7 @@ export default function UserPostDetails({ post, commentList, route }) {
         <Text style={styles.postDescription}>{post.description}</Text>
         <Text style={styles.date}>{post.creatAt}</Text>
       </View>
-      <Image
-        style={{
-          top: 85,
-          right: 335,
-          height: 54,
-          width: 64,
-          resizeMode: "contain",
-          position: "absolute",
-        }}
-        source={require("../../assets/blueVideoButton.png")}
-      />
+
       <View>
         <Text style={styles.commentsHeader}>Comments</Text>
 

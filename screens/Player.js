@@ -129,7 +129,7 @@ export default function Player({ route, navigation }) {
         <VideoHeader post={post} navigation={navigation} route={route} />
         {post.map((item) => {
           return (
-            <View key={item.id} style={{ top: 160, position: "absolute" }}>
+            <View key={item.id} style={{ top: 80 }}>
               <Video
                 source={{ uri: item.media }}
                 isLooping
@@ -141,7 +141,7 @@ export default function Player({ route, navigation }) {
           );
         })}
       </View>
-      <View style={{ top: 165, flex: 1, marginVertical: 150 }}>
+      <View style={{ top: 100, flex: 1 }}>
         <FlatList
           refreshing={refreshing}
           onRefresh={() => refreshFeed()}

@@ -108,6 +108,10 @@ export default function ImagePost({ item, navigation }) {
         <Text style={{ left: 17, fontWeight: "700", color: "#4F4E4E" }}>
           {postDate}
         </Text>
+
+        <View>
+          <Text style={{ left: 17, fontWeight: "500", top: 15 }}>Photo</Text>
+        </View>
       </View>
 
       <UserButtons
