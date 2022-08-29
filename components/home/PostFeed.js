@@ -22,7 +22,6 @@ export default function PostFeed({ posts }) {
   }
 
   //   const posts = userPost.body;
-  console.log("postsFeed", posts);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 

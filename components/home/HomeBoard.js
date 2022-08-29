@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
     left: 9,
   },
   homeboardContainer: {
-    top: 30,
+    top: 50,
   },
 });

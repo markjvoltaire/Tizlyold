@@ -54,8 +54,6 @@ export default function ProfileDetail({ navigation, route, item }) {
   //   </View>
   // );
 
-  console.log("route From Profile Detail", route);
-
   const Tab = createBottomTabNavigator();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -200,7 +198,10 @@ export default function ProfileDetail({ navigation, route, item }) {
     <>
       <View style={{ width: 200, backgroundColor: "white" }}></View>
 
-      <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, backgroundColor: "white" }}
+      >
         <Image
           style={styles.userBanner}
           source={{ uri: profile.bannerImage }}

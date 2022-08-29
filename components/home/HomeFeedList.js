@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Pressable,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import UserButtons from "./UserButtons";
 import { Video, AVPlaybackStatus } from "expo-av";
@@ -8,6 +15,8 @@ import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
 import { fromPairs } from "lodash";
 import { useFollow } from "../../context/FollowContext";
+import VideoPost from "./VideoPost";
+import ImagePost from "./ImagePost";
 
 export default function HomeFeedList({ item, navigation }) {
   const video = React.useRef(null);
@@ -21,313 +30,11 @@ export default function HomeFeedList({ item, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   if (item.mediaType === "image") {
-    // const userId = supabase.auth.currentUser.id;
-    useEffect(() => {
-      const unsubscribe = navigation.addListener("focus", () => {
-        async function getAllLikes() {
-          const userId = supabase.auth.currentUser.id;
-          const res = await supabase
-            .from("likes")
-            .select("*")
-            .eq("userId", userId)
-            .eq("postId", item.id)
-            .eq("liked_Id", item.likeId);
-
-          const resp = await supabase
-            .from("following")
-            .select(" creatorId, followingId,creatorUsername")
-            .eq("following", true)
-            .eq("userId", userId);
-
-          res.body.map((like) => setIsPressed(like.liked));
-          setFollow(resp.body.map((i) => i.followingId));
-
-          return res, resp;
-        }
-
-        async function getFollowing() {
-          const userId = supabase.auth.currentUser.id;
-          const resp = await supabase
-            .from("following")
-            .select(" creatorId, followingId,creatorUsername")
-            .eq("following", true)
-            .eq("userId", userId);
-          const res = await getFollowing();
-          setFollow(res.map((i) => i.followingId));
-
-          console.log("res", res);
-
-          return resp.body;
-        }
-        getAllLikes();
-        getFollowing();
-      });
-      return unsubscribe;
-    }, [navigation]);
-
-    return (
-      <View style={{ paddingBottom: 40 }}>
-        <View style={{ alignSelf: "center", paddingBottom: 25, left: 25 }}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("ProfileDetail2", {
-                user_id: item.user_id,
-              })
-            }
-          >
-            <Image
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 100,
-                right: 55,
-                top: 37,
-              }}
-              source={{ uri: item.profileimage }}
-            />
-            <Text
-              style={{
-                right: 6,
-                fontWeight: "600",
-                fontSize: 16,
-              }}
-            >
-              {item.displayName}
-            </Text>
-            <Text
-              style={{
-                fontWeight: "500",
-                fontSize: 12,
-                color: "#73738B",
-                right: 5,
-              }}
-            >
-              @{item.username}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Image
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-          }}
-          source={{ uri: item.media }}
-        />
-        <View style={{ top: 10 }}>
-          <Text
-            style={{
-              left: 7,
-
-              fontSize: 18,
-              textAlign: "left",
-            }}
-          >
-            {item.title}
-          </Text>
-          <Text
-            style={{
-              left: 7,
-              top: 10,
-              fontWeight: "500",
-              color: "#4F4E4E",
-              textAlign: "left",
-              width: 400,
-            }}
-          >
-            {item.description}
-          </Text>
-          <Image
-            style={{
-              top: 13,
-              left: 4,
-              height: 54,
-              width: 64,
-              resizeMode: "contain",
-            }}
-            source={require("../../assets/bluePhotoButton.png")}
-          />
-        </View>
-        <View>
-          <UserButtons
-            isPressed={isPressed}
-            setIsPressed={setIsPressed}
-            saveIsPressed={saveIsPressed}
-            setSaveIsPressed={setSaveIsPressed}
-            item={item}
-          />
-          <FullSeperator />
-        </View>
-      </View>
-    );
+    return <ImagePost item={item} navigation={navigation} />;
   }
 
   if (item.mediaType === "video") {
-    useEffect(() => {
-      const unsubscribe = navigation.addListener("focus", () => {
-        async function getAllLikes() {
-          const userId = supabase.auth.currentUser.id;
-          const res = await supabase
-            .from("likes")
-            .select("*")
-            .eq("userId", userId)
-            .eq("postId", item.id)
-            .eq("liked_Id", item.likeId);
-
-          res.body.map((like) => setIsPressed(like.liked));
-
-          return res.body;
-        }
-        getAllLikes();
-      });
-      return unsubscribe;
-    }, [navigation]);
-
-    if (status.positionMillis === status.durationMillis) {
-    }
-
-    return (
-      <View style={{ paddingBottom: 40 }}>
-        <View></View>
-        <View
-          style={{
-            alignSelf: "center",
-            paddingBottom: 25,
-            left: 25,
-            bottom: 10,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("ProfileDetail2", {
-                user_id: item.user_id,
-                bannerImage: item.bannerImage,
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bio: item.bio,
-              })
-            }
-          >
-            <Image
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 100,
-                right: 55,
-                top: 37,
-              }}
-              source={{ uri: item.profileimage }}
-            />
-            <Text
-              style={{
-                right: 6,
-                fontWeight: "600",
-                fontSize: 16,
-              }}
-            >
-              {item.displayName}
-            </Text>
-            <Text
-              style={{
-                fontWeight: "500",
-                fontSize: 12,
-                color: "#73738B",
-                right: 5,
-              }}
-            >
-              @{item.username}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("Player", {
-                id: item.id,
-                username: item.username,
-                profileimage: item.profileimage,
-                displayName: item.displayName,
-                user_id: item.user_id,
-              })
-            }
-          >
-            <Video
-              source={{ uri: item.media }}
-              ref={video}
-              style={{
-                height: 220,
-                width: 388,
-                borderRadius: 12,
-                alignSelf: "center",
-              }}
-              resizeMode="contain"
-              onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-            />
-            <Image
-              style={{
-                position: "absolute",
-                width: 50,
-                top: 75,
-                alignSelf: "center",
-                resizeMode: "contain",
-              }}
-              source={require("../../assets/playButton.png")}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View>
-          <View style={{ top: 10 }}>
-            <Text
-              style={{
-                left: 7,
-                fontWeight: "700",
-                fontSize: 18,
-                textAlign: "left",
-              }}
-            >
-              {item.title}
-            </Text>
-            <Text
-              style={{
-                left: 7,
-                top: 10,
-                fontWeight: "500",
-                color: "#4F4E4E",
-                textAlign: "left",
-                width: 400,
-                lineHeight: 27,
-              }}
-            >
-              {item.description}
-            </Text>
-            <Image
-              style={{
-                top: 20,
-                left: 10,
-                height: 54,
-                width: 64,
-                resizeMode: "contain",
-              }}
-              source={require("../../assets/blueVideoButton.png")}
-            />
-          </View>
-        </View>
-        <View style={{ top: 20, paddingBottom: 20 }}>
-          <UserButtons
-            isPressed={isPressed}
-            setIsPressed={setIsPressed}
-            item={item}
-            saveIsPressed={saveIsPressed}
-            setSaveIsPressed={setSaveIsPressed}
-          />
-        </View>
-        <FullSeperator />
-      </View>
-    );
+    return <VideoPost navigation={navigation} item={item} />;
   }
 
   if (item.mediaType === "text") {
@@ -354,7 +61,7 @@ export default function HomeFeedList({ item, navigation }) {
     return (
       <View style={{ paddingBottom: 40 }}>
         <View style={{ alignSelf: "center", paddingBottom: 45, left: 25 }}>
-          <TouchableOpacity
+          <Pressable
             onPress={() =>
               navigation.navigate("ProfileDetail", {
                 user_id: item.user_id,
@@ -396,7 +103,7 @@ export default function HomeFeedList({ item, navigation }) {
             >
               @{item.username}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <View style={{ alignSelf: "center", width: 400 }}>
           <Text

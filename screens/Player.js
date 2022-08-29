@@ -123,8 +123,6 @@ export default function Player({ route, navigation }) {
     setCommentList(resp);
   };
 
-  console.log("post", post);
-
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>

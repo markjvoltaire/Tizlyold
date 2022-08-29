@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
 
 export default function TextUserButtons({ isPressed, item, setIsPressed }) {
-  console.log("item", item);
   return (
     <View style={styles.userButtonsContainer}>
       <View style={styles.likeButtonContainer}>

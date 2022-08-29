@@ -2,8 +2,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
 export default function VideoHeader({ route, navigation }) {
-  console.log("route", route);
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   return (
     <View>

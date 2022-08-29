@@ -59,8 +59,6 @@ export default function UserButtons({
       },
     ]);
 
-    console.log("resp", resp);
-
     return resp;
   }
 

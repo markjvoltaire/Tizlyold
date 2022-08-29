@@ -15,7 +15,7 @@ export default function AnimatedBottomSheet({ translateY }) {
   };
   const dimensions = useWindowDimensions();
 
-  console.log(dimensions.height * 0);
+  
 
   const top = useSharedValue(dimensions.height);
 

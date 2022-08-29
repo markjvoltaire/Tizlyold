@@ -25,12 +25,12 @@ export default function TopHeader({ navigation }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
+      {/* <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
         <Image
           style={styles.notification}
           source={require("../assets/noti.png")}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Settings");

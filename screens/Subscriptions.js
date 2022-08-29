@@ -161,8 +161,6 @@ export default function Subscriptions({ navigation }) {
     }
   };
 
-  console.log("input", input);
-
   return (
     <SafeAreaView style={styles.container}>
       <TextInput

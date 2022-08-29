@@ -16,7 +16,7 @@ import { getTrendingCreators } from "../../services/user";
 export default function TrendingCreators({ navigation, route }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log("profiles", profiles);
+
   useEffect(() => {
     const loadTrendingCreators = async () => {
       const creators = await getTrendingCreators();

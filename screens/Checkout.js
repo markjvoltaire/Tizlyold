@@ -43,7 +43,7 @@ export default function Checkout({ navigation }) {
       if (presentSheet.error) return Alert.alert(presentSheet.error.message);
       Alert.alert("Payment complete, thank you!");
     } catch (err) {
-      console.error(err);
+      
       Alert.alert("Something went wrong, try again later!");
     }
   };

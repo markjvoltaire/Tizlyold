@@ -34,8 +34,6 @@ export default function PostDetailsVideos({ displayName, postUserId }) {
     getUserPost();
   }, []);
 
-  console.log("postUserId", postUserId);
-
   return (
     <View style={styles.container}>
       <Text style={styles.header}> Videos By {displayName} </Text>

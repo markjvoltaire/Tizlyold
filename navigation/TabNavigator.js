@@ -113,7 +113,7 @@ const BottomTabNavigator = (route) => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/SubscribersLight.jpg")}
+                  source={require("../assets/bottomtab/noti.png")}
                 />
                 <Text
                   style={{
@@ -126,7 +126,7 @@ const BottomTabNavigator = (route) => {
                     right: -25,
                   }}
                 >
-                  Subscriptions
+                  Notifications
                 </Text>
               </View>
             );

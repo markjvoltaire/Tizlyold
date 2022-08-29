@@ -11,7 +11,7 @@ export default function PostNavigator({ postUserId, displayName }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperatorBottom = () => <View style={styles.fullSeperatorBottom} />;
 
-  console.log("postUserId from navigator", postUserId);
+
 
   return (
     <View style={styles.container}>

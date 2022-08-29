@@ -18,13 +18,13 @@ export async function userId() {
 
 export function getUserEmail() {
   const userEmail = supabase.auth.currentUser.email;
-  console.log("userEmail", userEmail);
+
   return userEmail;
 }
 
 export async function getType() {
   const resp = await supabase.storage.extension().from("posts");
-  console.log("resp", resp);
+
   return resp;
 }
 
@@ -52,7 +52,7 @@ export async function addPost(username, displayName, title, description) {
       description: description,
     },
   ]);
-  console.log("resp", resp);
+
   return resp;
 }
 
@@ -83,8 +83,6 @@ export async function getAllUsers() {
 // export async function getPosts() {
 //   const resp = await supabase.from("post");
 
-//   console.log("resp", resp.body);
-
 //   return resp;
 // }
 
@@ -111,7 +109,6 @@ export async function getPostsById(user_id) {
 export async function getUserByIds() {
   const { user, setUser } = useUser();
   const userId = supabase.auth.currentUser.id;
-  console.log("user", userId);
 
   const { data } = await supabase
     .from("profiles")
@@ -119,7 +116,6 @@ export async function getUserByIds() {
     .eq("user_id", userId)
     .single();
   setUser(data);
-  console.log("currentUserContext", user);
 }
 
 export async function getProfileDetail(user_id) {
@@ -202,7 +198,7 @@ export async function createPost(
       description: description,
     },
   ]);
-  console.log("resp", resp);
+
   return resp;
 }
 
@@ -231,15 +227,3 @@ export async function getLikes(item) {
 
   return resp.body;
 }
-
-// async function getPosts(fol) {
-//   const userId = supabase.auth.currentUser.id;
-//   const resp = await supabase.from("post").select("*");
-//   //   .in("followingId", [follow, userId]);
-
-//   // console.log("Follow FROM FUNCTION", follow);
-
-//   console.log("resp GET POSTS", resp);
-
-//   return resp.body;
-// }

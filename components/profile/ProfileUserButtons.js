@@ -23,7 +23,7 @@ export default function ProfileUserButtons({
   const userId = user.user_id;
   const postId = item.id;
 
-  //   console.log("item", item);
+  
   async function checkLikes() {
     const likes = await supabase
       .from("likes")
@@ -51,7 +51,7 @@ export default function ProfileUserButtons({
       },
     ]);
 
-    console.log("resp", resp);
+   
 
     return resp;
   }

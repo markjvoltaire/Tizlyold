@@ -5,7 +5,7 @@ import SelectList from "react-native-dropdown-select-list";
 export default function AddCategory() {
   const [selected, setSelected] = useState("");
 
-  console.log("selected", selected);
+ 
 
   const data = [
     { key: "Entertainment", value: "Entertainment" },

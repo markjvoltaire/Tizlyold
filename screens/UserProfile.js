@@ -35,17 +35,17 @@ export default function UserProfile({ navigation, route }) {
   const [posts, setPosts] = useState();
   const [userPosts, setUserPosts] = useState();
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      const getPost = async () => {
-        const resp = await getCurrentUserPosts();
-        setPosts(resp);
-        setLoading(false);
-      };
-      getPost();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     const getPost = async () => {
+  //       const resp = await getCurrentUserPosts();
+  //       setPosts(resp);
+  //       setLoading(false);
+  //     };
+  //     getPost();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
   // console.log("user", user);
 
   async function getCurrentUserPosts() {
