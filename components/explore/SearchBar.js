@@ -171,7 +171,7 @@ export default function SearchBar({ setIsPressed, isPressed, navigation }) {
 
 const styles = StyleSheet.create({
   searchInput: {
-    top: 15,
+    top: 35,
     alignSelf: "center",
     paddingLeft: 63,
     borderColor: "grey",
