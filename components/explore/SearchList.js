@@ -1,0 +1,55 @@
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import React from "react";
+import HomeBoard from "../home/HomeBoard";
+import TrendingCreators from "./TrendingCreators";
+import NewToTizly from "./NewToTizly";
+
+export default function SearchList({ item, navigation, isPressed, query }) {
+  return (
+    <View>
+      <TouchableOpacity
+        style={{ margin: 10 }}
+        onPress={() =>
+          navigation.navigate("ProfileDetail2", {
+            username: item.username,
+            displayName: item.displayName,
+            profileimage: item.profileimage,
+            bannerImage: item.bannerImage,
+            bio: item.bio,
+            id: item.id,
+            user_id: item.user_id,
+          })
+        }
+      >
+        <View style={{ alignItems: "center" }}>
+          <Image
+            style={{ width: 110, height: 116, borderRadius: 13 }}
+            source={{ uri: item.profileimage }}
+          />
+          <Image
+            style={{
+              width: 110,
+              height: 80,
+              top: 37,
+              borderRadius: 13,
+              position: "absolute",
+            }}
+            source={require("../../assets/fader.png")}
+          />
+        </View>
+        <Text style={{ textAlign: "center", fontWeight: "500", top: 5 }}>
+          {item.username}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});

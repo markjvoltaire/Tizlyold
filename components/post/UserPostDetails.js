@@ -20,15 +20,13 @@ export default function UserPostDetails({ post, commentList, route }) {
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
   const [isPressed, setIsPressed] = useState(false);
 
-  console.log("post", post);
-
   if (commentList.length === 0) {
     return (
       <View style={styles.container}>
         <View style={{ left: 10 }}>
           <Text style={styles.postTitle}>{post.title}</Text>
           <Text style={styles.postDescription}>{post.description}</Text>
-          <Text style={styles.date}>{post.creatAt}</Text>
+          <Text style={styles.date}>{post.posted}</Text>
         </View>
 
         <UserButtons
@@ -100,7 +98,7 @@ export default function UserPostDetails({ post, commentList, route }) {
       <View style={{ left: 10, top: 10 }}>
         <Text style={styles.postTitle}>{post.title}</Text>
         <Text style={styles.postDescription}>{post.description}</Text>
-        <Text style={styles.date}>{post.creatAt}</Text>
+        <Text style={styles.date}>{post.posted}</Text>
       </View>
 
       <View>
@@ -203,7 +201,8 @@ const styles = StyleSheet.create({
   },
 
   commentSection: {
-    paddingTop: 160,
+    paddingTop: 100,
+    paddingBottom: 100,
     left: 10,
     width: 405,
   },

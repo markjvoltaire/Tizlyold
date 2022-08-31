@@ -2,42 +2,28 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  FlatList,
-  Button,
-  TouchableOpacity,
-  Image,
-  SafeAreaView,
   TextInput,
+  Image,
+  ScrollView,
   useWindowDimensions,
+  FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-
-import HomeBoard from "../components/home/HomeBoard";
-import TrendingCreators from "../components/explore/TrendingCreators";
-import TrendingTag from "../components/home/TrendingTag";
-import MainStackNavigator from "../navigation/StackNavigator";
-import { getUsername, getUsers } from "../services/user";
-import TopHeader from "../components/TopHeader";
-import NewToTizly from "../components/explore/NewToTizly";
-import Search from "../components/explore/Search";
-import { Dimensions } from "react-native";
-import UserButtons from "../components/home/UserButtons";
-import SearchBar from "../components/explore/SearchBar";
+import React, { useState, useEffect } from "react";
+import SearchView from "./SearchView";
+import { supabase } from "../../services/supabase";
 import Animated, {
   useAnimatedGestureHandler,
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
-import { supabase } from "../services/supabase";
-import SearchList from "../components/explore/SearchList";
-import SearchView from "../components/explore/SearchView";
-import { filter } from "lodash";
+import HomeBoard from "../home/HomeBoard";
+import TrendingCreators from "./TrendingCreators";
+import NewToTizly from "./NewToTizly";
+import SearchList from "./SearchList";
 
-export default function Explore({ navigation }) {
+export default function SearchBar({ setIsPressed, isPressed, navigation }) {
   const [query, setQuery] = useState("");
-  const [isPressed, setIsPressed] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState("");
@@ -75,6 +61,8 @@ export default function Explore({ navigation }) {
     }
   };
 
+  console.log("filterData", filterData);
+
   const SPING_CONFIG = {
     damping: 80,
     overshootClamping: true,
@@ -110,10 +98,10 @@ export default function Explore({ navigation }) {
     },
   });
 
-  return (
-    <View style={styles.container}>
-      <TopHeader navigation={navigation} />
+  console.log("search", search);
 
+  if (input === true) {
+    <View>
       <TextInput
         style={styles.searchInput}
         placeholder="Still Looking?"
@@ -130,23 +118,43 @@ export default function Explore({ navigation }) {
       />
       <Image
         style={styles.searchIcon}
-        source={require("../assets/Search.png")}
+        source={require("../../assets/Search.png")}
+      />
+
+      <FlatList
+        style={{ marginBottom: 100 }}
+        numColumns={2}
+        data={filterData}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        ItemSeparatorComponent={() => (
+          <View style={{ backgroundColor: "red" }} />
+        )}
+        renderItem={({ item }) => (
+          <SearchList
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            navigation={navigation}
+            item={item}
+            query={query}
+          />
+        )}
       />
 
       <SearchView
+        isPressed={isPressed}
+        navigation={navigation}
+        setIsPressed={setIsPressed}
         search={search}
         input={input}
-        navigation={navigation}
         filterData={filterData}
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
       />
-    </View>
-  );
-}
+    </View>;
+  }
 
-{
-  /* <ScrollView>
+  if (search === "") {
+    return (
+      <ScrollView>
         <View>
           <HomeBoard />
         </View>
@@ -156,14 +164,12 @@ export default function Explore({ navigation }) {
         <View>
           <NewToTizly navigation={navigation} />
         </View>
-      </ScrollView> */
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
   searchInput: {
     top: 15,
     alignSelf: "center",
@@ -180,42 +186,5 @@ const styles = StyleSheet.create({
     width: 20,
     bottom: 20,
     left: 80,
-  },
-  settingIcon: {
-    position: "absolute",
-    left: 368,
-    bottom: 306.5,
-    width: 29,
-    height: 29,
-  },
-  fullSeperator: {
-    borderBottomColor: "grey",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    opacity: 0.5,
-    width: 900,
-    left: 1,
-    bottom: 250,
-  },
-  halfSeperator: {
-    borderBottomColor: "grey",
-    borderBottomWidth: 0.8,
-    opacity: 0.5,
-    width: 298,
-    left: 70,
-    bottom: 25,
-  },
-  halfSeperator2: {
-    borderBottomColor: "grey",
-    borderBottomWidth: 0.8,
-    opacity: 0.5,
-    width: 298,
-    left: 70,
-    top: 235,
-  },
-  homeBoardContainer: {
-    backgroundColor: "white",
-  },
-  explorePageContainer: {
-    flex: 1,
   },
 });

@@ -175,7 +175,14 @@ export default function Player({ route, navigation }) {
             onChangeText={(text) => setComment(text)}
             style={styles.commentInput}
           />
-          <View style={{ position: "absolute", top: 207, left: 80 }}>
+          <View
+            style={{
+              position: "absolute",
+              top: 207,
+              left: 80,
+              backgroundColor: "white",
+            }}
+          >
             <TouchableOpacity
               onPress={() =>
                 createComment()
@@ -217,8 +224,11 @@ const styles = StyleSheet.create({
   },
   inner: {
     padding: 14,
+    borderTopColor: "#EDEDED",
+    opacity: 7.8,
+    borderTopWidth: 1.8,
     justifyContent: "space-around",
-
+    backgroundColor: "white",
     position: "relative",
   },
   backButton: {

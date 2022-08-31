@@ -9,14 +9,16 @@ export default function Search() {
         style={styles.searchInput}
         placeholder="Still Looking?"
         autoCapitalize="none"
-        autoCorrect={false}
         onChangeText={(text) => setQuery(text)}
-        value={query}
+        onFocus={() => console.log("ACTIVE")}
+        onBlur={() => console.log("NOT ACTIVE ")}
       />
       <Image
         style={styles.searchIcon}
         source={require("../../assets/Search.png")}
       />
+
+      <SearchView />
     </View>
   );
 }

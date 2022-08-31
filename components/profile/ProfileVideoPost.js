@@ -63,7 +63,7 @@ export default function ProfileVideoPost({ item, navigation }) {
         />
       </Pressable>
 
-      <View style={{ position: "absolute", top: 230, left: 20 }}>
+      <View style={{ position: "absolute", top: 230, left: 5 }}>
         <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
       </View>
 
@@ -74,7 +74,7 @@ export default function ProfileVideoPost({ item, navigation }) {
             width: 35,
             borderRadius: 100,
             position: "absolute",
-            left: 20,
+            left: 5,
             top: 190,
           }}
           source={{ uri: item.profileimage }}
@@ -84,7 +84,7 @@ export default function ProfileVideoPost({ item, navigation }) {
             position: "absolute",
             color: "white",
             top: 200,
-            left: 60,
+            left: 50,
             fontWeight: "500",
             fontSize: 15,
           }}
@@ -96,7 +96,7 @@ export default function ProfileVideoPost({ item, navigation }) {
       <View>
         <Text
           style={{
-            left: 15,
+            left: 5,
             top: 12,
             fontWeight: "700",
             color: "#4F4E4E",
@@ -108,7 +108,7 @@ export default function ProfileVideoPost({ item, navigation }) {
           {item.description}
         </Text>
 
-        <Text style={{ left: 17, fontWeight: "600", color: "#4F4E4E" }}>
+        <Text style={{ left: 5, fontWeight: "600", color: "#4F4E4E" }}>
           {postDate}
         </Text>
       </View>

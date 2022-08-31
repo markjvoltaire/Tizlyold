@@ -29,6 +29,7 @@ import Animated, {
 import { PanGestureHandler } from "react-native-gesture-handler";
 import AnimatedBottomSheet from "../components/home/AnimatedBottomSheet";
 import Explore from "./Explore";
+import SearchList from "../components/explore/SearchList";
 
 export default function Subscriptions({ navigation }) {
   const [users, setUsers] = useState();
@@ -138,12 +139,6 @@ export default function Subscriptions({ navigation }) {
     );
   };
 
-  const ItemSeparatorView = () => {
-    return (
-      <View style={{ height: 0.5, width: "100%", backgroundColor: "#c8c8c" }} />
-    );
-  };
-
   const searchFilter = (text) => {
     if (text) {
       const newData = masterData.filter((item) => {
@@ -180,12 +175,21 @@ export default function Subscriptions({ navigation }) {
         source={require("../assets/Search.png")}
       />
 
-      <FlatList
-        data={filterData}
-        keyExtractor={(item, index) => index.toString()}
-        ItemSeparatorComponent={ItemSeparatorView}
-        renderItem={ItemView}
-      />
+      <View style={{ flex: 1, marginBottom: 100 }}>
+        <FlatList
+          style={{ marginBottom: 100 }}
+          numColumns={2}
+          data={filterData}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={() => (
+            <View style={{ backgroundColor: "red" }} />
+          )}
+          renderItem={({ item }) => (
+            <SearchList navigation={navigation} item={item} />
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -196,6 +200,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     backgroundColor: "white",
+  },
+  row: {
+    justifyContent: "space-evenly",
   },
   inner: {
     padding: 24,

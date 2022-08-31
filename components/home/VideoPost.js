@@ -9,6 +9,7 @@ import {
 import { Video, AVPlaybackStatus } from "expo-av";
 import React, { useState } from "react";
 import UserButtons from "./UserButtons";
+import TrendingCreators from "../explore/TrendingCreators";
 
 export default function VideoPost({ item, navigation }) {
   const video = React.useRef(null);
@@ -50,6 +51,7 @@ export default function VideoPost({ item, navigation }) {
           resizeMode="cover"
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
+
         <Image
           style={{
             alignSelf: "center",
@@ -61,6 +63,17 @@ export default function VideoPost({ item, navigation }) {
             position: "absolute",
           }}
           source={require("../../assets/fader.png")}
+        />
+
+        <Image
+          style={{
+            position: "absolute",
+            width: 50,
+            top: 100,
+            alignSelf: "center",
+            resizeMode: "contain",
+          }}
+          source={require("../../assets/playButton.png")}
         />
       </Pressable>
 

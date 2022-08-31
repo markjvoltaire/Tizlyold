@@ -17,6 +17,7 @@ import { fromPairs } from "lodash";
 import { useFollow } from "../../context/FollowContext";
 import VideoPost from "./VideoPost";
 import ImagePost from "./ImagePost";
+import TrendingCreators from "../explore/TrendingCreators";
 
 export default function HomeFeedList({ item, navigation }) {
   const video = React.useRef(null);
