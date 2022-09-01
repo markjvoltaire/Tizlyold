@@ -19,6 +19,8 @@ import { editProfile } from "../services/user";
 
 export default function EditProfile({ navigation }) {
   const [image, setImage] = useState(null);
+  const [banner, setBanner] = useState(null);
+  const [bannerData, setBannerData] = useState(null);
   const [imageData, setImageData] = useState(null);
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(true);
@@ -118,7 +120,7 @@ export default function EditProfile({ navigation }) {
         .update({ bannerImage: publicURL })
         .eq("user_id", userId);
 
-      getUserByIds();
+      // getUserByIds();
 
       console.log("error", error);
 
@@ -173,6 +175,28 @@ export default function EditProfile({ navigation }) {
       return null;
     }
   };
+
+  let profileDisplay;
+
+  if (image === null && user.profileimage === null) {
+    profileDisplay = require("../assets/plusButton.png");
+  }
+  if (image != null) {
+    profileDisplay = image;
+  } else {
+    profileDisplay = user.profileimage;
+  }
+
+  let profileBanner;
+
+  if (banner === null && user.bannerImage === null) {
+    profileBanner = require("../assets/plusButton.png");
+  }
+  if (banner != null) {
+    profileBanner = banner;
+  } else {
+    profileBanner = user.bannerImage;
+  }
 
   return (
     <SafeAreaView
@@ -236,16 +260,7 @@ export default function EditProfile({ navigation }) {
             }
           }}
         >
-          <Image
-            style={styles.profileImage}
-            source={
-              user.profileimage
-                ? {
-                    uri: user.profileimage,
-                  }
-                : require("../assets/noImage.png")
-            }
-          />
+          <Image style={styles.profileImage} source={{ uri: profileDisplay }} />
           <Image
             style={styles.bluePlusProfile}
             source={require("../assets/bluePlus.png")}
@@ -257,21 +272,16 @@ export default function EditProfile({ navigation }) {
             const resp = await pickBannerImage();
 
             if (resp?.imageData) {
-              setImage(resp.uri);
-              setImageData(resp?.imageData);
+              setBanner(resp.uri);
+              setBannerData(resp?.imageData);
             }
           }}
         >
           <Image
             style={styles.userBanner}
-            u
-            source={
-              user.bannerImage
-                ? {
-                    uri: user.bannerImage,
-                  }
-                : require("../assets/noImage.png")
-            }
+            source={{
+              uri: profileBanner,
+            }}
           />
           <Image
             style={styles.bluePlusBanner}

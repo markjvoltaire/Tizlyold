@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Alert,
   Button,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import ProfileNav from "../components/profile/ProfileNav";
@@ -194,6 +195,10 @@ export default function ProfileDetail({ navigation, route, item }) {
     );
   }
 
+  const refreshFeed = async () => {
+    getProfileDetail();
+  };
+
   return (
     <>
       <View style={{ width: 200, backgroundColor: "white" }}></View>
@@ -201,12 +206,17 @@ export default function ProfileDetail({ navigation, route, item }) {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, backgroundColor: "white" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+          />
+        }
       >
         <Image
           style={styles.userBanner}
           source={{ uri: profile.bannerImage }}
         />
-
         <Video
           source={{ uri: profile.bannerImage }}
           isLooping
@@ -215,19 +225,17 @@ export default function ProfileDetail({ navigation, route, item }) {
           resizeMode="cover"
           style={styles.userBanner}
         />
-
         <Image
           style={styles.userBannerFader}
           source={require("../assets/fader.png")}
         />
 
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
           <Image
             style={styles.backButton}
             source={require("../assets/backButton2.png")}
           />
         </TouchableOpacity>
-
         <View style={{ bottom: 410 }}>
           <Text style={styles.displayname}>{profile.displayName}</Text>
           <Text style={styles.username}>@{profile.username}</Text>
@@ -247,8 +255,11 @@ export default function ProfileDetail({ navigation, route, item }) {
             />
           </TouchableOpacity>
         </View>
-        <UserProfileNav />
+        <View style={styles.profileNav}>
+          <Text style={styles.home}>Home</Text>
 
+          <FullSeperator />
+        </View>
         <View style={styles.feedContainer}>
           {posts.map((item) => {
             return (
@@ -276,11 +287,34 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: 60,
   },
+
   userBanner: {
     position: "absolute",
     width: 455,
     height: 455,
     alignSelf: "center",
+  },
+
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 1.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 428,
+  },
+
+  profileNav: {
+    position: "absolute",
+    top: 85,
+    width: 4000,
+  },
+  home: {
+    position: "absolute",
+    fontWeight: "bold",
+    top: 390,
+    left: 180,
+    fontSize: 16,
   },
 
   title: {
@@ -345,14 +379,6 @@ const styles = StyleSheet.create({
     right: 30,
   },
 
-  fullSeperator: {
-    position: "absolute",
-    borderBottomColor: "grey",
-    borderBottomWidth: 0.8,
-    opacity: 0.8,
-    width: 900,
-    left: 1,
-  },
   displayname: {
     position: "absolute",
     height: 38,

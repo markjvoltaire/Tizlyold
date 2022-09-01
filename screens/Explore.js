@@ -145,20 +145,6 @@ export default function Explore({ navigation }) {
   );
 }
 
-{
-  /* <ScrollView>
-        <View>
-          <HomeBoard />
-        </View>
-        <View>
-          <TrendingCreators navigation={navigation} />
-        </View>
-        <View>
-          <NewToTizly navigation={navigation} />
-        </View>
-      </ScrollView> */
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

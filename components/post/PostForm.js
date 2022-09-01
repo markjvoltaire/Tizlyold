@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
   Button,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import SelectList from "react-native-dropdown-select-list";
@@ -100,8 +101,7 @@ export default function PostForm({ navigation }) {
       },
     ]);
 
-    console.log("resp", resp);
-    console.log("image", image);
+    navigation.navigate("HomeScreen");
 
     return resp;
   }
@@ -218,7 +218,11 @@ export default function PostForm({ navigation }) {
       </View>
 
       <TouchableOpacity
-        onPress={() => addPost().then(() => navigation.navigate("HomeScreen"))}
+        onPress={() =>
+          addPost().then(() => {
+            navigation.navigate("Home");
+          })
+        }
       >
         <Image
           style={styles.postButton}

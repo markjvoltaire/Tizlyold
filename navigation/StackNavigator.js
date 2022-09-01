@@ -3,7 +3,7 @@ import React from "react";
 
 import Explore from "../screens/Explore";
 import HomeScreen from "../screens/HomeScreen";
-import Subscriptions from "../screens/Subscriptions";
+import Notifications from "../screens/Notifications";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import BottomTabNavigator from "./TabNavigator";
@@ -68,10 +68,10 @@ const ExploreStackNavigator = () => {
   );
 };
 
-const SubscriptionStackNavigator = () => {
+const NotificationsStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="SubscriptionScreen" component={Subscriptions} />
+      <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
@@ -159,7 +159,6 @@ const ProfileDetailStackNavigator = () => {
 export {
   HomeStackNavigator,
   ExploreStackNavigator,
-  SubscriptionStackNavigator,
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
@@ -169,4 +168,5 @@ export {
   ProfileDetailStackNavigator,
   UserProfilePostDetail,
   EditPostStackNavigator,
+  NotificationsStackNavigator,
 };

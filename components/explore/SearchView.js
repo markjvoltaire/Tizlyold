@@ -31,7 +31,7 @@ export default function SearchView({
 }) {
   if (search === "") {
     return (
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <HomeBoard />
         </View>
@@ -50,11 +50,11 @@ export default function SearchView({
           style={{
             fontWeight: "600",
             fontSize: 25,
-            top: 20,
+            top: 40,
             alignSelf: "center",
           }}
         >
-          Search
+          Results
         </Text>
         <FlatList
           style={{ marginBottom: 100, alignSelf: "center", top: 60 }}

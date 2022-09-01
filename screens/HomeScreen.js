@@ -34,8 +34,6 @@ export default function HomeScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
 
-  const [creatorIds, setCreatorIds] = useState();
-  const [check, setCheck] = useState();
   const [follow, setFollow] = useState([]);
 
   // useEffect(() => {

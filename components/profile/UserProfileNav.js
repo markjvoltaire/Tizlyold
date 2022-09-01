@@ -1,17 +1,22 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 export default function UserProfileNav() {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperatorVert = () => <View style={styles.fullSeperatorVert} />;
+
+  const [navState, setNavState] = useState("home");
+
+  console.log("navState", navState);
+
   return (
     <View style={styles.profileNav}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => setNavState("home")}>
         <Text style={styles.home}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
-        <Text style={styles.subscribers}>Media</Text>
+      <TouchableOpacity onPress={() => setNavState("media")}>
+        <Text style={styles.media}>Media</Text>
       </TouchableOpacity>
 
       <FullSeperator />
@@ -33,14 +38,8 @@ const styles = StyleSheet.create({
     left: 90,
     fontSize: 16,
   },
+
   media: {
-    position: "absolute",
-    fontWeight: "bold",
-    top: 390,
-    left: 140,
-    fontSize: 16,
-  },
-  subscribers: {
     position: "absolute",
     fontWeight: "bold",
     top: 390,

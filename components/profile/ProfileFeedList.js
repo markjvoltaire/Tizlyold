@@ -23,7 +23,7 @@ export default function ProfileFeedList({ item, route, navigation }) {
   }
 
   if (item.mediaType === "video") {
-    return <ProfileVideoPost item={item} />;
+    return <ProfileVideoPost navigation={navigation} item={item} />;
   }
 
   if (item.mediaType === "text") {

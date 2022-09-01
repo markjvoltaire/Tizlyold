@@ -18,7 +18,7 @@ import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import Explore from "./screens/Explore";
 import Settings from "./screens/Settings";
-import Subscriptions from "./screens/Subscriptions";
+import Subscriptions from "./screens/Notifications";
 import Checkout from "./screens/Checkout";
 
 import { useState } from "react";
@@ -41,6 +41,7 @@ import Player from "./screens/Player";
 import UserProfilePostDetail from "./screens/UserProfilePostDetail";
 import EditPost from "./screens/EditPost";
 import { FollowProvider } from "./context/FollowContext";
+import Notifications from "./screens/Notifications";
 
 const Stack = createNativeStackNavigator();
 
@@ -105,8 +106,8 @@ export default function App() {
               />
 
               <Stack.Screen
-                name="Subscriptions"
-                component={Subscriptions}
+                name="NotificationsScreen"
+                component={Notifications}
                 options={{ headerShown: false, gestureEnabled: false }}
               />
 

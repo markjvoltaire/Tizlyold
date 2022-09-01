@@ -12,6 +12,7 @@ export default function UserButtons({
   setIsPressed,
   saveIsPressed,
   setSaveIsPressed,
+  post,
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
@@ -65,7 +66,7 @@ export default function UserButtons({
   async function unSavePost() {
     const resp = await supabase
       .from("saves")
-      .update({ saved: false })
+      .delete()
       .eq("postId", postId)
       .eq("saved_Id", item.saved_Id);
     return resp;
@@ -74,7 +75,7 @@ export default function UserButtons({
   async function unlikePost() {
     const resp = await supabase
       .from("likes")
-      .update({ liked: false })
+      .delete()
       .eq("postId", postId)
       .eq("liked_Id", item.likeId);
     return resp;
