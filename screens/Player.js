@@ -87,6 +87,15 @@ export default function Player({ route, navigation }) {
     return resp;
   }
 
+  async function getComments() {
+    const resp = await supabase
+      .from("comments")
+      .select("*")
+      .eq("postId", postId);
+
+    return resp.body;
+  }
+
   useEffect(() => {
     const getPostComments = async () => {
       const resp = await getComments();
@@ -108,15 +117,6 @@ export default function Player({ route, navigation }) {
 
     isPressed === true ? deletePost() : likePost();
   };
-
-  async function getComments() {
-    const resp = await supabase
-      .from("comments")
-      .select("*")
-      .eq("postId", postId);
-
-    return resp.body;
-  }
 
   const refreshFeed = async () => {
     const resp = await getComments();
