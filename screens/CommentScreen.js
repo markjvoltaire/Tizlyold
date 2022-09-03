@@ -87,19 +87,19 @@ export default function CommentScreen({ route }) {
               height: 35,
               width: 35,
               borderRadius: 100,
-              top: 30,
-              left: 60,
+              top: 15,
+              left: 45,
             }}
             source={{ uri: item.profileimage }}
           />
 
           <Text
             style={{
-              left: 100,
+              left: 90,
               fontWeight: "500",
               fontSize: 15,
               color: "#4F4E4E",
-              top: 5,
+              bottom: 10,
             }}
           >
             {item.username}
@@ -107,27 +107,15 @@ export default function CommentScreen({ route }) {
 
           <Text
             style={{
-              left: 60,
+              left: 50,
               fontWeight: "700",
               fontSize: 15,
               color: "#4F4E4E",
               top: 10,
-            }}
-          >
-            {item.title}
-          </Text>
-          <Text
-            style={{
-              left: 60,
-              top: 12,
-              fontWeight: "300",
-              color: "#4F4E4E",
-              textAlign: "left",
-
               paddingBottom: 30,
             }}
           >
-            {item.description}
+            {item.title}
           </Text>
         </View>
 
