@@ -15,11 +15,11 @@ export default function ProfileHomeView({
 }) {
   console.log("posts", post);
   if (post.mediaType === "image") {
-    return <UserProfileImagePost post={post} />;
+    return <UserProfileImagePost navigation={navigation} post={post} />;
   }
 
   if (post.mediaType === "video") {
-    return <UserProfileVideoPost post={post} />;
+    return <UserProfileVideoPost navigation={navigation} post={post} />;
   }
 }
 

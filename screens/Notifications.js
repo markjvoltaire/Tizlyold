@@ -62,7 +62,10 @@ export default function Notifications({ navigation, route, image }) {
         Notifications
       </Text>
 
-      <NotificationsView notifications={notifications} />
+      <NotificationsView
+        navigation={navigation}
+        notifications={notifications}
+      />
     </View>
   );
 }

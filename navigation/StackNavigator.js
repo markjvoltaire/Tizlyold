@@ -15,8 +15,11 @@ import UserProfileSubscribers from "../screens/UserProfileSubscribers";
 import UserProfilePostDetail from "../screens/UserProfilePostDetail";
 import EditPost from "../screens/EditPost";
 import ProfileDetail from "../screens/ProfileDetail";
+import ImageDetails from "../screens/ImageDetails";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+import CommentScreen from "../screens/CommentScreen";
 
-const Stack = createStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 const screenOptionStyle = {
   headerStyle: {
@@ -92,10 +95,32 @@ const WelcomeStackNavigator = () => {
   );
 };
 
+const ImageDetailStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="ImageDetails"
+        sharedElements={(route) => {
+          return [route.params.item.id];
+        }}
+        component={ImageDetails}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="UserScreen" component={UserProfile} />
+    </Stack.Navigator>
+  );
+};
+
+const CommentScreenStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="CommentScreen" component={CommentScreen} />
     </Stack.Navigator>
   );
 };
@@ -162,9 +187,10 @@ export {
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
-  // MainStackNavigator,
+  ImageDetailStackNavigator,
   UsernameStackNavigator,
   PostStackNavigator,
+  CommentScreenStackNavigator,
   ProfileDetailStackNavigator,
   UserProfilePostDetail,
   EditPostStackNavigator,

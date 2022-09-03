@@ -32,6 +32,8 @@ export default function Player({ route, navigation }) {
   const [commentList, setCommentList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
+  const [commentUser, setcommentUser] = useState([]);
+  const [commenter, setCommenter] = useState([]);
 
   const windowWidth = Dimensions.get("window").width;
 
@@ -71,6 +73,12 @@ export default function Player({ route, navigation }) {
     getUserPost();
   }, []);
 
+  async function getProfilePhotos() {
+    const resp = await supabase.from("profiles").select("*");
+
+    return resp;
+  }
+
   async function createComment() {
     const resp = await supabase.from("comments").insert([
       {
@@ -93,14 +101,44 @@ export default function Player({ route, navigation }) {
       .select("*")
       .eq("postId", postId);
 
+    const list = resp.body.map((i) => i.userId);
+
+    const users = await supabase
+      .from("profiles")
+      .select("username")
+      .in("user_id", [list]);
+
+    const comments = { users: users, comments: resp };
+
+    /// comments
+    // console.log(comments.comments.body);
+
+    console.log(comments.users.body);
+
     return resp.body;
   }
+
+  async function getUsers() {
+    const resp = await getProfilePhotos();
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const userList = async () => {
+      const resp = await getUsers();
+      const list = resp.map((item) => setcommentUser(item));
+      return list;
+    };
+    userList();
+  }, []);
 
   useEffect(() => {
     const getPostComments = async () => {
       const resp = await getComments();
       setCommentList(resp);
     };
+
     getPostComments();
   }, []);
 
@@ -123,6 +161,25 @@ export default function Player({ route, navigation }) {
     setCommentList(resp);
   };
 
+  async function getCommentProfileDetail() {
+    const respon = await getComments();
+    const list = respon.map((item) => item.userId);
+
+    const data = await supabase
+      .from("profiles")
+      .select("*")
+      .in("user_id", [list]);
+    setCommenter(data);
+
+    return data;
+  }
+
+  useEffect(() => {
+    const getDetails = async () => {
+      const resp = await getCommentProfileDetail();
+    };
+    getDetails();
+  }, []);
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
@@ -156,6 +213,8 @@ export default function Player({ route, navigation }) {
                 post={item}
                 commentList={commentList}
                 route={route}
+                commentUser={commentUser}
+                commenter={commenter}
               />
             </View>
           )}

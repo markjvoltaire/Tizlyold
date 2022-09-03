@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
 
-export default function ProfileImagePost({ item }) {
+export default function ProfileImagePost({ item, navigation }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
@@ -25,7 +25,7 @@ export default function ProfileImagePost({ item }) {
 
   return (
     <View style={{ paddingBottom: 90, top: 10.5 }}>
-      <Pressable>
+      <Pressable onPress={() => navigation.navigate("ImageDetails", { item })}>
         <Image
           source={{ uri: item.media }}
           style={{
@@ -106,6 +106,7 @@ export default function ProfileImagePost({ item }) {
         setIsPressed={setIsPressed}
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
+        navigation={navigation}
         item={item}
       />
     </View>

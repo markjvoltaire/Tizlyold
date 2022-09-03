@@ -13,6 +13,7 @@ export default function UserButtons({
   saveIsPressed,
   setSaveIsPressed,
   post,
+  navigation,
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
@@ -150,7 +151,9 @@ export default function UserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.commentButtonContainer}>
-        <TouchableOpacity onPress={() => getFollowing()}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("CommentScreen", { item })}
+        >
           <Image
             style={{
               top: 30,

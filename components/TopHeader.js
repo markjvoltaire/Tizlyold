@@ -18,7 +18,7 @@ export default function TopHeader({ navigation }) {
 
   return (
     <SafeAreaView style={styles.componentContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("ProfileDetail")}>
+      <TouchableOpacity>
         <Image
           style={styles.logo}
           source={require("../assets/tizlyicon.jpg")}

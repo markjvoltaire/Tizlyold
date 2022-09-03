@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import UserButtons from "./UserButtons";
 import TrendingCreators from "../explore/TrendingCreators";
 
-export default function VideoPost({ item, navigation }) {
+export default function VideoPost({ item, navigation, route }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
@@ -147,6 +147,7 @@ export default function VideoPost({ item, navigation }) {
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
         item={item}
+        navigation={navigation}
       />
     </View>
   );

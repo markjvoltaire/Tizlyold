@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
 import { useUser } from "../../context/UserContext";
 
-export default function UserProfileImagePost({ post }) {
+export default function UserProfileImagePost({ post, navigation }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const { user, setUser } = useUser();
@@ -86,6 +86,7 @@ export default function UserProfileImagePost({ post }) {
         setIsPressed={setIsPressed}
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
+        navigation={navigation}
         item={post}
       />
     </View>

@@ -19,7 +19,7 @@ export default function ProfileFeedList({ item, route, navigation }) {
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
   if (item.mediaType === "image") {
-    return <ProfileImagePost item={item} />;
+    return <ProfileImagePost navigation={navigation} item={item} />;
   }
 
   if (item.mediaType === "video") {

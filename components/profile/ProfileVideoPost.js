@@ -119,6 +119,7 @@ export default function ProfileVideoPost({ item, navigation }) {
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
         item={item}
+        navigation={navigation}
       />
     </View>
   );

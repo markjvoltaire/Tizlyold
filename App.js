@@ -42,8 +42,11 @@ import UserProfilePostDetail from "./screens/UserProfilePostDetail";
 import EditPost from "./screens/EditPost";
 import { FollowProvider } from "./context/FollowContext";
 import Notifications from "./screens/Notifications";
+import ImageDetails from "./screens/ImageDetails";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+import CommentScreen from "./screens/CommentScreen";
 
-const Stack = createNativeStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 export default function App() {
   return (
@@ -66,7 +69,7 @@ export default function App() {
               <Stack.Screen
                 name="Player"
                 component={Player}
-                options={{ headerShown: false, gestureEnabled: false }}
+                options={{ headerShown: false }}
               />
 
               <Stack.Screen
@@ -76,6 +79,14 @@ export default function App() {
               />
 
               <Stack.Screen
+                name="ImageDetails"
+                component={ImageDetails}
+                sharedElements={(route) => {
+                  return [route.params.item.id];
+                }}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
                 name="UserProfilePostDetail"
                 component={UserProfilePostDetail}
                 options={{ headerShown: false, gestureEnabled: false }}
@@ -84,6 +95,12 @@ export default function App() {
               <Stack.Screen
                 name="SignUp"
                 component={SignUp}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="CommentScreen"
+                component={CommentScreen}
                 options={{ headerShown: false }}
               />
 

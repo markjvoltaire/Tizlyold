@@ -15,10 +15,33 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import Comment from "../../components/post/Comment";
 import UserButtons from "../home/UserButtons";
 
-export default function UserPostDetails({ post, commentList, route }) {
+export default function UserPostDetails({
+  post,
+  commentList,
+  route,
+  commenter,
+}) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
   const [isPressed, setIsPressed] = useState(false);
+
+  async function getProfilePic() {
+    const respon = commentList;
+    const list = respon.map((item) => item.userId);
+    const data = await supabase
+      .from("profiles")
+      .select("*")
+      .in("user_id", [list]);
+
+    return data;
+  }
+
+  useEffect(() => {
+    const getImage = async () => {
+      const res = await getProfilePic();
+    };
+    getImage();
+  }, []);
 
   if (commentList.length === 0) {
     return (

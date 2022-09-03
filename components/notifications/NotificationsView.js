@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import NotificationsList from "./NotificationsList";
 
-export default function NotificationsView({ notifications }) {
+export default function NotificationsView({ notifications, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   console.log("notifications", notifications);
   return (
@@ -20,7 +20,9 @@ export default function NotificationsView({ notifications }) {
         onRefresh={() => console.log("YOOO")}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => <NotificationsList item={item} />}
+        renderItem={({ item }) => (
+          <NotificationsList navigation={navigation} item={item} />
+        )}
       />
     </View>
   );
