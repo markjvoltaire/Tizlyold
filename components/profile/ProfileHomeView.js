@@ -12,14 +12,30 @@ export default function ProfileHomeView({
   setPosts,
   navigation,
   post,
+  user,
+  setUser,
 }) {
   console.log("posts", post);
   if (post.mediaType === "image") {
-    return <UserProfileImagePost navigation={navigation} post={post} />;
+    return (
+      <UserProfileImagePost
+        user={user}
+        setUser={setUser}
+        navigation={navigation}
+        post={post}
+      />
+    );
   }
 
   if (post.mediaType === "video") {
-    return <UserProfileVideoPost navigation={navigation} post={post} />;
+    return (
+      <UserProfileVideoPost
+        user={user}
+        setUser={setUser}
+        navigation={navigation}
+        post={post}
+      />
+    );
   }
 }
 

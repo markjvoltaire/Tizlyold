@@ -87,8 +87,6 @@ export default function HomeScreen({ navigation, route }) {
     return resp.body;
   }
 
-  console.log("followingId", followingId);
-
   useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
@@ -128,7 +126,7 @@ export default function HomeScreen({ navigation, route }) {
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [list, followingId]);
+      .in("followingId", [list]);
 
     setPostList(resp.body);
 

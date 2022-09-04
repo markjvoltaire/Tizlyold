@@ -29,14 +29,12 @@ export default function UserProfile({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [stateImage, setStateImage] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const userProfileImage = user.profileimage;
 
   const [navState, setNavState] = useState("home");
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const [posts, setPosts] = useState();
-  const [userPosts, setUserPosts] = useState();
 
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener("focus", () => {
@@ -52,10 +50,11 @@ export default function UserProfile({ navigation, route }) {
   // console.log("user", user);
 
   async function getCurrentUserPosts() {
+    const userId = supabase.auth.currentUser.id;
     let { data: post, error } = await supabase
       .from("post")
       .select("*")
-      .eq("user_id", user.user_id)
+      .eq("user_id", userId)
       .order("id", { ascending: false });
 
     return post;
@@ -69,8 +68,6 @@ export default function UserProfile({ navigation, route }) {
     };
     getPost();
   }, []);
-
-  console.log("navState", navState);
 
   if (loading) {
     return (
@@ -103,7 +100,6 @@ export default function UserProfile({ navigation, route }) {
     getPost();
   };
 
-  console.log("user", user);
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white" }}
@@ -150,6 +146,8 @@ export default function UserProfile({ navigation, route }) {
                 post={post}
                 navState={navState}
                 setPosts={setPosts}
+                user={user}
+                setUser={setUser}
               />
             </View>
           );

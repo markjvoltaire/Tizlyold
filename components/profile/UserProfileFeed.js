@@ -24,12 +24,14 @@ export default function UserProfileFeed({
   post,
   setPosts,
   navState,
+  user,
+  setUser,
 }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const { user, setUser } = useUser();
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   // if (item.mediaType === "image") {
@@ -49,6 +51,8 @@ export default function UserProfileFeed({
         navState={navState}
         setPosts={setPosts}
         item={item}
+        user={user}
+        setUser={setUser}
       />
     );
   }

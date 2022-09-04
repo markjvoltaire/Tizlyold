@@ -61,6 +61,16 @@ export default function ProfileVideoPost({ item, navigation }) {
           }}
           source={require("../../assets/fader.png")}
         />
+        <Image
+          style={{
+            position: "absolute",
+            width: 50,
+            top: 100,
+            alignSelf: "center",
+            resizeMode: "contain",
+          }}
+          source={require("../../assets/playButton.png")}
+        />
       </Pressable>
 
       <View style={{ position: "absolute", top: 230, left: 5 }}>

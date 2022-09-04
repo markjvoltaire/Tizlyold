@@ -3,10 +3,14 @@ import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
 import { useUser } from "../../context/UserContext";
 
-export default function UserProfileImagePost({ post, navigation }) {
+export default function UserProfileImagePost({
+  post,
+  navigation,
+  user,
+  setUser,
+}) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const { user, setUser } = useUser();
 
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>

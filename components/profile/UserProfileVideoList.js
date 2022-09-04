@@ -2,14 +2,12 @@ import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../home/UserButtons";
-import { useUser } from "../../context/UserContext";
 
-export default function UserProfileVideoPost({ post }) {
+export default function UserProfileVideoPost({ post, user }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const { user, useUser } = useUser();
 
   console.log("user", user);
   return (
