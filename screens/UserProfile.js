@@ -110,7 +110,14 @@ export default function UserProfile({ navigation, route }) {
         />
       }
     >
-      <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
+      <Image
+        style={styles.userBanner}
+        source={
+          user.bannerImage === null
+            ? require("../assets/noProfilePic.jpeg")
+            : { uri: user.bannerImage }
+        }
+      />
 
       <Image
         style={styles.userBannerFader}
@@ -122,7 +129,11 @@ export default function UserProfile({ navigation, route }) {
         <Text style={styles.bio}> {user.bio}</Text>
         <Image
           style={styles.profileImage}
-          source={{ uri: user.profileimage }}
+          source={
+            user.profileimage === null
+              ? require("../assets/noProfilePic.jpeg")
+              : { uri: user.profileimage }
+          }
         />
         <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image

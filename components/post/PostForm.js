@@ -8,6 +8,7 @@ import {
   Pressable,
   Button,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
 import SelectList from "react-native-dropdown-select-list";
@@ -23,6 +24,7 @@ import AddCategory from "../AddCategory";
 export default function PostForm({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const { user, setUser } = useUser();
   const [image, setImage] = useState();
@@ -147,6 +149,8 @@ export default function PostForm({ navigation }) {
         type = null ? setMediaType("text") : setMediaType(type);
 
         console.log(photo.type);
+
+        setLoading(false);
       } catch (e) {
         ErrorAlert({ title: "image upload", message: e.message });
         return null;

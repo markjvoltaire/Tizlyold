@@ -5,58 +5,116 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  RefreshControl,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TopHeader from "../TopHeader";
+import { supabase } from "../../services/supabase";
 
 export default function NoPost({ navigation }) {
+  const [refreshing, setRefreshing] = useState(false);
+  const [follow, setFollow] = useState([]);
+  const [postList, setPostList] = useState([]);
+
+  async function getPosts() {
+    const userId = supabase.auth.currentUser.id;
+    const respon = await getFollowing();
+    const list = respon.map((item) => item.followingId);
+
+    const resp = await supabase
+      .from("post")
+      .select("*")
+      .in("followingId", [list]);
+
+    console.log("list", list);
+
+    setPostList(resp.body);
+
+    return resp.body;
+  }
+
+  async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("following")
+      .select(" creatorId, followingId, creatorUsername, userId")
+      .eq("following", true)
+      .eq("userId", userId);
+    // .eq('ceatorId', )
+
+    setFollow(resp.body);
+
+    // const list = resp.map((i) => i.followingId);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getFollowingList = async () => {
+      const resp = await getFollowing();
+      // console.log("resp", resp);
+
+      setFollow(resp);
+    };
+    getFollowingList();
+  }, []);
+
+  useEffect(() => {
+    const getUserPost = async () => {
+      await getPosts();
+    };
+    getUserPost();
+  }, []);
+
+  const refreshFeed = async () => {
+    await getPosts();
+    console.log("postList", postList);
+
+    const getUserPost = async () => {
+      await getPosts();
+    };
+    getUserPost();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={{ bottom: 350 }}>
-        <TopHeader />
-      </View>
-      <View style={styles.header}>
-        <Text style={styles.pageHeader}>Don't See Any Content ?</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <Text
+        style={{
+          fontSize: 13,
+          fontWeight: "700",
+          lineHeight: 20,
+          color: "#686877",
+          top: 100,
+        }}
+      >
+        Your home feed shows you content of creators that you are following.
+      </Text>
 
-      <View style={styles.whyHeader}>
-        <Text style={styles.why}>Why?</Text>
-      </View>
-      <View style={styles.whyDiv}>
-        <Text style={styles.whyText}>
-          Your home feed shows you content of creators that you are subscribed
-          to.
-        </Text>
-      </View>
+      <Text style={styles.howText}>
+        Use the search button above to find your favorite creator or you can
+        visit the explore screen to discover your new favorite creator.
+      </Text>
 
-      <View style={styles.howHeader}>
-        <Text style={styles.how}>How?</Text>
-      </View>
-
-      <View style={styles.howDiv}>
-        <Text style={styles.howText}>
-          Use the search button above to find your favorite creator or you can
-          visit the explore screen to discover your new favorite creator.
-        </Text>
-      </View>
-
-      <View style={styles.exploreButtonDiv}>
-        <TouchableOpacity onPress={() => navigation.navigate("ExploreScreen")}>
-          <Image
-            style={styles.exploreButton}
-            source={require("../../assets/exploreCreators.png")}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <Image
-        style={styles.whyIcon}
-        source={require("../../assets/bottomtab/SubscribersLight.jpg")}
-      />
-      <Image
-        style={styles.howIcon}
-        source={require("../../assets/Search.png")}
-      />
+      <Text
+        style={{
+          position: "absolute",
+          fontWeight: "800",
+          fontSize: 20,
+          alignSelf: "center",
+          top: 50,
+        }}
+      >
+        Don't See Any Content ?
+      </Text>
+      <TouchableOpacity
+        style={{ top: 500, alignItems: "center" }}
+        onPress={() => navigation.navigate("Explore")}
+      >
+        <Image
+          style={styles.exploreButton}
+          source={require("../../assets/exploreCreators.png")}
+        />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -140,12 +198,14 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 20,
     color: "#686877",
+    top: 200,
   },
 
   pageHeader: {
     position: "absolute",
     fontWeight: "800",
     fontSize: 20,
+    alignSelf: "center",
   },
 
   profileimage: {

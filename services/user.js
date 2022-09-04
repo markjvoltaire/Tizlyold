@@ -138,6 +138,15 @@ export async function getTrendingCreators() {
   return resp.body;
 }
 
+export async function getCreatorsYouMayLike() {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .in("id", [134, 133, 140]);
+
+  return resp.body;
+}
+
 export async function getNewTrendingCreators() {
   const resp = await supabase
     .from("profiles")

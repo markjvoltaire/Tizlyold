@@ -99,6 +99,12 @@ export default function App() {
               />
 
               <Stack.Screen
+                name="Username"
+                component={UserNames}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
                 name="CommentScreen"
                 component={CommentScreen}
                 options={{ headerShown: false }}

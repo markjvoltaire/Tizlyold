@@ -37,26 +37,6 @@ export default function ProfileDetail({ navigation, route, item }) {
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  // const TabNav = () => (
-  //   <View
-  //     style={{
-  //       width: 500,
-  //       opacity: 1,
-  //       borderBottomWidth: 80,
-  //       top: 820,
-  //       position: "absolute",
-  //       borderBottomColor: "white",
-  //     }}
-  //   >
-  //     <Image
-  //       style={{ width: 24, height: 24, position: "absolute" }}
-  //       source={require("../assets/bottomtab/HomeLight.jpg")}
-  //     />
-  //   </View>
-  // );
-
-  const Tab = createBottomTabNavigator();
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   async function getPosts() {
@@ -175,8 +155,6 @@ export default function ProfileDetail({ navigation, route, item }) {
       .delete()
       .eq("userId", user.user_id)
       .eq("creatorId", profile.user_id);
-    // .eq("userUsername", user.username)
-    // .eq("userDisplayname", user.displayname);
 
     return resp;
   }

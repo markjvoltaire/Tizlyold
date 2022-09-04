@@ -20,16 +20,6 @@ import ImagePost from "./ImagePost";
 import TrendingCreators from "../explore/TrendingCreators";
 
 export default function HomeFeedList({ item, navigation }) {
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
-  const { user, setUser } = useUser();
-  const pushAction = StackActions.replace("HomeScreen");
-  const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const { follow, setFollow } = useFollow();
-
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
-
   if (item.mediaType === "image") {
     return <ImagePost item={item} navigation={navigation} />;
   }

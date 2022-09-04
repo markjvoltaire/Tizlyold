@@ -42,7 +42,14 @@ export default function TopHeader({ navigation }) {
         />
       </TouchableOpacity>
 
-      <Image style={styles.profileimage} source={{ uri: user.profileimage }} />
+      <Image
+        style={styles.profileimage}
+        source={
+          user.profileimage === null
+            ? require("../assets/noProfilePic.jpeg")
+            : { uri: user.profileimage }
+        }
+      />
     </SafeAreaView>
   );
 }

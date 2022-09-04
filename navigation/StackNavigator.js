@@ -18,6 +18,7 @@ import ProfileDetail from "../screens/ProfileDetail";
 import ImageDetails from "../screens/ImageDetails";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CommentScreen from "../screens/CommentScreen";
+import UserNames from "../screens/UserNames";
 
 const Stack = createSharedElementStackNavigator();
 
@@ -128,7 +129,7 @@ const CommentScreenStackNavigator = () => {
 const UsernameStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Username" component={Username} />
+      <Stack.Screen name="Username" component={UserNames} />
     </Stack.Navigator>
   );
 };

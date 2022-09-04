@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   FlatList,
   useWindowDimensions,
+  RefreshControl,
 } from "react-native";
 
 import { Link } from "@react-navigation/native";
@@ -148,6 +149,28 @@ export default function HomeScreen({ navigation, route }) {
     );
   }
 
+  if (postList.length === 0) {
+    const refreshFeed = async () => {
+      await getPosts();
+      console.log("postList", postList);
+    };
+
+    return (
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <TopHeader />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => refreshFeed()}
+            />
+          }
+        >
+          <NoPost navigation={navigation} />
+        </ScrollView>
+      </View>
+    );
+  }
   const refreshFeed = async () => {
     getPosts();
   };
