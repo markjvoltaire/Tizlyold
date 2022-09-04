@@ -27,7 +27,7 @@ export default function ImageDetails({ navigation, route }) {
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const [comment, setComment] = useState("");
   const { item } = route.params;
-  console.log("item", item);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const { user, setUser } = useUser();
@@ -78,7 +78,7 @@ export default function ImageDetails({ navigation, route }) {
   useEffect(() => {
     const getPostComments = async () => {
       const resp = await getComments();
-      console.log("resp", resp);
+
       setCommentList(resp);
     };
 
@@ -183,6 +183,7 @@ export default function ImageDetails({ navigation, route }) {
           saveIsPressed={saveIsPressed}
           setSaveIsPressed={setSaveIsPressed}
           item={item}
+          navigation={navigation}
         />
 
         <View>

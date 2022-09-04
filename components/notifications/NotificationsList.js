@@ -24,7 +24,7 @@ export default function NotificationsList({ notifications, item, navigation }) {
     const getPhoto = async () => {
       const resp = await getPost();
       const photo = resp.body;
-      console.log("photo", photo);
+  
       photo.map((pic) => setImage(pic.media));
     };
     getPhoto();

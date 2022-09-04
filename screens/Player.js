@@ -32,6 +32,8 @@ export default function Player({ route, navigation }) {
   const [commentList, setCommentList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
+
   const [commentUser, setcommentUser] = useState([]);
   const [commenter, setCommenter] = useState([]);
 
@@ -113,8 +115,6 @@ export default function Player({ route, navigation }) {
     /// comments
     // console.log(comments.comments.body);
 
-    console.log(comments.users.body);
-
     return resp.body;
   }
 
@@ -180,6 +180,11 @@ export default function Player({ route, navigation }) {
     };
     getDetails();
   }, []);
+
+  const { item } = route.params;
+
+  console.log("item", item);
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
@@ -215,6 +220,8 @@ export default function Player({ route, navigation }) {
                 route={route}
                 commentUser={commentUser}
                 commenter={commenter}
+                saveIsPressed={saveIsPressed}
+                setSaveIsPressed={setSaveIsPressed}
               />
             </View>
           )}

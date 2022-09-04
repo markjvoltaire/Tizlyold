@@ -11,7 +11,7 @@ import NotificationsList from "./NotificationsList";
 
 export default function NotificationsView({ notifications, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-  console.log("notifications", notifications);
+
   return (
     <View style={{ backgroundColor: "white", flex: 1, top: 60, left: 10 }}>
       <FlatList

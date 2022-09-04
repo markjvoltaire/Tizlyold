@@ -33,6 +33,7 @@ export default function HomeScreen({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
+  const [followingId, setFollowingId] = useState([]);
 
   const [follow, setFollow] = useState([]);
 
@@ -77,6 +78,7 @@ export default function HomeScreen({ navigation, route }) {
       .select(" creatorId, followingId, creatorUsername, userId")
       .eq("following", true)
       .eq("userId", userId);
+    // .eq('ceatorId', )
 
     setFollow(resp.body);
 
@@ -84,6 +86,8 @@ export default function HomeScreen({ navigation, route }) {
 
     return resp.body;
   }
+
+  console.log("followingId", followingId);
 
   useEffect(() => {
     const getFollowingList = async () => {
@@ -95,14 +99,36 @@ export default function HomeScreen({ navigation, route }) {
     getFollowingList();
   }, []);
 
+  async function getFollowingId() {
+    const userId = supabase.auth.currentUser.id;
+
+    const resp = await supabase
+      .from("post")
+      .select("followingId")
+
+      .eq("user_id", userId);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getUserFollowingId = async () => {
+      const resp = await getFollowingId();
+      const list = resp.map((item) => item.followingId);
+      setFollowingId(list);
+    };
+    getUserFollowingId();
+  }, []);
+
   async function getPosts() {
     const userId = supabase.auth.currentUser.id;
     const respon = await getFollowing();
     const list = respon.map((item) => item.followingId);
+
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [list, userId]);
+      .in("followingId", [list, followingId]);
 
     setPostList(resp.body);
 

@@ -36,6 +36,7 @@ export default function VideoPost({ item, navigation, route }) {
             profileimage: item.profileimage,
             displayName: item.displayName,
             user_id: item.user_id,
+            item,
           })
         }
       >
@@ -144,10 +145,10 @@ export default function VideoPost({ item, navigation, route }) {
       <UserButtons
         isPressed={isPressed}
         setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
         item={item}
         navigation={navigation}
+        saveIsPressed={saveIsPressed}
+        setSaveIsPressed={setSaveIsPressed}
       />
     </View>
   );

@@ -115,7 +115,7 @@ export default function UserButtons({
   useEffect(() => {
     const seeSaves = async () => {
       const res = await getSaves();
-      res.map((post) => setSaveIsPressed(post.saved));
+      res.map((i) => setSaveIsPressed(i.saved));
     };
     seeSaves();
   }, []);

@@ -20,10 +20,12 @@ export default function UserPostDetails({
   commentList,
   route,
   commenter,
+  navigation,
 }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
   const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
 
   async function getProfilePic() {
     const respon = commentList;
@@ -133,6 +135,9 @@ export default function UserPostDetails({
             item={post}
             isPressed={isPressed}
             setIsPressed={setIsPressed}
+            navigation={navigation}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
           />
         </View>
         <View style={styles.commentSection}>
