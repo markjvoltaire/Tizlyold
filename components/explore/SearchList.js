@@ -31,7 +31,11 @@ export default function SearchList({ item, navigation, isPressed, query }) {
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ width: 110, height: 116, borderRadius: 13 }}
-            source={{ uri: item.profileimage }}
+            source={
+              item.profileimage === null
+                ? require("../../assets/noProfilePic.jpeg")
+                : { uri: item.profileimage }
+            }
           />
           <Image
             style={{
