@@ -15,7 +15,6 @@ export default function ProfileHomeView({
   user,
   setUser,
 }) {
-  console.log("posts", post);
   if (post.mediaType === "image") {
     return (
       <UserProfileImagePost

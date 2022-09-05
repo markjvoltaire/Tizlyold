@@ -16,10 +16,12 @@ import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
 import { getUserByIds } from "../services/user";
 import { editProfile } from "../services/user";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function EditProfile({ navigation }) {
   const [image, setImage] = useState(null);
   const [banner, setBanner] = useState(null);
+  const [bannerType, setBannerType] = useState();
   const [bannerData, setBannerData] = useState(null);
   const [imageData, setImageData] = useState(null);
   const { user, setUser } = useUser();
@@ -28,6 +30,8 @@ export default function EditProfile({ navigation }) {
   const [username, setUsername] = useState(user.username);
   const [displayName, setDisplayName] = useState(user.displayName);
   const [bio, setBio] = useState(user.bio);
+
+  const bannerImageType = user.bannerImageType;
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -115,9 +119,17 @@ export default function EditProfile({ navigation }) {
         .from("profile-images")
         .getPublicUrl(`${fileName}`);
 
+      let imageLink = publicURL;
+      let type = photo.type;
+
+      console.log("type ", type);
+
+      setBannerType(type);
+
       const resp = await supabase
         .from("profiles")
-        .update({ bannerImage: publicURL })
+        .update({ bannerImage: publicURL, bannerImageType: type })
+
         .eq("user_id", userId);
 
       // getUserByIds();
@@ -260,7 +272,14 @@ export default function EditProfile({ navigation }) {
             }
           }}
         >
-          <Image style={styles.profileImage} source={{ uri: profileDisplay }} />
+          <Image
+            style={styles.profileImage}
+            source={
+              user.profileimage === null
+                ? require("../assets/noProfilePic.jpeg")
+                : { uri: user.profileimage }
+            }
+          />
           <Image
             style={styles.bluePlusProfile}
             source={require("../assets/bluePlus.png")}
@@ -277,12 +296,25 @@ export default function EditProfile({ navigation }) {
             }
           }}
         >
-          <Image
-            style={styles.userBanner}
-            source={{
-              uri: profileBanner,
-            }}
-          />
+          {user.bannerImageType === "image" ? (
+            <Image
+              style={styles.userBanner}
+              source={
+                user.bannerImage === null
+                  ? require("../assets/noProfilePic.jpeg")
+                  : { uri: user.bannerImage }
+              }
+            />
+          ) : (
+            <Video
+              source={{ uri: user.bannerImage }}
+              isLooping
+              shouldPlay={true}
+              isMuted={true}
+              resizeMode="cover"
+              style={styles.userBanner}
+            />
+          )}
           <Image
             style={styles.bluePlusBanner}
             source={require("../assets/bluePlus.png")}
@@ -331,10 +363,10 @@ const styles = StyleSheet.create({
   bluePlusBanner: {
     position: "absolute",
     resizeMode: "contain",
-    top: 228,
+    top: 235,
     height: 30,
     width: 30,
-    left: 325,
+    left: 345,
   },
 
   logo: {
@@ -409,6 +441,7 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     left: 240,
+    borderRadius: 10,
   },
   username: {
     position: "absolute",

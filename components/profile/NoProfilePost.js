@@ -19,10 +19,12 @@ export default function NoProfilePost({ navigation, profile }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  console.log("profile", profile);
+
   return (
     <>
       <View>
-        <Image
+        {/* <Image
           style={styles.userBanner}
           source={{ uri: profile.bannerImage }}
         />
@@ -33,7 +35,27 @@ export default function NoProfilePost({ navigation, profile }) {
           isMuted={true}
           resizeMode="cover"
           style={styles.userBanner}
-        />
+        /> */}
+
+        {profile.bannerImageType === "image" ? (
+          <Image
+            style={styles.userBanner}
+            source={
+              profile.bannerImage === null
+                ? require("../../assets/noProfilePic.jpeg")
+                : { uri: profile.bannerImage }
+            }
+          />
+        ) : (
+          <Video
+            source={{ uri: profile.bannerImage }}
+            isLooping
+            shouldPlay={true}
+            isMuted={true}
+            resizeMode="cover"
+            style={styles.userBanner}
+          />
+        )}
         <Image
           style={styles.userBannerFader}
           source={require("../../assets/fader.png")}
@@ -51,7 +73,11 @@ export default function NoProfilePost({ navigation, profile }) {
           <Text style={styles.bio}> {profile.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: profile.profileimage }}
+            source={
+              profile.profileimage === null
+                ? require("../../assets/noProfilePic.jpeg")
+                : { uri: profile.profileimage }
+            }
           />
           <TouchableOpacity onPress={() => handleFollow()}>
             <Image

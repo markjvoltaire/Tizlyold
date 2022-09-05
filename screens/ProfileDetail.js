@@ -194,6 +194,8 @@ export default function ProfileDetail({ navigation, route, item }) {
     );
   }
 
+  console.log("profile", profile);
+
   return (
     <>
       <View style={{ width: 200, backgroundColor: "white" }}></View>
@@ -237,7 +239,11 @@ export default function ProfileDetail({ navigation, route, item }) {
           <Text style={styles.bio}> {profile.bio}</Text>
           <Image
             style={styles.profileImage}
-            source={{ uri: profile.profileimage }}
+            source={
+              profile.profileimage === null
+                ? require("../assets/noProfilePic.jpeg")
+                : { uri: profile.profileimage }
+            }
           />
           <TouchableOpacity onPress={() => handleFollow()}>
             <Image

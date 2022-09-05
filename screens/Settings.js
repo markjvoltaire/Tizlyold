@@ -34,48 +34,83 @@ export default function Settings({ navigation }) {
     <SafeAreaView
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "white",
       }}
     >
-      <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />
-      <View style={styles.userInfoContainer}>
+      <View>
         <Image
-          style={styles.img}
-          source={{
-            uri: user.profileimage,
+          style={styles.logo}
+          source={require("../assets/tizlyicon.jpg")}
+        />
+
+        <Text
+          style={{
+            fontWeight: "700",
+            fontSize: 18,
+            top: 165,
+            position: "absolute",
+            left: 100,
           }}
-        />
-        <Text style={styles.username}>{user.username}</Text>
-      </View>
-
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+        >
+          {user.username}
+        </Text>
         <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
+          style={{
+            height: 60,
+            width: 60,
+            borderRadius: 100,
+            top: 150,
+            left: 10,
+            position: "absolute",
+          }}
+          source={
+            user.profileimage
+              ? { uri: user.profileimage }
+              : require("../assets/noProfilePic.jpeg")
+          }
         />
-      </TouchableOpacity>
 
-      <View style={styles.accountSettings}>
-        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../assets/Profile.jpg")}
+            style={{
+              position: "absolute",
+              resizeMode: "contain",
+              width: 25,
+              height: 30,
+              left: 20,
+              top: 60,
+            }}
+            source={require("../assets/backButton.png")}
           />
-          <Image style={styles.arrow} source={require("../assets/arrow.png")} />
-          <Text style={styles.accountSettingsText}> Account Settings</Text>
         </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity
-        onPress={() => signOutUser().then(() => navigation.navigate("Welcome"))}
-      >
-        <Image
-          style={styles.signoutButton}
-          source={require("../assets/signoutButton.png")}
-        />
-      </TouchableOpacity>
+        <View style={{ position: "absolute", top: 300, left: 10 }}>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={require("../assets/Profile.jpg")}
+            />
+            <Image
+              style={styles.arrow}
+              source={require("../assets/arrow.png")}
+            />
+            <Text style={styles.accountSettingsText}> Account Settings</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ position: "absolute", alignSelf: "center", top: 400 }}>
+          <TouchableOpacity
+            onPress={() =>
+              signOutUser().then(() => navigation.navigate("Welcome"))
+            }
+          >
+            <Image
+              style={styles.signoutButton}
+              source={require("../assets/signoutButton.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -101,8 +136,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 25,
     height: 30,
-    left: -170,
-    top: -400,
   },
 
   signoutButton: {
@@ -153,11 +186,8 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 23,
-    left: 75,
-    bottom: 45,
-  },
-  userInfoContainer: {
-    bottom: 200,
-    right: 140,
+    right: 15,
+    bottom: 145,
+    position: "absolute",
   },
 });

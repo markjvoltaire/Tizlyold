@@ -22,6 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 import UserProfileFeed from "../components/profile/UserProfileFeed";
 import UserProfileNav from "../components/profile/UserProfileNav";
 import NoUserProfilePost from "../components/profile/NoUserProfilePost";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function UserProfile({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -36,6 +37,8 @@ export default function UserProfile({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const [posts, setPosts] = useState();
+
+  console.log("user", user);
 
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener("focus", () => {
@@ -127,14 +130,25 @@ export default function UserProfile({ navigation, route }) {
         />
       }
     >
-      <Image
-        style={styles.userBanner}
-        source={
-          user.bannerImage === null
-            ? require("../assets/noProfilePic.jpeg")
-            : { uri: user.bannerImage }
-        }
-      />
+      {user.bannerImageType === "image" ? (
+        <Image
+          style={styles.userBanner}
+          source={
+            user.bannerImage === null
+              ? require("../assets/noProfilePic.jpeg")
+              : { uri: user.bannerImage }
+          }
+        />
+      ) : (
+        <Video
+          source={{ uri: user.bannerImage }}
+          isLooping
+          shouldPlay={true}
+          isMuted={true}
+          resizeMode="cover"
+          style={styles.userBanner}
+        />
+      )}
 
       <Image
         style={styles.userBannerFader}

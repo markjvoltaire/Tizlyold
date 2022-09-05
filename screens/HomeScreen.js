@@ -156,7 +156,7 @@ export default function HomeScreen({ navigation, route }) {
 
     return (
       <View style={{ flex: 1, backgroundColor: "white" }}>
-        <TopHeader />
+        <TopHeader navigation={navigation} />
         <ScrollView
           refreshControl={
             <RefreshControl
