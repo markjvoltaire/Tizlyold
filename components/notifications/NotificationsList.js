@@ -3,39 +3,49 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../../services/supabase";
 import { get } from "lodash";
 import { Pressable } from "react-native";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function NotificationsList({ notifications, item, navigation }) {
   const [image, setImage] = useState();
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const [imageType, setImageType] = useState();
 
   const getPost = async () => {
     const userId = supabase.auth.currentUser.id;
 
-    const post = await supabase
-      .from("post")
-      .select("media")
-      .eq("id", item.postId);
+    const post = await supabase.from("post").select("*").eq("id", item.postId);
 
     return post;
   };
+
+  console.log("item", item);
 
   useEffect(() => {
     const getPhoto = async () => {
       const resp = await getPost();
       const photo = resp.body;
-  
+      console.log("resp", resp.body);
+
       photo.map((pic) => setImage(pic.media));
+      photo.map((pic) => setImageType(pic.mediaType));
     };
     getPhoto();
   }, []);
 
+  console.log("item", item);
+
+  console.log("image", image);
   return (
     <View style={{ paddingBottom: 40 }}>
       <Pressable>
         <Image
           style={{ height: 40, width: 40, borderRadius: 100 }}
-          source={{ uri: item.userProfileImage }}
+          source={
+            item.userProfileImage === null
+              ? require("../../assets/noProfilePic.jpeg")
+              : { uri: item.userProfileImage }
+          }
         />
       </Pressable>
       <View style={{ bottom: 40 }}>
@@ -78,7 +88,7 @@ export default function NotificationsList({ notifications, item, navigation }) {
             {item.userUsername} Liked your post
           </Text>
 
-          <Image
+          {/* <Image
             style={{
               height: 60,
               width: 60,
@@ -88,7 +98,37 @@ export default function NotificationsList({ notifications, item, navigation }) {
               left: 300,
             }}
             source={{ uri: image }}
-          />
+          /> */}
+
+          {imageType === "image" ? (
+            <Image
+              style={{
+                height: 60,
+                width: 60,
+                left: 300,
+                marginBottom: 10,
+                position: "absolute",
+              }}
+              source={
+                item.bannerImage === null
+                  ? require("../../assets/noProfilePic.jpeg")
+                  : { uri: image }
+              }
+            />
+          ) : (
+            <Video
+              source={{ uri: image }}
+              isMuted={true}
+              resizeMode="cover"
+              style={{
+                height: 60,
+                width: 60,
+                left: 300,
+                marginBottom: 10,
+                position: "absolute",
+              }}
+            />
+          )}
         </Pressable>
       </View>
     </View>

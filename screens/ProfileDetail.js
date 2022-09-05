@@ -121,6 +121,22 @@ export default function ProfileDetail({ navigation, route, item }) {
     getFeed();
   }, []);
 
+  if (posts.length === 0) {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+          />
+        }
+        style={{ flex: 1, backgroundColor: "white" }}
+      >
+        <NoProfilePost profile={profile} navigation={navigation} />
+      </ScrollView>
+    );
+  }
+
   if (loading) {
     return (
       <SafeAreaView>
@@ -177,22 +193,6 @@ export default function ProfileDetail({ navigation, route, item }) {
   const refreshFeed = async () => {
     getProfileDetail();
   };
-
-  if (posts.length === 0) {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-          />
-        }
-        style={{ flex: 1, backgroundColor: "white" }}
-      >
-        <NoProfilePost profile={profile} navigation={navigation} />
-      </ScrollView>
-    );
-  }
 
   console.log("profile", profile);
 
