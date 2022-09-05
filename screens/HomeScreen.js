@@ -152,7 +152,6 @@ export default function HomeScreen({ navigation, route }) {
   if (postList.length === 0) {
     const refreshFeed = async () => {
       await getPosts();
-      console.log("postList", postList);
     };
 
     return (

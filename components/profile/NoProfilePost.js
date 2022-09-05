@@ -1,213 +1,27 @@
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
   StyleSheet,
-  FlatList,
+  Text,
+  View,
   ScrollView,
-  SafeAreaView,
-  Alert,
-  Button,
   RefreshControl,
+  Image,
+  TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import ProfileNav from "../components/profile/ProfileNav";
-import UserButtons from "../components/home/UserButtons";
-import UserProfileFeed from "../components/profile/UserProfileFeed";
-import UserProfileNav from "../components/profile/UserProfileNav";
-import HomeScreen from "../screens/HomeScreen";
-
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import { supabase } from "../services/supabase";
-import { useUser } from "../context/UserContext";
-import { getCurrentUserPosts, getProfileDetail } from "../services/user";
-import ProfileDetailSub from "../components/profile/ProfileDetailSub";
-import ProfileFeedList from "../components/profile/ProfileFeedList";
-import { StackActions } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
-import NoProfilePost from "../components/profile/NoProfilePost";
 
-export default function ProfileDetail({ navigation, route, item }) {
-  const { user, setUser } = useUser();
-  const [userPosts, setUserPosts] = useState([]);
+export default function NoProfilePost({ navigation, profile }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  const [profile, setProfile] = useState([]);
+
   const [isFollowing, setIsFollowing] = useState(false);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  async function getPosts() {
-    let { data: post, error } = await supabase
-      .from("post")
-      .select("*")
-      .eq("user_id", user_id)
-      .order("id", { ascending: false });
-
-    return post;
-  }
-
-  async function getFollowing() {
-    const userId = supabase.auth.currentUser.id;
-    const resp = await supabase
-      .from("following")
-      .select("*")
-      .eq("creatorId", user_id)
-      .eq("userId", user.user_id);
-
-    return resp.body;
-  }
-
-  useEffect(() => {
-    const seeLikes = async () => {
-      const res = await getFollowing();
-      res.map((user) => setIsFollowing(user.following));
-    };
-    seeLikes();
-  }, []);
-
-  useEffect(() => {
-    const getPost = async () => {
-      const resp = await getPosts();
-      setPosts(resp);
-      setLoading(false);
-      // console.log("resp from curren user Post", resp);
-    };
-    getPost();
-  }, []);
-
-  const user_id = route.params.user_id;
-
-  if (route.params.user_id === user.user_id) {
-    navigation.navigate("Profile");
-  }
-
-  async function getUserPostsById() {
-    const items = await supabase
-      .from("post")
-      .select("*")
-      .eq("user_id", user_id)
-      .order("id", { ascending: false });
-
-    return items.body;
-  }
-
-  async function getProfileDetail() {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", route.params.user_id)
-      .single();
-
-    return data;
-  }
-
-  useEffect(() => {
-    const getUser = async () => {
-      const resp = await getProfileDetail();
-      setProfile(resp);
-    };
-    getUser();
-  }, []);
-
-  useEffect(() => {
-    const getFeed = () => {
-      getUserPostsById().then((res) => setUserPosts(res));
-      setLoading(false);
-    };
-    getFeed();
-  }, []);
-
-  if (loading) {
-    return (
-      <SafeAreaView>
-        <View>
-          <Text style={{ fontSize: 300 }}>LOADING</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  async function followUser() {
-    const resp = await supabase.from("following").insert([
-      {
-        creatorId: profile.user_id,
-        userId: user.user_id,
-        userProfileImage: user.profileimage,
-
-        userUsername: user.username,
-        creatorUsername: profile.username,
-        followingId: profile.following_Id,
-        creatorDisplayname: profile.displayName,
-        userDisplayname: user.displayName,
-        creatorProfileImage: profile.profileimage,
-      },
-    ]);
-
-    return resp;
-  }
-
-  async function unfollowUser() {
-    const resp = await supabase
-      .from("following")
-      .delete()
-      .eq("userId", user.user_id)
-      .eq("creatorId", profile.user_id);
-
-    return resp;
-  }
-
-  const handleFollow = () => {
-    setIsFollowing((current) => !current);
-
-    isFollowing === true ? unfollowUser() : followUser();
-  };
-
-  if (loading) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
-  }
-
-  const refreshFeed = async () => {
-    getProfileDetail();
-  };
-
-  if (posts.length === 0) {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-          />
-        }
-        style={{ flex: 1, backgroundColor: "white" }}
-      >
-        <NoProfilePost profile={profile} navigation={navigation} />
-      </ScrollView>
-    );
-  }
-
   return (
     <>
-      <View style={{ width: 200, backgroundColor: "white" }}></View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ flex: 1, backgroundColor: "white" }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-          />
-        }
-      >
+      <View>
         <Image
           style={styles.userBanner}
           source={{ uri: profile.bannerImage }}
@@ -222,13 +36,13 @@ export default function ProfileDetail({ navigation, route, item }) {
         />
         <Image
           style={styles.userBannerFader}
-          source={require("../assets/fader.png")}
+          source={require("../../assets/fader.png")}
         />
 
-        <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             style={styles.backButton}
-            source={require("../assets/backButton2.png")}
+            source={require("../../assets/backButton2.png")}
           />
         </TouchableOpacity>
         <View style={{ bottom: 410 }}>
@@ -244,8 +58,8 @@ export default function ProfileDetail({ navigation, route, item }) {
               style={styles.subButton}
               source={
                 isFollowing === true
-                  ? require("../assets/followingbutton.png")
-                  : require("../assets/followbutton.png")
+                  ? require("../../assets/followingbutton.png")
+                  : require("../../assets/followbutton.png")
               }
             />
           </TouchableOpacity>
@@ -255,23 +69,27 @@ export default function ProfileDetail({ navigation, route, item }) {
 
           <FullSeperator />
         </View>
-        <View style={styles.feedContainer}>
-          {posts.map((item) => {
-            return (
-              <View key={item.id}>
-                <ProfileFeedList
-                  navigation={navigation}
-                  route={route}
-                  item={item}
-                />
-              </View>
-            );
-          })}
+        <View style={{ alignItems: "center", top: 130, flex: 1 }}>
+          <Text
+            style={{
+              bottom: 60,
+              fontWeight: "600",
+              fontSize: 20,
+              color: "#686877",
+            }}
+          >
+            @{profile.username} Has No Content Yet.
+          </Text>
+          <Image
+            style={{ height: 170, resizeMode: "contain", bottom: 20 }}
+            source={require("../../assets/mobile-application.png")}
+          />
         </View>
-      </ScrollView>
+      </View>
     </>
   );
 }
+
 const styles = StyleSheet.create({
   logo: {
     position: "absolute",

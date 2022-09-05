@@ -78,7 +78,7 @@ export default function NoPost({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Text
+      {/* <Text
         style={{
           fontSize: 13,
           fontWeight: "700",
@@ -88,11 +88,10 @@ export default function NoPost({ navigation }) {
         }}
       >
         Your home feed shows you content of creators that you are following.
-      </Text>
+      </Text> */}
 
       <Text style={styles.howText}>
-        Use the search button above to find your favorite creator or you can
-        visit the explore screen to discover your new favorite creator.
+        visit the explore screen to discover your favorite creators.
       </Text>
 
       <Text
@@ -104,10 +103,22 @@ export default function NoPost({ navigation }) {
           top: 50,
         }}
       >
-        Don't See Any Content ?
+        Your Feed Is Currently Empty
       </Text>
+
+      <Image
+        style={{
+          position: "absolute",
+          height: 300,
+          resizeMode: "contain",
+          top: 250,
+          alignSelf: "center",
+        }}
+        source={require("../../assets/mobile-application.png")}
+      />
+
       <TouchableOpacity
-        style={{ top: 500, alignItems: "center" }}
+        style={{ top: 700, alignItems: "center" }}
         onPress={() => navigation.navigate("Explore")}
       >
         <Image
@@ -190,7 +201,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 20,
     color: "#686877",
-    bottom: 100,
+    bottom: 300,
   },
 
   howText: {
@@ -198,7 +209,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 20,
     color: "#686877",
-    top: 200,
+    top: 125,
+    position: "absolute",
+    width: 370,
+    alignSelf: "center",
   },
 
   pageHeader: {

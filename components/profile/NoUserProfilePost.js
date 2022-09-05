@@ -12,133 +12,33 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
+import { supabase } from "../../services/supabase";
+import { useUser } from "../../context/UserContext";
 import React, { useState, useEffect } from "react";
-import BottomTabNavigator from "../navigation/TabNavigator";
-import ProfileNav from "../components/profile/ProfileNav";
 
-import { supabase } from "../services/supabase";
-import { useUser } from "../context/UserContext";
-import * as ImagePicker from "expo-image-picker";
-import UserProfileFeed from "../components/profile/UserProfileFeed";
-import UserProfileNav from "../components/profile/UserProfileNav";
-import NoUserProfilePost from "../components/profile/NoUserProfilePost";
-
-export default function UserProfile({ navigation, route }) {
+export default function NoUserProfilePost({ navigation, route }) {
   const { user, setUser } = useUser();
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [stateImage, setStateImage] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  const [navState, setNavState] = useState("home");
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  const [posts, setPosts] = useState();
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     const getPost = async () => {
-  //       const resp = await getCurrentUserPosts();
-  //       setPosts(resp);
-  //       setLoading(false);
-  //     };
-  //     getPost();
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
-  // console.log("user", user);
-
-  async function getCurrentUserPosts() {
-    const userId = supabase.auth.currentUser.id;
-    let { data: post, error } = await supabase
-      .from("post")
-      .select("*")
-      .eq("user_id", userId)
-      .order("id", { ascending: false });
-
-    return post;
-  }
-
-  useEffect(() => {
-    const getPost = async () => {
-      const resp = await getCurrentUserPosts();
-      setPosts(resp);
-      setLoading(false);
-    };
-    getPost();
-  }, []);
-
-  if (loading) {
-    return (
-      <SafeAreaView>
-        <View>
-          <Text style={{ fontSize: 300 }}>LOADING</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  async function getUserById() {
-    const userId = supabase.auth.currentUser.id;
-
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    setUser(data);
-  }
-
-  const refreshFeed = async () => {
-    const getPost = async () => {
-      const resp = await getCurrentUserPosts();
-      setPosts(resp);
-      setLoading(false);
-    };
-    getUserById();
-    getPost();
-  };
-
-  if (posts.length === 0) {
-    return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-          />
-        }
-      >
-        <NoUserProfilePost navigation={navigation} />
-      </ScrollView>
-    );
-  }
-
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: "white" }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => refreshFeed()}
-        />
-      }
-    >
+    <View>
       <Image
         style={styles.userBanner}
         source={
           user.bannerImage === null
-            ? require("../assets/noProfilePic.jpeg")
+            ? require("../../assets/noProfilePic.jpeg")
             : { uri: user.bannerImage }
         }
       />
 
       <Image
         style={styles.userBannerFader}
-        source={require("../assets/fader.png")}
+        source={require("../../assets/fader.png")}
       />
       <View style={{ bottom: 410 }}>
         <Text style={styles.displayname}>{user.displayName}</Text>
@@ -148,14 +48,14 @@ export default function UserProfile({ navigation, route }) {
           style={styles.profileImage}
           source={
             user.profileimage === null
-              ? require("../assets/noProfilePic.jpeg")
+              ? require("../../assets/noProfilePic.jpeg")
               : { uri: user.profileimage }
           }
         />
         <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
             style={styles.subButton}
-            source={require("../assets/editprofile.png")}
+            source={require("../../assets/editprofile.png")}
           />
         </TouchableOpacity>
       </View>
@@ -164,24 +64,23 @@ export default function UserProfile({ navigation, route }) {
 
         <FullSeperator />
       </View>
-      <View style={styles.feedContainer}>
-        {posts.map((post) => {
-          return (
-            <View style={{ bottom: 90 }} key={post.id}>
-              <UserProfileFeed
-                navigation={navigation}
-                route={route}
-                post={post}
-                navState={navState}
-                setPosts={setPosts}
-                user={user}
-                setUser={setUser}
-              />
-            </View>
-          );
-        })}
+      <View style={{ alignItems: "center", top: 130, flex: 1 }}>
+        <Text
+          style={{
+            bottom: 60,
+            fontWeight: "600",
+            fontSize: 20,
+            color: "#686877",
+          }}
+        >
+          You Haven't Uploaded Any Content Yet.
+        </Text>
+        <Image
+          style={{ height: 170, resizeMode: "contain", bottom: 20 }}
+          source={require("../../assets/mobile-application.png")}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -401,42 +300,3 @@ const styles = StyleSheet.create({
     height: 455,
   },
 });
-
-//banner image
-{
-  /* <Image
-style={styles.userBanner}
-source={
-  user.bannerImage
-    ? {
-        uri: user.bannerImage,
-      }
-    : require("../assets/noImage.png")
-}
-/> */
-}
-
-// profile image
-{
-  /* <TouchableOpacity
-onPress={async () => {
-  const resp = await pickImage();
-
-  if (resp?.imageData) {
-    setImage(resp.uri);
-    setImageData(resp?.imageData);
-  }
-}}
->
-<Image
-  style={styles.profileImage}
-  source={
-    user.profileimage
-      ? {
-          uri: user.profileimage,
-        }
-      : require("../assets/noImage.png")
-  }
-/>
-</TouchableOpacity> */
-}

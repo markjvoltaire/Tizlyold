@@ -14,6 +14,7 @@ import {
   Keyboard,
   TextInput,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { getLikes, getAllUsers } from "../services/user";
@@ -21,10 +22,11 @@ import { supabase } from "../services/supabase";
 import TopHeader from "../components/TopHeader";
 import { useUser } from "../context/UserContext";
 import NotificationsView from "../components/notifications/NotificationsView";
+import NoNotifications from "../components/notifications/NoNotifications";
 
 export default function Notifications({ navigation, route, image }) {
   const { user, setUser } = useUser();
-
+  const [refreshing, setRefreshing] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
   const getNotifications = async () => {
@@ -46,6 +48,28 @@ export default function Notifications({ navigation, route, image }) {
     };
     fetchNotifications();
   }, []);
+
+  if (notifications.length === 0) {
+    const refreshFeed = async () => {
+      await getNotifications();
+    };
+    return (
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <TopHeader navigation={navigation} />
+
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => refreshFeed()}
+            />
+          }
+        >
+          <NoNotifications navigation={navigation} />
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
