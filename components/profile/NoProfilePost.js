@@ -48,7 +48,11 @@ export default function NoProfilePost({ navigation, profile }) {
           />
         ) : (
           <Video
-            source={{ uri: profile.bannerImage }}
+            source={
+              profile.bannerImage === null
+                ? require("../../assets/noProfilePic.jpeg")
+                : { uri: profile.bannerImage }
+            }
             isLooping
             shouldPlay={true}
             isMuted={true}
