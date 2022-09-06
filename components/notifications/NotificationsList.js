@@ -49,17 +49,7 @@ export default function NotificationsList({ notifications, item, navigation }) {
         />
       </Pressable>
       <View style={{ bottom: 40 }}>
-        <Pressable
-          onPress={() =>
-            navigation.push("ImageDetails", {
-              item,
-              isPressed,
-              setIsPressed,
-              saveIsPressed,
-              setSaveIsPressed,
-            })
-          }
-        >
+        <Pressable>
           <Text
             style={{
               fontWeight: "700",

@@ -12,12 +12,15 @@ import {
   SharedElement,
   createSharedElementStackNavigator,
 } from "react-navigation-shared-element";
+import CurrentUserButtons from "./CurrentUserButtons";
+import { useUser } from "../../context/UserContext";
 
-export default function ImagePost({ item, navigation }) {
+export default function ImagePost({ item, navigation, followingId }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const { user, setUser } = useUser();
 
   // const month = item.posted.slice(5);
   // const date = month.concat("-");
@@ -26,6 +29,8 @@ export default function ImagePost({ item, navigation }) {
   // const postDate = date + year;
   // const milliseconds = status.durationMillis;
   // const seconds = milliseconds / 1000;
+
+  console.log("followingId", followingId);
 
   return (
     <View style={{ paddingBottom: 39 }}>
@@ -129,14 +134,25 @@ export default function ImagePost({ item, navigation }) {
         </View>
       </View>
 
-      <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        item={item}
-        navigation={navigation}
-      />
+      {item.user_id === user.user_id ? (
+        <CurrentUserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+          navigation={navigation}
+          item={item}
+        />
+      ) : (
+        <UserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+          item={item}
+          navigation={navigation}
+        />
+      )}
     </View>
   );
 }

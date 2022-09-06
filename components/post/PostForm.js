@@ -130,6 +130,9 @@ export default function PostForm({ navigation }) {
         type: photo.type ? `image/${ext}` : `video/${ext}`,
       });
 
+      if (loading === true) {
+        return <Text>LOADING</Text>;
+      }
       try {
         const { data, error } = await supabase.storage
           .from("posts")

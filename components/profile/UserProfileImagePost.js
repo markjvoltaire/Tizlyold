@@ -1,7 +1,16 @@
-import { StyleSheet, Text, View, Pressable, Image, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Image,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
 import { useUser } from "../../context/UserContext";
+import CurrentUserButtons from "../home/CurrentUserButtons";
 
 export default function UserProfileImagePost({
   post,
@@ -11,6 +20,28 @@ export default function UserProfileImagePost({
 }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+
+  console.log("post", post);
+
+  const createThreeButtonAlert = () =>
+    Alert.alert("Post Options", "My Alert Msg", [
+      {
+        text: "Edit Post",
+        onPress: () =>
+          navigation.navigate("EditPost", {
+            user_id: post.user_id,
+            description: post.description,
+            title: post.title,
+            id: post.id,
+          }),
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "Delete Post", onPress: () => console.log("OK Pressed") },
+    ]);
 
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
@@ -83,9 +114,31 @@ export default function UserProfileImagePost({
         >
           {post.description}
         </Text>
+        {/* {post.user_id === user.user_id ? (
+          <TouchableOpacity onPress={() => createThreeButtonAlert()}>
+            <Image
+              style={{
+                resizeMode: "contain",
+                position: "absolute",
+                height: 28,
+                left: 340,
+              }}
+              source={require("../../assets/moreCircle.png")}
+            />
+          </TouchableOpacity>
+        ) : null} */}
       </View>
 
-      <UserButtons
+      {/* <UserButtons
+        isPressed={isPressed}
+        setIsPressed={setIsPressed}
+        saveIsPressed={saveIsPressed}
+        setSaveIsPressed={setSaveIsPressed}
+        navigation={navigation}
+        item={post}
+      />  */}
+
+      <CurrentUserButtons
         isPressed={isPressed}
         setIsPressed={setIsPressed}
         saveIsPressed={saveIsPressed}

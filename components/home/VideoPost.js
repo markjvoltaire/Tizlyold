@@ -10,6 +10,7 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import React, { useState } from "react";
 import UserButtons from "./UserButtons";
 import TrendingCreators from "../explore/TrendingCreators";
+import CurrentUserButtons from "./CurrentUserButtons";
 
 export default function VideoPost({ item, navigation, route }) {
   const video = React.useRef(null);
@@ -142,7 +143,16 @@ export default function VideoPost({ item, navigation, route }) {
         </View>
       </View>
 
-      <UserButtons
+      {/* <UserButtons
+        isPressed={isPressed}
+        setIsPressed={setIsPressed}
+        item={item}
+        navigation={navigation}
+        saveIsPressed={saveIsPressed}
+        setSaveIsPressed={setSaveIsPressed}
+      /> */}
+
+      <CurrentUserButtons
         isPressed={isPressed}
         setIsPressed={setIsPressed}
         item={item}

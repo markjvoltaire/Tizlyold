@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import TopHeader from "../components/TopHeader";
@@ -12,11 +13,24 @@ import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { editPost } from "../services/supabase";
 import { getCurrentUserPosts } from "../services/user";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function EditPost({ route, navigation }) {
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
   const [title, setTitle] = useState(route.params.title);
   const [description, setDescription] = useState(route.params.description);
   const [post, setPost] = useState([]);
+
+  const createTwoButtonAlert = () =>
+    Alert.alert("Delete Post", "This Can Not Be Undone", [
+      {
+        text: "Delete",
+        onPress: () => deletePost().then(() => navigation.goBack()),
+        style: "delete",
+      },
+      { text: "Cancel", onPress: () => console.log("OK Pressed") },
+    ]);
 
   async function getCurrentUserPosts() {
     let { data: post, error } = await supabase
@@ -48,6 +62,8 @@ export default function EditPost({ route, navigation }) {
     getPost();
   }, []);
 
+  console.log("post", post);
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <TopHeader />
@@ -77,9 +93,7 @@ export default function EditPost({ route, navigation }) {
       </TouchableOpacity>
 
       <View>
-        <TouchableOpacity
-          onPress={() => deletePost().then(() => navigation.goBack())}
-        >
+        <TouchableOpacity onPress={() => createTwoButtonAlert()}>
           <Image
             style={{
               top: 550,
@@ -106,16 +120,35 @@ export default function EditPost({ route, navigation }) {
       <View style={{ alignItems: "center", top: 80 }}>
         {post.map((item) => {
           return (
-            <Image
-              key={item.id}
-              source={{ uri: item.media }}
-              style={{
-                height: 220,
-                width: 220,
-                borderRadius: 12,
-                position: "absolute",
-              }}
-            />
+            <View>
+              {item.mediaType === "image" ? (
+                <Image
+                  key={item.id}
+                  source={{ uri: item.media }}
+                  style={{
+                    height: 220,
+                    width: 220,
+                    borderRadius: 12,
+                    position: "absolute",
+                    alignSelf: "center",
+                  }}
+                />
+              ) : (
+                <Video
+                  source={{ uri: item.media }}
+                  ref={video}
+                  style={{
+                    height: 220,
+                    width: 220,
+                    borderRadius: 12,
+                    position: "absolute",
+                    alignSelf: "center",
+                  }}
+                  resizeMode="cover"
+                  onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+                />
+              )}
+            </View>
           );
         })}
         <View style={{ bottom: 30 }}>

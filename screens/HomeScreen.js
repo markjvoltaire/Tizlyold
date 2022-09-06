@@ -35,6 +35,7 @@ export default function HomeScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
+  const [userFollowingId, setUserFollowingId] = useState();
 
   const [follow, setFollow] = useState([]);
 
@@ -91,7 +92,6 @@ export default function HomeScreen({ navigation, route }) {
   useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
-      // console.log("resp", resp);
 
       setFollow(resp);
     };
@@ -106,6 +106,8 @@ export default function HomeScreen({ navigation, route }) {
       .select("followingId")
 
       .eq("user_id", userId);
+
+    setUserFollowingId(resp.body);
 
     return resp.body;
   }
@@ -127,7 +129,7 @@ export default function HomeScreen({ navigation, route }) {
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [list]);
+      .in("followingId", [list, followingId]);
 
     setPostList(resp.body);
 

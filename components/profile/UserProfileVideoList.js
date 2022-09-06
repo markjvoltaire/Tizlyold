@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../home/UserButtons";
+import CurrentUserButtons from "../home/CurrentUserButtons";
 
-export default function UserProfileVideoPost({ post, user }) {
+export default function UserProfileVideoPost({ post, user, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
@@ -94,11 +95,20 @@ export default function UserProfileVideoPost({ post, user }) {
           {post.description}
         </Text>
       </View>
-      <UserButtons
+      {/* <UserButtons
         isPressed={isPressed}
         setIsPressed={setIsPressed}
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
+        item={post}
+      /> */}
+
+      <CurrentUserButtons
+        isPressed={isPressed}
+        setIsPressed={setIsPressed}
+        saveIsPressed={saveIsPressed}
+        setSaveIsPressed={setSaveIsPressed}
+        navigation={navigation}
         item={post}
       />
     </View>

@@ -19,7 +19,7 @@ import VideoPost from "./VideoPost";
 import ImagePost from "./ImagePost";
 import TrendingCreators from "../explore/TrendingCreators";
 
-export default function HomeFeedList({ item, navigation }) {
+export default function HomeFeedList({ item, navigation, followingId }) {
   if (item.mediaType === "image") {
     return <ImagePost item={item} navigation={navigation} />;
   }
