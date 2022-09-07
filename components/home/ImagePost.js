@@ -30,8 +30,6 @@ export default function ImagePost({ item, navigation, followingId }) {
   // const milliseconds = status.durationMillis;
   // const seconds = milliseconds / 1000;
 
-  console.log("followingId", followingId);
-
   return (
     <View style={{ paddingBottom: 39 }}>
       <Pressable

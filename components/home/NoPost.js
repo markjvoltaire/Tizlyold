@@ -26,8 +26,6 @@ export default function NoPost({ navigation }) {
       .select("*")
       .in("followingId", [list]);
 
-    console.log("list", list);
-
     setPostList(resp.body);
 
     return resp.body;
@@ -68,7 +66,6 @@ export default function NoPost({ navigation }) {
 
   const refreshFeed = async () => {
     await getPosts();
-    console.log("postList", postList);
 
     const getUserPost = async () => {
       await getPosts();

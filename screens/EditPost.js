@@ -62,8 +62,6 @@ export default function EditPost({ route, navigation }) {
     getPost();
   }, []);
 
-  console.log("post", post);
-
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <TopHeader />
@@ -120,10 +118,9 @@ export default function EditPost({ route, navigation }) {
       <View style={{ alignItems: "center", top: 80 }}>
         {post.map((item) => {
           return (
-            <View>
+            <View key={item.id}>
               {item.mediaType === "image" ? (
                 <Image
-                  key={item.id}
                   source={{ uri: item.media }}
                   style={{
                     height: 220,

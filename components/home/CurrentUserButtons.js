@@ -20,7 +20,7 @@ export default function CurrentUserButtons({
   navigation,
 }) {
   const { user } = useUser();
-  console.log("item", item);
+
   const createThreeButtonAlert = () =>
     Alert.alert("Post Options", " ", [
       {

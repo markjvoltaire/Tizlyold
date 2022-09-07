@@ -55,7 +55,6 @@ export default function HomeScreen({ navigation, route }) {
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
-
     const resp = await supabase
       .from("profiles")
       .select("*")
@@ -63,7 +62,10 @@ export default function HomeScreen({ navigation, route }) {
       .single();
     setUser(resp.body);
     setLoading(false);
+    console.log("userId", userId);
   }
+
+  console.log("user", user);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -80,11 +82,8 @@ export default function HomeScreen({ navigation, route }) {
       .select(" creatorId, followingId, creatorUsername, userId")
       .eq("following", true)
       .eq("userId", userId);
-    // .eq('ceatorId', )
 
     setFollow(resp.body);
-
-    // const list = resp.map((i) => i.followingId);
 
     return resp.body;
   }
@@ -104,10 +103,12 @@ export default function HomeScreen({ navigation, route }) {
     const resp = await supabase
       .from("post")
       .select("followingId")
-
       .eq("user_id", userId);
 
     setUserFollowingId(resp.body);
+
+    const list = resp.body.map((item) => item.followingId);
+    setFollowingId(list);
 
     return resp.body;
   }
@@ -115,8 +116,6 @@ export default function HomeScreen({ navigation, route }) {
   useEffect(() => {
     const getUserFollowingId = async () => {
       const resp = await getFollowingId();
-      const list = resp.map((item) => item.followingId);
-      setFollowingId(list);
     };
     getUserFollowingId();
   }, []);
@@ -125,11 +124,14 @@ export default function HomeScreen({ navigation, route }) {
     const userId = supabase.auth.currentUser.id;
     const respon = await getFollowing();
     const list = respon.map((item) => item.followingId);
+    setFollowingId(list);
+
+    const userPostList = { list, followingId };
 
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [list, followingId]);
+      .in("followingId", [userPostList.list]);
 
     setPostList(resp.body);
 
@@ -138,7 +140,7 @@ export default function HomeScreen({ navigation, route }) {
 
   useEffect(() => {
     const getUserPost = async () => {
-      await getPosts();
+      const resp = await getPosts();
     };
     getUserPost();
   }, []);
@@ -151,7 +153,7 @@ export default function HomeScreen({ navigation, route }) {
     );
   }
 
-  if (postList.length === 0) {
+  if (postList === null) {
     const refreshFeed = async () => {
       await getPosts();
     };
@@ -172,6 +174,7 @@ export default function HomeScreen({ navigation, route }) {
       </View>
     );
   }
+
   const refreshFeed = async () => {
     getPosts();
   };

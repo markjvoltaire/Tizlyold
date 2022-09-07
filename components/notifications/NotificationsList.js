@@ -19,8 +19,6 @@ export default function NotificationsList({ notifications, item, navigation }) {
     return post;
   };
 
-  console.log("item", item);
-
   useEffect(() => {
     const getPhoto = async () => {
       const resp = await getPost();
@@ -33,9 +31,6 @@ export default function NotificationsList({ notifications, item, navigation }) {
     getPhoto();
   }, []);
 
-  console.log("item", item);
-
-  console.log("image", image);
   return (
     <View style={{ paddingBottom: 40 }}>
       <Pressable>

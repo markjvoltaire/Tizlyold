@@ -16,6 +16,9 @@ import { signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import Validator from "email-validator";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -24,12 +27,36 @@ export default function Login({ navigation }) {
   const { user, setUser } = useUser();
   const pushAction = StackActions.replace("HomeScreen");
   const pushActionSignUp = StackActions.replace("SignUp");
+  const loginFormSchema = Yup.object().shape({
+    email: Yup.string().email().required("An email is required"),
+    password: Yup.string()
+      .required()
+      .min(8, "Your password must have at least 8 characters"),
+  });
 
   async function loginWithEmail() {
-    await supabase.auth.signIn({
+    const { user, error } = await supabase.auth.signIn({
       email,
       password,
     });
+    if (!error) {
+      navigation.dispatch(pushAction);
+    } else {
+      Alert.alert(error.message);
+    }
+  }
+
+  async function handleLogIn() {
+    const logIn = async () => {
+      const { user, error } = await supabase.auth.signIn({
+        email,
+        password,
+      });
+      logIn();
+      return user;
+    };
+
+    return user;
   }
 
   // async function getUserById() {
@@ -94,11 +121,7 @@ export default function Login({ navigation }) {
         value={password}
       />
 
-      <TouchableOpacity
-        onPress={() =>
-          loginWithEmail().then(() => navigation.dispatch(pushAction))
-        }
-      >
+      <TouchableOpacity onPress={() => loginWithEmail()}>
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}

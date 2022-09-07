@@ -21,7 +21,6 @@ export default function UserProfileImagePost({
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
-  console.log("post", post);
 
   const createThreeButtonAlert = () =>
     Alert.alert("Post Options", "My Alert Msg", [

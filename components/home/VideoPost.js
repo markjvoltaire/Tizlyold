@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import UserButtons from "./UserButtons";
 import TrendingCreators from "../explore/TrendingCreators";
 import CurrentUserButtons from "./CurrentUserButtons";
+import { useUser } from "../../context/UserContext";
 
 export default function VideoPost({ item, navigation, route }) {
   const video = React.useRef(null);
@@ -18,6 +19,7 @@ export default function VideoPost({ item, navigation, route }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const { user, setUser } = useUser();
 
   const month = item.posted.slice(5);
   const date = month.concat("-");
@@ -143,23 +145,25 @@ export default function VideoPost({ item, navigation, route }) {
         </View>
       </View>
 
-      {/* <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        item={item}
-        navigation={navigation}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-      /> */}
-
-      <CurrentUserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        item={item}
-        navigation={navigation}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-      />
+      {item.user_id === user.user_id ? (
+        <CurrentUserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+          navigation={navigation}
+          item={item}
+        />
+      ) : (
+        <UserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+          item={item}
+          navigation={navigation}
+        />
+      )}
     </View>
   );
 }
