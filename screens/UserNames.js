@@ -8,15 +8,104 @@ import {
   ScrollView,
   Alert,
   Button,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import Animated, {
+  useAnimatedGestureHandler,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 
 import { supabase } from "../services/supabase";
 import { addUser } from "../services/user";
 
 export default function UserNames({ navigation }) {
+  const [query, setQuery] = useState("");
+  const [isPressed, setIsPressed] = useState(false);
+  const [filterData, setFilterData] = useState([]);
+  const [masterData, setMasterData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [input, setInput] = useState(false);
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
+
+  const allUsernames = filterData.map((i) => i.username);
+  console.log("allUsernames", allUsernames);
+
+  console.log("username", username);
+
+  if (username === allUsernames.map((i) => i.username)) {
+    console.log("MATCH");
+  }
+
+  useEffect(() => {
+    fetchUsers();
+    return () => {};
+  }, []);
+
+  const fetchUsers = async () => {
+    const resp = await supabase
+      .from("profiles")
+      .select("*")
+      .order("id", { ascending: false });
+    setFilterData(resp.body);
+
+    setMasterData(resp.body);
+  };
+
+  const searchFilter = (text) => {
+    if (text) {
+      const newData = masterData.filter((item) => {
+        const itemData = item.username
+          ? item.username.toUpperCase()
+          : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterData(newData);
+      setSearch(text);
+    } else {
+      setFilterData(masterData);
+      setSearch(text);
+    }
+  };
+
+  const SPING_CONFIG = {
+    damping: 80,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.1,
+    restSpeedThreshold: 0.1,
+    stiffness: 500,
+  };
+  const dimensions = useWindowDimensions();
+
+  const top = useSharedValue(dimensions.height);
+
+  const style = useAnimatedStyle(() => {
+    return {
+      top: withSpring(top.value, SPING_CONFIG),
+    };
+  });
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart(_, context) {
+      context.startTop = top.value;
+    },
+
+    onActive(event, context) {
+      top.value = context.startTop + event.translationY;
+    },
+
+    onEnd() {
+      if (top.value > dimensions.height / 2 + 200) {
+        top.value = dimensions.height;
+      } else {
+        top.value = dimensions.height / 2;
+      }
+    },
+  });
 
   return (
     <ScrollView
@@ -46,7 +135,7 @@ export default function UserNames({ navigation }) {
         placeholder="Username"
         autoCapitalize="none"
         autoFocus={true}
-        onChangeText={(text) => setUsername(text)}
+        onChangeText={(text) => setUsername(text) && setQuery(text)}
         value={username}
       />
 

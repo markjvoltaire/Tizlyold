@@ -62,10 +62,7 @@ export default function HomeScreen({ navigation, route }) {
       .single();
     setUser(resp.body);
     setLoading(false);
-    console.log("userId", userId);
   }
-
-  console.log("user", user);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -153,7 +150,9 @@ export default function HomeScreen({ navigation, route }) {
     );
   }
 
-  if (postList === null) {
+  console.log("postList", postList);
+
+  if (postList.length === 0) {
     const refreshFeed = async () => {
       await getPosts();
     };
