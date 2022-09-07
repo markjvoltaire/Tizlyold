@@ -10,7 +10,7 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectList from "react-native-dropdown-select-list";
 
 import { useUser } from "../../context/UserContext";
@@ -81,6 +81,31 @@ export default function PostForm({ navigation }) {
     },
   ];
 
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [response, setResponse] = useState();
+
+  const handleProgress = (event) => {
+    setUploadProgress(Math.round((event.loaded * 100) / event.total));
+  };
+
+  const onUpload = () => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+
+    formData.append("image", {
+      uri: image,
+      type: "image/png",
+      name: "photo.png",
+    });
+    xhr.upload.addEventListener("progress", handleProgress);
+    xhr.addEventListener("load", () => {
+      setUploadProgress(100);
+      setResponse(xhr.response);
+    });
+    xhr.open("POST", image);
+    xhr.setRequestHeader("Authoriza");
+  };
+
   const Seperator = () => <View style={styles.fullSeperator} />;
 
   async function addPost() {
@@ -117,8 +142,6 @@ export default function PostForm({ navigation }) {
       quality: 1,
     });
 
-    console.log("photo", photo);
-
     if (!photo.cancelled) {
       const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
       const fileName = photo.uri.replace(/^.*[\\\/]/, "");
@@ -130,9 +153,6 @@ export default function PostForm({ navigation }) {
         type: photo.type ? `image/${ext}` : `video/${ext}`,
       });
 
-      if (loading === true) {
-        return <Text>LOADING</Text>;
-      }
       try {
         const { data, error } = await supabase.storage
           .from("posts")
@@ -152,14 +172,15 @@ export default function PostForm({ navigation }) {
         type = null ? setMediaType("text") : setMediaType(type);
 
         console.log(photo.type);
-
-        setLoading(false);
       } catch (e) {
         ErrorAlert({ title: "image upload", message: e.message });
         return null;
       }
     }
   };
+  useEffect(() => {
+    console.log(" has change", image);
+  }, [image]);
 
   return (
     <View style={styles.postHeader}>

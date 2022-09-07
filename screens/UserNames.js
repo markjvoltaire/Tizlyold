@@ -19,7 +19,8 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { supabase } from "../services/supabase";
-import { addUser } from "../services/user";
+
+import { StackActions } from "@react-navigation/native";
 
 export default function UserNames({ navigation }) {
   const [query, setQuery] = useState("");
@@ -36,76 +37,30 @@ export default function UserNames({ navigation }) {
 
   console.log("username", username);
 
-  if (username === allUsernames.map((i) => i.username)) {
-    console.log("MATCH");
-  }
+  const pushActionHome = StackActions.replace("HomeScreen");
 
-  useEffect(() => {
-    fetchUsers();
-    return () => {};
-  }, []);
+  async function addUser() {
+    const userId = supabase.auth.currentUser.id;
 
-  const fetchUsers = async () => {
-    const resp = await supabase
-      .from("profiles")
-      .select("*")
-      .order("id", { ascending: false });
-    setFilterData(resp.body);
-
-    setMasterData(resp.body);
-  };
-
-  const searchFilter = (text) => {
-    if (text) {
-      const newData = masterData.filter((item) => {
-        const itemData = item.username
-          ? item.username.toUpperCase()
-          : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilterData(newData);
-      setSearch(text);
-    } else {
-      setFilterData(masterData);
-      setSearch(text);
+    const { data, error } = await supabase.from("profiles").insert([
+      {
+        username: username,
+        user_id: userId,
+        email: supabase.auth.currentUser.email,
+        displayName: displayName,
+      },
+    ]);
+    if (!error) {
+      navigation.dispatch(pushActionHome);
     }
-  };
-
-  const SPING_CONFIG = {
-    damping: 80,
-    overshootClamping: true,
-    restDisplacementThreshold: 0.1,
-    restSpeedThreshold: 0.1,
-    stiffness: 500,
-  };
-  const dimensions = useWindowDimensions();
-
-  const top = useSharedValue(dimensions.height);
-
-  const style = useAnimatedStyle(() => {
-    return {
-      top: withSpring(top.value, SPING_CONFIG),
-    };
-  });
-
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart(_, context) {
-      context.startTop = top.value;
-    },
-
-    onActive(event, context) {
-      top.value = context.startTop + event.translationY;
-    },
-
-    onEnd() {
-      if (top.value > dimensions.height / 2 + 200) {
-        top.value = dimensions.height;
-      } else {
-        top.value = dimensions.height / 2;
-      }
-    },
-  });
+    if (
+      error.message ===
+      'duplicate key value violates unique constraint "profiles_username_key"'
+    ) {
+      Alert.alert("This Username Is Already Taken");
+      console.log("error.message", error.message);
+    }
+  }
 
   return (
     <ScrollView
@@ -147,13 +102,7 @@ export default function UserNames({ navigation }) {
         value={displayName}
       />
 
-      <TouchableOpacity
-        onPress={() =>
-          addUser(username, displayName).then(() => {
-            navigation.navigate("HomeScreen");
-          })
-        }
-      >
+      <TouchableOpacity onPress={() => addUser()}>
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}
