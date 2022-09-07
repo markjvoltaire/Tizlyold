@@ -58,7 +58,6 @@ export default function UserNames({ navigation }) {
       'duplicate key value violates unique constraint "profiles_username_key"'
     ) {
       Alert.alert("This Username Is Already Taken");
-      console.log("error.message", error.message);
     }
   }
 

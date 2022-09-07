@@ -14,8 +14,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
-import { getUserByIds } from "../services/user";
-import { editProfile } from "../services/user";
+import { StackActions } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function EditProfile({ navigation }) {
@@ -210,6 +209,27 @@ export default function EditProfile({ navigation }) {
     profileBanner = user.bannerImage;
   }
 
+  const pushActionProfile = StackActions.replace("UserProfile");
+
+  async function editProfile() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ username: username, displayName: displayName, bio: bio })
+      .eq("user_id", userId);
+
+    if (!error) {
+      navigation.goBack();
+    }
+    if (
+      error.message ===
+      'duplicate key value violates unique constraint "profiles_username_key"'
+    ) {
+      Alert.alert("This Username Is Already Taken");
+    }
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -322,13 +342,7 @@ export default function EditProfile({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        onPress={() =>
-          editProfile(username, displayName, bio).then(() => {
-            navigation.goBack();
-          })
-        }
-      >
+      <TouchableOpacity onPress={() => editProfile()}>
         <Image
           style={styles.button}
           source={require("../assets/continueButton.png")}
