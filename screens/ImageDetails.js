@@ -26,6 +26,7 @@ export default function ImageDetails({ navigation, route }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const [comment, setComment] = useState("");
+  const [commentProfilePics, setCommentProfilePics] = useState();
   const { item } = route.params;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -33,6 +34,20 @@ export default function ImageDetails({ navigation, route }) {
   const { user, setUser } = useUser();
 
   const postId = item.id;
+
+  async function getCommentsProfilePics() {
+    const resp = await supabase.from("profiles").select("user_id, username");
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getPics = async () => {
+      const resp = await getCommentsProfilePics();
+      console.log("resp", resp);
+    };
+    getPics();
+  }, []);
 
   async function getComments() {
     const resp = await supabase

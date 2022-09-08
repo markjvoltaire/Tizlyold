@@ -47,6 +47,8 @@ export default function CommentScreen({ route }) {
     return resp.body;
   }
 
+  console.log("item", item);
+
   async function createComment() {
     const resp = await supabase.from("comments").insert([
       {
@@ -82,17 +84,6 @@ export default function CommentScreen({ route }) {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <SafeAreaView>
         <View style={{ width: 350, alignSelf: "center" }}>
-          <Image
-            style={{
-              height: 35,
-              width: 35,
-              borderRadius: 100,
-              top: 15,
-              left: 45,
-            }}
-            source={{ uri: item.profileimage }}
-          />
-
           <Text
             style={{
               left: 90,

@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { useUser } from "../context/UserContext";
+import { useEffect } from "react";
 
 export async function signInUser(email, password) {
   const { user, error } = await supabase.auth.signIn({ email, password });
@@ -179,6 +180,17 @@ export async function editProfile(username, displayName, bio) {
     .from("profiles")
     .update({ username: username, displayName: displayName, bio: bio })
     .eq("user_id", userId);
+
+  const editProfileImage = async (userProfileImage) => {
+    const userId = supabase.auth.currentUser.id;
+
+    const resp = await supabase
+      .from("comments")
+      .update({ userProfileImage: userProfileImage })
+      .eq("userId", userId);
+  };
+
+  editProfileImage();
 }
 
 export async function editPost(title, description, id) {

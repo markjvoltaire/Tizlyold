@@ -230,6 +230,46 @@ export default function EditProfile({ navigation }) {
     }
   }
 
+  async function editProfile() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ username: username, displayName: displayName, bio: bio })
+      .eq("user_id", userId);
+
+    const editProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("comments")
+        .update({ userProfileImage: image })
+        .eq("userId", userId);
+    };
+
+    const editLikeProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("likes")
+        .update({ userProfileImage: image })
+        .eq("userId", userId);
+    };
+
+    const editSaveProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("saves")
+        .update({ userProfileImage: image })
+        .eq("userId", userId);
+    };
+
+    editProfileImage();
+    editLikeProfileImage();
+    editSaveProfileImage();
+  }
+
   return (
     <SafeAreaView
       style={{
