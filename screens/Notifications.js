@@ -71,25 +71,39 @@ export default function Notifications({ navigation, route, image }) {
     );
   }
 
-  return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <TopHeader navigation={navigation} />
-      <Text
-        style={{
-          fontWeight: "700",
-          color: "#4F4E4E",
-          alignSelf: "center",
-          fontSize: 20,
-          top: 25,
-        }}
-      >
-        Notifications
-      </Text>
+  const refreshFeed = async () => {
+    await getNotifications();
+  };
 
-      <NotificationsView
-        navigation={navigation}
-        notifications={notifications}
-      />
+  return (
+    <View>
+      <TopHeader navigation={navigation} />
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "white" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+          />
+        }
+      >
+        <Text
+          style={{
+            fontWeight: "700",
+            color: "#4F4E4E",
+            alignSelf: "center",
+            fontSize: 20,
+            top: 25,
+          }}
+        >
+          Notifications
+        </Text>
+
+        <NotificationsView
+          navigation={navigation}
+          notifications={notifications}
+        />
+      </ScrollView>
     </View>
   );
 }

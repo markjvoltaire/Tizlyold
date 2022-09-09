@@ -10,7 +10,6 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
-  console.log("user", user);
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
       <Pressable

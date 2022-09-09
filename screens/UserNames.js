@@ -33,9 +33,6 @@ export default function UserNames({ navigation }) {
   const [displayName, setDisplayName] = useState("");
 
   const allUsernames = filterData.map((i) => i.username);
-  console.log("allUsernames", allUsernames);
-
-  console.log("username", username);
 
   const pushActionHome = StackActions.replace("HomeScreen");
 

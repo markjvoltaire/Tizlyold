@@ -51,9 +51,6 @@ async function addPost() {
     },
   ]);
 
-  console.log("resp", resp);
-  console.log("image", image);
-
   return resp;
 }
 
@@ -65,8 +62,6 @@ const pickPost = async (navigation) => {
     aspect: [4, 3],
     quality: 1,
   });
-
-  console.log("photo", photo);
 
   if (!photo.cancelled) {
     const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
@@ -95,11 +90,11 @@ const pickPost = async (navigation) => {
 
     //   let imageLink = publicURL;
     //   let type = photo.type;
-    //   console.log("imageLink", imageLink);
+
     //   setImage(imageLink);
     //   type = null ? setMediaType("text") : setMediaType(type);
 
-    //   console.log(photo.type);
+    
     // } catch (e) {
     //   ErrorAlert({ title: "image upload", message: e.message });
     //   return null;

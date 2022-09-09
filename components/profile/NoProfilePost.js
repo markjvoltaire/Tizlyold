@@ -19,8 +19,6 @@ export default function NoProfilePost({ navigation, profile }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  console.log("profile", profile);
-
   return (
     <>
       <View>

@@ -16,8 +16,6 @@ export default function NotificationsView({ notifications, navigation }) {
     <View style={{ backgroundColor: "white", flex: 1, top: 60, left: 10 }}>
       <FlatList
         data={notifications}
-        refreshing={refreshing}
-        onRefresh={() => console.log("YOOO")}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (

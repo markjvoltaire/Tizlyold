@@ -49,7 +49,6 @@ export default function UserProfile({ navigation, route }) {
   //   });
   //   return unsubscribe;
   // }, [navigation]);
-  // console.log("user", user);
 
   async function getCurrentUserPosts() {
     const userId = supabase.auth.currentUser.id;
@@ -148,10 +147,12 @@ export default function UserProfile({ navigation, route }) {
         />
       )}
 
-      <Image
-        style={styles.userBannerFader}
-        source={require("../assets/fader.png")}
-      />
+      <TouchableOpacity onPress={() => console.log("YOoo")}>
+        <Image
+          style={styles.userBannerFader}
+          source={require("../assets/fader.png")}
+        />
+      </TouchableOpacity>
       <View style={{ bottom: 410 }}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>

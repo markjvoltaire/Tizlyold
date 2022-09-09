@@ -165,9 +165,6 @@ export async function signUp(email, password) {
       email: email,
       password: password,
     })
-    .then(() =>
-      console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-    )
     .then(() => navigation.navigate("Username"));
 
   return { user, error };

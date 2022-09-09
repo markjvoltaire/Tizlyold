@@ -21,7 +21,6 @@ export default function UserProfileImagePost({
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
-
   const createThreeButtonAlert = () =>
     Alert.alert("Post Options", "My Alert Msg", [
       {
@@ -36,10 +35,10 @@ export default function UserProfileImagePost({
       },
       {
         text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
+        onPress: () => null,
         style: "cancel",
       },
-      { text: "Delete Post", onPress: () => console.log("OK Pressed") },
+      { text: "Delete Post", onPress: () => null },
     ]);
 
   return (

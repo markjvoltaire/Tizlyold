@@ -19,11 +19,7 @@ export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
 
   async function signOutUser() {
-    await supabase.auth
-      .signOut()
-      .then(() =>
-        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-      );
+    await supabase.auth.signOut();
   }
 
   // if (!loaded) {

@@ -21,15 +21,21 @@ import { usePosts } from "../../context/PostContext";
 import Post from "../../screens/Post";
 import PostButtons from "./PostButtons";
 import AddCategory from "../AddCategory";
+
+import { Video, AVPlaybackStatus } from "expo-av";
 export default function PostForm({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const video = React.useRef(null);
   const { user, setUser } = useUser();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState({});
+  const [post, setPost] = useState();
   const [mediaType, setMediaType] = useState("text");
   const [imageData, setImageData] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState("");
+
+  const [imageURL, setImageURL] = useState("");
 
   const username = user.username;
   const displayName = user.displayName;
@@ -81,56 +87,74 @@ export default function PostForm({ navigation }) {
     },
   ];
 
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [response, setResponse] = useState();
-
   const handleProgress = (event) => {
     setUploadProgress(Math.round((event.loaded * 100) / event.total));
-  };
-
-  const onUpload = () => {
-    const xhr = new XMLHttpRequest();
-    const formData = new FormData();
-
-    formData.append("image", {
-      uri: image,
-      type: "image/png",
-      name: "photo.png",
-    });
-    xhr.upload.addEventListener("progress", handleProgress);
-    xhr.addEventListener("load", () => {
-      setUploadProgress(100);
-      setResponse(xhr.response);
-    });
-    xhr.open("POST", image);
-    xhr.setRequestHeader("Authoriza");
   };
 
   const Seperator = () => <View style={styles.fullSeperator} />;
 
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
+    const ext = image.uri.substring(image.uri.lastIndexOf(".") + 1);
+    const fileName = image.uri.replace(/^.*[\\\/]/, "");
 
-    const resp = await supabase.from("post").insert([
-      {
-        username: username,
-        user_id: userId,
-        displayName: displayName,
-        title: title,
-        description: description,
-        profileimage: profileImage,
-        media: image,
-        mediaType: mediaType,
-        bannerImage: bannerImage,
-        bio: bio,
-        category: selected,
-        followingId: followingId,
-      },
-    ]);
+    var formData = new FormData();
+    formData.append("files", {
+      uri: image.uri,
+      name: fileName,
+      type: image.type ? `image/${ext}` : `video/${ext}`,
+    });
 
-    navigation.navigate("HomeScreen");
+    try {
+      const { data, error } = await supabase.storage
+        .from("posts")
+        .upload(fileName, formData, {
+          upsert: true,
+        });
 
-    return resp;
+      const { publicURL } = await supabase.storage
+
+        .from("posts")
+        .getPublicUrl(`${fileName}`);
+      let imageLink = publicURL;
+      let type = image.type;
+
+      setImageURL(imageLink);
+      if (image.type === "image") {
+        setMediaType("image");
+        console.log("mediaType", mediaType);
+      }
+      if (image.type === "video") {
+        setMediaType("video");
+        console.log("mediaType", mediaType);
+      }
+      if (image.type === "text") {
+        setMediaType("text");
+      }
+
+      const resp = await supabase.from("post").insert([
+        {
+          username: username,
+          user_id: userId,
+          displayName: displayName,
+          title: title,
+          description: description,
+          profileimage: profileImage,
+          media: imageLink,
+          mediaType: type,
+          bannerImage: bannerImage,
+          bio: bio,
+          category: selected,
+          followingId: followingId,
+        },
+      ]);
+
+      console.log("resp", resp);
+      return resp;
+    } catch (e) {
+      console.log({ title: "image upload", message: e.message });
+      return null;
+    }
   }
 
   const pickPost = async () => {
@@ -143,44 +167,9 @@ export default function PostForm({ navigation }) {
     });
 
     if (!photo.cancelled) {
-      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
-      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: photo.uri,
-        name: fileName,
-        type: photo.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      try {
-        const { data, error } = await supabase.storage
-          .from("posts")
-          .upload(fileName, formData, {
-            upsert: true,
-          });
-
-        const { publicURL } = await supabase.storage
-
-          .from("posts")
-          .getPublicUrl(`${fileName}`);
-
-        let imageLink = publicURL;
-        let type = photo.type;
-        console.log("imageLink", imageLink);
-        setImage(imageLink);
-        type = null ? setMediaType("text") : setMediaType(type);
-
-        console.log(photo.type);
-      } catch (e) {
-        ErrorAlert({ title: "image upload", message: e.message });
-        return null;
-      }
+      setImage(photo);
     }
   };
-  useEffect(() => {
-    console.log(" has change", image);
-  }, [image]);
 
   return (
     <View style={styles.postHeader}>
@@ -226,32 +215,45 @@ export default function PostForm({ navigation }) {
             </View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={async () => {
-            const resp = await pickPost();
-
-            if (resp?.imageData) {
-              setImage(resp.uri);
-              setImageData(resp?.imageData);
-            }
-          }}
-        >
+        <TouchableOpacity onPress={() => pickPost()}>
           <Image
             style={styles.plusButton}
             source={
-              image ? { uri: image } : require("../../assets/plusButton.png")
+              image
+                ? { uri: image.uri }
+                : require("../../assets/plusButton.png")
             }
           />
+
+          <>
+            <Video
+              ref={video}
+              resizeMode="cover"
+              style={styles.plusButton}
+              source={
+                image
+                  ? { uri: image.uri }
+                  : require("../../assets/plusButton.png")
+              }
+            />
+            {/* <Image
+                style={{
+                  position: "absolute",
+                  width: 55,
+                  height: 55,
+                  top: 410,
+                  right: 105,
+                }}
+                resizeMode="contain"
+                source={require("../../assets/playButton.png")}
+              /> */}
+          </>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        onPress={() =>
-          addPost().then(() => {
-            navigation.navigate("Home");
-          })
-        }
-      >
+      <Text>{uploadProgress}</Text>
+
+      <TouchableOpacity onPress={() => addPost()}>
         <Image
           style={styles.postButton}
           source={require("../../assets/post.png")}
@@ -260,6 +262,63 @@ export default function PostForm({ navigation }) {
     </View>
   );
 }
+
+// try {
+//   const { data, error } = await supabase.storage
+//     .from("posts")
+//     .upload(fileName, formData, {
+//       upsert: true,
+//     });
+
+//   const { publicURL } = await supabase.storage
+
+//     .from("posts")
+//     .getPublicUrl(`${fileName}`);
+
+//   const url = `${supabase.supabaseUrl}/storage/v1/object/posts/${data.Key}`;
+//   const headers = supabase._getAuthHeaders();
+
+//   const req = new XMLHttpRequest();
+
+//   function updateProgress(event) {
+//     console.log("LOADING");
+//     setUploadProgress("LOADING");
+//   }
+
+//   function loadEnd(e) {
+//     setUploadProgress(
+//       "The transfer finished (although we don't know if it succeeded or not)."
+//     );
+//   }
+
+//   function transferComplete(evt) {
+//     setUploadProgress("The transfer is complete.");
+//     setPost(imageLink);
+//     console.log("DONE LOADING");
+//   }
+
+//   req.addEventListener("progress", updateProgress);
+
+//   req.addEventListener("load", transferComplete);
+//   // You might want to also listen to onabort, onerror, ontimeout
+
+//   req.open("POST", url);
+//   for (const [key, value] of Object.entries(headers)) {
+//     req.setRequestHeader(key, value);
+//   }
+//   req.setRequestHeader("Authorization", data.authorization);
+
+//   req.send(data);
+
+//   let imageLink = publicURL;
+//   let type = photo.type;
+
+//   setImage(imageLink);
+//   type = null ? setMediaType("text") : setMediaType(type);
+// } catch (e) {
+//   ErrorAlert({ title: "image upload", message: e.message });
+//   return null;
+// }
 
 const styles = StyleSheet.create({
   category: {

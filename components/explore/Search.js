@@ -10,8 +10,6 @@ export default function Search() {
         placeholder="Still Looking?"
         autoCapitalize="none"
         onChangeText={(text) => setQuery(text)}
-        onFocus={() => console.log("ACTIVE")}
-        onBlur={() => console.log("NOT ACTIVE ")}
       />
       <Image
         style={styles.searchIcon}

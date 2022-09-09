@@ -74,7 +74,6 @@ export default function ProfileDetail({ navigation, route, item }) {
       const resp = await getPosts();
       setPosts(resp);
       setLoading(false);
-      // console.log("resp from curren user Post", resp);
     };
     getPost();
   }, []);
@@ -193,8 +192,6 @@ export default function ProfileDetail({ navigation, route, item }) {
   const refreshFeed = async () => {
     getProfileDetail();
   };
-
-  console.log("profile", profile);
 
   return (
     <>

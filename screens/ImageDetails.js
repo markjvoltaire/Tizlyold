@@ -44,7 +44,6 @@ export default function ImageDetails({ navigation, route }) {
   useEffect(() => {
     const getPics = async () => {
       const resp = await getCommentsProfilePics();
-      console.log("resp", resp);
     };
     getPics();
   }, []);
@@ -64,7 +63,6 @@ export default function ImageDetails({ navigation, route }) {
     const comments = { users: users, comments: resp };
 
     /// comments
-    // console.log(comments.comments.body);
 
     return resp.body;
   }

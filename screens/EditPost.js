@@ -29,7 +29,7 @@ export default function EditPost({ route, navigation }) {
         onPress: () => deletePost().then(() => navigation.goBack()),
         style: "delete",
       },
-      { text: "Cancel", onPress: () => console.log("OK Pressed") },
+      { text: "Cancel", onPress: () => null },
     ]);
 
   async function getCurrentUserPosts() {

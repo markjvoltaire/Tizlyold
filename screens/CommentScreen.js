@@ -42,12 +42,10 @@ export default function CommentScreen({ route }) {
     const comments = { users: users, comments: resp };
 
     /// comments
-    // console.log(comments.comments.body);
 
     return resp.body;
   }
 
-  console.log("item", item);
 
   async function createComment() {
     const resp = await supabase.from("comments").insert([

@@ -7,8 +7,6 @@ export default function UserProfileNav() {
 
   const [navState, setNavState] = useState("home");
 
-  console.log("navState", navState);
-
   return (
     <View style={styles.profileNav}>
       <TouchableOpacity onPress={() => setNavState("home")}>

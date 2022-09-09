@@ -14,8 +14,6 @@ export default function ChoosePost({ navigation }) {
       quality: 1,
     });
 
-    console.log("photo", photo);
-
     if (!photo.cancelled) {
       const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
       const fileName = photo.uri.replace(/^.*[\\\/]/, "");

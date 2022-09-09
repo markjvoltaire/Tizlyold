@@ -34,7 +34,7 @@ export default function TextUserButtons({ isPressed, item, setIsPressed }) {
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => console.log("item", item)}>
+        <TouchableOpacity>
           <Image
             style={{
               top: 30,

@@ -45,7 +45,7 @@ export default function HomeScreen({ navigation, route }) {
   //       // const resp = await getFollowing();
   //       // const list = resp.map((i) => i.followingId);
   //       // setFollow(list);
-  //       console.log("hello");
+  //
   //     }
   //     updateFeed();
   //   });
@@ -149,8 +149,6 @@ export default function HomeScreen({ navigation, route }) {
       </View>
     );
   }
-
-  console.log("postList", postList);
 
   if (postList.length === 0) {
     const refreshFeed = async () => {

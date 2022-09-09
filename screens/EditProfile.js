@@ -83,9 +83,9 @@ export default function EditProfile({ navigation }) {
         .update({ profileimage: publicURL })
         .eq("user_id", userId);
 
-      console.log("error", error);
-
-      if (error) throw new Error(error.message);
+      if (error) {
+        Alert.alert(error.message);
+      }
 
       return { ...photo, imageData: data };
     } else {
@@ -121,8 +121,6 @@ export default function EditProfile({ navigation }) {
       let imageLink = publicURL;
       let type = photo.type;
 
-      console.log("type ", type);
-
       setBannerType(type);
 
       const resp = await supabase
@@ -133,9 +131,9 @@ export default function EditProfile({ navigation }) {
 
       // getUserByIds();
 
-      console.log("error", error);
-
-      if (error) throw new Error(error.message);
+      if (error) {
+        Alert.alert(error.message);
+      }
 
       return { ...photo, imageData: data };
     } else {
@@ -161,10 +159,9 @@ export default function EditProfile({ navigation }) {
     });
 
     try {
-      console.log(photo);
       return await uploadProfileFromUri(photo);
     } catch (e) {
-      ErrorAlert({ title: "image upload", message: e.message });
+      Alert.alert({ title: "image upload", message: e.message });
       return null;
     }
   };
@@ -179,10 +176,9 @@ export default function EditProfile({ navigation }) {
     });
 
     try {
-      console.log(photo);
       return await uploadBannerFromUri(photo);
     } catch (e) {
-      ErrorAlert({ title: "image upload", message: e.message });
+      Alert.alert({ title: "image upload", message: e.message });
       return null;
     }
   };
@@ -265,9 +261,19 @@ export default function EditProfile({ navigation }) {
         .eq("userId", userId);
     };
 
+    const editPostProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("post")
+        .update({ profileimage: image })
+        .eq("user_id", userId);
+    };
+
     editProfileImage();
     editLikeProfileImage();
     editSaveProfileImage();
+    editPostProfileImage();
   }
 
   return (

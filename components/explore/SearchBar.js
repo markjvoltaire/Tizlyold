@@ -61,7 +61,6 @@ export default function SearchBar({ setIsPressed, isPressed, navigation }) {
     }
   };
 
- 
   const SPING_CONFIG = {
     damping: 80,
     overshootClamping: true,
@@ -96,8 +95,6 @@ export default function SearchBar({ setIsPressed, isPressed, navigation }) {
       }
     },
   });
-
-  console.log("search", search);
 
   if (input === true) {
     <View>

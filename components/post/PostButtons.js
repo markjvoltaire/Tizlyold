@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React from "react";
 import { supabase } from "../../services/supabase";
 
@@ -40,9 +47,9 @@ export default function PostButtons({ image }) {
 
     getUserByIds();
 
-    console.log("error", error);
-
-    if (error) throw new Error(error.message);
+    if (error) {
+      Alert.alert(error.message);
+    }
 
     return { ...image, imageData: data };
   };
@@ -50,10 +57,9 @@ export default function PostButtons({ image }) {
   return (
     <View>
       <TouchableOpacity
-        // onPress={async () => {
-        //   await uploadPostFromUri();
-        // }}
-        onPress={() => console.log(image)}
+      // onPress={async () => {
+      //   await uploadPostFromUri();
+      // }}
       >
         <Image
           style={styles.postButton}

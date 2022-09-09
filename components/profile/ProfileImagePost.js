@@ -51,7 +51,7 @@ export default function ProfileImagePost({ item, navigation }) {
         />
       </Pressable>
 
-      <View style={{ position: "absolute", top: 370, left: 20 }}>
+      <View style={{ position: "absolute", top: 370, left: 10 }}>
         <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
       </View>
 
@@ -62,7 +62,7 @@ export default function ProfileImagePost({ item, navigation }) {
             width: 35,
             borderRadius: 100,
             position: "absolute",
-            left: 20,
+            left: 10,
             top: 330,
           }}
           source={{ uri: item.profileimage }}
@@ -72,7 +72,7 @@ export default function ProfileImagePost({ item, navigation }) {
             position: "absolute",
             color: "white",
             top: 342,
-            left: 60,
+            left: 55,
             fontWeight: "500",
             fontSize: 15,
           }}
@@ -84,7 +84,7 @@ export default function ProfileImagePost({ item, navigation }) {
       <View>
         <Text
           style={{
-            left: 15,
+            left: 10,
             top: 12,
             fontWeight: "700",
             color: "#4F4E4E",

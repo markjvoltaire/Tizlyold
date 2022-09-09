@@ -112,9 +112,6 @@ export default function Player({ route, navigation }) {
 
     const comments = { users: users, comments: resp };
 
-    /// comments
-    // console.log(comments.comments.body);
-
     return resp.body;
   }
 
@@ -182,8 +179,6 @@ export default function Player({ route, navigation }) {
   }, []);
 
   const { item } = route.params;
-
-  console.log("item", item);
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>

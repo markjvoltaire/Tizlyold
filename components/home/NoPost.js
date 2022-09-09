@@ -50,7 +50,7 @@ export default function NoPost({ navigation }) {
   useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
-      // console.log("resp", resp);
+    
 
       setFollow(resp);
     };
