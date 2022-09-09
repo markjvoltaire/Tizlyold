@@ -22,6 +22,9 @@ import Post from "../../screens/Post";
 import PostButtons from "./PostButtons";
 import AddCategory from "../AddCategory";
 import { StackActions } from "@react-navigation/native";
+import LottieView from "lottie-react-native";
+
+import { ViewPropTypes } from "deprecated-react-native-prop-types";
 
 import { Video, AVPlaybackStatus } from "expo-av";
 export default function PostForm({ navigation }) {
@@ -37,7 +40,7 @@ export default function PostForm({ navigation }) {
   const [uploadProgress, setUploadProgress] = useState("");
   const pushActionGoHome = StackActions.push("HomeScreen");
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
-
+  const pushAction = StackActions.replace("Checkout");
   const [imageURL, setImageURL] = useState("");
 
   const username = user.username;
@@ -90,23 +93,30 @@ export default function PostForm({ navigation }) {
     },
   ];
 
-  const handleProgress = (event) => {
-    setUploadProgress(Math.round((event.loaded * 100) / event.total));
+  function clear() {
+    setTitle("");
+    setDescription("");
+    setImage({});
+  }
+
+  const uploadComplete = () => {
+    navigation.navigate("CheckoutScreen").then(() => {});
   };
 
-  const showAlert = () =>
-    Alert.alert("Upload Successful", "your post has been uploaded", [
-      {
-        text: "Ok",
-        onPress: () => navigation.goBack(),
-        style: "cancel",
-      },
-    ]);
+  const waiting = (
+    <LottieView
+      style={{ height: 130, width: 130, position: "absolute" }}
+      source={require("../../assets/lottie/loading.json")}
+      autoPlay
+    />
+  );
 
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
     const ext = image.uri.substring(image.uri.lastIndexOf(".") + 1);
     const fileName = image.uri.replace(/^.*[\\\/]/, "");
+
+    setUploadProgress("loading");
 
     var formData = new FormData();
     formData.append("files", {
@@ -130,16 +140,18 @@ export default function PostForm({ navigation }) {
       const headers = supabase._getAuthHeaders();
       const req = new XMLHttpRequest();
 
-      function updateProgress(event) {
-        console.log("LOADING");
-        setUploadProgress("Please Wait");
-      }
+      // function updateProgress(event) {
+      //   console.log("LOADING");
+      //   setUploadProgress("Please Wait");
+      // }
 
       function transferComplete(evt) {
-        showAlert();
+        setUploadProgress("done");
+        clear();
+        navigation.dispatch(pushAction);
       }
 
-      req.addEventListener("progress", updateProgress);
+      // req.addEventListener("progress", updateProgress);
 
       req.addEventListener("load", transferComplete);
 
@@ -253,9 +265,9 @@ export default function PostForm({ navigation }) {
           <Image
             style={styles.plusButton}
             source={
-              image
-                ? { uri: image.uri }
-                : require("../../assets/plusButton.png")
+              image.uri === undefined
+                ? require("../../assets/plusButton.png")
+                : { uri: image.uri }
             }
           />
 
@@ -285,7 +297,13 @@ export default function PostForm({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Text>{uploadProgress}</Text>
+      {uploadProgress === "" ? null : uploadProgress === "loading" ? (
+        <LottieView
+          style={{ height: 130, width: 130, position: "absolute", top: 110 }}
+          source={require("../../assets/lottie/loading.json")}
+          autoPlay
+        />
+      ) : null}
 
       <TouchableOpacity onPress={() => addPost()}>
         <Image
@@ -296,63 +314,6 @@ export default function PostForm({ navigation }) {
     </View>
   );
 }
-
-// try {
-//   const { data, error } = await supabase.storage
-//     .from("posts")
-//     .upload(fileName, formData, {
-//       upsert: true,
-//     });
-
-//   const { publicURL } = await supabase.storage
-
-//     .from("posts")
-//     .getPublicUrl(`${fileName}`);
-
-//   const url = `${supabase.supabaseUrl}/storage/v1/object/posts/${data.Key}`;
-//   const headers = supabase._getAuthHeaders();
-
-//   const req = new XMLHttpRequest();
-
-//   function updateProgress(event) {
-//     console.log("LOADING");
-//     setUploadProgress("LOADING");
-//   }
-
-//   function loadEnd(e) {
-//     setUploadProgress(
-//       "The transfer finished (although we don't know if it succeeded or not)."
-//     );
-//   }
-
-//   function transferComplete(evt) {
-//     setUploadProgress("The transfer is complete.");
-//     setPost(imageLink);
-//     console.log("DONE LOADING");
-//   }
-
-//   req.addEventListener("progress", updateProgress);
-
-//   req.addEventListener("load", transferComplete);
-//   // You might want to also listen to onabort, onerror, ontimeout
-
-//   req.open("POST", url);
-//   for (const [key, value] of Object.entries(headers)) {
-//     req.setRequestHeader(key, value);
-//   }
-//   req.setRequestHeader("Authorization", data.authorization);
-
-//   req.send(data);
-
-//   let imageLink = publicURL;
-//   let type = photo.type;
-
-//   setImage(imageLink);
-//   type = null ? setMediaType("text") : setMediaType(type);
-// } catch (e) {
-//   ErrorAlert({ title: "image upload", message: e.message });
-//   return null;
-// }
 
 const styles = StyleSheet.create({
   category: {

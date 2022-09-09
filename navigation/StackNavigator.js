@@ -35,6 +35,15 @@ const HomeStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen
+        name="CheckoutScreen"
+        component={HomeScreen}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
         options={{

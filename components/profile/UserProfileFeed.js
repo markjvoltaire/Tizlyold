@@ -34,6 +34,8 @@ export default function UserProfileFeed({
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  console.log("post from USER PROFILE FEED", post);
+
   // if (item.mediaType === "image") {
   //   return <UserProfileImagePost item={item} />;
   // }

@@ -18,6 +18,7 @@ import UserProfileFeed from "../components/profile/UserProfileFeed";
 import UserProfileNav from "../components/profile/UserProfileNav";
 import HomeScreen from "../screens/HomeScreen";
 
+import LottieView from "lottie-react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { supabase } from "../services/supabase";
@@ -208,6 +209,17 @@ export default function ProfileDetail({ navigation, route, item }) {
           style={styles.userBanner}
           source={{ uri: profile.bannerImage }}
         />
+        <LottieView
+          style={{
+            top: 10,
+            height: 400,
+            width: 400,
+            position: "absolute",
+            alignSelf: "center",
+          }}
+          source={require("../assets/lottie/uploadComplete.json")}
+          autoPlay
+        />
         <Video
           source={{ uri: profile.bannerImage }}
           isLooping
@@ -216,6 +228,7 @@ export default function ProfileDetail({ navigation, route, item }) {
           resizeMode="cover"
           style={styles.userBanner}
         />
+
         <Image
           style={styles.userBannerFader}
           source={require("../assets/fader.png")}

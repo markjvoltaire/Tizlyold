@@ -42,7 +42,7 @@ export default function UserProfileImagePost({
     ]);
 
   return (
-    <View style={{ paddingBottom: 90, bottom: 10 }}>
+    <View style={{ paddingBottom: 90 }}>
       <Pressable>
         <Image
           source={{ uri: post.media }}

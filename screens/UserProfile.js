@@ -15,7 +15,7 @@ import {
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
-
+import LottieView from "lottie-react-native";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
@@ -72,10 +72,17 @@ export default function UserProfile({ navigation, route }) {
 
   if (loading) {
     return (
-      <SafeAreaView>
-        <View>
-          <Text style={{ fontSize: 300 }}>LOADING</Text>
-        </View>
+      <SafeAreaView style={{ top: 150 }}>
+        <LottieView
+          style={{
+            height: 300,
+            width: 300,
+            position: "absolute",
+            alignSelf: "center",
+          }}
+          source={require("../assets/lottie/loading.json")}
+          autoPlay
+        />
       </SafeAreaView>
     );
   }
@@ -180,7 +187,7 @@ export default function UserProfile({ navigation, route }) {
         <FullSeperator />
       </View>
       <View style={styles.feedContainer}>
-        {posts.map((post) => {
+        {/* {posts.map((post) => {
           return (
             <View style={{ bottom: 90 }} key={post.id}>
               <UserProfileFeed
@@ -194,7 +201,25 @@ export default function UserProfile({ navigation, route }) {
               />
             </View>
           );
-        })}
+        })} */}
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={posts}
+          initialNumToRender={2}
+          renderItem={({ item }) => (
+            <View>
+              <UserProfileFeed
+                navigation={navigation}
+                route={route}
+                post={item}
+                navState={navState}
+                setPosts={setPosts}
+                user={user}
+                setUser={setUser}
+              />
+            </View>
+          )}
+        />
       </View>
     </ScrollView>
   );
@@ -230,7 +255,7 @@ const styles = StyleSheet.create({
 
   feedContainer: {
     alignItems: "center",
-    top: 130,
+    top: 30,
     flex: 1,
   },
   displayNameContainer: {

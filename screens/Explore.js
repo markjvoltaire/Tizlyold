@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   searchInput: {
-    top: 35,
+    top: 25,
     alignSelf: "center",
     paddingLeft: 63,
     borderColor: "grey",
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   searchIcon: {
     height: 20,
     width: 20,
-    top: 2,
+    bottom: 8,
     left: 80,
   },
   settingIcon: {

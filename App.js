@@ -20,7 +20,9 @@ import Explore from "./screens/Explore";
 import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Notifications";
 import Checkout from "./screens/Checkout";
-
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 import { useState } from "react";
 
 import { UserProvider } from "./context/UserContext";
@@ -111,6 +113,12 @@ export default function App() {
               />
 
               <Stack.Screen
+                name="Checkout"
+                component={Checkout}
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+
+              <Stack.Screen
                 name="HomeScreen"
                 component={BottomTabNavigator}
                 options={{ headerShown: false, gestureEnabled: false }}
@@ -179,12 +187,6 @@ export default function App() {
               <Stack.Screen
                 name="UserSubscriber"
                 component={UserProfileSubscribers}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Checkout"
-                component={Checkout}
                 options={{ headerShown: false, gestureEnabled: false }}
               />
             </Stack.Navigator>

@@ -21,14 +21,6 @@ export default function VideoPost({ item, navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const { user, setUser } = useUser();
 
-  const month = item.posted.slice(5);
-  const date = month.concat("-");
-  const year = item.posted.slice(0, 4);
-
-  const postDate = date + year;
-  const milliseconds = status.durationMillis;
-  const seconds = milliseconds / 1000;
-
   return (
     <View style={{ paddingBottom: 35 }}>
       <Pressable
@@ -134,10 +126,6 @@ export default function VideoPost({ item, navigation, route }) {
           }}
         >
           {item.description}
-        </Text>
-
-        <Text style={{ left: 17, fontWeight: "400", color: "#4F4E4E" }}>
-          {postDate}
         </Text>
 
         <View>
