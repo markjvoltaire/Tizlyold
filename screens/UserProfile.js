@@ -104,6 +104,7 @@ export default function UserProfile({ navigation, route }) {
   if (posts.length === 0) {
     return (
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{ flex: 1, backgroundColor: "white" }}
         refreshControl={
           <RefreshControl
@@ -119,6 +120,7 @@ export default function UserProfile({ navigation, route }) {
 
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={{ flex: 1, backgroundColor: "white" }}
       refreshControl={
         <RefreshControl

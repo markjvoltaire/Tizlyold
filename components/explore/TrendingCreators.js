@@ -12,10 +12,14 @@ import ProfileDetail from "../../screens/ProfileDetail";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
 import { getTrendingCreators } from "../../services/user";
-
+import { StackActions } from "@react-navigation/native";
+import UserProfile from "../../screens/UserProfile";
 export default function TrendingCreators({ navigation, route }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { user, setUser } = useUser();
+  const pushAction = StackActions.push("UserProfile");
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -24,6 +28,10 @@ export default function TrendingCreators({ navigation, route }) {
     };
     loadTrendingCreators();
   }, []);
+
+  function goHome() {
+    return <UserProfile />;
+  }
 
   return (
     <View style={styles.container}>
@@ -34,17 +42,19 @@ export default function TrendingCreators({ navigation, route }) {
         return (
           <View key={item.id}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("ProfileDetail2", {
-                  username: item.username,
-                  displayName: item.displayName,
-                  profileimage: item.profileimage,
-                  bannerImage: item.bannerImage,
-                  bio: item.bio,
-                  id: item.id,
-                  user_id: item.user_id,
-                })
-              }
+              onPress={() => {
+                user.id === item.id
+                  ? navigation.navigate("UserProfile2")
+                  : navigation.navigate("ProfileDetail2", {
+                      username: item.username,
+                      displayName: item.displayName,
+                      profileimage: item.profileimage,
+                      bannerImage: item.bannerImage,
+                      bio: item.bio,
+                      id: item.id,
+                      user_id: item.user_id,
+                    });
+              }}
             >
               <View>
                 <Image

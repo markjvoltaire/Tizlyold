@@ -21,6 +21,7 @@ import { usePosts } from "../../context/PostContext";
 import Post from "../../screens/Post";
 import PostButtons from "./PostButtons";
 import AddCategory from "../AddCategory";
+import { StackActions } from "@react-navigation/native";
 
 import { Video, AVPlaybackStatus } from "expo-av";
 export default function PostForm({ navigation }) {
@@ -34,6 +35,8 @@ export default function PostForm({ navigation }) {
   const [mediaType, setMediaType] = useState("text");
   const [imageData, setImageData] = useState(null);
   const [uploadProgress, setUploadProgress] = useState("");
+  const pushActionGoHome = StackActions.push("HomeScreen");
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
   const [imageURL, setImageURL] = useState("");
 
@@ -91,7 +94,14 @@ export default function PostForm({ navigation }) {
     setUploadProgress(Math.round((event.loaded * 100) / event.total));
   };
 
-  const Seperator = () => <View style={styles.fullSeperator} />;
+  const showAlert = () =>
+    Alert.alert("Upload Successful", "your post has been uploaded", [
+      {
+        text: "Ok",
+        onPress: () => navigation.goBack(),
+        style: "cancel",
+      },
+    ]);
 
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
@@ -113,9 +123,34 @@ export default function PostForm({ navigation }) {
         });
 
       const { publicURL } = await supabase.storage
-
         .from("posts")
         .getPublicUrl(`${fileName}`);
+
+      const url = `${supabase.supabaseUrl}/storage/v1/object/posts/${data.Key}`;
+      const headers = supabase._getAuthHeaders();
+      const req = new XMLHttpRequest();
+
+      function updateProgress(event) {
+        console.log("LOADING");
+        setUploadProgress("Please Wait");
+      }
+
+      function transferComplete(evt) {
+        showAlert();
+      }
+
+      req.addEventListener("progress", updateProgress);
+
+      req.addEventListener("load", transferComplete);
+
+      req.open("POST", url);
+      for (const [key, value] of Object.entries(headers)) {
+        req.setRequestHeader(key, value);
+      }
+      req.setRequestHeader("Authorization", data.authorization);
+
+      req.send(data);
+
       let imageLink = publicURL;
       let type = image.type;
 
@@ -149,7 +184,6 @@ export default function PostForm({ navigation }) {
         },
       ]);
 
-      console.log("resp", resp);
       return resp;
     } catch (e) {
       console.log({ title: "image upload", message: e.message });

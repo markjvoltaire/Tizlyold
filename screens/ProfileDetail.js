@@ -28,6 +28,7 @@ import ProfileFeedList from "../components/profile/ProfileFeedList";
 import { StackActions } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
 import NoProfilePost from "../components/profile/NoProfilePost";
+import UserProfile from "./UserProfile";
 
 export default function ProfileDetail({ navigation, route, item }) {
   const { user, setUser } = useUser();
@@ -79,10 +80,6 @@ export default function ProfileDetail({ navigation, route, item }) {
   }, []);
 
   const user_id = route.params.user_id;
-
-  if (route.params.user_id === user.user_id) {
-    navigation.navigate("Profile");
-  }
 
   async function getUserPostsById() {
     const items = await supabase

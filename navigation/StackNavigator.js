@@ -51,6 +51,8 @@ const HomeStackNavigator = () => {
           headerTitle: () => <Header />,
         }}
       />
+
+      <Stack.Screen name="UserProfile2" component={UserProfile} />
     </Stack.Navigator>
   );
 };

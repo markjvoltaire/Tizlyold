@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { getNewTrendingCreators } from "../../services/user";
+import { useUser } from "../../context/UserContext";
 
 export default function NewToTizly({ navigation }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -23,17 +25,19 @@ export default function NewToTizly({ navigation }) {
         return (
           <View key={item.id}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("ProfileDetail2", {
-                  username: item.username,
-                  displayName: item.displayName,
-                  profileimage: item.profileimage,
-                  bannerImage: item.bannerImage,
-                  bio: item.bio,
-                  id: item.id,
-                  user_id: item.user_id,
-                })
-              }
+              onPress={() => {
+                user.id === item.id
+                  ? navigation.navigate("UserProfile2")
+                  : navigation.navigate("ProfileDetail2", {
+                      username: item.username,
+                      displayName: item.displayName,
+                      profileimage: item.profileimage,
+                      bannerImage: item.bannerImage,
+                      bio: item.bio,
+                      id: item.id,
+                      user_id: item.user_id,
+                    });
+              }}
             >
               <View>
                 <Image

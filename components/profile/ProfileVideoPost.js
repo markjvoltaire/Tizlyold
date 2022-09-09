@@ -17,11 +17,6 @@ export default function ProfileVideoPost({ item, navigation }) {
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  const month = item.posted.slice(5);
-  const date = month.concat("-");
-  const year = item.posted.slice(0, 4);
-
-  const postDate = date + year;
   const milliseconds = status.durationMillis;
   const seconds = milliseconds / 1000;
   return (
@@ -116,10 +111,6 @@ export default function ProfileVideoPost({ item, navigation }) {
           }}
         >
           {item.description}
-        </Text>
-
-        <Text style={{ left: 5, fontWeight: "600", color: "#4F4E4E" }}>
-          {postDate}
         </Text>
       </View>
 
