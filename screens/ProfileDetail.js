@@ -209,17 +209,7 @@ export default function ProfileDetail({ navigation, route, item }) {
           style={styles.userBanner}
           source={{ uri: profile.bannerImage }}
         />
-        <LottieView
-          style={{
-            top: 10,
-            height: 400,
-            width: 400,
-            position: "absolute",
-            alignSelf: "center",
-          }}
-          source={require("../assets/lottie/uploadComplete.json")}
-          autoPlay
-        />
+
         <Video
           source={{ uri: profile.bannerImage }}
           isLooping

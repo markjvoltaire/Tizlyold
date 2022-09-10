@@ -15,13 +15,15 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 
-export default function CommentScreen({ route }) {
+export default function CommentScreen({ route, navigation }) {
   const [comment, setComment] = useState("");
   const [commentList, setCommentList] = useState([]);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperatorTwo = () => <View style={styles.fullSeperatorTwo} />;
 
   const { item } = route.params;
+
+  console.log("item", item);
 
   const { user, setUser } = useUser();
 
@@ -45,7 +47,6 @@ export default function CommentScreen({ route }) {
 
     return resp.body;
   }
-
 
   async function createComment() {
     const resp = await supabase.from("comments").insert([
@@ -82,34 +83,39 @@ export default function CommentScreen({ route }) {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <SafeAreaView>
         <View style={{ width: 350, alignSelf: "center" }}>
-          <Text
-            style={{
-              left: 90,
-              fontWeight: "500",
-              fontSize: 15,
-              color: "#4F4E4E",
-              bottom: 10,
-            }}
-          >
-            {item.username}
-          </Text>
+          {/* <Image
+            style={{ height: 60, width: 60, borderRadius: 100 }}
+            source={{ uri: item.profileimage }}
+          /> */}
 
-          <Text
-            style={{
-              left: 50,
-              fontWeight: "700",
-              fontSize: 15,
-              color: "#4F4E4E",
-              top: 10,
-              paddingBottom: 30,
-            }}
-          >
-            {item.title}
-          </Text>
+          <View style={{ position: "absolute", alignSelf: "center", top: 30 }}>
+            {/* <Text
+              style={{
+                fontWeight: "700",
+                fontSize: 15,
+                color: "#4F4E4E",
+              }}
+            >
+              {item.title}
+            </Text>
+            <Text>{item.description}</Text> */}
+          </View>
         </View>
 
         <FullSeperatorTwo />
+        <Text style={{ alignSelf: "center", fontWeight: "700" }}>
+          {item.title}
+        </Text>
+        <Text style={{ alignSelf: "center", fontWeight: "400" }}>
+          @{item.username}
+        </Text>
       </SafeAreaView>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={styles.backButton}
+          source={require("../assets/backButton2.png")}
+        />
+      </TouchableOpacity>
       <ScrollView>
         <FullSeperator />
         {commentList.map((comment) => (
@@ -204,6 +210,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     position: "relative",
   },
+
+  backButton: {
+    height: 40,
+    width: 40,
+    left: 20,
+    bottom: 40,
+  },
   commentInput: {
     borderColor: "grey",
     borderWidth: 0.1,
@@ -221,5 +234,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
+    top: 50,
   },
 });

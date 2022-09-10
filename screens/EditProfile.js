@@ -274,6 +274,13 @@ export default function EditProfile({ navigation }) {
     editLikeProfileImage();
     editSaveProfileImage();
     editPostProfileImage();
+
+    Alert.alert(
+      "Changes Have Been Saved",
+      "",
+      [{ text: "OK", onPress: () => navigation.goBack() }],
+      { cancelable: false }
+    );
   }
 
   return (

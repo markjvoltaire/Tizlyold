@@ -27,7 +27,7 @@ import HomeFeedList from "../components/home/HomeFeedList";
 import { fromPairs } from "lodash";
 import { useFollow } from "../context/FollowContext";
 import { useScreens } from "react-native-screens";
-
+import LottieView from "lottie-react-native";
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
 
@@ -144,8 +144,18 @@ export default function HomeScreen({ navigation, route }) {
 
   if (loading) {
     return (
-      <View>
-        <Text>Loading</Text>
+      <View style={{ backgroundColor: "white", flex: 1 }}>
+        <LottieView
+          style={{
+            top: 70,
+            height: 400,
+            width: 400,
+            position: "absolute",
+            alignSelf: "center",
+          }}
+          source={require("../assets/lottie/fullBlueCircle.json")}
+          autoPlay
+        />
       </View>
     );
   }

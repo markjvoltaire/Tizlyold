@@ -21,7 +21,17 @@ export default function Checkout({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ top: 150 }}>
-        <Text style={{ alignSelf: "center" }}>Upload Complete</Text>
+        <Text
+          style={{
+            alignSelf: "center",
+            fontSize: 20,
+            position: "absolute",
+            fontWeight: "700",
+            color: "#4F4E4E",
+          }}
+        >
+          Upload Complete!
+        </Text>
         <View style={{ position: "absolute", alignSelf: "center", top: 350 }}>
           <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
             <Image
