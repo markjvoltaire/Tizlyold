@@ -22,7 +22,7 @@ export default function VideoPost({ item, navigation, route }) {
   const { user, setUser } = useUser();
 
   return (
-    <View style={{ paddingBottom: 35 }}>
+    <View style={{ paddingBottom: 55 }}>
       <Pressable
         onPress={() =>
           navigation.navigate("Player", {
@@ -152,6 +152,8 @@ export default function VideoPost({ item, navigation, route }) {
           navigation={navigation}
         />
       )}
+
+      <FullSeperator />
     </View>
   );
 }
@@ -162,6 +164,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    top: 36,
+    top: 40,
   },
 });

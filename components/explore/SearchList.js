@@ -10,23 +10,31 @@ import React from "react";
 import HomeBoard from "../home/HomeBoard";
 import TrendingCreators from "./TrendingCreators";
 import NewToTizly from "./NewToTizly";
+import { useUser } from "../../context/UserContext";
 
 export default function SearchList({ item, navigation, isPressed, query }) {
+  const { user, setUser } = useUser();
+
+  console.log("user", user);
+  console.log("item", item);
+
   return (
     <View>
       <TouchableOpacity
         style={{ margin: 10 }}
-        onPress={() =>
-          navigation.navigate("ProfileDetail2", {
-            username: item.username,
-            displayName: item.displayName,
-            profileimage: item.profileimage,
-            bannerImage: item.bannerImage,
-            bio: item.bio,
-            id: item.id,
-            user_id: item.user_id,
-          })
-        }
+        onPress={() => {
+          user.user_id === item.user_id
+            ? navigation.navigate("UserProfile2")
+            : navigation.navigate("ProfileDetail2", {
+                username: item.username,
+                displayName: item.displayName,
+                profileimage: item.profileimage,
+                bannerImage: item.bannerImage,
+                bio: item.bio,
+                id: item.id,
+                user_id: item.user_id,
+              });
+        }}
       >
         <View style={{ alignItems: "center" }}>
           <Image

@@ -9,6 +9,7 @@ import {
   Button,
   Alert,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import SelectList from "react-native-dropdown-select-list";
@@ -39,7 +40,7 @@ export default function PostForm({ navigation }) {
   const [imageData, setImageData] = useState(null);
   const [uploadProgress, setUploadProgress] = useState("");
   const pushActionGoHome = StackActions.push("HomeScreen");
-  const [status, requestPermission] = ImagePicker.useCameraPermissions();
+  const [hasGalleryPermissions, setHasGalleryPermission] = useState();
   const pushAction = StackActions.replace("Checkout");
   const [imageURL, setImageURL] = useState("");
 
@@ -52,46 +53,21 @@ export default function PostForm({ navigation }) {
 
   const [selected, setSelected] = useState("");
 
-  // entertainment📺   fitness🏋️   podcast🎙    music 🎤  sports 🏆  music 🍽  gaming 🎮  beauty 💄  content creation 🎬
+  const openImageLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-  const data = [
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/entertainmentBean.png?t=2022-08-23T00%3A51%3A11.199Z",
-      value: "Entertainment",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/fitnessBean.png?t=2022-08-08T04%3A38%3A09.071Z",
-      value: "Fitness",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/podcastBean.png?t=2022-08-08T04%3A18%3A17.495Z",
-      value: "Podcast",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/musicBean.png?t=2022-08-08T04%3A18%3A41.104Z",
-      value: "Music",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/sportsBean.png?t=2022-08-08T04%3A18%3A58.688Z",
-      value: "Sports",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/cookingBean.png?t=2022-08-08T04%3A19%3A14.026Z",
-      value: "Cooking",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/gamingBean.png?t=2022-08-08T04%3A19%3A29.450Z",
-      value: "Gaming",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/beautyBean.png?t=2022-08-08T04%3A19%3A41.911Z",
-      value: "Beauty",
-    },
-    {
-      key: "https://ivxipgaauikqwyguqagw.supabase.co/storage/v1/object/public/posts/categoryBeans/contentCreationBean.png?t=2022-08-08T04%3A19%3A56.347Z",
-      value: "Content Creation",
-    },
-  ];
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+    }
+
+    if (status === "granted") {
+      const response = await pickPost();
+
+      if (!response.cancelled) {
+        setImage(photo);
+      }
+    }
+  };
 
   function clear() {
     setTitle("");
@@ -169,11 +145,9 @@ export default function PostForm({ navigation }) {
       setImageURL(imageLink);
       if (image.type === "image") {
         setMediaType("image");
-        console.log("mediaType", mediaType);
       }
       if (image.type === "video") {
         setMediaType("video");
-        console.log("mediaType", mediaType);
       }
       if (image.type === "text") {
         setMediaType("text");
@@ -208,7 +182,7 @@ export default function PostForm({ navigation }) {
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [9, 16],
       quality: 1,
     });
 
@@ -251,17 +225,17 @@ export default function PostForm({ navigation }) {
         <View style={styles.addCategory}>
           <TouchableOpacity>
             <View>
-              <SelectList
+              {/* <SelectList
                 placeholder="Select a category"
                 data={data}
                 setSelected={setSelected}
                 inputStyles={{ fontWeight: "600" }}
                 dropdownStyles={{ height: 130 }}
-              />
+              /> */}
             </View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => pickPost()}>
+        <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
             style={styles.plusButton}
             source={

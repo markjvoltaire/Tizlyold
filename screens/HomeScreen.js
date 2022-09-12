@@ -196,7 +196,7 @@ export default function HomeScreen({ navigation, route }) {
           keyExtractor={(item) => item.id}
           refreshing={refreshing}
           onRefresh={() => refreshFeed()}
-          initialNumToRender={6}
+          initialNumToRender={2}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             borderBottomWidth: 0.8,

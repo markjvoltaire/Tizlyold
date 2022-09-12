@@ -27,21 +27,23 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
           source={{ uri: post.media }}
           ref={video}
           style={{
-            height: 260,
-            width: 400,
+            height: 400,
+            aspectRatio: 1,
             borderRadius: 12,
             alignSelf: "center",
+            top: 20,
           }}
           resizeMode="cover"
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
+
         <Image
           style={{
             alignSelf: "center",
             resizeMode: "stretch",
             height: 180,
             width: 400,
-            top: 80,
+            top: 240,
             borderRadius: 12,
             position: "absolute",
           }}
@@ -50,8 +52,8 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
         <Image
           style={{
             position: "absolute",
-            width: 50,
-            top: 100,
+            width: 60,
+            top: 190,
             alignSelf: "center",
             resizeMode: "contain",
           }}
@@ -59,7 +61,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
         />
       </Pressable>
 
-      <View style={{ position: "absolute", top: 230, left: 5 }}>
+      <View style={{ position: "absolute", top: 390, left: 5 }}>
         <Text style={{ color: "white", fontWeight: "700" }}>{post.title}</Text>
       </View>
 
@@ -71,15 +73,15 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
             borderRadius: 100,
             position: "absolute",
             left: 5,
-            top: 190,
+            top: 350,
           }}
-          source={{ uri: post.profileimage }}
+          source={{ uri: user.profileimage }}
         />
         <Text
           style={{
             position: "absolute",
             color: "white",
-            top: 200,
+            top: 360,
             left: 50,
             fontWeight: "500",
             fontSize: 15,
@@ -93,7 +95,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
         <Text
           style={{
             left: 5,
-            top: 12,
+            top: 32,
             fontWeight: "700",
             color: "#4F4E4E",
             textAlign: "left",

@@ -34,8 +34,6 @@ export default function UserProfileFeed({
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  console.log("post from USER PROFILE FEED", post);
-
   // if (item.mediaType === "image") {
   //   return <UserProfileImagePost item={item} />;
   // }
@@ -46,16 +44,18 @@ export default function UserProfileFeed({
 
   if (navState === "home") {
     return (
-      <ProfileHomeView
-        navigation={navigation}
-        post={post}
-        route={route}
-        navState={navState}
-        setPosts={setPosts}
-        item={item}
-        user={user}
-        setUser={setUser}
-      />
+      <>
+        <ProfileHomeView
+          navigation={navigation}
+          post={post}
+          route={route}
+          navState={navState}
+          setPosts={setPosts}
+          item={item}
+          user={user}
+          setUser={setUser}
+        />
+      </>
     );
   }
 

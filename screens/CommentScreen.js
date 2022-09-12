@@ -23,8 +23,6 @@ export default function CommentScreen({ route, navigation }) {
 
   const { item } = route.params;
 
-  console.log("item", item);
-
   const { user, setUser } = useUser();
 
   const postId = item.id;

@@ -1,23 +1,25 @@
 {
   "expo": {
     "name": "Tizly",
-    "slug": "Tizly",
+    "slug": "tizly",
+    "owner": "markjvoltaire",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Tizlymed.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Tizlymed.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library."
+      },
       "supportsTablet": true
     },
     "android": {
@@ -28,6 +30,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Tizly wants to access your camera roll"
+        }
+      ]
+    ]
   }
 }

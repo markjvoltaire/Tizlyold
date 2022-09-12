@@ -31,10 +31,11 @@ export default function UserProfile({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [stateImage, setStateImage] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+  const video = React.useRef(null);
   const [navState, setNavState] = useState("home");
-
+  const [status, setStatus] = React.useState({});
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperatorTwo = () => <View style={styles.FullSeperatorTwo} />;
 
   const [posts, setPosts] = useState();
 
@@ -59,6 +60,14 @@ export default function UserProfile({ navigation, route }) {
       .order("id", { ascending: false });
 
     return post;
+  }
+
+  function seeEdit() {
+    return (
+      <View>
+        <EditCurrentUser />
+      </View>
+    );
   }
 
   useEffect(() => {
@@ -136,25 +145,22 @@ export default function UserProfile({ navigation, route }) {
         />
       }
     >
-      {user.bannerImageType === "image" ? (
-        <Image
-          style={styles.userBanner}
-          source={
-            user.bannerImage === null
-              ? require("../assets/noProfilePic.jpeg")
-              : { uri: user.bannerImage }
-          }
-        />
-      ) : (
+      {user.bannerImageType === "video" ? (
         <Video
+          ref={video}
           source={{ uri: user.bannerImage }}
           isLooping
           shouldPlay={true}
           isMuted={true}
           resizeMode="cover"
           style={styles.userBanner}
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
+      ) : (
+        <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
       )}
+
+      <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
 
       <TouchableOpacity onPress={() => console.log("YOoo")}>
         <Image
@@ -168,11 +174,7 @@ export default function UserProfile({ navigation, route }) {
         <Text style={styles.bio}> {user.bio}</Text>
         <Image
           style={styles.profileImage}
-          source={
-            user.profileimage === null
-              ? require("../assets/noProfilePic.jpeg")
-              : { uri: user.profileimage }
-          }
+          source={{ uri: user.profileimage }}
         />
         <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
@@ -202,6 +204,7 @@ export default function UserProfile({ navigation, route }) {
             </View>
           );
         })} */}
+
         <FlatList
           keyExtractor={(item) => item.id}
           data={posts}

@@ -61,6 +61,14 @@ const HomeStackNavigator = () => {
         }}
       />
 
+      <Stack.Screen
+        name="ImageDetails"
+        sharedElements={(route) => {
+          return [route.params.item.id];
+        }}
+        component={ImageDetails}
+      />
+
       <Stack.Screen name="UserProfile2" component={UserProfile} />
     </Stack.Navigator>
   );
@@ -107,19 +115,19 @@ const WelcomeStackNavigator = () => {
   );
 };
 
-const ImageDetailStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="ImageDetails"
-        sharedElements={(route) => {
-          return [route.params.item.id];
-        }}
-        component={ImageDetails}
-      />
-    </Stack.Navigator>
-  );
-};
+// const ImageDetailStackNavigator = () => {
+//   return (
+//     <Stack.Navigator screenOptions={screenOptionStyle}>
+//       <Stack.Screen
+//         name="ImageDetails"
+//         sharedElements={(route) => {
+//           return [route.params.item.id];
+//         }}
+//         component={ImageDetails}
+//       />
+//     </Stack.Navigator>
+//   );
+// };
 
 const ProfileStackNavigator = () => {
   return (
@@ -199,7 +207,7 @@ export {
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
-  ImageDetailStackNavigator,
+  // ImageDetailStackNavigator,
   UsernameStackNavigator,
   PostStackNavigator,
   CommentScreenStackNavigator,

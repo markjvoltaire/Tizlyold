@@ -32,6 +32,17 @@ export default function EditPost({ route, navigation }) {
       { text: "Cancel", onPress: () => null },
     ]);
 
+  const saveChanges = () => {
+    Alert.alert(
+      "Changes Have Been Saved",
+      "",
+      [{ text: "OK", onPress: () => null }],
+      { cancelable: false }
+    );
+
+    navigation.goBack();
+  };
+
   async function getCurrentUserPosts() {
     let { data: post, error } = await supabase
       .from("post")
@@ -45,6 +56,8 @@ export default function EditPost({ route, navigation }) {
       .from("post")
       .update({ description: description, title: title })
       .eq("id", route.params.id);
+
+    saveChanges();
   }
 
   async function deletePost() {
@@ -73,11 +86,7 @@ export default function EditPost({ route, navigation }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() =>
-          updatePost(title, description).then(() => navigation.goBack())
-        }
-      >
+      <TouchableOpacity onPress={() => updatePost(title, description)}>
         <Image
           style={{
             height: 25,

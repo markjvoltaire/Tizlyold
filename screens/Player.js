@@ -183,7 +183,7 @@ export default function Player({ route, navigation }) {
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
-        <VideoHeader post={post} navigation={navigation} route={route} />
+        <VideoHeader navigation={navigation} route={route} />
         {post.map((item) => {
           return (
             <View key={item.id} style={{ top: 80 }}>
@@ -198,6 +198,7 @@ export default function Player({ route, navigation }) {
           );
         })}
       </View>
+
       <View style={{ top: 100, flex: 1 }}>
         <FlatList
           refreshing={refreshing}

@@ -76,7 +76,7 @@ export default function Notifications({ navigation, route, image }) {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <TopHeader navigation={navigation} />
       <ScrollView
         style={{ flex: 1, backgroundColor: "white" }}

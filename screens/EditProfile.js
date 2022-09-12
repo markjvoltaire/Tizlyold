@@ -171,6 +171,7 @@ export default function EditProfile({ navigation }) {
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
+      videoMaxDuration: 10,
       aspect: [4, 3],
       quality: 1,
     });
@@ -348,9 +349,12 @@ export default function EditProfile({ navigation }) {
           <Image
             style={styles.profileImage}
             source={
-              user.profileimage === null
-                ? require("../assets/noProfilePic.jpeg")
-                : { uri: user.profileimage }
+              image === null
+                ? { uri: user.profileimage }
+                : require("../assets/noProfilePic.jpeg")
+              // user.profileimage === null
+
+              //   : { uri: user.profileimage }
             }
           />
           <Image

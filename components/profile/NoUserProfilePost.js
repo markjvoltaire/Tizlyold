@@ -15,6 +15,7 @@ import {
 import { supabase } from "../../services/supabase";
 import { useUser } from "../../context/UserContext";
 import React, { useState, useEffect } from "react";
+import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function NoUserProfilePost({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -23,18 +24,24 @@ export default function NoUserProfilePost({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [stateImage, setStateImage] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const video = React.useRef(null);
+  const [status, setStatus] = useState({});
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
     <View>
-      <Image
+      <Video
+        ref={video}
+        source={{ uri: user.bannerImage }}
+        isLooping
+        shouldPlay={true}
+        isMuted={true}
+        resizeMode="cover"
         style={styles.userBanner}
-        source={
-          user.bannerImage === null
-            ? require("../../assets/noProfilePic.jpeg")
-            : { uri: user.bannerImage }
-        }
       />
+
+      <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
 
       <Image
         style={styles.userBannerFader}

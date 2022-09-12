@@ -4,6 +4,7 @@ import {
   View,
   KeyboardAvoidingView,
   TextInput,
+  Button,
 } from "react-native";
 import React from "react";
 import VideoHeader from "./VideoHeader";

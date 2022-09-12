@@ -112,29 +112,7 @@ export default function UserProfileImagePost({
         >
           {post.description}
         </Text>
-        {/* {post.user_id === user.user_id ? (
-          <TouchableOpacity onPress={() => createThreeButtonAlert()}>
-            <Image
-              style={{
-                resizeMode: "contain",
-                position: "absolute",
-                height: 28,
-                left: 340,
-              }}
-              source={require("../../assets/moreCircle.png")}
-            />
-          </TouchableOpacity>
-        ) : null} */}
       </View>
-
-      {/* <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        navigation={navigation}
-        item={post}
-      />  */}
 
       <CurrentUserButtons
         isPressed={isPressed}

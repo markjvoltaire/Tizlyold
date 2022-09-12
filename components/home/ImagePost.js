@@ -14,6 +14,7 @@ import {
 } from "react-navigation-shared-element";
 import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
+import VideoHeader from "../post/VideoHeader";
 
 export default function ImagePost({ item, navigation, followingId }) {
   const [status, setStatus] = React.useState({});
@@ -31,7 +32,7 @@ export default function ImagePost({ item, navigation, followingId }) {
   // const seconds = milliseconds / 1000;
 
   return (
-    <View style={{ paddingBottom: 39 }}>
+    <View style={{ paddingBottom: 55 }}>
       <Pressable
         onPress={() =>
           navigation.push("ImageDetails", {
@@ -44,14 +45,14 @@ export default function ImagePost({ item, navigation, followingId }) {
       >
         <SharedElement id={item.id}>
           <Image
-            source={{ uri: item.media }}
             style={{
               height: 398,
               aspectRatio: 1,
               alignSelf: "center",
               borderRadius: 10,
             }}
-            resizeMode="cover"
+            source={{ uri: item.media }}
+            resizeMode="contain"
           />
         </SharedElement>
         <Image
@@ -147,6 +148,7 @@ export default function ImagePost({ item, navigation, followingId }) {
           navigation={navigation}
         />
       )}
+      <FullSeperator />
     </View>
   );
 }
@@ -157,6 +159,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    top: 25,
+    top: 35,
   },
 });

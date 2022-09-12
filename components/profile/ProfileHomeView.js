@@ -15,29 +15,44 @@ export default function ProfileHomeView({
   user,
   setUser,
 }) {
-  console.log("post", post);
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   if (post.mediaType === "image") {
     return (
-      <UserProfileImagePost
-        user={user}
-        setUser={setUser}
-        navigation={navigation}
-        post={post}
-      />
+      <>
+        <UserProfileImagePost
+          user={user}
+          setUser={setUser}
+          navigation={navigation}
+          post={post}
+        />
+        <FullSeperator />
+      </>
     );
   }
 
   if (post.mediaType === "video") {
     return (
-      <UserProfileVideoPost
-        user={user}
-        setUser={setUser}
-        navigation={navigation}
-        post={post}
-      />
+      <>
+        <UserProfileVideoPost
+          user={user}
+          setUser={setUser}
+          navigation={navigation}
+          post={post}
+        />
+        <FullSeperator />
+      </>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fullSeperator: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 1.8,
+    width: 900,
+    bottom: 35,
+    position: "absolute",
+  },
+});
