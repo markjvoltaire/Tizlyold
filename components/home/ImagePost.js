@@ -54,7 +54,7 @@ export default function ImagePost({ item, navigation, followingId }) {
               borderRadius: 10,
             }}
             source={{ uri: item.media }}
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </SharedElement>
         <Image
@@ -161,6 +161,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    top: 35,
+    top: 55,
   },
 });

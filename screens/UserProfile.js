@@ -39,8 +39,6 @@ export default function UserProfile({ navigation, route }) {
 
   const [posts, setPosts] = useState();
 
-  console.log("user", user);
-
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener("focus", () => {
   //     const getPost = async () => {

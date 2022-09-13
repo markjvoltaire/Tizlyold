@@ -5,7 +5,7 @@
     "owner": "tizly",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Tizlymed.png",
+    "icon": "./assets/iconTizly.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/Tizlymed.png",
@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library."
@@ -30,9 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
