@@ -23,13 +23,7 @@ export default function ImagePost({ item, navigation, followingId }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const { user, setUser } = useUser();
 
-  // const month = item.posted.slice(5);
-  // const date = month.concat("-");
-  // const year = item.posted.slice(0, 4);
-
-  // const postDate = date + year;
-  // const milliseconds = status.durationMillis;
-  // const seconds = milliseconds / 1000;
+0;
 
   console.log("item", item);
 
@@ -114,13 +108,14 @@ export default function ImagePost({ item, navigation, followingId }) {
       <View>
         <Text
           style={{
-            left: 15,
+            left: 13,
             top: 12,
             fontWeight: "700",
             color: "#4F4E4E",
             textAlign: "left",
             width: 390,
             paddingBottom: 30,
+            lineHeight: 20,
           }}
         >
           {item.description}
@@ -150,7 +145,6 @@ export default function ImagePost({ item, navigation, followingId }) {
           navigation={navigation}
         />
       )}
-      <FullSeperator />
     </View>
   );
 }
@@ -160,7 +154,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#EDEDED",
     borderBottomWidth: 2.0,
     opacity: 1.8,
-    width: 900,
-    top: 55,
+    width: 400,
+    top: 30,
+    alignSelf: "center",
   },
 });

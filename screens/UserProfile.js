@@ -39,18 +39,6 @@ export default function UserProfile({ navigation, route }) {
 
   const [posts, setPosts] = useState();
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     const getPost = async () => {
-  //       const resp = await getCurrentUserPosts();
-  //       setPosts(resp);
-  //       setLoading(false);
-  //     };
-  //     getPost();
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
-
   async function getCurrentUserPosts() {
     const userId = supabase.auth.currentUser.id;
     let { data: post, error } = await supabase
@@ -312,20 +300,20 @@ const styles = StyleSheet.create({
   },
   subButton: {
     resizeMode: "contain",
-    top: 360,
+    top: 330,
     width: 160,
     height: 30,
-    right: 15,
+    right: 20,
   },
 
   bio: {
-    position: "absolute",
     color: "white",
     fontSize: 15,
     width: 400,
-    top: 320,
-    left: 8,
-    fontWeight: "800",
+    top: 312,
+    left: 3,
+    alignSelf: "center",
+    fontWeight: "700",
   },
 
   followbutton: {
@@ -444,42 +432,3 @@ const styles = StyleSheet.create({
     height: 455,
   },
 });
-
-//banner image
-{
-  /* <Image
-style={styles.userBanner}
-source={
-  user.bannerImage
-    ? {
-        uri: user.bannerImage,
-      }
-    : require("../assets/noImage.png")
-}
-/> */
-}
-
-// profile image
-{
-  /* <TouchableOpacity
-onPress={async () => {
-  const resp = await pickImage();
-
-  if (resp?.imageData) {
-    setImage(resp.uri);
-    setImageData(resp?.imageData);
-  }
-}}
->
-<Image
-  style={styles.profileImage}
-  source={
-    user.profileimage
-      ? {
-          uri: user.profileimage,
-        }
-      : require("../assets/noImage.png")
-  }
-/>
-</TouchableOpacity> */
-}

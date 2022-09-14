@@ -81,23 +81,6 @@ export async function getAllUsers() {
   return resp;
 }
 
-// export async function getPosts() {
-//   const resp = await supabase.from("post");
-
-//   return resp;
-// }
-
-// export async function getFollowing() {
-//   const userId = supabase.auth.currentUser.id;
-//   const resp = await supabase
-//     .from("following")
-//     .select("*")
-//     .eq("userId", userId)
-//     .eq("following", true);
-
-//   return resp.body;
-// }
-
 export async function getPostsById(user_id) {
   const resp = await supabase
     .from("post")
@@ -134,7 +117,7 @@ export async function getTrendingCreators() {
     .select(
       " user_id, id,username, displayName, profileimage, bannerImage, bio"
     )
-    .in("id", [135, 133, 140]);
+    .in("id", [179, 180, 181]);
 
   return resp.body;
 }
@@ -143,7 +126,7 @@ export async function getCreatorsYouMayLike() {
   const resp = await supabase
     .from("profiles")
     .select("*")
-    .in("id", [134, 133, 140]);
+    .in("id", [184, 183, 182]);
 
   return resp.body;
 }
@@ -154,7 +137,7 @@ export async function getNewTrendingCreators() {
     .select(
       "  user_id,id,username, displayName, profileimage, bannerImage, bio"
     )
-    .in("id", [155, 154, 156]);
+    .in("id", [184, 183, 182]);
 
   return resp.body;
 }

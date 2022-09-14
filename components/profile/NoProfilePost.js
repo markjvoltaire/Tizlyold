@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
     width: 400,
-    top: 320,
+    top: 312,
     left: 8,
     fontWeight: "800",
   },

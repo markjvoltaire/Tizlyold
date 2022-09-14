@@ -41,7 +41,7 @@ export default function CommentScreen({ route, navigation }) {
 
     const comments = { users: users, comments: resp };
 
-    /// comments
+
 
     return resp.body;
   }

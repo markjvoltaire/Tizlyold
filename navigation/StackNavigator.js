@@ -115,19 +115,6 @@ const WelcomeStackNavigator = () => {
   );
 };
 
-// const ImageDetailStackNavigator = () => {
-//   return (
-//     <Stack.Navigator screenOptions={screenOptionStyle}>
-//       <Stack.Screen
-//         name="ImageDetails"
-//         sharedElements={(route) => {
-//           return [route.params.item.id];
-//         }}
-//         component={ImageDetails}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
 
 const ProfileStackNavigator = () => {
   return (
@@ -177,13 +164,7 @@ const EditPostStackNavigator = () => {
   );
 };
 
-// const MainStackNavigator = () => {
-//   return (
-//     <Stack.Navigator screenOptions={{ headerShown: false }}>
-//       <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
-//     </Stack.Navigator>
-//   );
-// };
+
 
 const ProfileSubscriberStackNavigator = () => {
   return (
@@ -207,7 +188,7 @@ export {
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
-  // ImageDetailStackNavigator,
+
   UsernameStackNavigator,
   PostStackNavigator,
   CommentScreenStackNavigator,

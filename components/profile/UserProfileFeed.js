@@ -34,14 +34,6 @@ export default function UserProfileFeed({
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  // if (item.mediaType === "image") {
-  //   return <UserProfileImagePost item={item} />;
-  // }
-
-  // if (item.mediaType === "video") {
-  //   return <UserProfileVideoPost item={item} />;
-  // }
-
   if (navState === "home") {
     return (
       <>

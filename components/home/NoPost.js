@@ -38,11 +38,10 @@ export default function NoPost({ navigation }) {
       .select(" creatorId, followingId, creatorUsername, userId")
       .eq("following", true)
       .eq("userId", userId);
-    // .eq('ceatorId', )
+ 
 
     setFollow(resp.body);
 
-    // const list = resp.map((i) => i.followingId);
 
     return resp.body;
   }

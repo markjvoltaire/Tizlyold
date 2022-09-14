@@ -116,10 +116,6 @@ export default function PostForm({ navigation }) {
       const headers = supabase._getAuthHeaders();
       const req = new XMLHttpRequest();
 
-      // function updateProgress(event) {
-      //   console.log("LOADING");
-      //   setUploadProgress("Please Wait");
-      // }
 
       function transferComplete(evt) {
         setUploadProgress("done");
@@ -127,7 +123,6 @@ export default function PostForm({ navigation }) {
         navigation.dispatch(pushAction);
       }
 
-      // req.addEventListener("progress", updateProgress);
 
       req.addEventListener("load", transferComplete);
 
@@ -178,7 +173,7 @@ export default function PostForm({ navigation }) {
   }
 
   const pickPost = async () => {
-    // No permissions request is necessary for launching the image library
+
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -221,7 +216,7 @@ export default function PostForm({ navigation }) {
 
       <View style={{ bottom: 50 }}>
         <Text style={styles.subHead}>Select From Gallery</Text>
-        <Text style={styles.subHeadCategory}>Select a category</Text>
+
         <View style={styles.addCategory}>
           <TouchableOpacity>
             <View>

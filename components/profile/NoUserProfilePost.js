@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   editButton: {
     position: "absolute",
     resizeMode: "contain",
-    bottom: 30,
+    bottom: 20,
     width: 160,
     height: 30,
   },
@@ -175,18 +175,19 @@ const styles = StyleSheet.create({
   },
   subButton: {
     resizeMode: "contain",
-    top: 360,
+    top: 330,
     width: 160,
     height: 30,
     right: 15,
   },
 
   bio: {
-    position: "absolute",
     color: "white",
+
     fontSize: 15,
     width: 400,
-    top: 320,
+    top: 312,
+    alignSelf: "center",
     left: 8,
     fontWeight: "800",
   },

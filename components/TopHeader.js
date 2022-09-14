@@ -104,16 +104,3 @@ const styles = StyleSheet.create({
     top: 12,
   },
 });
-
-// searchInput: {
-//   position: "absolute",
-//   top: 57,
-//   paddingLeft: 63,
-
-//   borderColor: "grey",
-//   borderWidth: 0.1,
-//   borderRadius: 25,
-//   backgroundColor: "#F3F3F9",
-//   width: 200,
-//   height: 35,
-// },

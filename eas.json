@@ -20,6 +20,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "markjvoltaire@icloud.com",
+        "ascAppId": "1644871005",
+        "appleTeamId": "YH5DP87UFL"
+      }
+    }
   }
 }

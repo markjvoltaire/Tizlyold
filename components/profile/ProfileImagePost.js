@@ -15,14 +15,6 @@ export default function ProfileImagePost({ item, navigation }) {
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  // const month = item.posted.slice(5);
-  // const date = month.concat("-");
-  // const year = item.posted.slice(0, 4);
-
-  // const postDate = date + year;
-  // const milliseconds = status.durationMillis;
-  // const seconds = milliseconds / 1000;
-
   return (
     <View style={{ paddingBottom: 90, top: 10.5 }}>
       <Pressable onPress={() => navigation.navigate("ImageDetails", { item })}>

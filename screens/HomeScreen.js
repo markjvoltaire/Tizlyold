@@ -39,19 +39,7 @@ export default function HomeScreen({ navigation, route }) {
 
   const [follow, setFollow] = useState([]);
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     async function updateFeed() {
-  //       // const resp = await getFollowing();
-  //       // const list = resp.map((i) => i.followingId);
-  //       // setFollow(list);
-  //
-  //     }
-  //     updateFeed();
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
+ 
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;

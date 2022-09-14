@@ -57,9 +57,7 @@ export default function PostButtons({ image }) {
   return (
     <View>
       <TouchableOpacity
-      // onPress={async () => {
-      //   await uploadPostFromUri();
-      // }}
+  
       >
         <Image
           style={styles.postButton}

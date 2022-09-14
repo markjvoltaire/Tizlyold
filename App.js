@@ -21,9 +21,8 @@ import Settings from "./screens/Settings";
 import Subscriptions from "./screens/Notifications";
 import Checkout from "./screens/Checkout";
 import { LogBox } from "react-native";
-LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
-import { useState } from "react";
+LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
 
 import { UserProvider } from "./context/UserContext";
 

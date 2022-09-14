@@ -62,8 +62,6 @@ export default function ImageDetails({ navigation, route }) {
 
     const comments = { users: users, comments: resp };
 
-    /// comments
-
     return resp.body;
   }
 

@@ -345,21 +345,3 @@ onPlaybackStatusUpdate={(status) => setStatus(() => status)}
 /> */
 }
 
-// <Image
-// style={styles.logo}
-// source={require("../assets/tizlyicon.jpg")}
-// />
-// <FullSeperator />
-// </View>
-// <Image
-// style={{
-// position: "absolute",
-// width: 100,
-// height: 80,
-// resizeMode: "contain",
-// top: 120,
-// left: 300,
-// }}
-// source={require("../assets/goToProfile.png")}
-// />
-// <View>

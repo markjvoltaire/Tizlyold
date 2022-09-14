@@ -17,7 +17,7 @@ export default function UserButtons({
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
-  // const [isPressed, setIsPressed] = useState(false);
+
 
   const { user } = useUser();
 

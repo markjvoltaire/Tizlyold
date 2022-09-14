@@ -22,9 +22,7 @@ export default function Settings({ navigation }) {
     await supabase.auth.signOut();
   }
 
-  // if (!loaded) {
-  //   return null;
-  // }
+
 
   return (
     <SafeAreaView

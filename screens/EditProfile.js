@@ -129,7 +129,7 @@ export default function EditProfile({ navigation }) {
 
         .eq("user_id", userId);
 
-      // getUserByIds();
+
 
       if (error) {
         Alert.alert(error.message);
@@ -150,7 +150,7 @@ export default function EditProfile({ navigation }) {
   }
 
   const pickProfileImage = async () => {
-    // No permissions request is necessary for launching the image library
+  
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -167,7 +167,7 @@ export default function EditProfile({ navigation }) {
   };
 
   const pickBannerImage = async () => {
-    // No permissions request is necessary for launching the image library
+   
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -352,9 +352,8 @@ export default function EditProfile({ navigation }) {
               image === null
                 ? { uri: user.profileimage }
                 : require("../assets/noProfilePic.jpeg")
-              // user.profileimage === null
+         
 
-              //   : { uri: user.profileimage }
             }
           />
           <Image

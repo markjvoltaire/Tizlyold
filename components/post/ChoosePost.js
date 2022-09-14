@@ -6,7 +6,6 @@ import * as ImagePicker from "expo-image-picker";
 export default function ChoosePost({ navigation }) {
   const [image, setImage] = useState();
   const pickPost = async () => {
-    // No permissions request is necessary for launching the image library
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,

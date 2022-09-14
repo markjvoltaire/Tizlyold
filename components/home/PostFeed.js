@@ -21,7 +21,7 @@ export default function PostFeed({ posts }) {
     return <Text> loading</Text>;
   }
 
-  //   const posts = userPost.body;
+
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 

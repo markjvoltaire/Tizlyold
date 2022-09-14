@@ -21,7 +21,7 @@ export default function HomeBoard() {
           <View style={styles.homeboardContainer}>
             <Image
               style={styles.homeboard}
-              source={require("../../assets/Banner.png")}
+              source={require("../../assets/artistFlat.png")}
             />
           </View>
         </TouchableOpacity>
@@ -54,6 +54,8 @@ const styles = StyleSheet.create({
   homeboard: {
     height: 214,
     resizeMode: "contain",
+    left: 10,
+    bottom: 10,
   },
   username: {
     fontWeight: "bold",
