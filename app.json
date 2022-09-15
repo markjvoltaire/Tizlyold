@@ -22,7 +22,7 @@
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.tizly.Tizly",
-      "buildNumber": 2
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
