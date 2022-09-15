@@ -3,12 +3,12 @@
     "name": "Tizly",
     "slug": "Tizly",
     "owner": "tizly",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/iconTizly.png",
+    "icon": "./assets/appIcons/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/Tizlymed.png",
+      "image": "./assets/appIcons/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
