@@ -21,7 +21,8 @@
         "NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library."
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.tizly.Tizly"
+      "bundleIdentifier": "com.tizly.Tizly",
+      "buildNumber": 2
     },
     "android": {
       "adaptiveIcon": {
