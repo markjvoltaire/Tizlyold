@@ -23,6 +23,24 @@ export default function VideoPost({ item, navigation, route }) {
 
   return (
     <View style={{ paddingBottom: 55 }}>
+      <View style={{ alignSelf: "center", right: 20, top: 45 }}>
+        <Image
+          style={{
+            height: 35,
+            width: 35,
+            borderRadius: 100,
+            bottom: 30,
+          }}
+          source={{ uri: item.profileimage }}
+        />
+        <View style={{ bottom: 63, left: 40 }}>
+          <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
+          <Text style={{ fontWeight: "600", color: "#A1A1B3" }}>
+            @{item.username}
+          </Text>
+        </View>
+      </View>
+
       <Pressable
         onPress={() =>
           navigation.navigate("Player", {

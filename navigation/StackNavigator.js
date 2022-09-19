@@ -70,6 +70,8 @@ const HomeStackNavigator = () => {
       />
 
       <Stack.Screen name="UserProfile2" component={UserProfile} />
+
+      <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
@@ -87,6 +89,8 @@ const ExploreStackNavigator = () => {
           headerTitle: () => <Header />,
         }}
       />
+
+      <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
@@ -114,7 +118,6 @@ const WelcomeStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 
 const ProfileStackNavigator = () => {
   return (
@@ -164,8 +167,6 @@ const EditPostStackNavigator = () => {
   );
 };
 
-
-
 const ProfileSubscriberStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -188,7 +189,6 @@ export {
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
-
   UsernameStackNavigator,
   PostStackNavigator,
   CommentScreenStackNavigator,

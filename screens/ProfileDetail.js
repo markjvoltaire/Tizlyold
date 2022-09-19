@@ -207,11 +207,11 @@ export default function ProfileDetail({ navigation, route, item }) {
       >
         <Image
           style={styles.userBanner}
-          source={{ uri: profile.bannerImage }}
+          source={{ uri: route.params.bannerImage }}
         />
 
         <Video
-          source={{ uri: profile.bannerImage }}
+          source={{ uri: route.params.bannerImage }}
           isLooping
           shouldPlay={true}
           isMuted={true}
@@ -231,17 +231,20 @@ export default function ProfileDetail({ navigation, route, item }) {
           />
         </TouchableOpacity>
         <View style={{ bottom: 410 }}>
-          <Text style={styles.displayname}>{profile.displayName}</Text>
-          <Text style={styles.username}>@{profile.username}</Text>
-          <Text style={styles.bio}> {profile.bio}</Text>
-          <Image
-            style={styles.profileImage}
-            source={
-              profile.profileimage === null
-                ? require("../assets/noProfilePic.jpeg")
-                : { uri: profile.profileimage }
-            }
-          />
+          <View style={{ top: 30 }}>
+            <Text style={styles.displayname}>{profile.displayName}</Text>
+            <Text style={styles.username}>@{route.params.username}</Text>
+
+            <Image
+              style={styles.profileImage}
+              source={
+                profile.profileimage === null
+                  ? require("../assets/noProfilePic.jpeg")
+                  : { uri: route.params.profileimage }
+              }
+            />
+          </View>
+
           <TouchableOpacity onPress={() => handleFollow()}>
             <Image
               style={styles.subButton}

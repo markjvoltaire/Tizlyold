@@ -21,26 +21,6 @@ export default function UserProfileImagePost({
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
-  const createThreeButtonAlert = () =>
-    Alert.alert("Post Options", "My Alert Msg", [
-      {
-        text: "Edit Post",
-        onPress: () =>
-          navigation.navigate("EditPost", {
-            user_id: post.user_id,
-            description: post.description,
-            title: post.title,
-            id: post.id,
-          }),
-      },
-      {
-        text: "Cancel",
-        onPress: () => null,
-        style: "cancel",
-      },
-      { text: "Delete Post", onPress: () => null },
-    ]);
-
   return (
     <View style={{ paddingBottom: 90 }}>
       <Pressable>

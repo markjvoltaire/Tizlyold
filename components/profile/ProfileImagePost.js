@@ -13,6 +13,7 @@ export default function ProfileImagePost({ item, navigation }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const [loading, setLoading] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (

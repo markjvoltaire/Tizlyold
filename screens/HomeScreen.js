@@ -39,8 +39,6 @@ export default function HomeScreen({ navigation, route }) {
 
   const [follow, setFollow] = useState([]);
 
- 
-
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
@@ -148,27 +146,27 @@ export default function HomeScreen({ navigation, route }) {
     );
   }
 
-  if (postList.length === 0) {
-    const refreshFeed = async () => {
-      await getPosts();
-    };
+  // if (postList.length === 0) {
+  //   const refreshFeed = async () => {
+  //     await getPosts();
+  //   };
 
-    return (
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        <TopHeader navigation={navigation} />
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => refreshFeed()}
-            />
-          }
-        >
-          <NoPost navigation={navigation} />
-        </ScrollView>
-      </View>
-    );
-  }
+  //   return (
+  //     <View style={{ flex: 1, backgroundColor: "white" }}>
+  //       <TopHeader navigation={navigation} />
+  //       <ScrollView
+  //         refreshControl={
+  //           <RefreshControl
+  //             refreshing={refreshing}
+  //             onRefresh={() => refreshFeed()}
+  //           />
+  //         }
+  //       >
+  //         <NoPost navigation={navigation} />
+  //       </ScrollView>
+  //     </View>
+  //   );
+  // }
 
   const refreshFeed = async () => {
     getPosts();

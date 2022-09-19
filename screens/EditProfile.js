@@ -16,16 +16,17 @@ import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
 import { StackActions } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
+import { set } from "lodash";
 
 export default function EditProfile({ navigation }) {
-  const [image, setImage] = useState(null);
-  const [banner, setBanner] = useState(null);
   const [bannerType, setBannerType] = useState();
   const [bannerData, setBannerData] = useState(null);
   const [imageData, setImageData] = useState(null);
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(true);
 
+  const [image, setImage] = useState(user.profileimage);
+  const [banner, setBanner] = useState(user.bannerImage);
   const [username, setUsername] = useState(user.username);
   const [displayName, setDisplayName] = useState(user.displayName);
   const [bio, setBio] = useState(user.bio);
@@ -129,8 +130,6 @@ export default function EditProfile({ navigation }) {
 
         .eq("user_id", userId);
 
-
-
       if (error) {
         Alert.alert(error.message);
       }
@@ -150,39 +149,45 @@ export default function EditProfile({ navigation }) {
   }
 
   const pickProfileImage = async () => {
-  
     let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
 
-    try {
-      return await uploadProfileFromUri(photo);
-    } catch (e) {
-      Alert.alert({ title: "image upload", message: e.message });
-      return null;
+    // try {
+    //   return await uploadProfileFromUri(photo);
+    // } catch (e) {
+    //   Alert.alert({ title: "image upload", message: e.message });
+    //   return null;
+    // }
+
+    if (!photo.cancelled) {
+      setImage(photo.uri);
     }
   };
 
   const pickBannerImage = async () => {
-   
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       videoMaxDuration: 10,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
 
-    try {
-      return await uploadBannerFromUri(photo);
-    } catch (e) {
-      Alert.alert({ title: "image upload", message: e.message });
-      return null;
+    if (!photo.cancelled) {
+      setBanner(photo.uri);
+      setBannerType(photo.type);
     }
   };
+  // try {
+  //   return await uploadBannerFromUri(photo);
+  // } catch (e) {
+  //   Alert.alert({ title: "image upload", message: e.message });
+  //   return null;
+  // }
 
   let profileDisplay;
 
@@ -350,10 +355,8 @@ export default function EditProfile({ navigation }) {
             style={styles.profileImage}
             source={
               image === null
-                ? { uri: user.profileimage }
-                : require("../assets/noProfilePic.jpeg")
-         
-
+                ? require("../assets/noProfilePic.jpeg")
+                : { uri: image }
             }
           />
           <Image
@@ -362,33 +365,24 @@ export default function EditProfile({ navigation }) {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={async () => {
-            const resp = await pickBannerImage();
-
-            if (resp?.imageData) {
-              setBanner(resp.uri);
-              setBannerData(resp?.imageData);
-            }
-          }}
-        >
-          {user.bannerImageType === "image" ? (
-            <Image
-              style={styles.userBanner}
-              source={
-                user.bannerImage === null
-                  ? require("../assets/noProfilePic.jpeg")
-                  : { uri: user.bannerImage }
-              }
-            />
-          ) : (
+        <TouchableOpacity onPress={() => pickBannerImage()}>
+          {bannerType === "video" ? (
             <Video
-              source={{ uri: user.bannerImage }}
+              source={{ uri: banner }}
               isLooping
               shouldPlay={true}
               isMuted={true}
               resizeMode="cover"
               style={styles.userBanner}
+            />
+          ) : (
+            <Image
+              style={styles.userBanner}
+              source={
+                user.bannerImage === null
+                  ? require("../assets/noProfilePic.jpeg")
+                  : { uri: banner }
+              }
             />
           )}
           <Image
@@ -453,6 +447,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     top: 140,
     left: 30,
+    fontWeight: "600",
   },
 
   verticleDiv: {

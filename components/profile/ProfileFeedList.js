@@ -17,6 +17,7 @@ export default function ProfileFeedList({ item, route, navigation }) {
   const userId = user.user_id;
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   if (item.mediaType === "image") {
     return <ProfileImagePost navigation={navigation} item={item} />;

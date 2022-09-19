@@ -116,13 +116,11 @@ export default function PostForm({ navigation }) {
       const headers = supabase._getAuthHeaders();
       const req = new XMLHttpRequest();
 
-
       function transferComplete(evt) {
         setUploadProgress("done");
         clear();
         navigation.dispatch(pushAction);
       }
-
 
       req.addEventListener("load", transferComplete);
 
@@ -173,12 +171,12 @@ export default function PostForm({ navigation }) {
   }
 
   const pickPost = async () => {
-
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [9, 16],
-      quality: 1,
+      canAskAgain: true,
+      quality: 0,
     });
 
     if (!photo.cancelled) {
@@ -218,17 +216,7 @@ export default function PostForm({ navigation }) {
         <Text style={styles.subHead}>Select From Gallery</Text>
 
         <View style={styles.addCategory}>
-          <TouchableOpacity>
-            <View>
-              {/* <SelectList
-                placeholder="Select a category"
-                data={data}
-                setSelected={setSelected}
-                inputStyles={{ fontWeight: "600" }}
-                dropdownStyles={{ height: 130 }}
-              /> */}
-            </View>
-          </TouchableOpacity>
+          <TouchableOpacity></TouchableOpacity>
         </View>
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
