@@ -118,21 +118,21 @@ export default function ProfileDetail({ navigation, route, item }) {
     getFeed();
   }, []);
 
-  if (posts.length === 0) {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-          />
-        }
-        style={{ flex: 1, backgroundColor: "white" }}
-      >
-        <NoProfilePost profile={profile} navigation={navigation} />
-      </ScrollView>
-    );
-  }
+  // if (posts.length === 0) {
+  //   return (
+  //     <ScrollView
+  //       refreshControl={
+  //         <RefreshControl
+  //           refreshing={refreshing}
+  //           onRefresh={() => refreshFeed()}
+  //         />
+  //       }
+  //       style={{ flex: 1, backgroundColor: "white" }}
+  //     >
+  //       <NoProfilePost profile={profile} navigation={navigation} />
+  //     </ScrollView>
+  //   );
+  // }
 
   if (loading) {
     return (
