@@ -50,13 +50,14 @@ export default function HomeScreen({ navigation, route }) {
       .eq("user_id", userId)
       .single();
     setUser(resp.body);
-    setLoading(false);
   }
 
   useEffect(() => {
     const getUserProfile = async () => {
       await getUserById();
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     };
     getUserProfile();
   }, []);
@@ -142,7 +143,7 @@ export default function HomeScreen({ navigation, route }) {
             position: "absolute",
             alignSelf: "center",
           }}
-          source={require("../assets/lottie/fullBlueCircle.json")}
+          source={require("../assets/lottie/fasterGreyLoader.json")}
           autoPlay
         />
       </View>

@@ -61,8 +61,6 @@ export default function App() {
     setAuth(supabase.auth.session());
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("session", session);
-      console.log("yoooo");
       setAuth(session);
     });
   });
