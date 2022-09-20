@@ -1,4 +1,6 @@
 import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
+
 import {
   StyleSheet,
   Text,
@@ -46,149 +48,31 @@ import Notifications from "./screens/Notifications";
 import ImageDetails from "./screens/ImageDetails";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CommentScreen from "./screens/CommentScreen";
+import { supabase } from "./services/supabase";
+import AuthStack from "./Auth/AuthStack";
+import NoAuthStack from "./Auth/NoAuthStack";
 
 const Stack = createSharedElementStackNavigator();
 
 export default function App() {
+  const [auth, setAuth] = useState();
+
+  useEffect(() => {
+    setAuth(supabase.auth.session());
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("session", session);
+      console.log("yoooo");
+      setAuth(session);
+    });
+  });
+
   return (
     <UserProvider>
       <FollowProvider>
         <PostProvider>
           <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="Welcome"
-                component={Welcome}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Player"
-                component={Player}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="EditPost"
-                component={EditPost}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="ImageDetails"
-                component={ImageDetails}
-                sharedElements={(route) => {
-                  return [route.params.item.id];
-                }}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="UserProfilePostDetail"
-                component={UserProfilePostDetail}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="SignUp"
-                component={SignUp}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="Username"
-                component={UserNames}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="CommentScreen"
-                component={CommentScreen}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="Checkout"
-                component={Checkout}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="HomeScreen"
-                component={BottomTabNavigator}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Bio"
-                component={BioScreen}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Settings"
-                component={Settings}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="NotificationsScreen"
-                component={Notifications}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="UserProfile"
-                component={UserProfile}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Post"
-                component={Post}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="Root"
-                component={ProfileStackNavigator}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="EditProfile"
-                component={EditProfile}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="ProfileDetail"
-                component={ProfileDetail}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="ProfileDetail2"
-                component={ProfileDetail}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="ProfileDetail3"
-                component={ProfileDetail}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-
-              <Stack.Screen
-                name="UserSubscriber"
-                component={UserProfileSubscribers}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-            </Stack.Navigator>
+            {auth ? <AuthStack /> : <NoAuthStack />}
           </NavigationContainer>
         </PostProvider>
       </FollowProvider>
