@@ -94,52 +94,6 @@ export default function EditProfile({ navigation }) {
     }
   };
 
-  const uploadBannerFromUri = async (photo) => {
-    const userId = supabase.auth.currentUser.id;
-
-    if (!photo.cancelled) {
-      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
-
-      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: photo.uri,
-        name: fileName,
-        type: photo.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      const { data, error } = await supabase.storage
-        .from("profile-images")
-        .upload(fileName, formData, {
-          upsert: false,
-        });
-
-      const { publicURL } = await supabase.storage
-        .from("profile-images")
-        .getPublicUrl(`${fileName}`);
-
-      let imageLink = publicURL;
-      let type = photo.type;
-
-      setBannerType(type);
-
-      const resp = await supabase
-        .from("profiles")
-        .update({ bannerImage: publicURL, bannerImageType: type })
-
-        .eq("user_id", userId);
-
-      if (error) {
-        Alert.alert(error.message);
-      }
-
-      return { ...photo, imageData: data };
-    } else {
-      return photo;
-    }
-  };
-
   if (user === undefined) {
     navigation.navigate("Username");
   }
@@ -213,24 +167,24 @@ export default function EditProfile({ navigation }) {
 
   const pushActionProfile = StackActions.replace("UserProfile");
 
-  async function editProfile() {
-    const userId = supabase.auth.currentUser.id;
+  // async function editProfile() {
+  //   const userId = supabase.auth.currentUser.id;
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ username: username, displayName: displayName, bio: bio })
-      .eq("user_id", userId);
+  //   const { data, error } = await supabase
+  //     .from("profiles")
+  //     .update({ username: username, displayName: displayName, bio: bio })
+  //     .eq("user_id", userId);
 
-    if (!error) {
-      navigation.goBack();
-    }
-    if (
-      error.message ===
-      'duplicate key value violates unique constraint "profiles_username_key"'
-    ) {
-      Alert.alert("This Username Is Already Taken");
-    }
-  }
+  //   if (!error) {
+  //     navigation.goBack();
+  //   }
+  //   if (
+  //     error.message ===
+  //     'duplicate key value violates unique constraint "profiles_username_key"'
+  //   ) {
+  //     Alert.alert("This Username Is Already Taken");
+  //   }
+  // }
 
   async function editProfile() {
     const userId = supabase.auth.currentUser.id;
@@ -276,6 +230,47 @@ export default function EditProfile({ navigation }) {
         .eq("user_id", userId);
     };
 
+    const uploadBannerFromUri = async () => {
+      const userId = supabase.auth.currentUser.id;
+      const ext = banner.uri.substring(photo.uri.lastIndexOf(".") + 1);
+      const fileName = banner.uri.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: banner.uri,
+        name: fileName,
+        type: banner.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      const { data, error } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, formData, {
+          upsert: false,
+        });
+
+      const { publicURL } = await supabase.storage
+        .from("profile-images")
+        .getPublicUrl(`${fileName}`);
+
+      let imageLink = publicURL;
+      let type = photo.type;
+
+      setBannerType(type);
+
+      const resp = await supabase
+        .from("profiles")
+        .update({ bannerImage: publicURL, bannerImageType: type })
+
+        .eq("user_id", userId);
+
+      if (error) {
+        Alert.alert(error.message);
+      }
+
+      return { ...photo, imageData: data };
+    };
+
+    uploadBannerFromUri();
     editProfileImage();
     editLikeProfileImage();
     editSaveProfileImage();

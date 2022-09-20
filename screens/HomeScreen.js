@@ -28,6 +28,8 @@ import { fromPairs } from "lodash";
 import { useFollow } from "../context/FollowContext";
 import { useScreens } from "react-native-screens";
 import LottieView from "lottie-react-native";
+import { StackActions } from "@react-navigation/native";
+
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
 
@@ -36,6 +38,7 @@ export default function HomeScreen({ navigation, route }) {
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
   const [userFollowingId, setUserFollowingId] = useState();
+  const pushAction = StackActions.replace("Explore");
 
   const [follow, setFollow] = useState([]);
 
@@ -177,21 +180,63 @@ export default function HomeScreen({ navigation, route }) {
       <TopHeader user={user} navigation={navigation} />
 
       <View style={styles.feedContainer}>
-        <FlatList
-          data={postList}
-          keyExtractor={(item) => item.id}
-          refreshing={refreshing}
-          onRefresh={() => refreshFeed()}
-          initialNumToRender={2}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            borderBottomWidth: 0.8,
-            borderBottomColor: "#EDEDED",
-          }}
-          renderItem={({ item }) => (
-            <HomeFeedList item={item} navigation={navigation} />
-          )}
-        />
+        {postList.length === 0 ? (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => refreshFeed()}
+              />
+            }
+          >
+            <Text
+              style={{
+                position: "absolute",
+                fontWeight: "800",
+                fontSize: 20,
+                alignSelf: "center",
+                top: 50,
+              }}
+            >
+              Your Feed Is Currently Empty
+            </Text>
+            <Image
+              style={{
+                position: "absolute",
+                height: 300,
+                resizeMode: "contain",
+                top: 200,
+                alignSelf: "center",
+              }}
+              source={require("../assets/mobile-application.png")}
+            />
+            <TouchableOpacity
+              style={{ top: 600, alignItems: "center" }}
+              onPress={() => navigation.navigate("Explore")}
+            >
+              <Image
+                style={styles.exploreButton}
+                source={require("../assets/exploreCreators.png")}
+              />
+            </TouchableOpacity>
+          </ScrollView>
+        ) : (
+          <FlatList
+            data={postList}
+            keyExtractor={(item) => item.id}
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+            initialNumToRender={2}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              borderBottomWidth: 0.8,
+              borderBottomColor: "#EDEDED",
+            }}
+            renderItem={({ item }) => (
+              <HomeFeedList item={item} navigation={navigation} />
+            )}
+          />
+        )}
       </View>
     </View>
   );

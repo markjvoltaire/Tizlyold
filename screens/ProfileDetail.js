@@ -99,6 +99,8 @@ export default function ProfileDetail({ navigation, route, item }) {
       .eq("user_id", route.params.user_id)
       .single();
 
+    console.log("data", data);
+
     return data;
   }
 
@@ -261,19 +263,38 @@ export default function ProfileDetail({ navigation, route, item }) {
 
           <FullSeperator />
         </View>
-        <View style={styles.feedContainer}>
-          {posts.map((item) => {
-            return (
-              <View key={item.id}>
-                <ProfileFeedList
-                  navigation={navigation}
-                  route={route}
-                  item={item}
-                />
-              </View>
-            );
-          })}
-        </View>
+        {posts.length === 0 ? (
+          <View style={{ alignItems: "center", top: 130, flex: 1 }}>
+            <Text
+              style={{
+                bottom: 60,
+                fontWeight: "600",
+                fontSize: 20,
+                color: "#686877",
+              }}
+            >
+              @{route.params.username} Has No Content Yet.
+            </Text>
+            <Image
+              style={{ height: 170, resizeMode: "contain", bottom: 20 }}
+              source={require("../assets/mobile-application.png")}
+            />
+          </View>
+        ) : (
+          <View style={styles.feedContainer}>
+            {posts.map((item) => {
+              return (
+                <View key={item.id}>
+                  <ProfileFeedList
+                    navigation={navigation}
+                    route={route}
+                    item={item}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
     </>
   );
