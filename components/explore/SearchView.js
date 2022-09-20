@@ -35,10 +35,9 @@ export default function SearchView({
         <View>
           <HomeBoard />
         </View>
-        <View>
+        <View style={{ bottom: 20 }}>
           <TrendingCreators navigation={navigation} />
-        </View>
-        <View>
+
           <NewToTizly navigation={navigation} />
         </View>
       </ScrollView>

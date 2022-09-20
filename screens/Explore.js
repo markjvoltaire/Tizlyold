@@ -31,11 +31,12 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { supabase } from "../services/supabase";
-import SearchList from "../components/explore/SearchList";
 import SearchView from "../components/explore/SearchView";
-import { filter } from "lodash";
+import { useUser } from "../context/UserContext";
 
 export default function Explore({ navigation }) {
+  const { user, setUser } = useUser();
+
   const [query, setQuery] = useState("");
   const [isPressed, setIsPressed] = useState(false);
   const [filterData, setFilterData] = useState([]);
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   searchInput: {
-    top: 25,
+    top: 12,
     alignSelf: "center",
     paddingLeft: 63,
     borderColor: "grey",
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   searchIcon: {
     height: 20,
     width: 20,
-    bottom: 8,
+    bottom: 20,
     left: 80,
   },
   settingIcon: {

@@ -62,11 +62,11 @@ export default function UserProfile({ navigation, route }) {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
       setPosts(resp);
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
     };
     getPost();
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   }, []);
 
   if (loading) {
