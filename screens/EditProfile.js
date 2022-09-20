@@ -24,7 +24,7 @@ export default function EditProfile({ navigation }) {
   const [imageData, setImageData] = useState(null);
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(true);
-
+  const video = React.useRef(null);
   const [image, setImage] = useState(user.profileimage);
   const [banner, setBanner] = useState(user.bannerImage);
   const [username, setUsername] = useState(user.username);
@@ -54,46 +54,6 @@ export default function EditProfile({ navigation }) {
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  const uploadProfileFromUri = async (photo) => {
-    const userId = supabase.auth.currentUser.id;
-
-    if (!photo.cancelled) {
-      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
-
-      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: photo.uri,
-        name: fileName,
-        type: photo.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      const { data, error } = await supabase.storage
-        .from("profile-images")
-        .upload(fileName, formData, {
-          upsert: false,
-        });
-
-      const { publicURL } = await supabase.storage
-        .from("profile-images")
-        .getPublicUrl(`${fileName}`);
-
-      const resp = await supabase
-        .from("profiles")
-        .update({ profileimage: publicURL })
-        .eq("user_id", userId);
-
-      if (error) {
-        Alert.alert(error.message);
-      }
-
-      return { ...photo, imageData: data };
-    } else {
-      return photo;
-    }
-  };
-
   if (user === undefined) {
     navigation.navigate("Username");
   }
@@ -110,15 +70,9 @@ export default function EditProfile({ navigation }) {
       quality: 0,
     });
 
-    // try {
-    //   return await uploadProfileFromUri(photo);
-    // } catch (e) {
-    //   Alert.alert({ title: "image upload", message: e.message });
-    //   return null;
-    // }
-
     if (!photo.cancelled) {
       setImage(photo.uri);
+      setImageData(photo);
     }
   };
 
@@ -133,6 +87,7 @@ export default function EditProfile({ navigation }) {
 
     if (!photo.cancelled) {
       setBanner(photo.uri);
+      setBannerData(photo);
       setBannerType(photo.type);
     }
   };
@@ -166,25 +121,6 @@ export default function EditProfile({ navigation }) {
   }
 
   const pushActionProfile = StackActions.replace("UserProfile");
-
-  // async function editProfile() {
-  //   const userId = supabase.auth.currentUser.id;
-
-  //   const { data, error } = await supabase
-  //     .from("profiles")
-  //     .update({ username: username, displayName: displayName, bio: bio })
-  //     .eq("user_id", userId);
-
-  //   if (!error) {
-  //     navigation.goBack();
-  //   }
-  //   if (
-  //     error.message ===
-  //     'duplicate key value violates unique constraint "profiles_username_key"'
-  //   ) {
-  //     Alert.alert("This Username Is Already Taken");
-  //   }
-  // }
 
   async function editProfile() {
     const userId = supabase.auth.currentUser.id;
@@ -221,60 +157,97 @@ export default function EditProfile({ navigation }) {
         .eq("userId", userId);
     };
 
-    const editPostProfileImage = async () => {
-      const userId = supabase.auth.currentUser.id;
-
-      const resp = await supabase
-        .from("post")
-        .update({ profileimage: image })
-        .eq("user_id", userId);
-    };
-
     const uploadBannerFromUri = async () => {
       const userId = supabase.auth.currentUser.id;
-      const ext = banner.uri.substring(photo.uri.lastIndexOf(".") + 1);
-      const fileName = banner.uri.replace(/^.*[\\\/]/, "");
+      const ext = banner.substring(banner.lastIndexOf(".") + 1);
+      const fileName = banner.replace(/^.*[\\\/]/, "");
 
       var formData = new FormData();
       formData.append("files", {
-        uri: banner.uri,
+        uri: banner,
         name: fileName,
-        type: banner.type ? `image/${ext}` : `video/${ext}`,
+        type: bannerData.type ? `image/${ext}` : `video/${ext}`,
       });
 
-      const { data, error } = await supabase.storage
-        .from("profile-images")
-        .upload(fileName, formData, {
-          upsert: false,
-        });
+      try {
+        const { data, error } = await supabase.storage
+          .from("profile-images")
+          .upload(fileName, formData, {
+            upsert: false,
+          });
 
-      const { publicURL } = await supabase.storage
-        .from("profile-images")
-        .getPublicUrl(`${fileName}`);
+        const { publicURL } = await supabase.storage
+          .from("profile-images")
+          .getPublicUrl(`${fileName}`);
 
-      let imageLink = publicURL;
-      let type = photo.type;
+        let imageLink = publicURL;
+        let type = bannerData.type;
 
-      setBannerType(type);
+        setBannerType(type);
 
-      const resp = await supabase
-        .from("profiles")
-        .update({ bannerImage: publicURL, bannerImageType: type })
+        const resp = await supabase
+          .from("profiles")
+          .update({ bannerImage: publicURL, bannerImageType: type })
 
-        .eq("user_id", userId);
+          .eq("user_id", userId);
+      } catch (e) {
+        console.log({ title: "image upload", message: e.message });
+      }
 
       if (error) {
         Alert.alert(error.message);
       }
 
-      return { ...photo, imageData: data };
+      return { ...banner, imageData: data };
+    };
+
+    const uploadProfileImageFromUri = async () => {
+      const userId = supabase.auth.currentUser.id;
+      const ext = image.substring(banner.lastIndexOf(".") + 1);
+      const fileName = image.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: image,
+        name: fileName,
+        type: imageData.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      try {
+        const { data, error } = await supabase.storage
+          .from("profile-images")
+          .upload(fileName, formData, {
+            upsert: false,
+          });
+
+        const { publicURL } = await supabase.storage
+          .from("profile-images")
+          .getPublicUrl(`${fileName}`);
+
+        let imageLink = publicURL;
+        let type = imageData.type;
+
+        const resp = await supabase
+          .from("profiles")
+          .update({ profileimage: publicURL })
+
+          .eq("user_id", userId);
+      } catch (e) {
+        console.log({ title: "image upload", message: e.message });
+      }
+
+      if (error) {
+        Alert.alert(error.message);
+      }
+
+      return { ...image, imageData: data };
     };
 
     uploadBannerFromUri();
+    uploadProfileImageFromUri();
     editProfileImage();
     editLikeProfileImage();
     editSaveProfileImage();
-    editPostProfileImage();
 
     Alert.alert(
       "Changes Have Been Saved",
@@ -300,7 +273,9 @@ export default function EditProfile({ navigation }) {
         />
       </TouchableOpacity>
 
-      <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
+      <TouchableOpacity onPress={() => console.log(banner)}>
+        <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
+      </TouchableOpacity>
 
       <View style={styles.imagesAndInputs}>
         <Text style={styles.profileImageText}>Change Profile Image</Text>
@@ -336,16 +311,7 @@ export default function EditProfile({ navigation }) {
       </View>
 
       <View style={styles.userProfileImages}>
-        <TouchableOpacity
-          onPress={async () => {
-            const resp = await pickProfileImage();
-
-            if (resp?.imageData) {
-              setImage(resp.uri);
-              setImageData(resp?.imageData);
-            }
-          }}
-        >
+        <TouchableOpacity onPress={() => pickProfileImage()}>
           <Image
             style={styles.profileImage}
             source={
@@ -361,8 +327,9 @@ export default function EditProfile({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => pickBannerImage()}>
-          {bannerType === "video" ? (
+          {banner.endsWith(".mov") ? (
             <Video
+              ref={video}
               source={{ uri: banner }}
               isLooping
               shouldPlay={true}

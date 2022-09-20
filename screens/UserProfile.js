@@ -150,12 +150,11 @@ export default function UserProfile({ navigation, route }) {
 
       <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
 
-      <TouchableOpacity onPress={() => console.log("YOoo")}>
-        <Image
-          style={styles.userBannerFader}
-          source={require("../assets/fader.png")}
-        />
-      </TouchableOpacity>
+      <Image
+        style={styles.userBannerFader}
+        source={require("../assets/fader.png")}
+      />
+
       <View style={{ bottom: 410 }}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
