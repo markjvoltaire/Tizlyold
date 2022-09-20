@@ -62,22 +62,25 @@ export default function UserProfile({ navigation, route }) {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
       setPosts(resp);
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     };
     getPost();
   }, []);
 
   if (loading) {
     return (
-      <SafeAreaView style={{ top: 150 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <LottieView
           style={{
-            height: 300,
-            width: 300,
+            top: 60,
+            height: 400,
+            width: 400,
             position: "absolute",
             alignSelf: "center",
           }}
-          source={require("../assets/lottie/loading.json")}
+          source={require("../assets/lottie/fasterGreyLoader.json")}
           autoPlay
         />
       </SafeAreaView>
