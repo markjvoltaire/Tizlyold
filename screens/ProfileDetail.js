@@ -99,8 +99,6 @@ export default function ProfileDetail({ navigation, route, item }) {
       .eq("user_id", route.params.user_id)
       .single();
 
-    console.log("data", data);
-
     return data;
   }
 
@@ -119,22 +117,6 @@ export default function ProfileDetail({ navigation, route, item }) {
     };
     getFeed();
   }, []);
-
-  // if (posts.length === 0) {
-  //   return (
-  //     <ScrollView
-  //       refreshControl={
-  //         <RefreshControl
-  //           refreshing={refreshing}
-  //           onRefresh={() => refreshFeed()}
-  //         />
-  //       }
-  //       style={{ flex: 1, backgroundColor: "white" }}
-  //     >
-  //       <NoProfilePost profile={profile} navigation={navigation} />
-  //     </ScrollView>
-  //   );
-  // }
 
   if (loading) {
     return (

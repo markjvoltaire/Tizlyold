@@ -36,7 +36,6 @@ export default function EditProfile({ navigation }) {
   useEffect(() => {
     const getUserProfile = async () => {
       await getUserById();
-      setLoading(false);
     };
     getUserProfile();
   }, []);
@@ -51,8 +50,6 @@ export default function EditProfile({ navigation }) {
       .single();
     setUser(data);
   }
-
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   if (user === undefined) {
     navigation.navigate("Username");
@@ -119,8 +116,6 @@ export default function EditProfile({ navigation }) {
   } else {
     profileBanner = user.bannerImage;
   }
-
-  const pushActionProfile = StackActions.replace("UserProfile");
 
   async function editProfile() {
     const userId = supabase.auth.currentUser.id;
@@ -191,7 +186,7 @@ export default function EditProfile({ navigation }) {
 
           .eq("user_id", userId);
       } catch (e) {
-        console.log({ title: "image upload", message: e.message });
+        return null;
       }
 
       if (error) {
@@ -233,7 +228,7 @@ export default function EditProfile({ navigation }) {
 
           .eq("user_id", userId);
       } catch (e) {
-        console.log({ title: "image upload", message: e.message });
+        return null;
       }
 
       if (error) {
@@ -243,11 +238,11 @@ export default function EditProfile({ navigation }) {
       return { ...image, imageData: data };
     };
 
-    uploadBannerFromUri();
-    uploadProfileImageFromUri();
-    editProfileImage();
-    editLikeProfileImage();
-    editSaveProfileImage();
+    await uploadBannerFromUri();
+    await uploadProfileImageFromUri();
+    await editProfileImage();
+    await editLikeProfileImage();
+    await editSaveProfileImage();
 
     Alert.alert(
       "Changes Have Been Saved",
@@ -255,7 +250,16 @@ export default function EditProfile({ navigation }) {
       [{ text: "OK", onPress: () => navigation.goBack() }],
       { cancelable: false }
     );
+
+    if (
+      error.message ===
+      'duplicate key value violates unique constraint "profiles_username_key"'
+    ) {
+      Alert.alert("This Username Is Already Taken");
+    }
   }
+
+  console.log("loading", loading);
 
   return (
     <SafeAreaView
@@ -273,9 +277,7 @@ export default function EditProfile({ navigation }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => console.log(banner)}>
-        <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
-      </TouchableOpacity>
+      <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
 
       <View style={styles.imagesAndInputs}>
         <Text style={styles.profileImageText}>Change Profile Image</Text>
@@ -292,7 +294,7 @@ export default function EditProfile({ navigation }) {
             placeholder="Username"
             style={styles.username}
             value={username}
-            onChangeText={(text) => setUsername(text)}
+            onChangeText={(text) => setUsername(text.toLowerCase())}
           />
           <TextInput
             placeholder="Display Name"

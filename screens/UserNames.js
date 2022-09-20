@@ -86,7 +86,9 @@ export default function UserNames({ navigation }) {
         placeholder="Username"
         autoCapitalize="none"
         autoFocus={true}
-        onChangeText={(text) => setUsername(text) && setQuery(text)}
+        onChangeText={(text) =>
+          setUsername(text.toLowerCase()) && setQuery(text.toLowerCase())
+        }
         value={username}
       />
 

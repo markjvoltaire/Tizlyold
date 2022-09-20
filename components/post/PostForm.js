@@ -75,18 +75,6 @@ export default function PostForm({ navigation }) {
     setImage({});
   }
 
-  const uploadComplete = () => {
-    navigation.navigate("CheckoutScreen").then(() => {});
-  };
-
-  const waiting = (
-    <LottieView
-      style={{ height: 130, width: 130, position: "absolute" }}
-      source={require("../../assets/lottie/loading.json")}
-      autoPlay
-    />
-  );
-
   async function addPost() {
     const userId = supabase.auth.currentUser.id;
     const ext = image.uri.substring(image.uri.lastIndexOf(".") + 1);
@@ -165,7 +153,6 @@ export default function PostForm({ navigation }) {
 
       return resp;
     } catch (e) {
-      console.log({ title: "image upload", message: e.message });
       return null;
     }
   }

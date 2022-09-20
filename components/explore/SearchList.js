@@ -15,8 +15,6 @@ import { useUser } from "../../context/UserContext";
 export default function SearchList({ item, navigation, isPressed, query }) {
   const { user, setUser } = useUser();
 
-  console.log("user", user);
-  console.log("item", item);
 
   return (
     <View>
