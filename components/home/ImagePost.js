@@ -63,11 +63,13 @@ export default function ImagePost({ item, navigation, followingId }) {
             alignSelf: "center",
             borderRadius: 10,
             bottom: 50,
+            borderColor: "#5C5C5C",
+            borderWidth: 0.2,
           }}
           source={{ uri: item.media }}
           resizeMode="cover"
         />
-
+        {/* 
         <Image
           style={{
             alignSelf: "center",
@@ -80,7 +82,7 @@ export default function ImagePost({ item, navigation, followingId }) {
           }}
           resizeMode="stretch"
           source={require("../../assets/fader.png")}
-        />
+        /> */}
 
         <TouchableOpacity
           onPress={() => {

@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   searchInput: {
-    top: 12,
+    top: 15,
     alignSelf: "center",
     paddingLeft: 63,
     borderColor: "grey",

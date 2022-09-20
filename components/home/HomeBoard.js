@@ -52,10 +52,10 @@ const styles = StyleSheet.create({
   },
 
   homeboard: {
-    height: 215,
+    height: 210,
     resizeMode: "contain",
     alignSelf: "center",
-    bottom: 25,
+    bottom: 20,
   },
   username: {
     fontWeight: "bold",

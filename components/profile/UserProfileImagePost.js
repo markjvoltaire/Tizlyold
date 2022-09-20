@@ -31,10 +31,12 @@ export default function UserProfileImagePost({
             aspectRatio: 1,
             alignSelf: "center",
             borderRadius: 10,
+            borderColor: "#5C5C5C",
+            borderWidth: 0.2,
           }}
           resizeMode="cover"
         />
-        <Image
+        {/* <Image
           style={{
             alignSelf: "center",
             resizeMode: "stretch",
@@ -46,7 +48,7 @@ export default function UserProfileImagePost({
           }}
           resizeMode="stretch"
           source={require("../../assets/fader.png")}
-        />
+        /> */}
       </Pressable>
       <View style={{ position: "absolute", top: 370, left: 10 }}>
         <Text style={{ color: "white", fontWeight: "700" }}>{post.title}</Text>

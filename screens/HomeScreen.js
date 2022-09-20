@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, route }) {
       await getUserById();
       setTimeout(() => {
         setLoading(false);
-      }, 2000);
+      }, 1000);
     };
     getUserProfile();
   }, []);
