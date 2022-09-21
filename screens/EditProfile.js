@@ -20,8 +20,8 @@ import { set } from "lodash";
 
 export default function EditProfile({ navigation }) {
   const [bannerType, setBannerType] = useState();
-  const [bannerData, setBannerData] = useState(null);
-  const [imageData, setImageData] = useState(null);
+  const [bannerData, setBannerData] = useState({});
+  const [imageData, setImageData] = useState({});
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(true);
   const video = React.useRef(null);
@@ -31,8 +31,14 @@ export default function EditProfile({ navigation }) {
   const [displayName, setDisplayName] = useState(user.displayName);
   const [bio, setBio] = useState(user.bio);
 
-  const bannerImageType = user.bannerImageType;
-
+  async function sendAlert() {
+    Alert.alert(
+      "Changes Have Been Saved",
+      "",
+      [{ text: "OK", onPress: () => navigation.goBack() }],
+      { cancelable: false }
+    );
+  }
   useEffect(() => {
     const getUserProfile = async () => {
       await getUserById();
@@ -219,9 +225,6 @@ export default function EditProfile({ navigation }) {
           .from("profile-images")
           .getPublicUrl(`${fileName}`);
 
-        let imageLink = publicURL;
-        let type = imageData.type;
-
         const resp = await supabase
           .from("profiles")
           .update({ profileimage: publicURL })
@@ -231,25 +234,27 @@ export default function EditProfile({ navigation }) {
         return null;
       }
 
-      if (error) {
+      if (imageData.type === null) {
+        return null;
+      }
+
+      if (error === null) {
+        return undefined;
+      } else {
         Alert.alert(error.message);
       }
+
+      console.log("data", data);
 
       return { ...image, imageData: data };
     };
 
-    await uploadBannerFromUri();
-    await uploadProfileImageFromUri();
-    await editProfileImage();
-    await editLikeProfileImage();
-    await editSaveProfileImage();
-
-    Alert.alert(
-      "Changes Have Been Saved",
-      "",
-      [{ text: "OK", onPress: () => navigation.goBack() }],
-      { cancelable: false }
-    );
+    uploadBannerFromUri();
+    uploadProfileImageFromUri();
+    editProfileImage();
+    editLikeProfileImage();
+    editSaveProfileImage();
+    sendAlert();
 
     if (
       error.message ===
@@ -259,7 +264,7 @@ export default function EditProfile({ navigation }) {
     }
   }
 
-  console.log("loading", loading);
+  async function handSubmit() {}
 
   return (
     <SafeAreaView
@@ -428,6 +433,8 @@ const styles = StyleSheet.create({
   userProfileImages: {
     position: "absolute",
     top: 60,
+    borderColor: "#5C5C5C",
+    borderWidth: 0.2,
   },
 
   profileImage: {
@@ -438,6 +445,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     top: 150,
     borderRadius: 200,
+    borderColor: "#5C5C5C",
+    borderWidth: 0.2,
   },
 
   profileImageText: {
@@ -471,6 +480,8 @@ const styles = StyleSheet.create({
     height: 130,
     left: 240,
     borderRadius: 10,
+    borderColor: "#5C5C5C",
+    borderWidth: 0.2,
   },
   username: {
     position: "absolute",

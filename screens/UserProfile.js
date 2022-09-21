@@ -66,7 +66,7 @@ export default function UserProfile({ navigation, route }) {
     getPost();
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
 
   if (loading) {

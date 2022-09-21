@@ -41,7 +41,13 @@ export default function NewToTizly({ navigation }) {
             >
               <View>
                 <Image
-                  style={{ width: 124, height: 130, borderRadius: 13 }}
+                  style={{
+                    width: 124,
+                    height: 130,
+                    borderRadius: 13,
+                    borderColor: "#5C5C5C",
+                    borderWidth: 0.2,
+                  }}
                   source={{ uri: item.profileimage }}
                 />
                 <Image
