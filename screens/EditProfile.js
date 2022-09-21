@@ -9,6 +9,9 @@ import {
   Pressable,
   ErrorAlert,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
@@ -16,7 +19,8 @@ import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
 import { StackActions } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
-import { set } from "lodash";
+
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function EditProfile({ navigation }) {
   const [bannerType, setBannerType] = useState();
@@ -264,15 +268,8 @@ export default function EditProfile({ navigation }) {
     }
   }
 
-  async function handSubmit() {}
-
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-      }}
-    >
+    <View style={{ backgroundColor: "white", flex: 1 }}>
       <Text style={styles.pageTitle}>Edit Profile</Text>
 
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -281,42 +278,6 @@ export default function EditProfile({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
-
-      <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
-
-      <View style={styles.imagesAndInputs}>
-        <Text style={styles.profileImageText}>Change Profile Image</Text>
-
-        <Text style={styles.profileBannerText}>Change Profile Banner</Text>
-
-        <Image
-          style={styles.verticleDiv}
-          source={require("../assets/verticleDiv.png")}
-        />
-
-        <View style={styles.inputs}>
-          <TextInput
-            placeholder="Username"
-            style={styles.username}
-            value={username}
-            onChangeText={(text) => setUsername(text.toLowerCase())}
-          />
-          <TextInput
-            placeholder="Display Name"
-            style={styles.displayName}
-            value={displayName}
-            onChangeText={(text) => setDisplayName(text)}
-          />
-
-          <TextInput
-            placeholder="Bio"
-            style={styles.bio}
-            value={bio}
-            onChangeText={(text) => setBio(text)}
-          />
-        </View>
-      </View>
-
       <View style={styles.userProfileImages}>
         <TouchableOpacity onPress={() => pickProfileImage()}>
           <Image
@@ -361,23 +322,91 @@ export default function EditProfile({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      <Image
+        style={styles.verticleDiv}
+        source={require("../assets/verticleDiv.png")}
+      />
+
+      <TextInput
+        placeholder="Username"
+        style={styles.username}
+        value={username}
+        onChangeText={(text) => setUsername(text.toLowerCase())}
+      />
+      <TextInput
+        placeholder="Display Name"
+        style={styles.displayName}
+        value={displayName}
+        onChangeText={(text) => setDisplayName(text)}
+      />
+
+      <TextInput
+        placeholder="Bio"
+        style={styles.bio}
+        value={bio}
+        onChangeText={(text) => setBio(text)}
+      />
       <TouchableOpacity onPress={() => editProfile()}>
         <Image
           style={styles.button}
           source={require("../assets/continueButton.png")}
         />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
 
+// <SafeAreaView
+//   style={{
+//     flex: 1,
+//     backgroundColor: "#FFFFFF",
+//   }}
+// >
+//   <KeyboardAvoidingView
+//     style={styles.container}
+//     behavior={Platform.OS === "ios" ? "padding" : "height"}
+//   >
+
+//     <View style={styles.imagesAndInputs}>
+
+//       <View style={styles.inputs}>
+//         <TextInput
+//           placeholder="Username"
+//           style={styles.username}
+//           value={username}
+//           onChangeText={(text) => setUsername(text.toLowerCase())}
+//         />
+//         <TextInput
+//           placeholder="Display Name"
+//           style={styles.displayName}
+//           value={displayName}
+//           onChangeText={(text) => setDisplayName(text)}
+//         />
+
+//         <TextInput
+//           placeholder="Bio"
+//           style={styles.bio}
+//           value={bio}
+//           onChangeText={(text) => setBio(text)}
+//         />
+//       </View>
+//     </View>
+
+//   </KeyboardAvoidingView>
+// </SafeAreaView>
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+
   button: {
     position: "absolute",
     width: 311,
     height: 50,
     left: 52,
-    top: 750,
+    top: 600,
   },
 
   imagesAndInputs: {
@@ -406,22 +435,24 @@ const styles = StyleSheet.create({
     position: "absolute",
     resizeMode: "contain",
     height: 39,
-    width: 80,
+    width: 50,
+    alignSelf: "center",
+    alignItems: "center",
+    alignContent: "center",
     top: 60,
-    left: 170,
   },
 
   pageTitle: {
     position: "absolute",
-    fontSize: 25,
-    top: 140,
-    left: 30,
+    fontSize: 16,
+    top: 70,
     fontWeight: "600",
+    alignSelf: "center",
   },
 
   verticleDiv: {
     position: "absolute",
-    top: 200,
+    top: 140,
     left: 190,
     height: 120,
   },
@@ -432,7 +463,7 @@ const styles = StyleSheet.create({
   },
   userProfileImages: {
     position: "absolute",
-    top: 60,
+
     borderColor: "#5C5C5C",
     borderWidth: 0.2,
   },
@@ -470,7 +501,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     left: 30,
-    top: 20,
+    top: 70,
   },
 
   userBanner: {
@@ -487,7 +518,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 300,
     left: 55,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor: "grey",
     borderWidth: 0.5,
     width: 311,
@@ -495,9 +526,9 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
   },
   displayName: {
-    top: 380,
+    top: 370,
     left: 55,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor: "grey",
     borderWidth: 0.5,
     width: 311,
@@ -506,13 +537,13 @@ const styles = StyleSheet.create({
   },
 
   bio: {
-    top: 410,
+    top: 385,
     left: 55,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor: "grey",
     borderWidth: 0.5,
     width: 311,
-    height: 100,
+    height: 60,
     paddingLeft: 30,
   },
 });

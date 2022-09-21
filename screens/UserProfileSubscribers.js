@@ -14,7 +14,6 @@ export default function UserProfileSubscribers({ navigation }) {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-   
   };
 
   return (

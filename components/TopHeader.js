@@ -18,7 +18,7 @@ export default function TopHeader({ navigation }) {
 
   return (
     <SafeAreaView style={styles.componentContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
+      <TouchableOpacity onPress={() => navigation.navigate("UserSubscriber")}>
         <Image
           style={styles.logo}
           source={require("../assets/tizlyicon.jpg")}
