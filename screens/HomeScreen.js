@@ -150,28 +150,6 @@ export default function HomeScreen({ navigation, route }) {
     );
   }
 
-  // if (postList.length === 0) {
-  //   const refreshFeed = async () => {
-  //     await getPosts();
-  //   };
-
-  //   return (
-  //     <View style={{ flex: 1, backgroundColor: "white" }}>
-  //       <TopHeader navigation={navigation} />
-  //       <ScrollView
-  //         refreshControl={
-  //           <RefreshControl
-  //             refreshing={refreshing}
-  //             onRefresh={() => refreshFeed()}
-  //           />
-  //         }
-  //       >
-  //         <NoPost navigation={navigation} />
-  //       </ScrollView>
-  //     </View>
-  //   );
-  // }
-
   const refreshFeed = async () => {
     getPosts();
   };
@@ -199,7 +177,7 @@ export default function HomeScreen({ navigation, route }) {
                 top: 50,
               }}
             >
-              Your Feed Is Currently Empty
+              Your Feed Is Empty At The Moment
             </Text>
             <Image
               style={{
