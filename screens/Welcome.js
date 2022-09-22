@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 230,
     height: 20,
-    top: 356,
+    top: 356.5,
   },
   signIn: {
     width: 315,
