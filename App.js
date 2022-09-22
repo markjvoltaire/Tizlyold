@@ -52,8 +52,6 @@ import { supabase } from "./services/supabase";
 import AuthStack from "./Auth/AuthStack";
 import NoAuthStack from "./Auth/NoAuthStack";
 
-const Stack = createSharedElementStackNavigator();
-
 export default function App() {
   const [auth, setAuth] = useState();
 
@@ -70,7 +68,7 @@ export default function App() {
       <FollowProvider>
         <PostProvider>
           <NavigationContainer>
-            {auth ? <AuthStack /> : <NoAuthStack />}
+            {auth !== null ? <AuthStack /> : <NoAuthStack />}
           </NavigationContainer>
         </PostProvider>
       </FollowProvider>
