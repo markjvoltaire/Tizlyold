@@ -27,7 +27,7 @@ LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
 import { UserProvider } from "./context/UserContext";
-import { SUPABASE_KEY } from "@env";
+
 import UserProfile from "./screens/UserProfile";
 import BottomTabNavigator from "./navigation/TabNavigator";
 import { ProfileStackNavigator } from "./navigation/StackNavigator";
