@@ -99,7 +99,6 @@ export default function EditProfile({ navigation }) {
     }
   };
 
-
   let profileDisplay;
 
   if (image === null && user.profileimage === null) {
@@ -243,8 +242,6 @@ export default function EditProfile({ navigation }) {
         Alert.alert(error.message);
       }
 
-  
-
       return { ...image, imageData: data };
     };
 
@@ -351,8 +348,6 @@ export default function EditProfile({ navigation }) {
   );
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -402,7 +397,7 @@ const styles = StyleSheet.create({
 
   pageTitle: {
     position: "absolute",
-    fontSize: 16,
+    fontSize: 15,
     top: 70,
     fontWeight: "600",
     alignSelf: "center",
