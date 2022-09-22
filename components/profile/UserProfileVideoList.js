@@ -14,7 +14,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
     <View style={{ paddingBottom: 90, bottom: 10 }}>
       <Pressable
         onPress={() =>
-          navigation.navigate("Player", {
+          navigation.push("Player", {
             id: post.id,
             username: post.username,
             profileimage: post.profileimage,

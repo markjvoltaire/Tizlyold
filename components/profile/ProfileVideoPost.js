@@ -18,7 +18,7 @@ export default function ProfileVideoPost({ item, navigation }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const milliseconds = status.durationMillis;
-  const seconds = milliseconds / 1000;
+
   return (
     <View style={{ paddingBottom: 90, top: 10.5 }}>
       <Pressable

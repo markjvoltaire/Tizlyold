@@ -23,7 +23,6 @@
     "@supabase/supabase-js": "^1.35.6",
     "cors": "^2.8.5",
     "deprecated-react-native-prop-types": "^2.3.0",
-    "dotenv": "^16.0.2",
     "email-validator": "^2.0.4",
     "expo": "^46.0.10",
     "expo-app-loading": "~2.1.0",
@@ -43,6 +42,7 @@
     "react-native": "0.70.0",
     "react-native-dropdown-picker": "^5.4.2",
     "react-native-dropdown-select-list": "^1.0.21",
+    "react-native-env": "^0.0.6",
     "react-native-express": "^0.0.1",
     "react-native-gesture-handler": "~2.6.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -60,7 +60,9 @@
   "devDependencies": {
     "@babel/core": "^7.19.0",
     "@types/react": "~18.0.19",
-    "@types/react-native": "~0.70.0"
+    "@types/react-native": "~0.70.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.4",
+    "react-native-dotenv": "^3.3.1"
   },
   "private": true
 }

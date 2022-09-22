@@ -1,5 +1,5 @@
-import { PUBLISHABLE_KEY } from "@env";
+import { SUPABASE_KEY } from "react-native-dotenv";
 
 export default {
-  PUBLISHABLE_KEY,
+  SUPABASE_KEY,
 };

@@ -27,7 +27,7 @@ LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
 import { UserProvider } from "./context/UserContext";
-
+import { SUPABASE_KEY } from "@env";
 import UserProfile from "./screens/UserProfile";
 import BottomTabNavigator from "./navigation/TabNavigator";
 import { ProfileStackNavigator } from "./navigation/StackNavigator";
@@ -53,6 +53,8 @@ import AuthStack from "./Auth/AuthStack";
 import NoAuthStack from "./Auth/NoAuthStack";
 
 const Stack = createSharedElementStackNavigator();
+
+console.log("SUPABASE_KEY", SUPABASE_KEY);
 
 export default function App() {
   const [auth, setAuth] = useState();

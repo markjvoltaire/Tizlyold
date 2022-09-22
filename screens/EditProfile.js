@@ -98,12 +98,7 @@ export default function EditProfile({ navigation }) {
       setBannerType(photo.type);
     }
   };
-  // try {
-  //   return await uploadBannerFromUri(photo);
-  // } catch (e) {
-  //   Alert.alert({ title: "image upload", message: e.message });
-  //   return null;
-  // }
+
 
   let profileDisplay;
 
@@ -248,7 +243,7 @@ export default function EditProfile({ navigation }) {
         Alert.alert(error.message);
       }
 
-      console.log("data", data);
+  
 
       return { ...image, imageData: data };
     };
@@ -356,44 +351,7 @@ export default function EditProfile({ navigation }) {
   );
 }
 
-// <SafeAreaView
-//   style={{
-//     flex: 1,
-//     backgroundColor: "#FFFFFF",
-//   }}
-// >
-//   <KeyboardAvoidingView
-//     style={styles.container}
-//     behavior={Platform.OS === "ios" ? "padding" : "height"}
-//   >
 
-//     <View style={styles.imagesAndInputs}>
-
-//       <View style={styles.inputs}>
-//         <TextInput
-//           placeholder="Username"
-//           style={styles.username}
-//           value={username}
-//           onChangeText={(text) => setUsername(text.toLowerCase())}
-//         />
-//         <TextInput
-//           placeholder="Display Name"
-//           style={styles.displayName}
-//           value={displayName}
-//           onChangeText={(text) => setDisplayName(text)}
-//         />
-
-//         <TextInput
-//           placeholder="Bio"
-//           style={styles.bio}
-//           value={bio}
-//           onChangeText={(text) => setBio(text)}
-//         />
-//       </View>
-//     </View>
-
-//   </KeyboardAvoidingView>
-// </SafeAreaView>
 
 const styles = StyleSheet.create({
   container: {
