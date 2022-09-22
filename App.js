@@ -54,8 +54,6 @@ import NoAuthStack from "./Auth/NoAuthStack";
 
 const Stack = createSharedElementStackNavigator();
 
-console.log("SUPABASE_KEY", SUPABASE_KEY);
-
 export default function App() {
   const [auth, setAuth] = useState();
 
