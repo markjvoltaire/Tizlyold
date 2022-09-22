@@ -177,7 +177,7 @@ export default function HomeScreen({ navigation, route }) {
                 top: 50,
               }}
             >
-              Your Feed Is Empty At The Moment
+              Your Feed Is Currently Empty
             </Text>
             <Image
               style={{
