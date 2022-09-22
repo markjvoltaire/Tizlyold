@@ -11,24 +11,41 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import Animated, {
+  useAnimatedGestureHandler,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 
 import { supabase } from "../services/supabase";
 import { signUp } from "../services/user";
+import { StackActions } from "@react-navigation/native";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [query, setQuery] = useState("");
+  const [isPressed, setIsPressed] = useState(false);
+  const [filterData, setFilterData] = useState([]);
+  const [masterData, setMasterData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [input, setInput] = useState(false);
+
+  const pushActionLogin = StackActions.replace("Login");
+  const pushActionUsername = StackActions.replace("Username");
 
   const signUpWithEmail = async () => {
-    let { user } = await supabase.auth
-      .signUp({
-        email: email,
-        password: password,
-      })
-      .then(() =>
-        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-      )
-      .then(() => navigation.navigate("Username"));
+    const { user, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (!error) {
+      navigation.dispatch(pushActionUsername);
+    } else {
+      Alert.alert(error.message);
+    }
 
     return { user, error };
   };
@@ -45,13 +62,6 @@ export default function SignUp({ navigation }) {
         style={styles.headerIcon}
         source={require("../assets/Tizlymed.png")}
       />
-
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
-        />
-      </TouchableOpacity>
 
       <TextInput
         style={styles.emailInput}
@@ -74,12 +84,35 @@ export default function SignUp({ navigation }) {
         value={password}
       />
 
-      <TouchableOpacity onPress={() => signUpWithEmail()}>
-        <Image
-          style={styles.continueButton}
-          source={require("../assets/buttonBlue.png")}
-        />
-      </TouchableOpacity>
+      {password.length < 8 ? (
+        <TouchableOpacity
+          onPress={() => Alert.alert("Password Should Be 8 or More Characters")}
+        >
+          <Image
+            style={styles.continueButton}
+            source={require("../assets/buttonGrey.png")}
+          />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => signUpWithEmail()}>
+          <Image
+            style={styles.continueButton}
+            source={require("../assets/buttonBlue.png")}
+          />
+        </TouchableOpacity>
+      )}
+
+      <View>
+        <Text style={styles.signupRedirect}>Already have an account?</Text>
+        <TouchableOpacity>
+          <Text
+            onPress={() => navigation.dispatch(pushActionLogin)}
+            style={styles.signupButton}
+          >
+            Sign in Here
+          </Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }

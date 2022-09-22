@@ -8,15 +8,55 @@ import {
   ScrollView,
   Alert,
   Button,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import Animated, {
+  useAnimatedGestureHandler,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 
 import { supabase } from "../services/supabase";
-import { addUser } from "../services/user";
+
+import { StackActions } from "@react-navigation/native";
 
 export default function UserNames({ navigation }) {
+  const [query, setQuery] = useState("");
+  const [isPressed, setIsPressed] = useState(false);
+  const [filterData, setFilterData] = useState([]);
+  const [masterData, setMasterData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [input, setInput] = useState(false);
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
+
+  const allUsernames = filterData.map((i) => i.username);
+
+  const pushActionHome = StackActions.replace("HomeScreen");
+
+  async function addUser() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data, error } = await supabase.from("profiles").insert([
+      {
+        username: username,
+        user_id: userId,
+        email: supabase.auth.currentUser.email,
+        displayName: displayName,
+      },
+    ]);
+    if (!error) {
+      navigation.dispatch(pushActionHome);
+    }
+    if (
+      error.message ===
+      'duplicate key value violates unique constraint "profiles_username_key"'
+    ) {
+      Alert.alert("This Username Is Already Taken");
+    }
+  }
 
   return (
     <ScrollView
@@ -46,7 +86,9 @@ export default function UserNames({ navigation }) {
         placeholder="Username"
         autoCapitalize="none"
         autoFocus={true}
-        onChangeText={(text) => setUsername(text)}
+        onChangeText={(text) =>
+          setUsername(text.toLowerCase()) && setQuery(text.toLowerCase())
+        }
         value={username}
       />
 
@@ -58,13 +100,7 @@ export default function UserNames({ navigation }) {
         value={displayName}
       />
 
-      <TouchableOpacity
-        onPress={() =>
-          addUser(username, displayName).then(() => {
-            navigation.navigate("HomeScreen");
-          })
-        }
-      >
+      <TouchableOpacity onPress={() => addUser()}>
         <Image
           style={styles.continueButton}
           source={require("../assets/buttonBlue.png")}

@@ -26,7 +26,7 @@ export default function SignUpSuccess({ navigation }) {
     setUser(data);
   }
 
-  console.log("userdsvvds", user);
+
 
   useEffect(() => {
     const getUserProfile = async () => {

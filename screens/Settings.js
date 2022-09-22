@@ -13,66 +13,112 @@ import React, { useState } from "react";
 import { supabase } from "../services/supabase";
 import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
+import { StackActions } from "@react-navigation/native";
 
 export default function Settings({ navigation }) {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   async function signOutUser() {
-    await supabase.auth
-      .signOut()
-      .then(() =>
-        console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-      );
+    await supabase.auth.signOut();
   }
+
+
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "white",
       }}
     >
-      <Text style={styles.username}>{user.username}</Text>
-
-      <Image
-        style={styles.img}
-        source={{
-          uri: user.profileimage,
-        }}
-      />
-
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View>
         <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
+          style={styles.logo}
+          source={require("../assets/tizlyicon.jpg")}
         />
-      </TouchableOpacity>
-      <View style={styles.accountSettings}>
-        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+
+        <Text
+          style={{
+            fontWeight: "700",
+            fontSize: 18,
+            top: 165,
+            position: "absolute",
+            left: 100,
+          }}
+        >
+          {user.username}
+        </Text>
+        <Image
+          style={{
+            height: 60,
+            width: 60,
+            borderRadius: 100,
+            top: 150,
+            left: 10,
+            position: "absolute",
+          }}
+          source={
+            user.profileimage
+              ? { uri: user.profileimage }
+              : require("../assets/noProfilePic.jpeg")
+          }
+        />
+
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../assets/Profile.jpg")}
+            style={{
+              position: "absolute",
+              resizeMode: "contain",
+              width: 25,
+              height: 30,
+              left: 20,
+              top: 60,
+            }}
+            source={require("../assets/backButton.png")}
           />
-          <Image style={styles.arrow} source={require("../assets/arrow.png")} />
-          <Text style={styles.accountSettingsText}> Account Settings</Text>
         </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity
-        onPress={() => signOutUser().then(() => navigation.navigate("Welcome"))}
-      >
-        <Image
-          style={styles.signoutButton}
-          source={require("../assets/signoutButton.png")}
-        />
-      </TouchableOpacity>
+        <View style={{ position: "absolute", top: 300, left: 10 }}>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={require("../assets/Profile.jpg")}
+            />
+            <Image
+              style={styles.arrow}
+              source={require("../assets/arrow.png")}
+            />
+            <Text style={styles.accountSettingsText}> Account Settings</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ position: "absolute", alignSelf: "center", top: 400 }}>
+          <TouchableOpacity
+            onPress={() =>
+              signOutUser().then(() => navigation.navigate("Welcome"))
+            }
+          >
+            <Image
+              style={styles.signoutButton}
+              source={require("../assets/signoutButton.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 52,
+    height: 26,
+    backgroundColor: "white",
+    alignSelf: "center",
+    top: 60,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -84,8 +130,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 25,
     height: 30,
-    left: -170,
-    top: -400,
   },
 
   signoutButton: {
@@ -112,13 +156,6 @@ const styles = StyleSheet.create({
     width: 300,
     left: -150,
   },
-  username: {
-    position: "absolute",
-    bottom: 600,
-    fontWeight: "bold",
-    fontSize: 23,
-    right: 290,
-  },
   accountSettingsText: {
     left: 39,
     bottom: 20,
@@ -137,11 +174,14 @@ const styles = StyleSheet.create({
     bottom: 500,
   },
   img: {
-    position: "absolute",
     height: 60,
     width: 60,
-    top: 150,
-    right: 320,
     borderRadius: 100,
+  },
+  username: {
+    fontSize: 23,
+    right: 15,
+    bottom: 145,
+    position: "absolute",
   },
 });

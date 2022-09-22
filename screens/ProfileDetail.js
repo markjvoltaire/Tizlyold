@@ -1,17 +1,529 @@
-import { View, Text, TouchableOpacity, Image, sty } from "react-native";
-import { useLinkTo } from "@react-navigation/native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  SafeAreaView,
+  Alert,
+  Button,
+  RefreshControl,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import ProfileNav from "../components/profile/ProfileNav";
+import UserButtons from "../components/home/UserButtons";
+import UserProfileFeed from "../components/profile/UserProfileFeed";
+import UserProfileNav from "../components/profile/UserProfileNav";
+import HomeScreen from "../screens/HomeScreen";
 
-export default function ProfileDetail({ navigation }) {
-  const linkTo = useLinkTo();
+import LottieView from "lottie-react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-  console.log("linkTo", linkTo);
+import { supabase } from "../services/supabase";
+import { useUser } from "../context/UserContext";
+import { getCurrentUserPosts, getProfileDetail } from "../services/user";
+import ProfileDetailSub from "../components/profile/ProfileDetailSub";
+import ProfileFeedList from "../components/profile/ProfileFeedList";
+import { StackActions } from "@react-navigation/native";
+import { Video, AVPlaybackStatus } from "expo-av";
+import NoProfilePost from "../components/profile/NoProfilePost";
+import UserProfile from "./UserProfile";
+
+export default function ProfileDetail({ navigation, route, item }) {
+  const { user, setUser } = useUser();
+  const [userPosts, setUserPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
+  const [profile, setProfile] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  async function getPosts() {
+    let { data: post, error } = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("id", { ascending: false });
+
+    return post;
+  }
+
+  async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("following")
+      .select("*")
+      .eq("creatorId", user_id)
+      .eq("userId", user.user_id);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const seeLikes = async () => {
+      const res = await getFollowing();
+      res.map((user) => setIsFollowing(user.following));
+    };
+    seeLikes();
+  }, []);
+
+  useEffect(() => {
+    const getPost = async () => {
+      const resp = await getPosts();
+      setPosts(resp);
+      setLoading(false);
+    };
+    getPost();
+  }, []);
+
+  const user_id = route.params.user_id;
+
+  async function getUserPostsById() {
+    const items = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", user_id)
+      .order("id", { ascending: false });
+
+    return items.body;
+  }
+
+  async function getProfileDetail() {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", route.params.user_id)
+      .single();
+
+    return data;
+  }
+
+  useEffect(() => {
+    const getUser = async () => {
+      const resp = await getProfileDetail();
+      setProfile(resp);
+    };
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    const getFeed = () => {
+      getUserPostsById().then((res) => setUserPosts(res));
+      setLoading(false);
+    };
+    getFeed();
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView>
+        <View>
+          <Text style={{ fontSize: 300 }}>LOADING</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  async function followUser() {
+    const resp = await supabase.from("following").insert([
+      {
+        creatorId: profile.user_id,
+        userId: user.user_id,
+        userProfileImage: user.profileimage,
+
+        userUsername: user.username,
+        creatorUsername: profile.username,
+        followingId: profile.following_Id,
+        creatorDisplayname: profile.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: profile.profileimage,
+      },
+    ]);
+
+    return resp;
+  }
+
+  async function unfollowUser() {
+    const resp = await supabase
+      .from("following")
+      .delete()
+      .eq("userId", user.user_id)
+      .eq("creatorId", profile.user_id);
+
+    return resp;
+  }
+
+  const handleFollow = () => {
+    setIsFollowing((current) => !current);
+
+    isFollowing === true ? unfollowUser() : followUser();
+  };
+
+  if (loading) {
+    return (
+      <View>
+        <Text>Loading</Text>
+      </View>
+    );
+  }
+
+  const refreshFeed = async () => {
+    getProfileDetail();
+  };
+
   return (
-    <View>
-      <Text>Profile</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image source={require("../assets/backButton.png")} />
-      </TouchableOpacity>
-    </View>
+    <>
+      <View style={{ width: 200, backgroundColor: "white" }}></View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, backgroundColor: "white" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+          />
+        }
+      >
+        <Image
+          style={styles.userBanner}
+          source={{ uri: route.params.bannerImage }}
+        />
+
+        <Video
+          source={{ uri: route.params.bannerImage }}
+          isLooping
+          shouldPlay={true}
+          isMuted={true}
+          resizeMode="cover"
+          style={styles.userBanner}
+        />
+
+        <Image
+          style={styles.userBannerFader}
+          source={require("../assets/fader.png")}
+        />
+
+        <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
+          <Image
+            style={styles.backButton}
+            source={require("../assets/backButton2.png")}
+          />
+        </TouchableOpacity>
+        <View style={{ bottom: 410 }}>
+          <View style={{ top: 30 }}>
+            <Text style={styles.displayname}>{profile.displayName}</Text>
+            <Text style={styles.username}>@{route.params.username}</Text>
+
+            <Image
+              style={styles.profileImage}
+              source={
+                profile.profileimage === null
+                  ? require("../assets/noProfilePic.jpeg")
+                  : { uri: route.params.profileimage }
+              }
+            />
+          </View>
+
+          <TouchableOpacity onPress={() => handleFollow()}>
+            <Image
+              style={styles.subButton}
+              source={
+                isFollowing === true
+                  ? require("../assets/followingbutton.png")
+                  : require("../assets/followbutton.png")
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.profileNav}>
+          <Text style={styles.home}>Home</Text>
+
+          <FullSeperator />
+        </View>
+        {posts.length === 0 ? (
+          <View style={{ alignItems: "center", top: 130, flex: 1 }}>
+            <Text
+              style={{
+                bottom: 60,
+                fontWeight: "600",
+                fontSize: 20,
+                color: "#686877",
+              }}
+            >
+              @{route.params.username} Has No Content Yet.
+            </Text>
+            <Image
+              style={{ height: 170, resizeMode: "contain", bottom: 20 }}
+              source={require("../assets/mobile-application.png")}
+            />
+          </View>
+        ) : (
+          <View style={styles.feedContainer}>
+            {posts.map((item) => {
+              return (
+                <View key={item.id}>
+                  <ProfileFeedList
+                    navigation={navigation}
+                    route={route}
+                    item={item}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </ScrollView>
+    </>
   );
 }
+const styles = StyleSheet.create({
+  logo: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 52,
+    height: 26,
+    backgroundColor: "white",
+    alignSelf: "center",
+    top: 60,
+  },
+
+  userBanner: {
+    position: "absolute",
+    width: 455,
+    height: 455,
+    alignSelf: "center",
+  },
+
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 1.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 428,
+  },
+
+  profileNav: {
+    position: "absolute",
+    top: 85,
+    width: 4000,
+  },
+  home: {
+    position: "absolute",
+    fontWeight: "bold",
+    top: 390,
+    left: 180,
+    fontSize: 16,
+  },
+
+  title: {
+    left: 35,
+    fontWeight: "800",
+    fontSize: 15,
+    paddingBottom: 15,
+    top: 8,
+  },
+  description: {
+    left: 35,
+    fontWeight: "600",
+    color: "#5F5F69",
+  },
+
+  media: {
+    height: 392,
+    width: 343,
+    borderRadius: 12,
+    alignSelf: "center",
+  },
+
+  postUsername: {
+    bottom: 26,
+    fontWeight: "500",
+    color: "#5F5F69",
+    fontSize: 12,
+  },
+
+  postDisplayname: {
+    fontWeight: "600",
+    fontSize: 16,
+    bottom: 27,
+  },
+
+  feedContainer: {
+    alignItems: "center",
+    top: 20,
+    flex: 1,
+  },
+  displayNameContainer: {
+    left: 40,
+    bottom: 33,
+  },
+  usernameContainer: {
+    left: 40,
+    bottom: 33,
+  },
+  halfSep: {
+    top: 655,
+    borderBottomColor: "grey",
+    borderBottomWidth: 0.8,
+    opacity: 0.6,
+    width: 300,
+    left: 60,
+  },
+  subButton: {
+    resizeMode: "contain",
+    top: 360,
+    width: 160,
+    height: 30,
+    right: 30,
+  },
+
+  displayname: {
+    position: "absolute",
+    height: 38,
+    left: 75,
+    right: 64.27,
+    top: 253,
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 22,
+    width: 400,
+  },
+  username: {
+    position: "absolute",
+    color: "white",
+    top: 283,
+    left: 75,
+  },
+
+  bio: {
+    position: "absolute",
+    color: "white",
+    fontSize: 15,
+    width: 400,
+    top: 312,
+    left: 8,
+    fontWeight: "800",
+  },
+
+  followbutton: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 100,
+    left: 10,
+    top: 320,
+  },
+  profileImage: {
+    position: "absolute",
+    left: 10,
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
+    top: 250,
+    borderRadius: 100,
+  },
+  backButton: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 35,
+    height: 50,
+    left: 21,
+    bottom: 300,
+  },
+  photoBox: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    top: 575,
+    left: 20,
+  },
+  videosBox: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    top: 575,
+    left: 165,
+  },
+  wrapBox: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    top: 575,
+    left: 305,
+  },
+  testButton: {
+    position: "absolute",
+  },
+  paywall: {
+    position: "absolute",
+  },
+  photosDiv: {
+    position: "absolute",
+  },
+  videosDiv: {
+    position: "absolute",
+  },
+  wrapsDiv: {
+    position: "absolute",
+  },
+  photosTextTitle: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 14,
+    top: 600,
+    left: 45,
+  },
+  videosTextTitle: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 14,
+    top: 600,
+    left: 190,
+  },
+  wrapsTextTitle: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 14,
+    top: 600,
+    left: 330,
+  },
+  photosLength: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    top: 615,
+    left: 55,
+  },
+  videosLength: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    top: 615,
+    left: 200,
+  },
+  wrapsLength: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    top: 615,
+    left: 350,
+  },
+  accessButton: {
+    position: "absolute",
+    resizeMode: "contain",
+    width: 190,
+    height: 61,
+    top: 720,
+    left: 120,
+  },
+  userBannerFader: {
+    width: 455,
+
+    height: 455,
+  },
+});

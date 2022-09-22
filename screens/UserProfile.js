@@ -8,24 +8,84 @@ import {
   TouchableOpacity,
   Button,
   Alert,
+  ErrorAlert,
+  FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
-
+import LottieView from "lottie-react-native";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
+import UserProfileFeed from "../components/profile/UserProfileFeed";
+import UserProfileNav from "../components/profile/UserProfileNav";
+import NoUserProfilePost from "../components/profile/NoUserProfilePost";
+import { Video, AVPlaybackStatus } from "expo-av";
 
-export default function UserProfile({ navigation }) {
+export default function UserProfile({ navigation, route }) {
   const { user, setUser } = useUser();
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [stateImage, setStateImage] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const video = React.useRef(null);
+  const [navState, setNavState] = useState("home");
+  const [status, setStatus] = React.useState({});
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperatorTwo = () => <View style={styles.FullSeperatorTwo} />;
 
-  const HalfSeperator = () => <View style={styles.halfSep} />;
+  const [posts, setPosts] = useState();
+
+  async function getCurrentUserPosts() {
+    const userId = supabase.auth.currentUser.id;
+    let { data: post, error } = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", userId)
+      .order("id", { ascending: false });
+
+    return post;
+  }
+
+  function seeEdit() {
+    return (
+      <View>
+        <EditCurrentUser />
+      </View>
+    );
+  }
+
+  useEffect(() => {
+    const getPost = async () => {
+      const resp = await getCurrentUserPosts();
+      setPosts(resp);
+    };
+    getPost();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <LottieView
+          style={{
+            top: 60,
+            height: 400,
+            width: 400,
+            position: "absolute",
+            alignSelf: "center",
+          }}
+          source={require("../assets/lottie/fasterGreyLoader.json")}
+          autoPlay
+        />
+      </SafeAreaView>
+    );
+  }
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -38,180 +98,123 @@ export default function UserProfile({ navigation }) {
     setUser(data);
   }
 
-  useEffect(() => {
-    const getUserProfile = async () => {
-      await getUserById();
+  const refreshFeed = async () => {
+    const getPost = async () => {
+      const resp = await getCurrentUserPosts();
+      setPosts(resp);
       setLoading(false);
     };
-    getUserProfile();
-  }, []);
+    getUserById();
+    getPost();
+  };
 
-  if (loading) {
-    return <Text> Please Wait</Text>;
+  if (posts.length === 0) {
+    return (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, backgroundColor: "white" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+          />
+        }
+      >
+        <NoUserProfilePost navigation={navigation} />
+      </ScrollView>
+    );
   }
 
-  const uploadFromUri = async (photo) => {
-    const userId = supabase.auth.currentUser.id;
-
-    if (!photo.cancelled) {
-      const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
-
-      const fileName = photo.uri.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: photo.uri,
-        name: fileName,
-        type: photo.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      const { data, error } = await supabase.storage
-        .from("profile-images")
-        .upload(fileName, formData, {
-          upsert: false,
-        });
-
-      const { publicURL } = await supabase.storage
-        .from("profile-images")
-        .getPublicUrl(`${fileName}`);
-
-      const resp = await supabase
-        .from("profiles")
-        .update({ profileimage: publicURL })
-        .eq("user_id", userId);
-
-      console.log("error", error);
-
-      if (error) throw new Error(error.message);
-
-      return { ...photo, imageData: data };
-    } else {
-      return photo;
-    }
-  };
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    try {
-      console.log(photo);
-      return await uploadFromUri(photo);
-    } catch (e) {
-      ErrorAlert({ title: "image upload", message: e.message });
-      return null;
-    }
-  };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-      }}
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{ flex: 1, backgroundColor: "white" }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => refreshFeed()}
+        />
+      }
     >
-      <Image
-        style={styles.userBanner}
-        source={{
-          uri: user.bannerImage,
-        }}
-      />
+      {user.bannerImageType === "video" ? (
+        <Video
+          ref={video}
+          source={{ uri: user.bannerImage }}
+          isLooping
+          shouldPlay={true}
+          isMuted={true}
+          resizeMode="cover"
+          style={styles.userBanner}
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        />
+      ) : (
+        <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
+      )}
+
+      <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
 
       <Image
-        style={styles.userBanner}
+        style={styles.userBannerFader}
         source={require("../assets/fader.png")}
       />
 
-      <TouchableOpacity
-        onPress={async () => {
-          const resp = await pickImage();
-
-          if (resp?.imageData) {
-            setImage(resp.uri);
-            setImageData(resp?.imageData);
-          }
-        }}
-      >
-        <Image
-          style={styles.profileImage}
-          source={{
-            uri: user.profileimage,
-          }}
-        />
-      </TouchableOpacity>
-
-      {/* <Button
-        style={styles.testButton}
-        title="press me "
-        onPress={() => {
-          console.log(user);
-        }}
-      /> */}
-
-      <View style={styles.userinfoContainer}>
+      <View style={{ bottom: 410 }}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
-        <Text style={styles.bio}>{user.bio}</Text>
-      </View>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.bio}> {user.bio}</Text>
         <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
+          style={styles.profileImage}
+          source={{ uri: user.profileimage }}
         />
-      </TouchableOpacity>
-      <ProfileNav />
-      <FullSeperator />
-      {/* <HalfSeperator style={styles.halfSep} /> */}
-
-      <View style={styles.paywall}>
-        <View style={styles.photosDiv}>
+        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
-            style={styles.photoBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.photosTextTitle}>Photos</Text>
-          <Text style={styles.photosLength}>18</Text>
-        </View>
-        <View style={styles.videosDiv}>
-          <Image
-            style={styles.videosBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.videosTextTitle}>Videos</Text>
-          <Text style={styles.videosLength}>32</Text>
-        </View>
-        <View style={styles.wrapsDiv}>
-          <Image
-            style={styles.wrapBox}
-            source={require("../assets/subBox.png")}
-          />
-          <Text style={styles.wrapsTextTitle}>Wraps</Text>
-          <Text style={styles.wrapsLength}>9</Text>
-        </View>
-
-        <TouchableOpacity>
-          <Image
-            style={styles.accessButton}
-            source={require("../assets/accessButton.png")}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("EditProfile");
-          }}
-        >
-          <Image
-            style={styles.editButton}
+            style={styles.subButton}
             source={require("../assets/editprofile.png")}
           />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      <View style={styles.profileNav}>
+        <Text style={styles.home}>Home</Text>
+
+        <FullSeperator />
+      </View>
+      <View style={styles.feedContainer}>
+        {/* {posts.map((post) => {
+          return (
+            <View style={{ bottom: 90 }} key={post.id}>
+              <UserProfileFeed
+                navigation={navigation}
+                route={route}
+                post={post}
+                navState={navState}
+                setPosts={setPosts}
+                user={user}
+                setUser={setUser}
+              />
+            </View>
+          );
+        })} */}
+
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={posts}
+          initialNumToRender={2}
+          renderItem={({ item }) => (
+            <View>
+              <UserProfileFeed
+                navigation={navigation}
+                route={route}
+                post={item}
+                navState={navState}
+                setPosts={setPosts}
+                user={user}
+                setUser={setUser}
+              />
+            </View>
+          )}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
@@ -219,8 +222,42 @@ const styles = StyleSheet.create({
   userBanner: {
     position: "absolute",
     width: 455,
-    right: -10,
     height: 455,
+    alignSelf: "center",
+  },
+
+  profileNav: {
+    position: "absolute",
+    top: 85,
+    width: 4000,
+  },
+  home: {
+    position: "absolute",
+    fontWeight: "bold",
+    top: 390,
+    left: 180,
+    fontSize: 16,
+  },
+  media: {
+    position: "absolute",
+    fontWeight: "bold",
+    top: 390,
+    left: 245,
+    fontSize: 16,
+  },
+
+  feedContainer: {
+    alignItems: "center",
+    top: 30,
+    flex: 1,
+  },
+  displayNameContainer: {
+    left: 40,
+    bottom: 33,
+  },
+  usernameContainer: {
+    left: 40,
+    bottom: 33,
   },
   halfSep: {
     top: 655,
@@ -233,10 +270,9 @@ const styles = StyleSheet.create({
   editButton: {
     position: "absolute",
     resizeMode: "contain",
-    top: 410,
+    bottom: 30,
     width: 160,
     height: 30,
-    left: -15,
   },
 
   fullSeperator: {
@@ -245,7 +281,7 @@ const styles = StyleSheet.create({
     opacity: 0.2,
     width: 900,
     left: 1,
-    top: 470,
+    top: 429,
   },
   displayname: {
     position: "absolute",
@@ -256,6 +292,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 22,
+    width: 400,
   },
   username: {
     position: "absolute",
@@ -263,14 +300,22 @@ const styles = StyleSheet.create({
     top: 283,
     left: 75,
   },
+  subButton: {
+    resizeMode: "contain",
+    top: 330,
+    width: 160,
+    height: 30,
+    right: 20,
+  },
 
   bio: {
-    position: "absolute",
     color: "white",
-    fontSize: 12,
+    fontSize: 15,
     width: 400,
-    top: 320,
-    left: 8,
+    top: 312,
+    left: 3,
+    alignSelf: "center",
+    fontWeight: "700",
   },
 
   followbutton: {
@@ -382,5 +427,10 @@ const styles = StyleSheet.create({
     height: 61,
     top: 720,
     left: 120,
+  },
+  userBannerFader: {
+    width: 455,
+
+    height: 455,
   },
 });

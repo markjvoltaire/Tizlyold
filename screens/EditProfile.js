@@ -6,22 +6,262 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Pressable,
+  ErrorAlert,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
+import * as ImagePicker from "expo-image-picker";
+import { StackActions } from "@react-navigation/native";
+import { Video, AVPlaybackStatus } from "expo-av";
+
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function EditProfile({ navigation }) {
+  const [bannerType, setBannerType] = useState();
+  const [bannerData, setBannerData] = useState({});
+  const [imageData, setImageData] = useState({});
   const { user, setUser } = useUser();
+  const [loading, setLoading] = useState(true);
+  const video = React.useRef(null);
+  const [image, setImage] = useState(user.profileimage);
+  const [banner, setBanner] = useState(user.bannerImage);
+  const [username, setUsername] = useState(user.username);
+  const [displayName, setDisplayName] = useState(user.displayName);
+  const [bio, setBio] = useState(user.bio);
 
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  async function sendAlert() {
+    Alert.alert(
+      "Changes Have Been Saved",
+      "",
+      [{ text: "OK", onPress: () => navigation.goBack() }],
+      { cancelable: false }
+    );
+  }
+  useEffect(() => {
+    const getUserProfile = async () => {
+      await getUserById();
+    };
+    getUserProfile();
+  }, []);
+
+  async function getUserById() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    setUser(data);
+  }
+
+  if (user === undefined) {
+    navigation.navigate("Username");
+  }
+
+  if (user.bannerImage === undefined) {
+    navigation.navigate("Username");
+  }
+
+  const pickProfileImage = async () => {
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0,
+    });
+
+    if (!photo.cancelled) {
+      setImage(photo.uri);
+      setImageData(photo);
+    }
+  };
+
+  const pickBannerImage = async () => {
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      videoMaxDuration: 10,
+      aspect: [4, 3],
+      quality: 0,
+    });
+
+    if (!photo.cancelled) {
+      setBanner(photo.uri);
+      setBannerData(photo);
+      setBannerType(photo.type);
+    }
+  };
+
+  let profileDisplay;
+
+  if (image === null && user.profileimage === null) {
+    profileDisplay = require("../assets/plusButton.png");
+  }
+  if (image != null) {
+    profileDisplay = image;
+  } else {
+    profileDisplay = user.profileimage;
+  }
+
+  let profileBanner;
+
+  if (banner === null && user.bannerImage === null) {
+    profileBanner = require("../assets/plusButton.png");
+  }
+  if (banner != null) {
+    profileBanner = banner;
+  } else {
+    profileBanner = user.bannerImage;
+  }
+
+  async function editProfile() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ username: username, displayName: displayName, bio: bio })
+      .eq("user_id", userId);
+
+    const editProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("comments")
+        .update({ userProfileImage: image })
+        .eq("userId", userId);
+    };
+
+    const editLikeProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("likes")
+        .update({ userProfileImage: image })
+        .eq("userId", userId);
+    };
+
+    const editSaveProfileImage = async () => {
+      const userId = supabase.auth.currentUser.id;
+
+      const resp = await supabase
+        .from("saves")
+        .update({ userProfileImage: image })
+        .eq("userId", userId);
+    };
+
+    const uploadBannerFromUri = async () => {
+      const userId = supabase.auth.currentUser.id;
+      const ext = banner.substring(banner.lastIndexOf(".") + 1);
+      const fileName = banner.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: banner,
+        name: fileName,
+        type: bannerData.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      try {
+        const { data, error } = await supabase.storage
+          .from("profile-images")
+          .upload(fileName, formData, {
+            upsert: false,
+          });
+
+        const { publicURL } = await supabase.storage
+          .from("profile-images")
+          .getPublicUrl(`${fileName}`);
+
+        let imageLink = publicURL;
+        let type = bannerData.type;
+
+        setBannerType(type);
+
+        const resp = await supabase
+          .from("profiles")
+          .update({ bannerImage: publicURL, bannerImageType: type })
+
+          .eq("user_id", userId);
+      } catch (e) {
+        return null;
+      }
+
+      if (error) {
+        Alert.alert(error.message);
+      }
+
+      return { ...banner, imageData: data };
+    };
+
+    const uploadProfileImageFromUri = async () => {
+      const userId = supabase.auth.currentUser.id;
+      const ext = image.substring(banner.lastIndexOf(".") + 1);
+      const fileName = image.replace(/^.*[\\\/]/, "");
+
+      var formData = new FormData();
+      formData.append("files", {
+        uri: image,
+        name: fileName,
+        type: imageData.type ? `image/${ext}` : `video/${ext}`,
+      });
+
+      try {
+        const { data, error } = await supabase.storage
+          .from("profile-images")
+          .upload(fileName, formData, {
+            upsert: false,
+          });
+
+        const { publicURL } = await supabase.storage
+          .from("profile-images")
+          .getPublicUrl(`${fileName}`);
+
+        const resp = await supabase
+          .from("profiles")
+          .update({ profileimage: publicURL })
+
+          .eq("user_id", userId);
+      } catch (e) {
+        return null;
+      }
+
+      if (imageData.type === null) {
+        return null;
+      }
+
+      if (error === null) {
+        return undefined;
+      } else {
+        Alert.alert(error.message);
+      }
+
+      return { ...image, imageData: data };
+    };
+
+    uploadBannerFromUri();
+    uploadProfileImageFromUri();
+    editProfileImage();
+    editLikeProfileImage();
+    editSaveProfileImage();
+    sendAlert();
+
+    if (
+      error.message ===
+      'duplicate key value violates unique constraint "profiles_username_key"'
+    ) {
+      Alert.alert("This Username Is Already Taken");
+    }
+  }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-      }}
-    >
+    <View style={{ backgroundColor: "white", flex: 1 }}>
       <Text style={styles.pageTitle}>Edit Profile</Text>
 
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -30,87 +270,142 @@ export default function EditProfile({ navigation }) {
           source={require("../assets/backButton.png")}
         />
       </TouchableOpacity>
-
-      <Image style={styles.logo} source={require("../assets/TizlyBig.png")} />
-
-      <View style={styles.imagesAndInputs}>
-        <Text style={styles.profileImageText}>Change Profile Image</Text>
-
-        <Text style={styles.profileBannerText}>Change Profile Banner</Text>
-
-        <Image
-          style={styles.verticleDiv}
-          source={require("../assets/verticleDiv.png")}
-        />
-
-        <View style={styles.userImages}>
+      <View style={styles.userProfileImages}>
+        <TouchableOpacity onPress={() => pickProfileImage()}>
           <Image
             style={styles.profileImage}
-            source={{
-              uri: user.profileimage,
-            }}
+            source={
+              image === null
+                ? require("../assets/noProfilePic.jpeg")
+                : { uri: image }
+            }
           />
-
           <Image
-            style={styles.userBanner}
-            source={{
-              uri: user.bannerImage,
-            }}
+            style={styles.bluePlusProfile}
+            source={require("../assets/bluePlus.png")}
           />
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.inputs}>
-          <TextInput placeholder="Username" style={styles.username} />
-          <TextInput placeholder="Display Name" style={styles.displayName} />
-          <TextInput placeholder="Bio" style={styles.bio} />
-        </View>
+        <TouchableOpacity onPress={() => pickBannerImage()}>
+          {banner.endsWith(".mov") ? (
+            <Video
+              ref={video}
+              source={{ uri: banner }}
+              isLooping
+              shouldPlay={true}
+              isMuted={true}
+              resizeMode="cover"
+              style={styles.userBanner}
+            />
+          ) : (
+            <Image
+              style={styles.userBanner}
+              source={
+                user.bannerImage === null
+                  ? require("../assets/noProfilePic.jpeg")
+                  : { uri: banner }
+              }
+            />
+          )}
+          <Image
+            style={styles.bluePlusBanner}
+            source={require("../assets/bluePlus.png")}
+          />
+        </TouchableOpacity>
       </View>
 
       <Image
-        style={styles.button}
-        source={require("../assets/continueButton.png")}
+        style={styles.verticleDiv}
+        source={require("../assets/verticleDiv.png")}
       />
-    </SafeAreaView>
+
+      <TextInput
+        placeholder="Username"
+        style={styles.username}
+        value={username}
+        onChangeText={(text) => setUsername(text.toLowerCase())}
+      />
+      <TextInput
+        placeholder="Display Name"
+        style={styles.displayName}
+        value={displayName}
+        onChangeText={(text) => setDisplayName(text)}
+      />
+
+      <TextInput
+        placeholder="Bio"
+        style={styles.bio}
+        value={bio}
+        onChangeText={(text) => setBio(text)}
+      />
+      <TouchableOpacity onPress={() => editProfile()}>
+        <Image
+          style={styles.button}
+          source={require("../assets/continueButton.png")}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+
   button: {
     position: "absolute",
     width: 311,
     height: 50,
     left: 52,
-    top: 790,
-  },
-
-  holder: {
-    height: 52,
-    Bordercolor: "red",
+    top: 600,
   },
 
   imagesAndInputs: {
-    bottom: 10,
+    position: "absolute",
+  },
+
+  bluePlusProfile: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 228,
+    height: 30,
+    width: 30,
+    left: 114,
+  },
+
+  bluePlusBanner: {
+    position: "absolute",
+    resizeMode: "contain",
+    top: 235,
+    height: 30,
+    width: 30,
+    left: 345,
   },
 
   logo: {
     position: "absolute",
     resizeMode: "contain",
     height: 39,
-    width: 80,
+    width: 50,
+    alignSelf: "center",
+    alignItems: "center",
+    alignContent: "center",
     top: 60,
-    left: 170,
   },
 
   pageTitle: {
     position: "absolute",
-    fontSize: 25,
-    top: 140,
-    left: 30,
+    fontSize: 15,
+    top: 70,
+    fontWeight: "600",
+    alignSelf: "center",
   },
 
   verticleDiv: {
     position: "absolute",
-    top: 200,
+    top: 140,
     left: 190,
     height: 120,
   },
@@ -119,9 +414,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 140,
   },
-  userImages: {
+  userProfileImages: {
     position: "absolute",
-    top: 60,
+
+    borderColor: "#5C5C5C",
+    borderWidth: 0.2,
   },
 
   profileImage: {
@@ -132,6 +429,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     top: 150,
     borderRadius: 200,
+    borderColor: "#5C5C5C",
+    borderWidth: 0.2,
   },
 
   profileImageText: {
@@ -155,7 +454,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     left: 30,
-    top: 20,
+    top: 70,
   },
 
   userBanner: {
@@ -164,12 +463,15 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     left: 240,
+    borderRadius: 10,
+    borderColor: "#5C5C5C",
+    borderWidth: 0.2,
   },
   username: {
     position: "absolute",
     top: 300,
     left: 55,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor: "grey",
     borderWidth: 0.5,
     width: 311,
@@ -177,9 +479,9 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
   },
   displayName: {
-    top: 380,
+    top: 370,
     left: 55,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor: "grey",
     borderWidth: 0.5,
     width: 311,
@@ -188,13 +490,13 @@ const styles = StyleSheet.create({
   },
 
   bio: {
-    top: 410,
+    top: 385,
     left: 55,
-    borderRadius: 25,
+    borderRadius: 15,
     borderColor: "grey",
     borderWidth: 0.5,
     width: 311,
-    height: 100,
+    height: 60,
     paddingLeft: 30,
   },
 });

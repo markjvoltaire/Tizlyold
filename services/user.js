@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { useUser } from "../context/UserContext";
+import { useEffect } from "react";
 
 export async function signInUser(email, password) {
   const { user, error } = await supabase.auth.signIn({ email, password });
@@ -18,8 +19,14 @@ export async function userId() {
 
 export function getUserEmail() {
   const userEmail = supabase.auth.currentUser.email;
-  console.log("userEmail", userEmail);
+
   return userEmail;
+}
+
+export async function getType() {
+  const resp = await supabase.storage.extension().from("posts");
+
+  return resp;
 }
 
 export async function addUser(username, displayName) {
@@ -35,14 +42,57 @@ export async function addUser(username, displayName) {
   ]);
 }
 
-export async function getUsers() {
-  const { data: profiles, error } = await supabase.from("profiles").select("*");
+export async function addPost(username, displayName, title, description) {
+  const userId = supabase.auth.currentUser.id;
+  const resp = await supabase.from("post").insert([
+    {
+      username: username,
+      user_id: userId,
+      DisplayName: displayName,
+      title: title,
+      description: description,
+    },
+  ]);
+
+  return resp;
 }
 
-export async function getUserById() {
+export async function getUsers() {
+  const resp = await supabase.from("profiles").select("*");
+
+  return resp;
+}
+
+export async function getCurrentUserPosts() {
+  const resp = await supabase
+    .from("post")
+    .select("*")
+    .eq("user_id", userId)
+    .order("id", { ascending: false });
+
+  return resp;
+}
+
+export async function getAllUsers() {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .order("id", { ascending: false });
+  return resp;
+}
+
+export async function getPostsById(user_id) {
+  const resp = await supabase
+    .from("post")
+    .select("*")
+    .eq("user_id", user_id)
+    .order("id", { ascending: false });
+  return resp;
+}
+
+export async function getUserByIds() {
   const { user, setUser } = useUser();
   const userId = supabase.auth.currentUser.id;
-  console.log("user", userId);
 
   const { data } = await supabase
     .from("profiles")
@@ -50,7 +100,46 @@ export async function getUserById() {
     .eq("user_id", userId)
     .single();
   setUser(data);
-  console.log("currentUserContext", user);
+}
+
+export async function getProfileDetail(user_id) {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", user_id);
+
+  return resp;
+}
+
+export async function getTrendingCreators() {
+  const resp = await supabase
+    .from("profiles")
+    .select(
+      " user_id, id,username, displayName, profileimage, bannerImage, bio"
+    )
+    .in("id", [179, 180, 181]);
+
+  return resp.body;
+}
+
+export async function getCreatorsYouMayLike() {
+  const resp = await supabase
+    .from("profiles")
+    .select("*")
+    .in("id", [184, 183, 182]);
+
+  return resp.body;
+}
+
+export async function getNewTrendingCreators() {
+  const resp = await supabase
+    .from("profiles")
+    .select(
+      "  user_id,id,username, displayName, profileimage, bannerImage, bio"
+    )
+    .in("id", [184, 183, 182]);
+
+  return resp.body;
 }
 
 export async function signUp(email, password) {
@@ -59,21 +148,59 @@ export async function signUp(email, password) {
       email: email,
       password: password,
     })
-    .then(() =>
-      console.log("supabase.auth.currentUser", supabase.auth.currentUser)
-    )
     .then(() => navigation.navigate("Username"));
 
   return { user, error };
 }
 
-export async function editProfile() {
+export async function editProfile(username, displayName, bio) {
   const userId = supabase.auth.currentUser.id;
 
   const { data, error } = await supabase
     .from("profiles")
-    .update({ username: username, displayName: displayName })
+    .update({ username: username, displayName: displayName, bio: bio })
     .eq("user_id", userId);
+
+  const editProfileImage = async (userProfileImage) => {
+    const userId = supabase.auth.currentUser.id;
+
+    const resp = await supabase
+      .from("comments")
+      .update({ userProfileImage: userProfileImage })
+      .eq("userId", userId);
+  };
+
+  editProfileImage();
+}
+
+export async function editPost(title, description, id) {
+  const { data, error } = await supabase
+    .from("post")
+    .update({ title: title, description: description })
+    .eq("id", id);
+}
+
+export async function createPost(
+  username,
+  displayName,
+  title,
+  publicURL,
+  description
+) {
+  const userId = supabase.auth.currentUser.id;
+
+  const resp = await supabase.from("post").insert([
+    {
+      username: username,
+      user_id: userId,
+      DisplayName: displayName,
+      title: title,
+      media: publicURL,
+      description: description,
+    },
+  ]);
+
+  return resp;
 }
 
 export async function createProfileImage(photo) {
@@ -89,4 +216,15 @@ export async function createProfileImage(photo) {
     profileimage: publicURL,
   });
   return error(resp);
+}
+
+export async function getLikes(item) {
+  const resp = await supabase
+    .from("likes")
+    .select("*")
+    .eq("userId", userId)
+    .eq("postId", item.id)
+    .eq("liked_Id", item.likeId);
+
+  return resp.body;
 }

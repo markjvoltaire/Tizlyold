@@ -3,7 +3,7 @@ import React from "react";
 
 import Explore from "../screens/Explore";
 import HomeScreen from "../screens/HomeScreen";
-import Subscriptions from "../screens/Subscriptions";
+import Notifications from "../screens/Notifications";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import BottomTabNavigator from "./TabNavigator";
@@ -11,8 +11,16 @@ import Settings from "../screens/Settings";
 import Welcome from "../screens/Welcome";
 import UserProfile from "../screens/UserProfile";
 import Post from "../screens/Post";
+import UserProfileSubscribers from "../screens/UserProfileSubscribers";
+import UserProfilePostDetail from "../screens/UserProfilePostDetail";
+import EditPost from "../screens/EditPost";
+import ProfileDetail from "../screens/ProfileDetail";
+import ImageDetails from "../screens/ImageDetails";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+import CommentScreen from "../screens/CommentScreen";
+import UserNames from "../screens/UserNames";
 
-const Stack = createStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 const screenOptionStyle = {
   headerStyle: {
@@ -26,7 +34,44 @@ const screenOptionStyle = {
 const HomeStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen
+        name="CheckoutScreen"
+        component={HomeScreen}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
+        name="ProfileDetail2"
+        component={ProfileDetail}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
+        name="ImageDetails"
+        sharedElements={(route) => {
+          return [route.params.item.id];
+        }}
+        component={ImageDetails}
+      />
+
+      <Stack.Screen name="UserProfile2" component={UserProfile} />
+
+      <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
@@ -35,14 +80,25 @@ const ExploreStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ExploreScreen" component={Explore} />
+
+      <Stack.Screen
+        name="ProfileDetail2"
+        component={ProfileDetail}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
 
-const SubscriptionStackNavigator = () => {
+const NotificationsStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="SubscriptionScreen" component={Subscriptions} />
+      <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
@@ -71,10 +127,26 @@ const ProfileStackNavigator = () => {
   );
 };
 
+const CommentScreenStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="CommentScreen" component={CommentScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const UsernameStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Username" component={Username} />
+      <Stack.Screen name="Username" component={UserNames} />
+    </Stack.Navigator>
+  );
+};
+
+const UserProfilePostDetailStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="UserProfilePost" component={UserProfilePostDetail} />
     </Stack.Navigator>
   );
 };
@@ -87,10 +159,26 @@ const PostStackNavigator = () => {
   );
 };
 
-const MainStackNavigator = () => {
+const EditPostStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="EditPostScreen" component={EditPost} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileSubscriberStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="TabNavigator" component={BottomTabNavigator} />
+      <Stack.Screen name="UserSubcriber" component={UserProfileSubscribers} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileDetailStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
     </Stack.Navigator>
   );
 };
@@ -98,11 +186,14 @@ const MainStackNavigator = () => {
 export {
   HomeStackNavigator,
   ExploreStackNavigator,
-  SubscriptionStackNavigator,
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,
-  MainStackNavigator,
   UsernameStackNavigator,
   PostStackNavigator,
+  CommentScreenStackNavigator,
+  ProfileDetailStackNavigator,
+  UserProfilePostDetail,
+  EditPostStackNavigator,
+  NotificationsStackNavigator,
 };

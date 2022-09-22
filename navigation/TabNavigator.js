@@ -1,5 +1,5 @@
-import React from "react";
-import { Image, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, Text, View, Pressable } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
@@ -9,17 +9,23 @@ import {
   SettingsStackNavigator,
   PostStackNavigator,
   ProfileStackNavigator,
+  ProfileSubscriberStackNavigator,
+  ProfileDetailStackNavigator,
+  NotificationsStackNavigator,
 } from "./StackNavigator";
 import UserProfile from "../screens/UserProfile";
+import * as ImagePicker from "expo-image-picker";
+import { supabase } from "../services/supabase";
+import { useUser } from "../context/UserContext";
+import Notifications from "../screens/Notifications";
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+const BottomTabNavigator = (route, navigation) => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={{ headerShown: false }}
-      tabBarOptions={{ showLabel: false }}
+      screenOptions={{ headerShown: false, tabBarShowLabel: false }}
     >
       <Tab.Screen
         options={{
@@ -83,7 +89,7 @@ const BottomTabNavigator = () => {
 
       <Tab.Screen
         options={{
-          tabBarIcon: () => {
+          tabBarIcon: (navigation) => {
             return (
               <View>
                 <Image
@@ -112,7 +118,7 @@ const BottomTabNavigator = () => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/SubscribersLight.jpg")}
+                  source={require("../assets/bottomtab/noti.png")}
                 />
                 <Text
                   style={{
@@ -125,15 +131,21 @@ const BottomTabNavigator = () => {
                     right: -25,
                   }}
                 >
-                  Subscriptions
+                  Notifications
                 </Text>
               </View>
             );
           },
         }}
-        name="Subscriptions"
-        component={SubscriptionStackNavigator}
+        name="Notifications"
+        component={NotificationsStackNavigator}
       />
+
+      {/* <Tab.Screen
+        options={{ tabBarButton: () => null, tabBarVisible: false }}
+        name="UserSubscriber"
+        component={ProfileDetailStackNavigator}
+      /> */}
 
       <Tab.Screen
         options={{

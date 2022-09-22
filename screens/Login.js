@@ -12,45 +12,33 @@ import {
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
-import { getUserById, signIn, signInUser } from "../services/user";
+import { signIn, signInUser } from "../services/user";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
+import { StackActions } from "@react-navigation/native";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import Validator from "email-validator";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser();
+  // const pushAction = StackActions.navigate("HomeScreen");
+  const pushActionSignUp = StackActions.replace("SignUp");
 
   async function loginWithEmail() {
-    const { user, session, error } = await supabase.auth
-      .signIn({
-        email,
-        password,
-      })
-      .then(() => navigation.navigate("HomeScreen"))
-      .then(() =>
-        console.log("current user after log in ", supabase.auth.currentUser)
-      );
+    const { user, error } = await supabase.auth.signIn({
+      email,
+      password,
+    });
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      navigation.push("HomeScreen");
+    }
   }
-
-  async function getUserById() {
-    const userId = supabase.auth.currentUser.id;
-
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    setUser(data);
-  }
-
-  useEffect(() => {
-    const getUserProfile = async () => {
-      await getUserById();
-    };
-    getUserProfile();
-    console.log("user", user);
-  }, []);
 
   return (
     <ScrollView
@@ -65,13 +53,6 @@ export default function Login({ navigation }) {
         style={styles.headerIcon}
         source={require("../assets/Tizlymed.png")}
       />
-
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton.png")}
-        />
-      </TouchableOpacity>
 
       <Image
         style={styles.headerIcon}
@@ -110,7 +91,7 @@ export default function Login({ navigation }) {
         <Text style={styles.signupRedirect}>Don't have an account?</Text>
         <TouchableOpacity>
           <Text
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => navigation.dispatch(pushActionSignUp)}
             style={styles.signupButton}
           >
             Sign Up Here
@@ -144,7 +125,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 100,
     height: 100,
-    left: 168,
+    alignSelf: "center",
     top: 180,
     resizeMode: "contain",
   },
@@ -159,7 +140,7 @@ const styles = StyleSheet.create({
 
   emailInput: {
     position: "absolute",
-    left: 55,
+    alignSelf: "center",
     top: 300,
     borderColor: "grey",
     borderWidth: 0.5,
@@ -170,7 +151,7 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     position: "absolute",
-    left: 55,
+    alignSelf: "center",
     top: 370,
     borderColor: "grey",
     borderWidth: 0.5,
@@ -184,7 +165,7 @@ const styles = StyleSheet.create({
     width: 311,
     height: 50,
     top: 450,
-    left: 55,
+    alignSelf: "center",
   },
   userPic: {
     resizeMode: "contain",
