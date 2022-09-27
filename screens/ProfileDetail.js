@@ -10,6 +10,7 @@ import {
   Alert,
   Button,
   RefreshControl,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import ProfileNav from "../components/profile/ProfileNav";
@@ -30,8 +31,12 @@ import { StackActions } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
 import NoProfilePost from "../components/profile/NoProfilePost";
 import UserProfile from "./UserProfile";
+import {
+  SharedElement,
+  createSharedElementStackNavigator,
+} from "react-navigation-shared-element";
 
-export default function ProfileDetail({ navigation, route, item }) {
+export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPosts, setUserPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -39,6 +44,7 @@ export default function ProfileDetail({ navigation, route, item }) {
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const { item } = route.params;
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -46,139 +52,138 @@ export default function ProfileDetail({ navigation, route, item }) {
     let { data: post, error } = await supabase
       .from("post")
       .select("*")
-      .eq("user_id", user_id)
+      .eq("user_id", item.user_id)
       .order("id", { ascending: false });
 
     return post;
   }
 
-  async function getFollowing() {
-    const userId = supabase.auth.currentUser.id;
-    const resp = await supabase
-      .from("following")
-      .select("*")
-      .eq("creatorId", user_id)
-      .eq("userId", user.user_id);
+  // async function getFollowing() {
+  //   const userId = supabase.auth.currentUser.id;
+  //   const resp = await supabase
+  //     .from("following")
+  //     .select("*")
+  //     .eq("creatorId", user_id)
+  //     .eq("userId", user.user_id);
 
-    return resp.body;
-  }
+  //   return resp.body;
+  // }
 
-  useEffect(() => {
-    const seeLikes = async () => {
-      const res = await getFollowing();
-      res.map((user) => setIsFollowing(user.following));
-    };
-    seeLikes();
-  }, []);
+  // useEffect(() => {
+  //   const seeLikes = async () => {
+  //     const res = await getFollowing();
+  //     res.map((user) => setIsFollowing(user.following));
+  //   };
+  //   seeLikes();
+  // }, []);
 
   useEffect(() => {
     const getPost = async () => {
       const resp = await getPosts();
+
       setPosts(resp);
       setLoading(false);
     };
     getPost();
   }, []);
 
-  const user_id = route.params.user_id;
+  // const user_id = route.params.user_id;
 
-  async function getUserPostsById() {
-    const items = await supabase
-      .from("post")
-      .select("*")
-      .eq("user_id", user_id)
-      .order("id", { ascending: false });
+  // async function getUserPostsById() {
+  //   const items = await supabase
+  //     .from("post")
+  //     .select("*")
+  //     .eq("user_id", user_id)
+  //     .order("id", { ascending: false });
 
-    return items.body;
-  }
+  //   return items.body;
+  // }
 
-  async function getProfileDetail() {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", route.params.user_id)
-      .single();
+  // async function getProfileDetail() {
+  //   const { data } = await supabase
+  //     .from("profiles")
+  //     .select("*")
+  //     .eq("user_id", route.params.user_id)
+  //     .single();
 
-    return data;
-  }
+  //   return data;
+  // }
 
-  useEffect(() => {
-    const getUser = async () => {
-      const resp = await getProfileDetail();
-      setProfile(resp);
-    };
-    getUser();
-  }, []);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     const resp = await getProfileDetail();
+  //     setProfile(resp);
+  //   };
+  //   getUser();
+  // }, []);
 
-  useEffect(() => {
-    const getFeed = () => {
-      getUserPostsById().then((res) => setUserPosts(res));
-      setLoading(false);
-    };
-    getFeed();
-  }, []);
+  // useEffect(() => {
+  //   const getFeed = () => {
+  //     getUserPostsById().then((res) => setUserPosts(res));
+  //     setLoading(false);
+  //   };
+  //   getFeed();
+  // }, []);
 
-  if (loading) {
-    return (
-      <SafeAreaView>
-        <View>
-          <Text style={{ fontSize: 300 }}>LOADING</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <SafeAreaView>
+  //       <View>
+  //         <Text style={{ fontSize: 300 }}>LOADING</Text>
+  //       </View>
+  //     </SafeAreaView>
+  //   );
+  // }
 
-  async function followUser() {
-    const resp = await supabase.from("following").insert([
-      {
-        creatorId: profile.user_id,
-        userId: user.user_id,
-        userProfileImage: user.profileimage,
+  // async function followUser() {
+  //   const resp = await supabase.from("following").insert([
+  //     {
+  //       creatorId: profile.user_id,
+  //       userId: user.user_id,
+  //       userProfileImage: user.profileimage,
 
-        userUsername: user.username,
-        creatorUsername: profile.username,
-        followingId: profile.following_Id,
-        creatorDisplayname: profile.displayName,
-        userDisplayname: user.displayName,
-        creatorProfileImage: profile.profileimage,
-      },
-    ]);
+  //       userUsername: user.username,
+  //       creatorUsername: profile.username,
+  //       followingId: profile.following_Id,
+  //       creatorDisplayname: profile.displayName,
+  //       userDisplayname: user.displayName,
+  //       creatorProfileImage: profile.profileimage,
+  //     },
+  //   ]);
 
-    return resp;
-  }
+  //   return resp;
+  // }
 
-  async function unfollowUser() {
-    const resp = await supabase
-      .from("following")
-      .delete()
-      .eq("userId", user.user_id)
-      .eq("creatorId", profile.user_id);
+  // async function unfollowUser() {
+  //   const resp = await supabase
+  //     .from("following")
+  //     .delete()
+  //     .eq("userId", user.user_id)
+  //     .eq("creatorId", profile.user_id);
 
-    return resp;
-  }
+  //   return resp;
+  // }
 
-  const handleFollow = () => {
-    setIsFollowing((current) => !current);
+  // const handleFollow = () => {
+  //   setIsFollowing((current) => !current);
 
-    isFollowing === true ? unfollowUser() : followUser();
-  };
+  //   isFollowing === true ? unfollowUser() : followUser();
+  // };
 
-  if (loading) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View>
+  //       <Text>Loading</Text>
+  //     </View>
+  //   );
+  // }
 
-  const refreshFeed = async () => {
-    getProfileDetail();
-  };
+  // const refreshFeed = async () => {
+  //   getProfileDetail();
+  // };
 
   return (
     <>
-      <View style={{ width: 200, backgroundColor: "white" }}></View>
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, backgroundColor: "white" }}
@@ -189,13 +194,15 @@ export default function ProfileDetail({ navigation, route, item }) {
           />
         }
       >
-        <Image
-          style={styles.userBanner}
-          source={{ uri: route.params.bannerImage }}
-        />
+        <SharedElement id={item.id}>
+          <Image
+            style={styles.userBanner}
+            source={{ uri: item.profileimage }}
+          />
+        </SharedElement>
 
         <Video
-          source={{ uri: route.params.bannerImage }}
+          source={{ uri: item.bannerimage }}
           isLooping
           shouldPlay={true}
           isMuted={true}
@@ -208,25 +215,25 @@ export default function ProfileDetail({ navigation, route, item }) {
           source={require("../assets/fader.png")}
         />
 
-        <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
             style={styles.backButton}
             source={require("../assets/backButton2.png")}
           />
         </TouchableOpacity>
         <View style={{ bottom: 410 }}>
-          <View style={{ top: 30 }}>
-            <Text style={styles.displayname}>{profile.displayName}</Text>
-            <Text style={styles.username}>@{route.params.username}</Text>
+          <View style={{ top: 30, right: 62 }}>
+            <Text style={styles.displayname}>{item.displayName}</Text>
+            <Text style={styles.username}>@{item.username}</Text>
 
-            <Image
+            {/* <Image
               style={styles.profileImage}
               source={
-                profile.profileimage === null
+                item.profileimage === null
                   ? require("../assets/noProfilePic.jpeg")
-                  : { uri: route.params.profileimage }
+                  : { uri: item.profileimage }
               }
-            />
+            /> */}
           </View>
 
           <TouchableOpacity onPress={() => handleFollow()}>
@@ -267,11 +274,96 @@ export default function ProfileDetail({ navigation, route, item }) {
             {posts.map((item) => {
               return (
                 <View key={item.id}>
-                  <ProfileFeedList
+                  <Pressable
+                    key={item.id}
+                    onPress={() =>
+                      navigation.navigate("ImageDetails", { item })
+                    }
+                  >
+                    <SharedElement id={item.id}>
+                      <Image
+                        source={{ uri: item.media }}
+                        style={{
+                          height: 398,
+                          aspectRatio: 1,
+                          alignSelf: "center",
+                          borderRadius: 10,
+                        }}
+                        resizeMode="cover"
+                      />
+                    </SharedElement>
+                    <Image
+                      style={{
+                        alignSelf: "center",
+                        resizeMode: "stretch",
+                        height: 200,
+                        width: 398,
+                        top: 200,
+                        borderRadius: 12,
+                        position: "absolute",
+                      }}
+                      resizeMode="stretch"
+                      source={require("../assets/fader.png")}
+                    />
+                  </Pressable>
+
+                  <View style={{ position: "absolute", top: 370, left: 10 }}>
+                    <Text style={{ color: "white", fontWeight: "700" }}>
+                      {item.title}
+                    </Text>
+                  </View>
+
+                  <View style={{ position: "absolute" }}>
+                    <Image
+                      style={{
+                        height: 35,
+                        width: 35,
+                        borderRadius: 100,
+                        position: "absolute",
+                        left: 10,
+                        top: 330,
+                      }}
+                      source={{ uri: item.profileimage }}
+                    />
+                    <Text
+                      style={{
+                        position: "absolute",
+                        color: "white",
+                        top: 342,
+                        left: 55,
+                        fontWeight: "500",
+                        fontSize: 15,
+                      }}
+                    >
+                      {item.username}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <Text
+                      style={{
+                        left: 10,
+                        top: 12,
+                        fontWeight: "700",
+                        color: "#4F4E4E",
+                        textAlign: "left",
+                        width: 390,
+                        paddingBottom: 30,
+                      }}
+                    >
+                      {item.description}
+                    </Text>
+
+                    {/* <Text style={{ left: 17, fontWeight: "700", color: "#4F4E4E" }}>
+          {postDate}
+        </Text> */}
+                  </View>
+
+                  {/* <ProfileFeedList
                     navigation={navigation}
                     route={route}
                     item={item}
-                  />
+                  /> */}
                 </View>
               );
             })}

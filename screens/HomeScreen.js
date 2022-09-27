@@ -10,6 +10,7 @@ import {
   FlatList,
   useWindowDimensions,
   RefreshControl,
+  Pressable,
 } from "react-native";
 
 import { Link } from "@react-navigation/native";
@@ -29,16 +30,28 @@ import { useFollow } from "../context/FollowContext";
 import { useScreens } from "react-native-screens";
 import LottieView from "lottie-react-native";
 import { StackActions } from "@react-navigation/native";
+import {
+  SharedElement,
+  createSharedElementStackNavigator,
+} from "react-navigation-shared-element";
+import PostImage from "../components/home/PostImage";
+import PostHeader from "../components/home/PostHeader";
+import Skeleton from "../Skeleton";
+import ProgressiveImage from "../components/ProgressiveImage";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
-
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
   const [userFollowingId, setUserFollowingId] = useState();
   const pushAction = StackActions.replace("Explore");
+  const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const [follow, setFollow] = useState([]);
 
@@ -135,7 +148,7 @@ export default function HomeScreen({ navigation, route }) {
   if (loading) {
     return (
       <View style={{ backgroundColor: "white", flex: 1 }}>
-        <LottieView
+        {/* <LottieView
           style={{
             top: 70,
             height: 400,
@@ -145,7 +158,9 @@ export default function HomeScreen({ navigation, route }) {
           }}
           source={require("../assets/lottie/fasterGreyLoader.json")}
           autoPlay
-        />
+        /> */}
+
+        <Skeleton />
       </View>
     );
   }
@@ -211,9 +226,151 @@ export default function HomeScreen({ navigation, route }) {
               borderBottomWidth: 0.8,
               borderBottomColor: "#EDEDED",
             }}
-            renderItem={({ item }) => (
-              <HomeFeedList item={item} navigation={navigation} />
-            )}
+            renderItem={({ item, defaultImageSource, source }) => {
+              item.media === null
+                ? console.log("null")
+                : console.log("NOT null");
+
+              return (
+                <View style={{ alignSelf: "center" }}>
+                  {item.mediaType === "image" ? (
+                    <>
+                      <View style={{ paddingBottom: 45, top: 60 }}>
+                        <View
+                          style={{ alignSelf: "center", right: 20, bottom: 10 }}
+                        >
+                          {item.media != null ? (
+                            <View style={{ alignSelf: "center" }}>
+                              <PostHeader item={item} navigation={navigation} />
+
+                              <ProgressiveImage
+                                defaultImageSource={require("../assets/defaultImage.png")}
+                                source={{ uri: item.media }}
+                              />
+                            </View>
+                          ) : (
+                            <Skeleton />
+                          )}
+                        </View>
+
+                        {/* <View>
+                          <PostImage item={item} navigation={navigation} />
+                        </View> */}
+                      </View>
+                    </>
+                  ) : (
+                    <View style={{ paddingBottom: 90, bottom: 10 }}>
+                      <Pressable
+                        onPress={() => navigation.push("Player", { item })}
+                      >
+                        <Video
+                          source={{ uri: item.media }}
+                          ref={video}
+                          style={{
+                            height: 400,
+                            aspectRatio: 1,
+                            borderRadius: 12,
+                            alignSelf: "center",
+                            top: 20,
+                          }}
+                          resizeMode="cover"
+                          onPlaybackStatusUpdate={(status) =>
+                            setStatus(() => status)
+                          }
+                        />
+
+                        <Image
+                          style={{
+                            alignSelf: "center",
+                            resizeMode: "stretch",
+                            height: 180,
+                            width: 400,
+                            top: 240,
+                            borderRadius: 12,
+                            position: "absolute",
+                          }}
+                          source={require("../assets/fader.png")}
+                        />
+                        <Image
+                          style={{
+                            position: "absolute",
+                            width: 60,
+                            top: 190,
+                            alignSelf: "center",
+                            resizeMode: "contain",
+                          }}
+                          source={require("../assets/playButton.png")}
+                        />
+                      </Pressable>
+
+                      <View style={{ position: "absolute", top: 390, left: 5 }}>
+                        <Text style={{ color: "white", fontWeight: "700" }}>
+                          {item.title}
+                        </Text>
+                      </View>
+
+                      <View style={{ position: "absolute" }}>
+                        <Image
+                          style={{
+                            height: 35,
+                            width: 35,
+                            borderRadius: 100,
+                            position: "absolute",
+                            left: 5,
+                            top: 350,
+                          }}
+                          source={{ uri: item.profileimage }}
+                        />
+                        <Text
+                          style={{
+                            position: "absolute",
+                            color: "white",
+                            top: 360,
+                            left: 50,
+                            fontWeight: "500",
+                            fontSize: 15,
+                          }}
+                        >
+                          {item.username}
+                        </Text>
+                      </View>
+
+                      <View>
+                        <Text
+                          style={{
+                            left: 5,
+                            top: 32,
+                            fontWeight: "700",
+                            color: "#4F4E4E",
+                            textAlign: "left",
+                            width: 390,
+                            paddingBottom: 30,
+                          }}
+                        >
+                          {item.description}
+                        </Text>
+                      </View>
+                      {/* <UserButtons
+        isPressed={isPressed}
+        setIsPressed={setIsPressed}
+        saveIsPressed={saveIsPressed}
+        setSaveIsPressed={setSaveIsPressed}
+        item={post}
+      /> */}
+
+                      {/* <CurrentUserButtons
+                        isPressed={isPressed}
+                        setIsPressed={setIsPressed}
+                        saveIsPressed={saveIsPressed}
+                        setSaveIsPressed={setSaveIsPressed}
+                        navigation={navigation}
+                        item={post}
+                      /> */}
+                    </View>
+                  )}
+                </View>
+              );
+            }}
           />
         )}
       </View>

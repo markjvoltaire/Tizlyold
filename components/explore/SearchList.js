@@ -15,7 +15,6 @@ import { useUser } from "../../context/UserContext";
 export default function SearchList({ item, navigation, isPressed, query }) {
   const { user, setUser } = useUser();
 
-
   return (
     <View>
       <TouchableOpacity
@@ -24,13 +23,7 @@ export default function SearchList({ item, navigation, isPressed, query }) {
           user.user_id === item.user_id
             ? navigation.navigate("UserProfile2")
             : navigation.navigate("ProfileDetail2", {
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bannerImage: item.bannerImage,
-                bio: item.bio,
-                id: item.id,
-                user_id: item.user_id,
+                item,
               });
         }}
       >

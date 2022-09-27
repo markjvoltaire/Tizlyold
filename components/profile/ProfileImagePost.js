@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
+import { SharedElement } from "react-native-shared-element";
 
 export default function ProfileImagePost({ item, navigation }) {
   const [status, setStatus] = React.useState({});
@@ -18,17 +19,22 @@ export default function ProfileImagePost({ item, navigation }) {
 
   return (
     <View style={{ paddingBottom: 90, top: 10.5 }}>
-      <Pressable onPress={() => navigation.navigate("ImageDetails", { item })}>
-        <Image
-          source={{ uri: item.media }}
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-          }}
-          resizeMode="cover"
-        />
+      <Pressable
+        key={item.id}
+        onPress={() => navigation.navigate("ImageDetails", { item })}
+      >
+        <SharedElement id={item.id}>
+          <Image
+            source={{ uri: item.media }}
+            style={{
+              height: 398,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+          />
+        </SharedElement>
         <Image
           style={{
             alignSelf: "center",

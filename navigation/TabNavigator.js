@@ -18,6 +18,8 @@ import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import Notifications from "../screens/Notifications";
+import Explore from "../screens/Explore";
+import Post from "../screens/Post";
 
 const Tab = createBottomTabNavigator();
 
@@ -84,7 +86,7 @@ const BottomTabNavigator = (route, navigation) => {
           },
         }}
         name="Explore"
-        component={ExploreStackNavigator}
+        component={Explore}
       />
 
       <Tab.Screen
@@ -108,7 +110,7 @@ const BottomTabNavigator = (route, navigation) => {
           },
         }}
         name="Post"
-        component={PostStackNavigator}
+        component={Post}
       />
 
       <Tab.Screen
@@ -138,7 +140,7 @@ const BottomTabNavigator = (route, navigation) => {
           },
         }}
         name="Notifications"
-        component={NotificationsStackNavigator}
+        component={Notifications}
       />
 
       {/* <Tab.Screen
@@ -174,7 +176,7 @@ const BottomTabNavigator = (route, navigation) => {
           },
         }}
         name="Profile"
-        component={ProfileStackNavigator}
+        component={UserProfile}
       />
     </Tab.Navigator>
   );

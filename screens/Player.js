@@ -39,6 +39,8 @@ export default function Player({ route, navigation }) {
 
   const windowWidth = Dimensions.get("window").width;
 
+  const { item } = route.params;
+
   const postUserId = route.params.user_id;
   const postId = route.params.id;
   const displayName = route.params.displayName;
@@ -178,13 +180,13 @@ export default function Player({ route, navigation }) {
     getDetails();
   }, []);
 
-  const { item } = route.params;
+  console.log("post", post);
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
         <VideoHeader navigation={navigation} route={route} />
-        {post.map((item) => {
+        {/* {post.map((item) => {
           return (
             <View key={item.id} style={{ top: 80 }}>
               <Video
@@ -196,11 +198,11 @@ export default function Player({ route, navigation }) {
               />
             </View>
           );
-        })}
+        })} */}
       </View>
 
       <View style={{ top: 100, flex: 1 }}>
-        <FlatList
+        {/* <FlatList
           refreshing={refreshing}
           onRefresh={() => refreshFeed()}
           keyExtractor={(item) => item.id}
@@ -221,7 +223,7 @@ export default function Player({ route, navigation }) {
               />
             </View>
           )}
-        />
+        /> */}
       </View>
       <FullSeperator />
       <KeyboardAvoidingView
@@ -344,4 +346,3 @@ resizeMode="contain"
 onPlaybackStatusUpdate={(status) => setStatus(() => status)}
 /> */
 }
-

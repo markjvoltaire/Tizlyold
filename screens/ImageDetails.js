@@ -97,20 +97,21 @@ export default function ImageDetails({ navigation, route }) {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ backgroundColor: "white" }}></SafeAreaView>
+    <View style={{ flex: 1, top: 50 }}>
       <ScrollView style={{ backgroundColor: "white" }}>
-        <Image
-          source={{ uri: item.media }}
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-          }}
-          resizeMode="cover"
-        />
-        <Image
+        <SharedElement id={item.id}>
+          <Image
+            source={{ uri: item.media }}
+            style={{
+              height: 398,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+          />
+        </SharedElement>
+        {/* <Image
           style={{
             alignSelf: "center",
             resizeMode: "stretch",
@@ -122,18 +123,14 @@ export default function ImageDetails({ navigation, route }) {
           }}
           resizeMode="stretch"
           source={require("../assets/fader.png")}
-        />
+        /> */}
         <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
           <Image
             style={styles.backButton}
             source={require("../assets/backButton2.png")}
           />
         </TouchableOpacity>
-        <View style={{ position: "absolute", top: 370, left: 20 }}>
-          <Text style={{ color: "white", fontWeight: "700" }}>
-            {item.title}
-          </Text>
-        </View>
+        <View style={{ position: "absolute", top: 370, left: 20 }}></View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("ProfileDetail2", {
@@ -143,7 +140,7 @@ export default function ImageDetails({ navigation, route }) {
           style={{ position: "absolute" }}
         >
           <View style={{ position: "absolute" }}>
-            <Image
+            {/* <Image
               style={{
                 height: 35,
                 width: 35,
@@ -153,19 +150,7 @@ export default function ImageDetails({ navigation, route }) {
                 top: 330,
               }}
               source={{ uri: item.profileimage }}
-            />
-            <Text
-              style={{
-                position: "absolute",
-                color: "white",
-                top: 342,
-                left: 60,
-                fontWeight: "500",
-                fontSize: 15,
-              }}
-            >
-              {item.username}
-            </Text>
+            /> */}
           </View>
         </TouchableOpacity>
         <View>
@@ -197,12 +182,15 @@ export default function ImageDetails({ navigation, route }) {
           navigation={navigation}
         />
 
-        <View>
+        <View style={{ paddingBottom: 60 }}>
           <Text style={styles.commentsHeader}>Comments</Text>
 
           <FullSeperator />
           {commentList.map((comment) => (
-            <View style={{ top: 30, left: 10 }} key={comment.id}>
+            <View
+              style={{ left: 10, top: 40, paddingBottom: 20 }}
+              key={comment.id}
+            >
               <View>
                 <Image
                   style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
@@ -287,6 +275,7 @@ export default function ImageDetails({ navigation, route }) {
 const styles = StyleSheet.create({
   inner: {
     padding: 14,
+    bottom: 40,
     borderTopColor: "#EDEDED",
     opacity: 7.8,
     borderTopWidth: 1.8,
@@ -319,7 +308,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: 65,
     color: "#73738B",
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: "600",
     paddingBottom: 70,
   },

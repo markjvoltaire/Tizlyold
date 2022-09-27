@@ -42,14 +42,14 @@ export default function TopHeader({ navigation }) {
         />
       </TouchableOpacity>
 
-      <Image
+      {/* <Image
         style={styles.profileimage}
         source={
           user.profileimage === null
             ? require("../assets/noProfilePic.jpeg")
             : { uri: user.profileimage }
         }
-      />
+      /> */}
     </SafeAreaView>
   );
 }
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: 29,
     width: 29,
-    left: 368,
-    top: 17,
+    left: 358,
+    top: 10,
   },
 
   logo: {
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     height: 26,
     backgroundColor: "white",
     alignSelf: "center",
+    top: 10,
   },
   logoContainer: {
     alignItems: "center",

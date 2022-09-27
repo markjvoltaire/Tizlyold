@@ -51,6 +51,7 @@ import CommentScreen from "./screens/CommentScreen";
 import { supabase } from "./services/supabase";
 import AuthStack from "./Auth/AuthStack";
 import NoAuthStack from "./Auth/NoAuthStack";
+import { useUser } from "./context/UserContext";
 
 export default function App() {
   const [auth, setAuth] = useState();

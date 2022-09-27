@@ -200,7 +200,7 @@ export default function UserProfile({ navigation, route }) {
           data={posts}
           initialNumToRender={2}
           renderItem={({ item }) => (
-            <View>
+            <ScrollView>
               <UserProfileFeed
                 navigation={navigation}
                 route={route}
@@ -210,7 +210,7 @@ export default function UserProfile({ navigation, route }) {
                 user={user}
                 setUser={setUser}
               />
-            </View>
+            </ScrollView>
           )}
         />
       </View>
