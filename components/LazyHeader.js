@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { useUser } from "../context/UserContext";
 
-export default function TopHeader({ navigation }) {
+export default function LazyHeader({ navigation }) {
   const { user, setUser } = useUser();
   const [query, setQuery] = useState();
   const [loading, setLoading] = useState(true);
@@ -26,11 +26,11 @@ export default function TopHeader({ navigation }) {
       </TouchableOpacity>
 
       {/* <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
-        <Image
-          style={styles.notification}
-          source={require("../assets/noti.png")}
-        />
-      </TouchableOpacity> */}
+          <Image
+            style={styles.notification}
+            source={require("../assets/noti.png")}
+          />
+        </TouchableOpacity> */}
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("SettingsScreen");
@@ -42,15 +42,14 @@ export default function TopHeader({ navigation }) {
         />
       </TouchableOpacity>
 
-      <View>
-        <Image
+      {/* <Image
           style={styles.profileimage}
-          source={require("../assets/coin.png")}
-        />
-        <Text style={{ left: 50, bottom: 8, fontWeight: "700" }}>
-          {user.tizlyPoints}
-        </Text>
-      </View>
+          source={
+            user.profileimage === null
+              ? require("../assets/noProfilePic.jpeg")
+              : { uri: user.profileimage }
+          }
+        /> */}
     </SafeAreaView>
   );
 }
@@ -99,8 +98,8 @@ const styles = StyleSheet.create({
     left: 320,
   },
   profileimage: {
-    height: 25,
-    width: 25,
+    height: 34,
+    width: 34,
     borderRadius: 100,
     left: 16,
     top: 12,

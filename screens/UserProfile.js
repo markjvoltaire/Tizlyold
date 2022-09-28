@@ -11,6 +11,7 @@ import {
   ErrorAlert,
   FlatList,
   RefreshControl,
+  Animated,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
@@ -23,6 +24,7 @@ import UserProfileFeed from "../components/profile/UserProfileFeed";
 import UserProfileNav from "../components/profile/UserProfileNav";
 import NoUserProfilePost from "../components/profile/NoUserProfilePost";
 import { Video, AVPlaybackStatus } from "expo-av";
+import ProfileSkeleton from "../ProfileSkeleton";
 
 export default function UserProfile({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -50,14 +52,6 @@ export default function UserProfile({ navigation, route }) {
     return post;
   }
 
-  function seeEdit() {
-    return (
-      <View>
-        <EditCurrentUser />
-      </View>
-    );
-  }
-
   useEffect(() => {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
@@ -68,24 +62,6 @@ export default function UserProfile({ navigation, route }) {
       setLoading(false);
     }, 1000);
   }, []);
-
-  if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-        <LottieView
-          style={{
-            top: 60,
-            height: 400,
-            width: 400,
-            position: "absolute",
-            alignSelf: "center",
-          }}
-          source={require("../assets/lottie/fasterGreyLoader.json")}
-          autoPlay
-        />
-      </SafeAreaView>
-    );
-  }
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -107,6 +83,25 @@ export default function UserProfile({ navigation, route }) {
     getUserById();
     getPost();
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        {/* <LottieView
+          style={{
+            top: 60,
+            height: 400,
+            width: 400,
+            position: "absolute",
+            alignSelf: "center",
+          }}
+          source={require("../assets/lottie/fasterGreyLoader.json")}
+          autoPlay
+        /> */}
+        <ProfileSkeleton />
+      </SafeAreaView>
+    );
+  }
 
   if (posts.length === 0) {
     return (
@@ -175,26 +170,8 @@ export default function UserProfile({ navigation, route }) {
       </View>
       <View style={styles.profileNav}>
         <Text style={styles.home}>Home</Text>
-
-        <FullSeperator />
       </View>
       <View style={styles.feedContainer}>
-        {/* {posts.map((post) => {
-          return (
-            <View style={{ bottom: 90 }} key={post.id}>
-              <UserProfileFeed
-                navigation={navigation}
-                route={route}
-                post={post}
-                navState={navState}
-                setPosts={setPosts}
-                user={user}
-                setUser={setUser}
-              />
-            </View>
-          );
-        })} */}
-
         <FlatList
           keyExtractor={(item) => item.id}
           data={posts}
@@ -276,12 +253,10 @@ const styles = StyleSheet.create({
   },
 
   fullSeperator: {
-    borderBottomColor: "grey",
+    borderBottomColor: "red",
     borderBottomWidth: 0.8,
-    opacity: 0.2,
+    opacity: 1.2,
     width: 900,
-    left: 1,
-    top: 429,
   },
   displayname: {
     position: "absolute",

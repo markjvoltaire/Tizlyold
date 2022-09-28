@@ -87,7 +87,7 @@ export default function AuthStack() {
 
             <Stack.Screen
               name="ExploreScreen"
-              component={ExploreStackNavigator}
+              component={Explore}
               options={{ headerShown: false, gestureEnabled: false }}
             />
 

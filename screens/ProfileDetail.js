@@ -262,7 +262,7 @@ export default function ProfileDetail({ navigation, route }) {
                 color: "#686877",
               }}
             >
-              @{route.params.username} Has No Content Yet.
+              @{item.username} Has No Content Yet.
             </Text>
             <Image
               style={{ height: 170, resizeMode: "contain", bottom: 20 }}

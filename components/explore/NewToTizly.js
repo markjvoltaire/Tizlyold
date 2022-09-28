@@ -29,13 +29,7 @@ export default function NewToTizly({ navigation }) {
                 user.id === item.id
                   ? navigation.navigate("UserProfile2")
                   : navigation.navigate("ProfileDetail2", {
-                      username: item.username,
-                      displayName: item.displayName,
-                      profileimage: item.profileimage,
-                      bannerImage: item.bannerImage,
-                      bio: item.bio,
-                      id: item.id,
-                      user_id: item.user_id,
+                      item,
                     });
               }}
             >

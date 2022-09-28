@@ -46,13 +46,7 @@ export default function TrendingCreators({ navigation, route }) {
                 user.id === item.id
                   ? navigation.navigate("UserProfile2")
                   : navigation.push("ProfileDetail2", {
-                      username: item.username,
-                      displayName: item.displayName,
-                      profileimage: item.profileimage,
-                      bannerImage: item.bannerImage,
-                      bio: item.bio,
-                      id: item.id,
-                      user_id: item.user_id,
+                      item,
                     });
               }}
             >

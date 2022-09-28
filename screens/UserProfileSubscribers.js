@@ -7,10 +7,12 @@ import {
   Image,
   Pressable,
   Animated,
+  Alert,
 } from "react-native";
 import { Permissions, Contacts } from "expo-permissions";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import { supabase } from "../services/supabase";
 import {
   SharedElement,
   createSharedElementStackNavigator,
@@ -21,192 +23,52 @@ import LottieView from "lottie-react-native";
 
 export default function UserProfileSubscribers({ navigation }) {
   const { user, setUser } = useUser();
+  const [userPoints, setUserPoints] = useState();
 
-  const opacity = useRef(new Animated.Value(0.3));
+  console.log("user", user);
+  async function getUserPoints() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("tizlyPoints")
+      .eq("user_id", userId);
+
+    return profiles;
+  }
 
   useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacity.current, {
-          toValue: 1,
-          useNativeDriver: true,
-          duration: 500,
-        }),
-        Animated.timing(opacity.current, {
-          toValue: 0.3,
-          useNativeDriver: true,
-          duration: 800,
-        }),
-      ])
-    ).start();
-  }, [opacity]);
+    const getPoints = async () => {
+      const resp = await getUserPoints();
+      resp.map((i) => setUserPoints(i));
+    };
+    getPoints();
+  }, []);
+
+  // const test = () => {
+  //   const resp = userPoints.tizlyPoints - 50;
+  //   console.log("resp", resp);
+  // };
+
+  // async function minusFiftyPoints() {
+  //   userPoints.tizlyPoints - 50 < 0
+  //     ? Alert.alert("not enough")
+  //     : console.log("you have enough");
+
+  //   const userId = supabase.auth.currentUser.id;
+  //   const { data: profiles, error } = await supabase
+  //     .from("profiles")
+  //     .update({ tizlyPoints: userPoints.tizlyPoints - 50 })
+  //     .eq("user_id", userId);
+
+  //   return profiles;
+  // }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <TopHeader user={user} />
-      <View style={{ top: 50 }}>
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            aspectRatio: 1,
-            alignSelf: "center",
-            height: 35,
-            right: 50,
-            borderRadius: 100,
-            bottom: 30,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            alignSelf: "center",
-            height: 5,
-            width: 125,
-            left: 35,
-            borderRadius: 100,
-            bottom: 60,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            alignSelf: "center",
-            height: 5,
-            width: 70,
-            left: 10,
-            borderRadius: 100,
-            bottom: 55,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            aspectRatio: 1,
-            alignSelf: "center",
-            height: 398,
-            borderRadius: 10,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            top: 15,
-            left: 10,
-            width: 220,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-        <LottieView
-          style={{
-            top: 10,
-            height: 400,
-            width: 400,
-            position: "absolute",
-            alignSelf: "center",
-          }}
-          source={require("../assets/lottie/uploadComplete.json")}
-          autoPlay
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            top: 25,
-            left: 10,
-            width: 360,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-      </View>
-
-      <View style={{ top: 170 }}>
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            aspectRatio: 1,
-            left: 135,
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            bottom: 30,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            alignSelf: "center",
-            height: 5,
-            width: 125,
-            left: 35,
-            borderRadius: 100,
-            bottom: 60,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            alignSelf: "center",
-            height: 5,
-            width: 70,
-            left: 10,
-            borderRadius: 100,
-            bottom: 55,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            aspectRatio: 1,
-            alignSelf: "center",
-            height: 398,
-            borderRadius: 10,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            top: 15,
-            left: 10,
-            width: 220,
-            height: 30,
-            borderRadius: 10,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-
-        <Animated.View
-          style={{
-            opacity: opacity.current,
-            top: 5,
-            left: 10,
-            width: 220,
-            height: 30,
-            borderRadius: 10,
-            backgroundColor: "#CFCFCF",
-          }}
-        />
-      </View>
-    </View>
+    <SafeAreaView>
+      <Button title="access for 50 points" onPress={() => minusFiftyPoints()} />
+      <Button title="go back" onPress={() => navigation.goBack()} />
+    </SafeAreaView>
   );
 }
 

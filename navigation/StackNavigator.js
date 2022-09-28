@@ -45,6 +45,7 @@ const HomeStackNavigator = () => {
           headerTitle: () => <Header />,
         }}
       />
+      <Stack.Screen name="SettingsScreen" component={Settings} />
 
       <Stack.Screen
         name="ProfileDetail2"
@@ -94,14 +95,14 @@ const ExploreStackNavigator = () => {
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ExploreScreen" component={Explore} />
 
-      {/* <Stack.Screen
+      <Stack.Screen
         name="ProfileDetail2"
         component={ProfileDetail}
         options={{
           headerBackVisible: false,
           headerTitle: () => <Header />,
         }}
-      /> */}
+      />
 
       <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>

@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
   RefreshControl,
   Pressable,
+  Animated,
 } from "react-native";
 
 import { Link } from "@react-navigation/native";
@@ -52,6 +53,23 @@ export default function HomeScreen({ navigation, route }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const [follow, setFollow] = useState([]);
 
@@ -148,18 +166,6 @@ export default function HomeScreen({ navigation, route }) {
   if (loading) {
     return (
       <View style={{ backgroundColor: "white", flex: 1 }}>
-        {/* <LottieView
-          style={{
-            top: 70,
-            height: 400,
-            width: 400,
-            position: "absolute",
-            alignSelf: "center",
-          }}
-          source={require("../assets/lottie/fasterGreyLoader.json")}
-          autoPlay
-        /> */}
-
         <Skeleton />
       </View>
     );
@@ -227,36 +233,118 @@ export default function HomeScreen({ navigation, route }) {
               borderBottomColor: "#EDEDED",
             }}
             renderItem={({ item, defaultImageSource, source }) => {
-              item.media === null
-                ? console.log("null")
-                : console.log("NOT null");
-
+            
               return (
-                <View style={{ alignSelf: "center" }}>
+                <View
+                  style={{ alignSelf: "center", paddingBottom: 200, top: 70 }}
+                >
                   {item.mediaType === "image" ? (
                     <>
-                      <View style={{ paddingBottom: 45, top: 60 }}>
-                        <View
-                          style={{ alignSelf: "center", right: 20, bottom: 10 }}
-                        >
-                          {item.media != null ? (
-                            <View style={{ alignSelf: "center" }}>
-                              <PostHeader item={item} navigation={navigation} />
-
-                              <ProgressiveImage
-                                defaultImageSource={require("../assets/defaultImage.png")}
+                      {item.media != null ? (
+                        <>
+                          <View style={{ bottom: 25 }}>
+                            <PostHeader navigation={navigation} item={item} />
+                          </View>
+                          <SharedElement id={item.id}>
+                            <Animated.Image
+                              source={require("../assets/defaultImage.png")}
+                              style={{
+                                opacity: defaultImageAnimated,
+                                height: 300,
+                                width: 300,
+                                alignSelf: "center",
+                              }}
+                              onLoad={handleDefaultImageLoad}
+                              blurRadius={1}
+                            />
+                          </SharedElement>
+                          <Pressable
+                            onPress={() =>
+                              navigation.push("ImageDetails", { item })
+                            }
+                            style={{
+                              position: "absolute",
+                              alignSelf: "center",
+                            }}
+                          >
+                            <SharedElement id={item.id}>
+                              <Animated.Image
                                 source={{ uri: item.media }}
+                                style={{
+                                  opacity: imageAnimated,
+                                  aspectRatio: 1,
+                                  width: 400,
+                                  borderRadius: 10,
+                                  position: "absolute",
+                                  alignSelf: "center",
+                                }}
+                                onLoad={handleImageLoad}
                               />
-                            </View>
-                          ) : (
-                            <Skeleton />
-                          )}
-                        </View>
+                            </SharedElement>
+                          </Pressable>
+                          <View style={{ top: 45 }}>
+                            <Text
+                              style={{
+                                fontWeight: "700",
+                                textAlign: "left",
+                                width: 390,
+                                paddingBottom: 16,
+                                lineHeight: 20,
+                              }}
+                            >
+                              {item.title}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: "600",
+                                color: "#4F4E4E",
+                                textAlign: "left",
+                                width: 390,
+                                paddingBottom: 6,
+                                lineHeight: 20,
+                              }}
+                            >
+                              {item.description}
+                            </Text>
 
-                        {/* <View>
+                            <Image
+                              resizeMode="contain"
+                              style={{
+                                width: 70,
+                              }}
+                              source={require("../assets/photoBean.png")}
+                            />
+                          </View>
+                          <View style={{ top: 17 }}>
+                            {item.user_id === user.user_id ? (
+                              <CurrentUserButtons
+                                isPressed={isPressed}
+                                setIsPressed={setIsPressed}
+                                saveIsPressed={saveIsPressed}
+                                setSaveIsPressed={setSaveIsPressed}
+                                navigation={navigation}
+                                item={item}
+                              />
+                            ) : (
+                              <UserButtons
+                                isPressed={isPressed}
+                                setIsPressed={setIsPressed}
+                                saveIsPressed={saveIsPressed}
+                                setSaveIsPressed={setSaveIsPressed}
+                                item={item}
+                                navigation={navigation}
+                              />
+                            )}
+                          </View>
+                          <FullSeperator />
+                        </>
+                      ) : (
+                        <Skeleton />
+                      )}
+
+                      {/* <View>
                           <PostImage item={item} navigation={navigation} />
                         </View> */}
-                      </View>
                     </>
                   ) : (
                     <View style={{ paddingBottom: 90, bottom: 10 }}>
@@ -350,6 +438,7 @@ export default function HomeScreen({ navigation, route }) {
                           {item.description}
                         </Text>
                       </View>
+
                       {/* <UserButtons
         isPressed={isPressed}
         setIsPressed={setIsPressed}
@@ -401,12 +490,12 @@ const styles = StyleSheet.create({
 
   fullSeperator: {
     position: "absolute",
+    top: 680,
     alignSelf: "center",
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
     width: 600,
-    top: 370,
   },
 
   fullSeperator2: {

@@ -6,11 +6,17 @@ import {
   Image,
   Alert,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
 import { useUser } from "../../context/UserContext";
 import CurrentUserButtons from "../home/CurrentUserButtons";
+
+import {
+  SharedElement,
+  createSharedElementStackNavigator,
+} from "react-navigation-shared-element";
 
 export default function UserProfileImagePost({
   post,
@@ -21,22 +27,68 @@ export default function UserProfileImagePost({
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View style={{ paddingBottom: 90 }}>
-      <Pressable>
+      <Pressable
+        key={post.id}
+        onPress={() =>
+          navigation.push("ImageDetails", {
+            item: post,
+          })
+        }
+      >
+        <SharedElement id={post.id}>
+          <Animated.Image
+            source={require("../../assets/defaultImage.png")}
+            style={{
+              height: 398,
+              position: "absolute",
+              opacity: defaultImageAnimated,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+            }}
+            resizeMode="cover"
+            onLoad={handleDefaultImageLoad}
+          />
+        </SharedElement>
+
+        <SharedElement id={post.id}>
+          <Animated.Image
+            source={{ uri: post.media }}
+            style={{
+              height: 398,
+              opacity: imageAnimated,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+            }}
+            resizeMode="cover"
+            onLoad={handleImageLoad}
+          />
+        </SharedElement>
         <Image
-          source={{ uri: post.media }}
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-            borderColor: "#5C5C5C",
-            borderWidth: 0.2,
-          }}
-          resizeMode="cover"
-        />
-        {/* <Image
           style={{
             alignSelf: "center",
             resizeMode: "stretch",
@@ -48,7 +100,7 @@ export default function UserProfileImagePost({
           }}
           resizeMode="stretch"
           source={require("../../assets/fader.png")}
-        /> */}
+        />
       </Pressable>
       <View style={{ position: "absolute", top: 370, left: 10 }}>
         <Text style={{ color: "white", fontWeight: "700" }}>{post.title}</Text>

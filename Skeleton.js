@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import TopHeader from "./components/TopHeader";
 
 import { useUser } from "./context/UserContext";
+import LazyHeader from "./components/LazyHeader";
 
 export default function Skeleton({ navigation }) {
   const { user, setUser } = useUser();
@@ -28,7 +29,7 @@ export default function Skeleton({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <TopHeader user={user} />
+      <LazyHeader />
       <View style={{ top: 50 }}>
         <Animated.View
           style={{

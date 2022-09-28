@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Animated } from "react-native";
+import { StyleSheet, Text, View, Animated, Pressable } from "react-native";
 import React, { useState, useEffect } from "react";
 
 export default function ProgressiveImage({ defaultImageSource, source }) {
@@ -41,7 +41,6 @@ export default function ProgressiveImage({ defaultImageSource, source }) {
           opacity: imageAnimated,
           height: 300,
           width: 300,
-          position: "absolute",
         }}
         onLoad={handleImageLoad}
       />
