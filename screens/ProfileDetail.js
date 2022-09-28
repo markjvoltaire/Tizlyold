@@ -4,13 +4,10 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  FlatList,
   ScrollView,
-  SafeAreaView,
-  Alert,
-  Button,
   RefreshControl,
   Pressable,
+  Animated,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import ProfileNav from "../components/profile/ProfileNav";
@@ -35,6 +32,7 @@ import {
   SharedElement,
   createSharedElementStackNavigator,
 } from "react-navigation-shared-element";
+import ProfileSkeleton from "../ProfileSkeleton";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -170,17 +168,34 @@ export default function ProfileDetail({ navigation, route }) {
   //   isFollowing === true ? unfollowUser() : followUser();
   // };
 
-  // if (loading) {
-  //   return (
-  //     <View>
-  //       <Text>Loading</Text>
-  //     </View>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <View>
+        <ProfileSkeleton navigation={navigation} />
+      </View>
+    );
+  }
 
   // const refreshFeed = async () => {
   //   getProfileDetail();
   // };
+
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   return (
     <>
@@ -194,6 +209,23 @@ export default function ProfileDetail({ navigation, route }) {
           />
         }
       >
+        <SharedElement id={item.id}>
+          <Animated.Image
+            source={require("../assets/defaultImage.png")}
+            style={{
+              height: 398,
+              position: "absolute",
+              opacity: defaultImageAnimated,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+            }}
+            resizeMode="cover"
+            onLoad={handleDefaultImageLoad}
+          />
+        </SharedElement>
         <SharedElement id={item.id}>
           <Image
             style={styles.userBanner}
@@ -281,7 +313,25 @@ export default function ProfileDetail({ navigation, route }) {
                     }
                   >
                     <SharedElement id={item.id}>
-                      <Image
+                      <Animated.Image
+                        source={require("../assets/defaultImage.png")}
+                        style={{
+                          height: 398,
+                          position: "absolute",
+                          opacity: defaultImageAnimated,
+
+                          alignSelf: "center",
+                          borderRadius: 10,
+                          borderColor: "#5C5C5C",
+                          borderWidth: 0.2,
+                        }}
+                        resizeMode="cover"
+                        onLoad={handleDefaultImageLoad}
+                      />
+                    </SharedElement>
+
+                    <SharedElement id={item.id}>
+                      <Animated.Image
                         source={{ uri: item.media }}
                         style={{
                           height: 398,
@@ -290,9 +340,10 @@ export default function ProfileDetail({ navigation, route }) {
                           borderRadius: 10,
                         }}
                         resizeMode="cover"
+                        onLoad={handleImageLoad}
                       />
                     </SharedElement>
-                    <Image
+                    <Animated.Image
                       style={{
                         alignSelf: "center",
                         resizeMode: "stretch",

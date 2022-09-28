@@ -74,40 +74,32 @@ const HomeStackNavigator = () => {
         component={ImageDetails}
       />
 
-      <Stack.Screen
-        name="UserProfile2"
-        sharedElements={(route) => {
-          const { item } = route.params;
-          return [item];
-        }}
-        component={UserProfile}
-      />
+      <Stack.Screen name="UserProfile2" component={UserProfile} />
       <Stack.Screen name="UserProfilePost" component={UserProfilePostDetail} />
       <Stack.Screen name="UserSubcriber" component={UserProfileSubscribers} />
-
       <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
 
-const ExploreStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="ExploreScreen" component={Explore} />
+// const ExploreStackNavigator = () => {
+//   return (
+//     <Stack.Navigator screenOptions={screenOptionStyle}>
+//       <Stack.Screen name="ExploreScreen" component={Explore} />
 
-      <Stack.Screen
-        name="ProfileDetail2"
-        component={ProfileDetail}
-        options={{
-          headerBackVisible: false,
-          headerTitle: () => <Header />,
-        }}
-      />
+//       <Stack.Screen
+//         name="ProfileDetail2"
+//         component={ProfileDetail}
+//         options={{
+//           headerBackVisible: false,
+//           headerTitle: () => <Header />,
+//         }}
+//       />
 
-      <Stack.Screen name="NotificationsScreen" component={Notifications} />
-    </Stack.Navigator>
-  );
-};
+//       <Stack.Screen name="NotificationsScreen" component={Notifications} />
+//     </Stack.Navigator>
+//   );
+// };
 
 const NotificationsStackNavigator = () => {
   return (
@@ -199,7 +191,7 @@ const ProfileDetailStackNavigator = () => {
 
 export {
   HomeStackNavigator,
-  ExploreStackNavigator,
+  // ExploreStackNavigator,
   SettingsStackNavigator,
   WelcomeStackNavigator,
   ProfileStackNavigator,

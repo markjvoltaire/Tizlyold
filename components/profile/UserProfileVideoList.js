@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  Animated,
+} from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../home/UserButtons";
@@ -9,6 +16,23 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
