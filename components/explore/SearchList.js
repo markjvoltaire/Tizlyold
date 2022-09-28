@@ -22,7 +22,7 @@ export default function SearchList({ item, navigation, isPressed, query }) {
         onPress={() => {
           user.user_id === item.user_id
             ? navigation.navigate("UserProfile2")
-            : navigation.navigate("ProfileDetail2", {
+            : navigation.push("ProfileDetail2", {
                 item,
               });
         }}

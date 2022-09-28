@@ -40,6 +40,7 @@ export default function ProfileDetail({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const { item } = route.params;
@@ -56,24 +57,24 @@ export default function ProfileDetail({ navigation, route }) {
     return post;
   }
 
-  // async function getFollowing() {
-  //   const userId = supabase.auth.currentUser.id;
-  //   const resp = await supabase
-  //     .from("following")
-  //     .select("*")
-  //     .eq("creatorId", user_id)
-  //     .eq("userId", user.user_id);
+  async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("following")
+      .select("*")
+      .eq("creatorId", item.user_id)
+      .eq("userId", user.user_id);
 
-  //   return resp.body;
-  // }
+    return resp.body;
+  }
 
-  // useEffect(() => {
-  //   const seeLikes = async () => {
-  //     const res = await getFollowing();
-  //     res.map((user) => setIsFollowing(user.following));
-  //   };
-  //   seeLikes();
-  // }, []);
+  useEffect(() => {
+    const seeLikes = async () => {
+      const res = await getFollowing();
+      res.map((user) => setIsFollowing(user.following));
+    };
+    seeLikes();
+  }, []);
 
   useEffect(() => {
     const getPost = async () => {
@@ -133,40 +134,40 @@ export default function ProfileDetail({ navigation, route }) {
   //   );
   // }
 
-  // async function followUser() {
-  //   const resp = await supabase.from("following").insert([
-  //     {
-  //       creatorId: profile.user_id,
-  //       userId: user.user_id,
-  //       userProfileImage: user.profileimage,
+  async function followUser() {
+    const resp = await supabase.from("following").insert([
+      {
+        creatorId: item.user_id,
+        userId: user.user_id,
+        userProfileImage: user.profileimage,
 
-  //       userUsername: user.username,
-  //       creatorUsername: profile.username,
-  //       followingId: profile.following_Id,
-  //       creatorDisplayname: profile.displayName,
-  //       userDisplayname: user.displayName,
-  //       creatorProfileImage: profile.profileimage,
-  //     },
-  //   ]);
+        userUsername: user.username,
+        creatorUsername: item.username,
+        followingId: item.following_Id,
+        creatorDisplayname: item.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: item.profileimage,
+      },
+    ]);
 
-  //   return resp;
-  // }
+    return resp;
+  }
 
-  // async function unfollowUser() {
-  //   const resp = await supabase
-  //     .from("following")
-  //     .delete()
-  //     .eq("userId", user.user_id)
-  //     .eq("creatorId", profile.user_id);
+  async function unfollowUser() {
+    const resp = await supabase
+      .from("following")
+      .delete()
+      .eq("userId", user.user_id)
+      .eq("creatorId", item.user_id);
 
-  //   return resp;
-  // }
+    return resp;
+  }
 
-  // const handleFollow = () => {
-  //   setIsFollowing((current) => !current);
+  const handleFollow = () => {
+    setIsFollowing((current) => !current);
 
-  //   isFollowing === true ? unfollowUser() : followUser();
-  // };
+    isFollowing === true ? unfollowUser() : followUser();
+  };
 
   if (loading) {
     return (
@@ -196,6 +197,10 @@ export default function ProfileDetail({ navigation, route }) {
       useNativeDriver: true,
     }).start();
   };
+
+  const photoCount = posts.filter((item) => item.mediaType === "image");
+  const videoCount = posts.filter((item) => item.mediaType === "video");
+  const textCount = posts.filter((item) => item.mediaType === "text");
 
   return (
     <>
@@ -254,7 +259,7 @@ export default function ProfileDetail({ navigation, route }) {
           />
         </TouchableOpacity>
         <View style={{ bottom: 410 }}>
-          <View style={{ top: 30, right: 62 }}>
+          <View style={{ top: 60, right: 62 }}>
             <Text style={styles.displayname}>{item.displayName}</Text>
             <Text style={styles.username}>@{item.username}</Text>
 
@@ -268,7 +273,7 @@ export default function ProfileDetail({ navigation, route }) {
             /> */}
           </View>
 
-          <TouchableOpacity onPress={() => handleFollow()}>
+          {/* <TouchableOpacity onPress={() => handleFollow()}>
             <Image
               style={styles.subButton}
               source={
@@ -277,7 +282,7 @@ export default function ProfileDetail({ navigation, route }) {
                   : require("../assets/followbutton.png")
               }
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.profileNav}>
           <Text style={styles.home}>Home</Text>
@@ -302,122 +307,240 @@ export default function ProfileDetail({ navigation, route }) {
             />
           </View>
         ) : (
-          <View style={styles.feedContainer}>
-            {posts.map((item) => {
-              return (
-                <View key={item.id}>
-                  <Pressable
-                    key={item.id}
-                    onPress={() =>
-                      navigation.navigate("ImageDetails", { item })
-                    }
-                  >
-                    <SharedElement id={item.id}>
-                      <Animated.Image
-                        source={require("../assets/defaultImage.png")}
-                        style={{
-                          height: 398,
-                          position: "absolute",
-                          opacity: defaultImageAnimated,
-
-                          alignSelf: "center",
-                          borderRadius: 10,
-                          borderColor: "#5C5C5C",
-                          borderWidth: 0.2,
-                        }}
-                        resizeMode="cover"
-                        onLoad={handleDefaultImageLoad}
-                      />
-                    </SharedElement>
-
-                    <SharedElement id={item.id}>
-                      <Animated.Image
-                        source={{ uri: item.media }}
-                        style={{
-                          height: 398,
-                          aspectRatio: 1,
-                          alignSelf: "center",
-                          borderRadius: 10,
-                        }}
-                        resizeMode="cover"
-                        onLoad={handleImageLoad}
-                      />
-                    </SharedElement>
-                    <Animated.Image
-                      style={{
-                        alignSelf: "center",
-                        resizeMode: "stretch",
-                        height: 200,
-                        width: 398,
-                        top: 200,
-                        borderRadius: 12,
-                        position: "absolute",
-                      }}
-                      resizeMode="stretch"
-                      source={require("../assets/fader.png")}
-                    />
-                  </Pressable>
-
-                  <View style={{ position: "absolute", top: 370, left: 10 }}>
-                    <Text style={{ color: "white", fontWeight: "700" }}>
-                      {item.title}
-                    </Text>
-                  </View>
-
-                  <View style={{ position: "absolute" }}>
+          <View>
+            {isFollowing === false ? (
+              <>
+                <View
+                  style={{
+                    top: 100,
+                    flexDirection: "row",
+                    alignSelf: "center",
+                  }}
+                >
+                  <View>
                     <Image
-                      style={{
-                        height: 35,
-                        width: 35,
-                        borderRadius: 100,
-                        position: "absolute",
-                        left: 10,
-                        top: 330,
-                      }}
-                      source={{ uri: item.profileimage }}
+                      style={{ height: 130, width: 130, right: 5 }}
+                      source={require("../assets/subBox.png")}
                     />
                     <Text
                       style={{
                         position: "absolute",
+                        alignSelf: "center",
+                        fontWeight: "600",
                         color: "white",
-                        top: 342,
-                        left: 55,
-                        fontWeight: "500",
-                        fontSize: 15,
+                        top: 15,
+                        fontSize: 17,
                       }}
                     >
-                      {item.username}
+                      Photos
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        top: 55,
+                        fontWeight: "600",
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    >
+                      {photoCount.length}
                     </Text>
                   </View>
 
                   <View>
+                    <Image
+                      style={{ height: 130, width: 130 }}
+                      source={require("../assets/subBox.png")}
+                    />
                     <Text
                       style={{
-                        left: 10,
-                        top: 12,
-                        fontWeight: "700",
-                        color: "#4F4E4E",
-                        textAlign: "left",
-                        width: 390,
-                        paddingBottom: 30,
+                        position: "absolute",
+                        alignSelf: "center",
+                        fontWeight: "600",
+                        color: "white",
+                        top: 15,
+                        fontSize: 17,
                       }}
                     >
-                      {item.description}
+                      Videos
                     </Text>
-
-                    {/* <Text style={{ left: 17, fontWeight: "700", color: "#4F4E4E" }}>
-          {postDate}
-        </Text> */}
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        top: 55,
+                        fontWeight: "600",
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    >
+                      {videoCount.length}
+                    </Text>
                   </View>
 
-                  {/* <ProfileFeedList
-                    navigation={navigation}
-                    route={route}
-                    item={item}
-                  /> */}
+                  <View>
+                    <Image
+                      style={{ height: 130, width: 130, left: 5 }}
+                      source={require("../assets/subBox.png")}
+                    />
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        fontWeight: "600",
+                        color: "white",
+                        top: 15,
+                        fontSize: 17,
+                      }}
+                    >
+                      Text
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        top: 55,
+                        fontWeight: "600",
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    >
+                      {textCount.length}
+                    </Text>
+                  </View>
                 </View>
-              );
-            })}
+                <View style={{ alignItems: "center", top: 65 }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.push("UserSubscriber", {
+                        item,
+                      })
+                    }
+                  >
+                    <Image
+                      style={{
+                        resizeMode: "contain",
+                        height: 215,
+                        width: 215,
+                        alignSelf: "center",
+                      }}
+                      source={require("../assets/accessButton.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <View style={styles.feedContainer}>
+                {posts.map((item) => {
+                  return (
+                    <View key={item.id}>
+                      <Pressable
+                        key={item.id}
+                        onPress={() =>
+                          navigation.navigate("ImageDetails", { item })
+                        }
+                      >
+                        <SharedElement id={item.id}>
+                          <Animated.Image
+                            source={require("../assets/defaultImage.png")}
+                            style={{
+                              height: 398,
+                              position: "absolute",
+                              opacity: defaultImageAnimated,
+
+                              alignSelf: "center",
+                              borderRadius: 10,
+                              borderColor: "#5C5C5C",
+                              borderWidth: 0.2,
+                            }}
+                            resizeMode="cover"
+                            onLoad={handleDefaultImageLoad}
+                          />
+                        </SharedElement>
+
+                        <SharedElement id={item.id}>
+                          <Animated.Image
+                            source={{ uri: item.media }}
+                            style={{
+                              height: 398,
+                              aspectRatio: 1,
+                              alignSelf: "center",
+                              borderRadius: 10,
+                            }}
+                            resizeMode="cover"
+                            onLoad={handleImageLoad}
+                          />
+                        </SharedElement>
+                        <Animated.Image
+                          style={{
+                            alignSelf: "center",
+                            resizeMode: "stretch",
+                            height: 200,
+                            width: 398,
+                            top: 200,
+                            borderRadius: 12,
+                            position: "absolute",
+                          }}
+                          resizeMode="stretch"
+                          source={require("../assets/fader.png")}
+                        />
+                      </Pressable>
+
+                      <View
+                        style={{ position: "absolute", top: 370, left: 10 }}
+                      >
+                        <Text style={{ color: "white", fontWeight: "700" }}>
+                          {item.title}
+                        </Text>
+                      </View>
+
+                      <View style={{ position: "absolute" }}>
+                        <Image
+                          style={{
+                            height: 35,
+                            width: 35,
+                            borderRadius: 100,
+                            position: "absolute",
+                            left: 10,
+                            top: 330,
+                          }}
+                          source={{ uri: item.profileimage }}
+                        />
+                        <Text
+                          style={{
+                            position: "absolute",
+                            color: "white",
+                            top: 342,
+                            left: 55,
+                            fontWeight: "500",
+                            fontSize: 15,
+                          }}
+                        >
+                          {item.username}
+                        </Text>
+                      </View>
+
+                      <View>
+                        <Text
+                          style={{
+                            left: 10,
+                            top: 12,
+                            fontWeight: "700",
+                            color: "#4F4E4E",
+                            textAlign: "left",
+                            width: 390,
+                            paddingBottom: 30,
+                          }}
+                        >
+                          {item.description}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
           </View>
         )}
       </ScrollView>

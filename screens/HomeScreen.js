@@ -97,7 +97,7 @@ export default function HomeScreen({ navigation, route }) {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
       .from("following")
-      .select(" creatorId, followingId, creatorUsername, userId")
+      .select("*")
       .eq("following", true)
       .eq("userId", userId);
 
@@ -110,7 +110,7 @@ export default function HomeScreen({ navigation, route }) {
     const getFollowingList = async () => {
       const resp = await getFollowing();
 
-      setFollow(resp);
+      // setFollow(resp);
     };
     getFollowingList();
   }, []);
@@ -233,7 +233,6 @@ export default function HomeScreen({ navigation, route }) {
               borderBottomColor: "#EDEDED",
             }}
             renderItem={({ item, defaultImageSource, source }) => {
-            
               return (
                 <View
                   style={{ alignSelf: "center", paddingBottom: 200, top: 70 }}

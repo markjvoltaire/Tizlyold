@@ -114,9 +114,7 @@ export async function getProfileDetail(user_id) {
 export async function getTrendingCreators() {
   const resp = await supabase
     .from("profiles")
-    .select(
-      " user_id, id,username, displayName, profileimage, bannerImage, bio"
-    )
+    .select("*")
     .in("id", [179, 180, 181]);
 
   return resp.body;
