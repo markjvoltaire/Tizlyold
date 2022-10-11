@@ -7,31 +7,31 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { usePoints } from "../context/PointsContext";
+import { supabase } from "../services/supabase";
 
-export default function TopHeader({ navigation }) {
+import { getUserPoints } from "../services/points";
+
+export default function TopHeader({ navigation, tizlyPoints }) {
   const { user, setUser } = useUser();
+  const { points, setPoints } = usePoints();
   const [query, setQuery] = useState();
+  // const [tizlyPoints, setTizlyPoints] = useState(points);
   const [loading, setLoading] = useState(true);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
     <SafeAreaView style={styles.componentContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("UserSubscriber")}>
-        <Image
-          style={styles.logo}
-          source={require("../assets/tizlyicon.jpg")}
-        />
-      </TouchableOpacity>
+      <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />
 
-      {/* <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
-        <Image
-          style={styles.notification}
-          source={require("../assets/noti.png")}
-        />
-      </TouchableOpacity> */}
-      <TouchableOpacity
+      <View style={{ position: "absolute", top: 35, left: 16 }}>
+        <Image style={styles.setting} source={require("../assets/coin.png")} />
+        <Text style={{ left: 350, top: 22, fontWeight: "700" }}>{points}</Text>
+      </View>
+
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate("SettingsScreen");
         }}
@@ -40,16 +40,13 @@ export default function TopHeader({ navigation }) {
           style={styles.setting}
           source={require("../assets/Setting.jpg")}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      <View>
+      <View style={{ position: "absolute", top: 35 }}>
         <Image
           style={styles.profileimage}
-          source={require("../assets/coin.png")}
+          source={{ uri: user.profileimage }}
         />
-        <Text style={{ left: 50, bottom: 8, fontWeight: "700" }}>
-          {user.tizlyPoints}
-        </Text>
       </View>
     </SafeAreaView>
   );
@@ -66,8 +63,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: 29,
     width: 29,
-    left: 358,
-    top: 10,
+    left: 308,
+    top: 15,
   },
 
   logo: {
@@ -77,7 +74,7 @@ const styles = StyleSheet.create({
     height: 26,
     backgroundColor: "white",
     alignSelf: "center",
-    top: 10,
+    top: 50,
   },
   logoContainer: {
     alignItems: "center",
@@ -99,8 +96,8 @@ const styles = StyleSheet.create({
     left: 320,
   },
   profileimage: {
-    height: 25,
-    width: 25,
+    height: 35,
+    width: 35,
     borderRadius: 100,
     left: 16,
     top: 12,

@@ -14,6 +14,7 @@ import { supabase } from "../../services/supabase";
 import { Video, AVPlaybackStatus } from "expo-av";
 import Comment from "../../components/post/Comment";
 import UserButtons from "../home/UserButtons";
+import CommentList from "./CommentList";
 
 export default function UserPostDetails({
   post,
@@ -45,147 +46,205 @@ export default function UserPostDetails({
     getImage();
   }, []);
 
-  if (commentList.length === 0) {
-    return (
-      <View style={styles.container}>
-        <View style={{ left: 10 }}>
-          <Text style={styles.postTitle}>{post.title}</Text>
-          <Text style={styles.postDescription}>{post.description}</Text>
-          <Text style={styles.date}>{post.posted}</Text>
-        </View>
+  // if (commentList.length === 0) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <View style={{ left: 10 }}>
+  //         <Text style={styles.postTitle}>{post.title}</Text>
+  //         <Text style={styles.postDescription}>{post.description}</Text>
+  //         <Text style={styles.date}>{post.posted}</Text>
+  //       </View>
 
-        <UserButtons
-          isPressed={isPressed}
-          setIsPressed={setIsPressed}
-          item={post}
-        />
+  //       <View style={{ top: 100 }}>
+  //         <UserButtons
+  //           isPressed={isPressed}
+  //           setIsPressed={setIsPressed}
+  //           item={post}
+  //           setSaveIsPressed={setSaveIsPressed}
+  //           saveIsPressed={saveIsPressed}
+  //         />
+  //       </View>
 
-        <View>
-          <Text style={styles.commentsHeader}>Comments</Text>
-          <Text style={styles.commentsHeader}>Be the first to comment</Text>
+  //       <View>
+  //         <Text style={styles.commentsHeader}>Be the first to comment</Text>
 
-          <FullSeperator />
+  //         <FullSeperator />
 
-          <View style={styles.commentSection}>
-            <FlatList
-              keyExtractor={(item) => item.id}
-              data={commentList}
-              contentContainerStyle={{
-                borderBottomWidth: 0.8,
-                borderBottomColor: "#EDEDED",
-              }}
-              renderItem={({ item }) => (
-                <View>
-                  <Image
-                    style={{
-                      height: 30,
-                      width: 30,
-                      borderRadius: 40,
-                      bottom: 4,
-                    }}
-                    source={{ uri: item.userProfileImage }}
-                  />
-                  <View style={{ left: 35, bottom: 35 }}>
-                    <Text style={{ fontWeight: "600" }}>
-                      {item.userDisplayName}
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#4F4E4E",
-                        fontWeight: "500",
-                        fontSize: 12,
-                      }}
-                    >
-                      @{item.userUsername}
-                    </Text>
-                    <Text
-                      style={{
-                        right: 35,
-                        fontWeight: "600",
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                      }}
-                    >
-                      {item.comment}
-                    </Text>
-                  </View>
-                </View>
-              )}
-            />
-          </View>
-        </View>
-      </View>
-    );
-  }
+  //         <View style={styles.commentSection}>
+  //           <FlatList
+  //             keyExtractor={(item) => item.id}
+  //             data={commentList}
+  //             renderItem={({ item }) => (
+  //               <View>
+  //                 <Image
+  //                   style={{
+  //                     height: 30,
+  //                     width: 30,
+  //                     borderRadius: 40,
+  //                     bottom: 4,
+  //                   }}
+  //                   source={{ uri: item.userProfileImage }}
+  //                 />
+  //                 <View style={{ left: 35, bottom: 3 }}>
+  //                   <Text style={{ fontWeight: "600" }}>
+  //                     {item.userDisplayName}
+  //                   </Text>
+  //                   <Text
+  //                     style={{
+  //                       color: "#4F4E4E",
+  //                       fontWeight: "500",
+  //                       fontSize: 12,
+  //                     }}
+  //                   >
+  //                     @{item.userUsername}
+  //                   </Text>
+  //                   <Text
+  //                     style={{
+  //                       right: 35,
+  //                       fontWeight: "600",
+  //                       paddingTop: 10,
+  //                       paddingBottom: 10,
+  //                     }}
+  //                   >
+  //                     {item.comment}
+  //                   </Text>
+  //                 </View>
+  //               </View>
+  //             )}
+  //           />
+  //         </View>
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
   return (
-    <View style={styles.container}>
-      <View style={{ left: 10, top: 10 }}>
-        <Text style={styles.postTitle}>{post.title}</Text>
-        <Text style={styles.postDescription}>{post.description}</Text>
-        <Text style={styles.date}>{post.posted}</Text>
-      </View>
+    <>
+      <View style={{ flex: 1, left: 10 }}>
+        <View>
+          {post.title ? (
+            <Text style={styles.postTitle}>{post.title}</Text>
+          ) : (
+            <Text style={styles.postTitle}>No Title was added</Text>
+          )}
+        </View>
 
-      <View>
-        <Text style={styles.commentsHeader}>Comments</Text>
+        <View>
+          {post.description ? (
+            <Text style={styles.postDescription}>{post.description}</Text>
+          ) : (
+            <Text style={styles.postTitle}>No description was added</Text>
+          )}
+          <View style={{ top: 40 }}>
+            <Image
+              style={{
+                height: 30,
+                width: 30,
+                borderRadius: 100,
+                position: "absolute",
+              }}
+              source={{ uri: post.profileimage }}
+            />
+            <View style={{ left: 40 }}>
+              <Text style={{ fontWeight: "500" }}>{post.displayName}</Text>
+              <Text style={{ fontWeight: "400", color: "#A1A1B3" }}>
+                @{post.username}
+              </Text>
+            </View>
+          </View>
+        </View>
 
         <FullSeperator />
-        <View style={{ bottom: 20 }}>
-          <UserButtons
+        <View style={{ top: 50 }}>
+          {/* <UserButtons
             item={post}
             isPressed={isPressed}
             setIsPressed={setIsPressed}
             navigation={navigation}
             saveIsPressed={saveIsPressed}
             setSaveIsPressed={setSaveIsPressed}
-          />
+          /> */}
         </View>
-        <View style={styles.commentSection}>
-          <FlatList
-            keyExtractor={(item) => item.id}
-            data={commentList}
-            contentContainerStyle={{
-              borderBottomWidth: 0.8,
-              borderBottomColor: "#EDEDED",
-            }}
-            renderItem={({ item }) => (
-              <View>
-                <Image
-                  style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
-                  source={{ uri: item.userProfileImage }}
-                />
-                <View style={{ left: 35, bottom: 35 }}>
-                  <Text style={{ fontWeight: "600" }}>
-                    {item.userDisplayName}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#4F4E4E",
-                      fontWeight: "500",
-                      fontSize: 12,
-                    }}
-                  >
-                    @{item.userUsername}
-                  </Text>
-                  <Text
-                    style={{
-                      right: 35,
-                      fontWeight: "600",
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                    }}
-                  >
-                    {item.comment}
-                  </Text>
-                </View>
-              </View>
-            )}
+        <ScrollView style={{ top: 60 }}>
+          <CommentList
+            item={post}
+            navigation={navigation}
+            commentList={commentList}
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
           />
-        </View>
+        </ScrollView>
       </View>
-    </View>
+    </>
   );
 }
+
+// <View style={styles.container}>
+// <View style={{ left: 10, top: 10 }}>
+
+//   <Text style={styles.postDescription}>{post.description}</Text>
+//   <Text style={styles.date}>{post.posted}</Text>
+// </View>
+
+// <View>
+//   <Text style={styles.commentsHeader}>Comments</Text>
+
+//   <View style={{ top: 20 }}>
+//     <UserButtons
+//       item={post}
+//       isPressed={isPressed}
+//       setIsPressed={setIsPressed}
+//       navigation={navigation}
+//       saveIsPressed={saveIsPressed}
+//       setSaveIsPressed={setSaveIsPressed}
+//     />
+//   </View>
+//   <View style={styles.commentSection}>
+//     <FlatList
+//       keyExtractor={(item) => item.id}
+//       data={commentList}
+//       contentContainerStyle={{
+//         borderBottomWidth: 0.8,
+//         borderBottomColor: "#EDEDED",
+//       }}
+//       renderItem={({ item }) => (
+//         <View style={{ top: 20 }}>
+//           <Image
+//             style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
+//             source={{ uri: item.userProfileImage }}
+//           />
+//           <View style={{ left: 35, bottom: 35 }}>
+//             <Text style={{ fontWeight: "600" }}>
+//               {item.userDisplayName}
+//             </Text>
+//             <Text
+//               style={{
+//                 color: "#4F4E4E",
+//                 fontWeight: "500",
+//                 fontSize: 12,
+//               }}
+//             >
+//               @{item.userUsername}
+//             </Text>
+//             <Text
+//               style={{
+//                 right: 35,
+//                 fontWeight: "600",
+//                 paddingTop: 10,
+//                 paddingBottom: 10,
+//               }}
+//             >
+//               {item.comment}
+//             </Text>
+//           </View>
+//         </View>
+//       )}
+//     />
+//   </View>
+// </View>
+// </View>
 
 const styles = StyleSheet.create({
   header: {
@@ -209,7 +268,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   postDescription: {
-    fontWeight: "400",
+    fontWeight: "300",
     fontSize: 14,
     top: 10,
     position: "relative",
@@ -221,11 +280,12 @@ const styles = StyleSheet.create({
   },
   commentsHeader: {
     alignSelf: "center",
-    top: 185,
+    top: 95,
     color: "#73738B",
     fontSize: 20,
     fontWeight: "600",
     paddingBottom: 70,
+    position: "absolute",
   },
 
   commentSection: {
@@ -233,6 +293,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     left: 10,
     width: 405,
+    top: 20,
   },
   fullSeperator: {
     position: "absolute",
@@ -241,6 +302,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
     width: 600,
-    top: 165,
+    top: 145,
   },
 });

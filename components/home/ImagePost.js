@@ -14,11 +14,17 @@ import {
 } from "react-navigation-shared-element";
 import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
+import { useLike } from "../../context/LikeContext";
 import VideoHeader from "../post/VideoHeader";
+import PostHeader from "./PostHeader";
+import PostActivity from "../../views/PostActivity";
+import HomePostButtons from "./HomePostButtons";
+import Buttons from "./Buttons";
 
 export default function ImagePost({ item, navigation, followingId }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
+
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const { user, setUser } = useUser();
@@ -27,48 +33,26 @@ export default function ImagePost({ item, navigation, followingId }) {
     <>
       <View style={{ paddingBottom: 45, top: 60 }}>
         <View style={{ alignSelf: "center", right: 20, bottom: 10 }}>
-          <Pressable
-            onPress={() =>
-              navigation.push("ProfileDetail2", {
-                username: item.username,
-                displayName: item.displayName,
-                user_id: item.user_id,
-                profileimage: item.profileimage,
-                bannerImage: item.bannerImage,
-              })
-            }
-          >
-            <Image
-              style={{
-                height: 35,
-                width: 35,
-                borderRadius: 100,
-                bottom: 30,
-              }}
-              source={{ uri: item.profileimage }}
-            />
-            <View style={{ bottom: 63, left: 40 }}>
-              <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
-              <Text style={{ fontWeight: "600", color: "#A1A1B3" }}>
-                @{item.username}
-              </Text>
-            </View>
-          </Pressable>
+          <PostHeader navigation={navigation} item={item} />
         </View>
 
-        <Image
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-            bottom: 50,
-            borderColor: "#5C5C5C",
-            borderWidth: 0.2,
-          }}
-          source={{ uri: item.media }}
-          resizeMode="cover"
-        />
+        <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
+          <SharedElement id={item.id}>
+            <Image
+              style={{
+                height: 398,
+                aspectRatio: 1,
+                alignSelf: "center",
+                borderRadius: 10,
+                bottom: 50,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+              }}
+              source={{ uri: item.media }}
+              resizeMode="cover"
+            />
+          </SharedElement>
+        </Pressable>
         {/* 
         <Image
           style={{
@@ -140,14 +124,20 @@ export default function ImagePost({ item, navigation, followingId }) {
               item={item}
             />
           ) : (
-            <UserButtons
-              isPressed={isPressed}
-              setIsPressed={setIsPressed}
-              saveIsPressed={saveIsPressed}
-              setSaveIsPressed={setSaveIsPressed}
-              item={item}
-              navigation={navigation}
-            />
+            <>
+              {/* <UserButtons
+                isPressed={isPressed}
+                setIsPressed={setIsPressed}
+                saveIsPressed={saveIsPressed}
+                setSaveIsPressed={setSaveIsPressed}
+                item={item}
+                navigation={navigation}
+              /> */}
+
+              {/* <HomePostButtons item={item} /> */}
+
+              <Buttons navigation={navigation} item={item} />
+            </>
           )}
         </View>
       </View>

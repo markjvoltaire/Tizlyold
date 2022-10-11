@@ -25,9 +25,11 @@ import UserProfileNav from "../components/profile/UserProfileNav";
 import NoUserProfilePost from "../components/profile/NoUserProfilePost";
 import { Video, AVPlaybackStatus } from "expo-av";
 import ProfileSkeleton from "../ProfileSkeleton";
+import { usePoints } from "../context/PointsContext";
 
 export default function UserProfile({ navigation, route }) {
   const { user, setUser } = useUser();
+  const { points, setPoints } = usePoints();
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -153,6 +155,18 @@ export default function UserProfile({ navigation, route }) {
         source={require("../assets/fader.png")}
       />
 
+      <View style={{ position: "absolute", top: 55, left: 320 }}>
+        <Image
+          style={{ height: 40, width: 70, borderRadius: 10 }}
+          source={require("../assets/backgroundBlur.png")}
+        />
+      </View>
+
+      <View style={{ position: "absolute", top: 35, left: 16 }}>
+        <Image style={styles.setting} source={require("../assets/coin.png")} />
+        <Text style={{ left: 350, top: 31, fontWeight: "700" }}>{points}</Text>
+      </View>
+
       <View style={{ bottom: 410 }}>
         <Text style={styles.displayname}>{user.displayName}</Text>
         <Text style={styles.username}>@{user.username}</Text>
@@ -167,17 +181,25 @@ export default function UserProfile({ navigation, route }) {
             source={require("../assets/editprofile.png")}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+          <Image
+            style={styles.settingsButton}
+            source={require("../assets/settings.png")}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.profileNav}>
         <Text style={styles.home}>Home</Text>
       </View>
       <View style={styles.feedContainer}>
-        <FlatList
+        {/* <FlatList
           keyExtractor={(item) => item.id}
           data={posts}
           initialNumToRender={2}
-          renderItem={({ item }) => (
-            <ScrollView>
+          renderItem={({ item }) => ( */}
+        {posts.map((item) => {
+          return (
+            <View key={item.id}>
               <UserProfileFeed
                 navigation={navigation}
                 route={route}
@@ -187,9 +209,11 @@ export default function UserProfile({ navigation, route }) {
                 user={user}
                 setUser={setUser}
               />
-            </ScrollView>
-          )}
-        />
+            </View>
+          );
+        })}
+        {/* )} */}
+        {/* /> */}
       </View>
     </ScrollView>
   );
@@ -201,6 +225,14 @@ const styles = StyleSheet.create({
     width: 455,
     height: 455,
     alignSelf: "center",
+  },
+
+  setting: {
+    position: "absolute",
+    height: 29,
+    width: 29,
+    left: 308,
+    top: 26,
   },
 
   profileNav: {
@@ -281,6 +313,15 @@ const styles = StyleSheet.create({
     width: 160,
     height: 30,
     right: 20,
+  },
+
+  settingsButton: {
+    resizeMode: "contain",
+    position: "absolute",
+    top: 300,
+    width: 160,
+    height: 29,
+    left: 100,
   },
 
   bio: {

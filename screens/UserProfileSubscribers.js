@@ -21,50 +21,13 @@ import {
 import TopHeader from "../components/TopHeader";
 import { useUser } from "../context/UserContext";
 import LottieView from "lottie-react-native";
+import AnimatedBottomSheet from "../components/home/AnimatedBottomSheet";
 
 export default function UserProfileSubscribers({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPoints, setUserPoints] = useState();
 
   const { item } = route.params;
-
-  // async function getUserPoints() {
-  //   const userId = supabase.auth.currentUser.id;
-
-  //   const { data: profiles, error } = await supabase
-  //     .from("profiles")
-  //     .select("tizlyPoints")
-  //     .eq("user_id", userId);
-
-  //   return profiles;
-  // }
-
-  // useEffect(() => {
-  //   const getPoints = async () => {
-  //     const resp = await getUserPoints();
-  //     resp.map((i) => setUserPoints(i));
-  //   };
-  //   getPoints();
-  // }, []);
-
-  // const test = () => {
-  //   const resp = userPoints.tizlyPoints - 50;
-  //   console.log("resp", resp);
-  // };
-
-  // async function minusFiftyPoints() {
-  //   userPoints.tizlyPoints - 50 < 0
-  //     ? Alert.alert("not enough")
-  //     : console.log("you have enough");
-
-  //   const userId = supabase.auth.currentUser.id;
-  //   const { data: profiles, error } = await supabase
-  //     .from("profiles")
-  //     .update({ tizlyPoints: userPoints.tizlyPoints - 50 })
-  //     .eq("user_id", userId);
-
-  //   return profiles;
-  // }
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -109,7 +72,7 @@ export default function UserProfileSubscribers({ navigation, route }) {
           alignSelf: "center",
         }}
       >
-        <Text
+        {/* <Text
           style={{
             alignSelf: "center",
             top: 30,
@@ -119,9 +82,11 @@ export default function UserProfileSubscribers({ navigation, route }) {
             position: "absolute",
           }}
         >
-          Subscriptions Details
-        </Text>
+          Subscription Details
+        </Text> */}
         <FullSeperator />
+
+        <AnimatedBottomSheet />
 
         <Image
           resizeMode="contain"
@@ -156,7 +121,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    top: 40,
+    top: 90,
   },
   displayname: {
     position: "absolute",

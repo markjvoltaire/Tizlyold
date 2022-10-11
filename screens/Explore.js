@@ -33,6 +33,7 @@ import Animated, {
 import { supabase } from "../services/supabase";
 import SearchView from "../components/explore/SearchView";
 import { useUser } from "../context/UserContext";
+import Points from "../views/Points";
 
 export default function Explore({ navigation }) {
   const { user, setUser } = useUser();
@@ -113,7 +114,7 @@ export default function Explore({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TopHeader navigation={navigation} />
+      <Points navigation={navigation} />
 
       <TextInput
         style={styles.searchInput}

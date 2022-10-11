@@ -12,6 +12,7 @@ import UserButtons from "./UserButtons";
 import TrendingCreators from "../explore/TrendingCreators";
 import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
+import PostHeader from "./PostHeader";
 
 export default function VideoPost({ item, navigation, route }) {
   const video = React.useRef(null);
@@ -22,25 +23,10 @@ export default function VideoPost({ item, navigation, route }) {
   const { user, setUser } = useUser();
 
   return (
-    <View style={{ paddingBottom: 55 }}>
-      <View style={{ alignSelf: "center", right: 20, top: 45 }}>
-        <Image
-          style={{
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            bottom: 30,
-          }}
-          source={{ uri: item.profileimage }}
-        />
-        <View style={{ bottom: 63, left: 40 }}>
-          <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
-          <Text style={{ fontWeight: "600", color: "#A1A1B3" }}>
-            @{item.username}
-          </Text>
-        </View>
+    <View style={{ paddingBottom: 55, top: 10 }}>
+      <View style={{ alignSelf: "center", right: 20, top: 40 }}>
+        <PostHeader navigation={navigation} item={item} />
       </View>
-
       <Pressable
         onPress={() =>
           navigation.navigate("Player", {
@@ -57,10 +43,10 @@ export default function VideoPost({ item, navigation, route }) {
           source={{ uri: item.media }}
           ref={video}
           style={{
-            height: 260,
-            width: 400,
-            borderRadius: 12,
+            height: 398,
+            aspectRatio: 1,
             alignSelf: "center",
+            borderRadius: 10,
           }}
           resizeMode="cover"
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
@@ -72,7 +58,7 @@ export default function VideoPost({ item, navigation, route }) {
             resizeMode: "stretch",
             height: 180,
             width: 400,
-            top: 80,
+            top: 219,
             borderRadius: 12,
             position: "absolute",
           }}
@@ -83,7 +69,7 @@ export default function VideoPost({ item, navigation, route }) {
           style={{
             position: "absolute",
             width: 50,
-            top: 100,
+            top: 160,
             alignSelf: "center",
             resizeMode: "contain",
           }}

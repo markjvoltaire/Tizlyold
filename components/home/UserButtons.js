@@ -5,6 +5,8 @@ import { useUser } from "../../context/UserContext";
 import { FlatList } from "react-native-gesture-handler";
 import { set } from "react-native-reanimated";
 import { getPosts, getFollowing } from "../../services/user";
+import { useLike } from "../../context/LikeContext";
+import { getAllLikes } from "../../services/user";
 
 export default function UserButtons({
   item,
@@ -14,11 +16,11 @@ export default function UserButtons({
   setSaveIsPressed,
   post,
   navigation,
+  likeList,
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
-
-
+  // const { likeList, setLikeList } = useLike();
   const { user } = useUser();
 
   const creatorId = item.user_id;
@@ -82,17 +84,6 @@ export default function UserButtons({
     return resp;
   }
 
-  async function getLikes() {
-    const resp = await supabase
-      .from("likes")
-      .select("*")
-      .eq("userId", userId)
-      .eq("postId", item.id)
-      .eq("liked_Id", item.likeId);
-
-    return resp.body;
-  }
-
   async function getSaves() {
     const resp = await supabase
       .from("saves")
@@ -100,6 +91,23 @@ export default function UserButtons({
       .eq("userId", userId)
       .eq("postId", item.id)
       .eq("saved_Id", item.saved_Id);
+
+    return resp.body;
+  }
+
+  async function getAllLikedPost() {
+    const resp = await supabase.from("post").select("*").eq("user_id", userId);
+
+    return resp;
+  }
+
+  async function getLikes() {
+    const resp = await supabase
+      .from("likes")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("liked_Id", item.likeId);
 
     return resp.body;
   }
@@ -132,6 +140,14 @@ export default function UserButtons({
     saveIsPressed === true ? unSavePost() : savePost();
   };
 
+  useEffect(() => {
+    const getLikeList = async () => {
+      const resp = await getAllLikes();
+      // setLikeList(resp);
+    };
+    getLikeList();
+  }, []);
+
   return (
     <View style={styles.userButtonsContainer}>
       <View style={styles.likeButtonContainer}>
@@ -152,7 +168,9 @@ export default function UserButtons({
       </View>
       <View style={styles.commentButtonContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("CommentScreen", { item })}
+          // onPress={() => navigation.navigate("CommentScreen", { item })}
+
+          onPress={() => console.log("likeList", likeList)}
         >
           <Image
             style={{
@@ -166,7 +184,7 @@ export default function UserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => handleSavePress()}>
+        <TouchableOpacity onPress={() => getAllLikedPost()}>
           <Image
             style={{
               top: 30,

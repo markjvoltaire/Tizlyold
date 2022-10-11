@@ -20,6 +20,7 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import CommentScreen from "../screens/CommentScreen";
 import UserNames from "../screens/UserNames";
 import { useUser } from "../context/UserContext";
+import GeneralSettings from "../screens/GeneralSettings";
 
 const Stack = createSharedElementStackNavigator();
 
@@ -59,6 +60,15 @@ const HomeStackNavigator = () => {
       <Stack.Screen
         name="UserSub"
         component={UserProfileSubscribers}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
+        name="GeneralSettings"
+        component={GeneralSettings}
         options={{
           headerBackVisible: false,
           headerTitle: () => <Header />,

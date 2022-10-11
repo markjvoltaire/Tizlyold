@@ -19,6 +19,8 @@ import UserButtons from "../components/home/UserButtons";
 import CommentList from "../components/post/CommentList";
 import { useUser } from "../context/UserContext";
 import { supabase } from "../services/supabase";
+import { useLike } from "../context/LikeContext";
+import HomePostButtons from "../components/home/HomePostButtons";
 
 export default function ImageDetails({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -32,6 +34,7 @@ export default function ImageDetails({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const { user, setUser } = useUser();
+  const { like, setLike } = useLike();
 
   const postId = item.id;
 
@@ -97,14 +100,14 @@ export default function ImageDetails({ navigation, route }) {
   }, []);
 
   return (
-    <View style={{ flex: 1, top: 50 }}>
+    <View style={{ flex: 1, top: 50, backgroundColor: "white" }}>
       <ScrollView style={{ backgroundColor: "white" }}>
         <SharedElement id={item.id}>
           <Image
             source={{ uri: item.media }}
             style={{
-              height: 398,
-              aspectRatio: 1,
+              height: 448,
+              width: 400,
               alignSelf: "center",
               borderRadius: 10,
             }}
@@ -173,20 +176,11 @@ export default function ImageDetails({ navigation, route }) {
           </View>
         </View>
 
-        <UserButtons
-          isPressed={isPressed}
-          setIsPressed={setIsPressed}
-          saveIsPressed={saveIsPressed}
-          setSaveIsPressed={setSaveIsPressed}
-          item={item}
-          navigation={navigation}
-        />
-
         <View style={{ paddingBottom: 60 }}>
           <Text style={styles.commentsHeader}>Comments</Text>
 
           <FullSeperator />
-          {commentList.map((comment) => (
+          {/* {commentList.map((comment) => (
             <View
               style={{ left: 10, top: 40, paddingBottom: 20 }}
               key={comment.id}
@@ -222,7 +216,7 @@ export default function ImageDetails({ navigation, route }) {
                 </View>
               </View>
             </View>
-          ))}
+          ))} */}
         </View>
       </ScrollView>
       <KeyboardAvoidingView

@@ -86,7 +86,7 @@ const BottomTabNavigator = (route, navigation) => {
           },
         }}
         name="Explore"
-        component={ExploreStackNavigator}
+        component={Explore}
       />
 
       <Tab.Screen

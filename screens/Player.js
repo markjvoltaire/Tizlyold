@@ -180,52 +180,36 @@ export default function Player({ route, navigation }) {
     getDetails();
   }, []);
 
-  console.log("post", post);
-
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
         <VideoHeader navigation={navigation} route={route} />
-        {/* {post.map((item) => {
-          return (
-            <View key={item.id} style={{ top: 80 }}>
-              <Video
-                source={{ uri: item.media }}
-                isLooping
-                useNativeControls
-                shouldPlay={true}
-                style={{ height: 229, width: 415 }}
-              />
-            </View>
-          );
-        })} */}
+        <View key={item.id} style={{ top: 80 }}>
+          <Video
+            source={{ uri: item.media }}
+            isLooping
+            useNativeControls
+            shouldPlay={true}
+            style={{ height: 229, width: 415 }}
+          />
+        </View>
       </View>
 
       <View style={{ top: 100, flex: 1 }}>
-        {/* <FlatList
-          refreshing={refreshing}
-          onRefresh={() => refreshFeed()}
-          keyExtractor={(item) => item.id}
-          data={post}
-          renderItem={({ item }) => (
-            <View>
-              <UserPostDetails
-                displayName={displayName}
-                postUserId={postUserId}
-                navigation={navigation}
-                post={item}
-                commentList={commentList}
-                route={route}
-                commentUser={commentUser}
-                commenter={commenter}
-                saveIsPressed={saveIsPressed}
-                setSaveIsPressed={setSaveIsPressed}
-              />
-            </View>
-          )}
-        /> */}
+        <UserPostDetails
+          displayName={displayName}
+          postUserId={postUserId}
+          navigation={navigation}
+          post={item}
+          commentList={commentList}
+          route={route}
+          commentUser={commentUser}
+          commenter={commenter}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+        />
       </View>
-      <FullSeperator />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}

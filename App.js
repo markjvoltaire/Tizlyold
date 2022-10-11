@@ -40,6 +40,8 @@ import ProfileDetail from "./screens/ProfileDetail";
 import BioScreen from "./screens/BioScreen";
 import UserProfileSubscribers from "./screens/UserProfileSubscribers";
 import { PostProvider } from "./context/PostContext";
+import { PointsProvider } from "./context/PointsContext";
+import { LikeProvider } from "./context/LikeContext";
 import Player from "./screens/Player";
 import UserProfilePostDetail from "./screens/UserProfilePostDetail";
 import EditPost from "./screens/EditPost";
@@ -68,9 +70,13 @@ export default function App() {
     <UserProvider>
       <FollowProvider>
         <PostProvider>
-          <NavigationContainer>
-            {auth !== null ? <AuthStack /> : <NoAuthStack />}
-          </NavigationContainer>
+          <PointsProvider>
+            <LikeProvider>
+              <NavigationContainer>
+                {auth !== null ? <AuthStack /> : <NoAuthStack />}
+              </NavigationContainer>
+            </LikeProvider>
+          </PointsProvider>
         </PostProvider>
       </FollowProvider>
     </UserProvider>

@@ -11,7 +11,7 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../home/UserButtons";
 import CurrentUserButtons from "../home/CurrentUserButtons";
 
-export default function UserProfileVideoPost({ post, user, navigation }) {
+export default function UserProfileVideoPost({ item, user, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
@@ -39,16 +39,12 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
       <Pressable
         onPress={() =>
           navigation.push("Player", {
-            id: post.id,
-            username: post.username,
-            profileimage: post.profileimage,
-            displayName: post.displayName,
-            user_id: post.user_id,
+            item,
           })
         }
       >
         <Video
-          source={{ uri: post.media }}
+          source={{ uri: item.media }}
           ref={video}
           style={{
             height: 400,
@@ -86,7 +82,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
       </Pressable>
 
       <View style={{ position: "absolute", top: 390, left: 5 }}>
-        <Text style={{ color: "white", fontWeight: "700" }}>{post.title}</Text>
+        <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
       </View>
 
       <View style={{ position: "absolute" }}>
@@ -111,7 +107,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
             fontSize: 15,
           }}
         >
-          {post.username}
+          {item.username}
         </Text>
       </View>
 
@@ -127,7 +123,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
             paddingBottom: 30,
           }}
         >
-          {post.description}
+          {item.description}
         </Text>
       </View>
       {/* <UserButtons
@@ -144,7 +140,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
         navigation={navigation}
-        item={post}
+        item={item}
       />
     </View>
   );

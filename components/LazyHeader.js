@@ -31,16 +31,6 @@ export default function LazyHeader({ navigation }) {
             source={require("../assets/noti.png")}
           />
         </TouchableOpacity> */}
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("SettingsScreen");
-        }}
-      >
-        <Image
-          style={styles.setting}
-          source={require("../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
 
       {/* <Image
           style={styles.profileimage}

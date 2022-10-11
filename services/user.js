@@ -226,3 +226,62 @@ export async function getLikes(item) {
 
   return resp.body;
 }
+
+export async function getAllLikes() {
+  const userId = supabase.auth.currentUser.id;
+  const resp = await supabase.from("likes").select("*").eq("userId", userId);
+
+  return resp.body;
+}
+
+export async function getFollowing() {
+  const userId = supabase.auth.currentUser.id;
+  const resp = await supabase
+    .from("following")
+    .select("*")
+    .eq("following", true)
+    .eq("userId", userId);
+
+  setFollow(resp.body);
+
+  return resp.body;
+}
+
+export async function likePost(item, user) {
+  const resp = await supabase.from("likes").insert([
+    {
+      creatorId: item.user_id,
+      userId: user.user_id,
+      userProfileImage: user.profileimage,
+      postId: item.id,
+      userUsername: user.username,
+      creatorUsername: item.username,
+      liked_Id: item.likeId,
+      creatorDisplayname: item.displayName,
+      userDisplayname: user.displayName,
+      creatorProfileImage: item.profileimage,
+    },
+  ]);
+
+  return resp;
+}
+
+export async function unlikePost(item) {
+  const resp = await supabase
+    .from("likes")
+    .delete()
+    .eq("postId", item.id)
+    .eq("liked_Id", item.likeId);
+  return resp;
+}
+
+export async function getUserLikes(userId, item) {
+  const resp = await supabase
+    .from("likes")
+    .select("*")
+    .eq("userId", userId)
+    .eq("postId", item.id)
+    .eq("liked_Id", item.likeId);
+
+  return resp.body;
+}

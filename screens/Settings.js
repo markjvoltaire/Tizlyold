@@ -14,18 +14,17 @@ import { supabase } from "../services/supabase";
 import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
+import { usePoints } from "../context/PointsContext";
 
 export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
-
+  const { points, setPoints } = usePoints();
   async function signOutUser() {
     await supabase.auth.signOut();
   }
 
-
-
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: "white",
@@ -36,6 +35,16 @@ export default function Settings({ navigation }) {
           style={styles.logo}
           source={require("../assets/tizlyicon.jpg")}
         />
+
+        <View style={{ position: "absolute", top: 45, left: 20 }}>
+          <Image
+            style={styles.profileimage}
+            source={require("../assets/coin.png")}
+          />
+          <Text style={{ left: 340, bottom: 12, fontWeight: "700" }}>
+            {points}
+          </Text>
+        </View>
 
         <Text
           style={{
@@ -92,6 +101,22 @@ export default function Settings({ navigation }) {
           </TouchableOpacity>
         </View>
 
+        {/* <View style={{ position: "absolute", top: 400, left: 10 }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("GeneralSettings")}
+          >
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={require("../assets/Setting.jpg")}
+            />
+            <Image
+              style={styles.arrow}
+              source={require("../assets/arrow.png")}
+            />
+            <Text style={styles.accountSettingsText}> General Settings</Text>
+          </TouchableOpacity>
+        </View> */}
+
         <View style={{ position: "absolute", alignSelf: "center", top: 400 }}>
           <TouchableOpacity
             onPress={() =>
@@ -105,11 +130,19 @@ export default function Settings({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  profileimage: {
+    height: 30,
+    width: 30,
+    borderRadius: 100,
+    left: 296,
+    top: 12,
+  },
+
   logo: {
     position: "absolute",
     resizeMode: "contain",

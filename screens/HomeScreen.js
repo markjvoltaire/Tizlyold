@@ -39,6 +39,9 @@ import PostImage from "../components/home/PostImage";
 import PostHeader from "../components/home/PostHeader";
 import Skeleton from "../Skeleton";
 import ProgressiveImage from "../components/ProgressiveImage";
+import Points from "../views/Points";
+import { useLike } from "../context/LikeContext";
+import { getAllLikes } from "../services/user";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -53,6 +56,8 @@ export default function HomeScreen({ navigation, route }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  const { likeList, setLikeList } = useLike();
 
   const defaultImageAnimated = new Animated.Value(0);
   const imageAnimated = new Animated.Value(0);
@@ -106,6 +111,21 @@ export default function HomeScreen({ navigation, route }) {
     return resp.body;
   }
 
+  // async function getAllLikes() {
+  //   const userId = supabase.auth.currentUser.id;
+  //   const resp = await supabase.from("likes").select("*").eq("userId", userId);
+
+  //   return resp.body;
+  // }
+
+  useEffect(() => {
+    const getLikeList = async () => {
+      const resp = await getAllLikes();
+      setLikeList(resp);
+    };
+    getLikeList();
+  }, []);
+
   useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
@@ -149,7 +169,8 @@ export default function HomeScreen({ navigation, route }) {
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [userPostList.list]);
+      .in("followingId", [userPostList.list])
+      .order("date", { ascending: false });
 
     setPostList(resp.body);
 
@@ -177,11 +198,12 @@ export default function HomeScreen({ navigation, route }) {
 
   return (
     <View style={styles.homeScreenContainer}>
-      <TopHeader user={user} navigation={navigation} />
+      <Points navigation={navigation} />
 
       <View style={styles.feedContainer}>
         {postList.length === 0 ? (
           <ScrollView
+            showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -222,243 +244,19 @@ export default function HomeScreen({ navigation, route }) {
           </ScrollView>
         ) : (
           <FlatList
-            data={postList}
             keyExtractor={(item) => item.id}
+            data={postList}
             refreshing={refreshing}
             onRefresh={() => refreshFeed()}
-            initialNumToRender={2}
-            showsVerticalScrollIndicator={false}
+            initialNumToRender={6}
             contentContainerStyle={{
               borderBottomWidth: 0.8,
               borderBottomColor: "#EDEDED",
             }}
-            renderItem={({ item, defaultImageSource, source }) => {
-              return (
-                <View
-                  style={{ alignSelf: "center", paddingBottom: 200, top: 70 }}
-                >
-                  {item.mediaType === "image" ? (
-                    <>
-                      {item.media != null ? (
-                        <>
-                          <View style={{ bottom: 25 }}>
-                            <PostHeader navigation={navigation} item={item} />
-                          </View>
-                          <SharedElement id={item.id}>
-                            <Animated.Image
-                              source={require("../assets/defaultImage.png")}
-                              style={{
-                                opacity: defaultImageAnimated,
-                                height: 300,
-                                width: 300,
-                                alignSelf: "center",
-                              }}
-                              onLoad={handleDefaultImageLoad}
-                              blurRadius={1}
-                            />
-                          </SharedElement>
-                          <Pressable
-                            onPress={() =>
-                              navigation.push("ImageDetails", { item })
-                            }
-                            style={{
-                              position: "absolute",
-                              alignSelf: "center",
-                            }}
-                          >
-                            <SharedElement id={item.id}>
-                              <Animated.Image
-                                source={{ uri: item.media }}
-                                style={{
-                                  opacity: imageAnimated,
-                                  aspectRatio: 1,
-                                  width: 400,
-                                  borderRadius: 10,
-                                  position: "absolute",
-                                  alignSelf: "center",
-                                }}
-                                onLoad={handleImageLoad}
-                              />
-                            </SharedElement>
-                          </Pressable>
-                          <View style={{ top: 45 }}>
-                            <Text
-                              style={{
-                                fontWeight: "700",
-                                textAlign: "left",
-                                width: 390,
-                                paddingBottom: 16,
-                                lineHeight: 20,
-                              }}
-                            >
-                              {item.title}
-                            </Text>
-                            <Text
-                              style={{
-                                fontWeight: "600",
-                                color: "#4F4E4E",
-                                textAlign: "left",
-                                width: 390,
-                                paddingBottom: 6,
-                                lineHeight: 20,
-                              }}
-                            >
-                              {item.description}
-                            </Text>
-
-                            <Image
-                              resizeMode="contain"
-                              style={{
-                                width: 70,
-                              }}
-                              source={require("../assets/photoBean.png")}
-                            />
-                          </View>
-                          <View style={{ top: 17 }}>
-                            {item.user_id === user.user_id ? (
-                              <CurrentUserButtons
-                                isPressed={isPressed}
-                                setIsPressed={setIsPressed}
-                                saveIsPressed={saveIsPressed}
-                                setSaveIsPressed={setSaveIsPressed}
-                                navigation={navigation}
-                                item={item}
-                              />
-                            ) : (
-                              <UserButtons
-                                isPressed={isPressed}
-                                setIsPressed={setIsPressed}
-                                saveIsPressed={saveIsPressed}
-                                setSaveIsPressed={setSaveIsPressed}
-                                item={item}
-                                navigation={navigation}
-                              />
-                            )}
-                          </View>
-                          <FullSeperator />
-                        </>
-                      ) : (
-                        <Skeleton />
-                      )}
-
-                      {/* <View>
-                          <PostImage item={item} navigation={navigation} />
-                        </View> */}
-                    </>
-                  ) : (
-                    <View style={{ paddingBottom: 90, bottom: 10 }}>
-                      <Pressable
-                        onPress={() => navigation.push("Player", { item })}
-                      >
-                        <Video
-                          source={{ uri: item.media }}
-                          ref={video}
-                          style={{
-                            height: 400,
-                            aspectRatio: 1,
-                            borderRadius: 12,
-                            alignSelf: "center",
-                            top: 20,
-                          }}
-                          resizeMode="cover"
-                          onPlaybackStatusUpdate={(status) =>
-                            setStatus(() => status)
-                          }
-                        />
-
-                        <Image
-                          style={{
-                            alignSelf: "center",
-                            resizeMode: "stretch",
-                            height: 180,
-                            width: 400,
-                            top: 240,
-                            borderRadius: 12,
-                            position: "absolute",
-                          }}
-                          source={require("../assets/fader.png")}
-                        />
-                        <Image
-                          style={{
-                            position: "absolute",
-                            width: 60,
-                            top: 190,
-                            alignSelf: "center",
-                            resizeMode: "contain",
-                          }}
-                          source={require("../assets/playButton.png")}
-                        />
-                      </Pressable>
-
-                      <View style={{ position: "absolute", top: 390, left: 5 }}>
-                        <Text style={{ color: "white", fontWeight: "700" }}>
-                          {item.title}
-                        </Text>
-                      </View>
-
-                      <View style={{ position: "absolute" }}>
-                        <Image
-                          style={{
-                            height: 35,
-                            width: 35,
-                            borderRadius: 100,
-                            position: "absolute",
-                            left: 5,
-                            top: 350,
-                          }}
-                          source={{ uri: item.profileimage }}
-                        />
-                        <Text
-                          style={{
-                            position: "absolute",
-                            color: "white",
-                            top: 360,
-                            left: 50,
-                            fontWeight: "500",
-                            fontSize: 15,
-                          }}
-                        >
-                          {item.username}
-                        </Text>
-                      </View>
-
-                      <View>
-                        <Text
-                          style={{
-                            left: 5,
-                            top: 32,
-                            fontWeight: "700",
-                            color: "#4F4E4E",
-                            textAlign: "left",
-                            width: 390,
-                            paddingBottom: 30,
-                          }}
-                        >
-                          {item.description}
-                        </Text>
-                      </View>
-
-                      {/* <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        item={post}
-      /> */}
-
-                      {/* <CurrentUserButtons
-                        isPressed={isPressed}
-                        setIsPressed={setIsPressed}
-                        saveIsPressed={saveIsPressed}
-                        setSaveIsPressed={setSaveIsPressed}
-                        navigation={navigation}
-                        item={post}
-                      /> */}
-                    </View>
-                  )}
-                </View>
-              );
-            }}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <HomeFeedList item={item} navigation={navigation} />
+            )}
           />
         )}
       </View>

@@ -52,6 +52,7 @@ import ImageDetails from "../screens/ImageDetails";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CommentScreen from "../screens/CommentScreen";
 import { supabase } from "../services/supabase";
+import GeneralSettings from "../screens/GeneralSettings";
 
 export default function AuthStack() {
   const Stack = createSharedElementStackNavigator();
@@ -82,6 +83,12 @@ export default function AuthStack() {
             <Stack.Screen
               name="Player"
               component={Player}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="GeneralSettings"
+              component={GeneralSettings}
               options={{ headerShown: false }}
             />
 
