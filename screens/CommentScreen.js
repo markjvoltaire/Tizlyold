@@ -10,6 +10,7 @@ import {
   ScrollView,
   Platform,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
@@ -24,6 +25,15 @@ export default function CommentScreen({ route, navigation }) {
   const { item } = route.params;
 
   const { user, setUser } = useUser();
+  console.log("user", user);
+
+  async function deleteComment(comment) {
+    const resp = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", comment.id)
+      .eq("userId", user.user_id);
+  }
 
   const postId = item.id;
 
@@ -74,6 +84,26 @@ export default function CommentScreen({ route, navigation }) {
 
     getPostComments();
   }, []);
+
+  const handleDelete = () =>
+    Alert.alert("Would You Like To Delete This Comment ?", " ", [
+      {
+        text: "Delete",
+        onPress: () =>
+          navigation.navigate("EditPost", {
+            user_id: item.user_id,
+            description: item.description,
+            title: item.title,
+            id: item.id,
+          }),
+      },
+      {
+        text: "Cancel",
+
+        onPress: () => null,
+        type: "cancel",
+      },
+    ]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -144,6 +174,25 @@ export default function CommentScreen({ route, navigation }) {
                 >
                   {comment.comment}
                 </Text>
+
+                {comment.userId === user.user_id ? (
+                  <View style={{ left: 270, bottom: 60 }}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        deleteComment(comment).then(() => refreshFeed())
+                      }
+                    >
+                      <Image
+                        style={{
+                          resizeMode: "contain",
+                          position: "absolute",
+                          height: 23,
+                        }}
+                        source={require("../assets/Delete.png")}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
               </View>
             </View>
           </View>

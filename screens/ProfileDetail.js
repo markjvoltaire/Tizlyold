@@ -137,8 +137,6 @@ export default function ProfileDetail({ navigation, route }) {
     }
   }
 
-  console.log("points", item.subCost);
-
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   async function getPosts() {
@@ -579,7 +577,7 @@ export default function ProfileDetail({ navigation, route }) {
                   if (item.mediaType === "image") {
                     return (
                       <View
-                        style={{ top: 70, paddingBottom: 90 }}
+                        style={{ top: 30, paddingBottom: 60 }}
                         key={item.id}
                       >
                         <ImagePost item={item} navigation={navigation} />

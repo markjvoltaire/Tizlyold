@@ -99,6 +99,14 @@ export default function ImageDetails({ navigation, route }) {
     getPostComments();
   }, []);
 
+  async function deleteComment(comment) {
+    const resp = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", comment.id)
+      .eq("userId", user.user_id);
+  }
+
   return (
     <View style={{ flex: 1, top: 50, backgroundColor: "white" }}>
       <ScrollView style={{ backgroundColor: "white" }}>
@@ -180,7 +188,7 @@ export default function ImageDetails({ navigation, route }) {
           <Text style={styles.commentsHeader}>Comments</Text>
 
           <FullSeperator />
-          {/* {commentList.map((comment) => (
+          {commentList.map((comment) => (
             <View
               style={{ left: 10, top: 40, paddingBottom: 20 }}
               key={comment.id}
@@ -213,10 +221,29 @@ export default function ImageDetails({ navigation, route }) {
                   >
                     {comment.comment}
                   </Text>
+
+                  {comment.userId === user.user_id ? (
+                    <View style={{ left: 270, bottom: 60 }}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          deleteComment(comment).then(() => refreshFeed())
+                        }
+                      >
+                        <Image
+                          style={{
+                            resizeMode: "contain",
+                            position: "absolute",
+                            height: 23,
+                          }}
+                          source={require("../assets/Delete.png")}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  ) : null}
                 </View>
               </View>
             </View>
-          ))} */}
+          ))}
         </View>
       </ScrollView>
       <KeyboardAvoidingView

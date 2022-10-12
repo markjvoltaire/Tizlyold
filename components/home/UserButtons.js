@@ -168,9 +168,9 @@ export default function UserButtons({
       </View>
       <View style={styles.commentButtonContainer}>
         <TouchableOpacity
-          // onPress={() => navigation.navigate("CommentScreen", { item })}
+          onPress={() => navigation.navigate("CommentScreen", { item })}
 
-          onPress={() => console.log("likeList", likeList)}
+          // onPress={() => console.log("likeList", likeList)}
         >
           <Image
             style={{
@@ -184,7 +184,7 @@ export default function UserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => console.log("first", first)}>
+        <TouchableOpacity onPress={() => handleSavePress()}>
           <Image
             style={{
               top: 30,
