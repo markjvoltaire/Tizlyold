@@ -28,6 +28,8 @@ export default function Buttons({ item, navigation }) {
   return (
     <View>
       <HomePostButtons navigation={navigation} item={item} />
+
+      {/* <Buttons navigation={navigation} item={item} /> */}
     </View>
   );
 }

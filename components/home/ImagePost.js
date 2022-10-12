@@ -6,7 +6,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserButtons from "./UserButtons";
 import {
   SharedElement,
@@ -20,14 +20,52 @@ import PostHeader from "./PostHeader";
 import PostActivity from "../../views/PostActivity";
 import HomePostButtons from "./HomePostButtons";
 import Buttons from "./Buttons";
+import { supabase } from "../../services/supabase";
 
 export default function ImagePost({ item, navigation, followingId }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
+  const { user, setUser } = useUser();
+
+  const userId = user.user_id;
+
+  async function getLikes() {
+    const resp = await supabase
+      .from("likes")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("liked_Id", item.likeId);
+
+    return resp.body;
+  }
 
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  const { user, setUser } = useUser();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      const seeLikes = async () => {
+        const res = await getLikes();
+        console.log("res from userBUTTONS LINE 50", res);
+        res.map((post) => setIsPressed(post.liked));
+
+        if (res.length === 0) {
+          setIsPressed(false);
+          console.log("its false");
+        }
+      };
+      seeLikes();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  // const seeLikes = async () => {
+  //   const res = await getLikes();
+  //   console.log("res from userBUTTONS", res);
+  //   res.map((post) => setIsPressed(post.liked));
+  // };
+  // seeLikes();
 
   return (
     <>
@@ -125,18 +163,18 @@ export default function ImagePost({ item, navigation, followingId }) {
             />
           ) : (
             <>
-              {/* <UserButtons
+              <UserButtons
                 isPressed={isPressed}
                 setIsPressed={setIsPressed}
                 saveIsPressed={saveIsPressed}
                 setSaveIsPressed={setSaveIsPressed}
                 item={item}
                 navigation={navigation}
-              /> */}
+              />
 
               {/* <HomePostButtons item={item} /> */}
 
-              <Buttons navigation={navigation} item={item} />
+              {/* <Buttons navigation={navigation} item={item} /> */}
             </>
           )}
         </View>

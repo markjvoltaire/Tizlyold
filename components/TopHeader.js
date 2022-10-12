@@ -28,7 +28,16 @@ export default function TopHeader({ navigation, tizlyPoints }) {
 
       <View style={{ position: "absolute", top: 35, left: 16 }}>
         <Image style={styles.setting} source={require("../assets/coin.png")} />
-        <Text style={{ left: 350, top: 22, fontWeight: "700" }}>{points}</Text>
+        <Text
+          style={{
+            left: 350,
+            top: 22,
+            fontWeight: "700",
+            position: "absolute",
+          }}
+        >
+          {points}
+        </Text>
       </View>
 
       {/* <TouchableOpacity

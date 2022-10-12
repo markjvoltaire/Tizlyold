@@ -40,6 +40,7 @@ import TopHeader from "../components/TopHeader";
 import PostHeader from "../components/home/PostHeader";
 import Points from "../views/Points";
 import Buttons from "../components/home/Buttons";
+import ImagePost from "../components/home/ImagePost";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -135,6 +136,8 @@ export default function ProfileDetail({ navigation, route }) {
       setIsFollowing(true);
     }
   }
+
+  console.log("points", item.subCost);
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -419,7 +422,14 @@ export default function ProfileDetail({ navigation, route }) {
             style={styles.setting}
             source={require("../assets/coin.png")}
           />
-          <Text style={{ left: 350, top: 31, fontWeight: "700" }}>
+          <Text
+            style={{
+              left: 344,
+              top: 31,
+              fontWeight: "700",
+              position: "absolute",
+            }}
+          >
             {points}
           </Text>
         </View>
@@ -569,90 +579,10 @@ export default function ProfileDetail({ navigation, route }) {
                   if (item.mediaType === "image") {
                     return (
                       <View
-                        style={{ top: 90, paddingBottom: 90 }}
+                        style={{ top: 70, paddingBottom: 90 }}
                         key={item.id}
                       >
-                        <View style={{ alignItems: "center", top: 20 }}>
-                          <PostHeader navigation={navigation} item={item} />
-                        </View>
-                        <Pressable
-                          key={item.id}
-                          onPress={() =>
-                            navigation.navigate("ImageDetails", { item })
-                          }
-                        >
-                          <SharedElement id={item.id}>
-                            <Animated.Image
-                              source={require("../assets/defaultImage.png")}
-                              style={{
-                                height: 398,
-                                position: "absolute",
-                                opacity: defaultImageAnimated,
-
-                                alignSelf: "center",
-                                borderRadius: 10,
-                                borderColor: "#5C5C5C",
-                                borderWidth: 0.2,
-                              }}
-                              resizeMode="cover"
-                              onLoad={handleDefaultImageLoad}
-                            />
-                          </SharedElement>
-
-                          <SharedElement id={item.id}>
-                            <Animated.Image
-                              source={{ uri: item.media }}
-                              style={{
-                                height: 398,
-                                aspectRatio: 1,
-                                alignSelf: "center",
-                                borderRadius: 10,
-                              }}
-                              resizeMode="cover"
-                              onLoad={handleImageLoad}
-                            />
-                          </SharedElement>
-                        </Pressable>
-
-                        <View>
-                          <Text
-                            style={{
-                              left: 13,
-                              top: 12,
-                              fontWeight: "700",
-                              textAlign: "left",
-                              width: 390,
-                              paddingBottom: 6,
-                              lineHeight: 20,
-                            }}
-                          >
-                            {item.title}
-                          </Text>
-                          <Text
-                            style={{
-                              left: 13,
-                              top: 12,
-                              fontWeight: "600",
-                              color: "#4F4E4E",
-                              textAlign: "left",
-                              width: 390,
-                              paddingBottom: 30,
-                              lineHeight: 20,
-                            }}
-                          >
-                            {item.description}
-                          </Text>
-
-                          <Image
-                            resizeMode="contain"
-                            style={{ width: 70, left: 10, bottom: 30 }}
-                            source={require("../assets/photoBean.png")}
-                          />
-                        </View>
-
-                        <View style={{ bottom: 30 }}>
-                          <Buttons navigation={navigation} item={item} />
-                        </View>
+                        <ImagePost item={item} navigation={navigation} />
                       </View>
                     );
                   }
@@ -763,15 +693,7 @@ export default function ProfileDetail({ navigation, route }) {
                           />
                         </View>
 
-                        <View style={{ bottom: 30 }}>
-                          <UserButtons
-                            isPressed={isPressed}
-                            setIsPressed={setIsPressed}
-                            saveIsPressed={saveIsPressed}
-                            setSaveIsPressed={setSaveIsPressed}
-                            item={item}
-                          />
-                        </View>
+                        <View style={{ bottom: 30 }}></View>
                       </View>
                     );
                   }

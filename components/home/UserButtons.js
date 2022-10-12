@@ -115,6 +115,7 @@ export default function UserButtons({
   useEffect(() => {
     const seeLikes = async () => {
       const res = await getLikes();
+      console.log("res from userBUTTONS", res);
       res.map((post) => setIsPressed(post.liked));
     };
     seeLikes();
@@ -129,9 +130,8 @@ export default function UserButtons({
   }, []);
 
   const handlePress = () => {
-    setIsPressed((current) => !current);
-
     isPressed === true ? unlikePost() : likePost();
+    setIsPressed((current) => !current);
   };
 
   const handleSavePress = () => {
@@ -184,7 +184,7 @@ export default function UserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => getAllLikedPost()}>
+        <TouchableOpacity onPress={() => console.log("first", first)}>
           <Image
             style={{
               top: 30,

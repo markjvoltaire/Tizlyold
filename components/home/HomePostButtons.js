@@ -18,6 +18,7 @@ export default function HomePostButtons({ item, navigation }) {
     buttonActive === true ? unlikePost(item) : likePost(item, user);
   };
 
+  // when i go to profile
   useEffect(() => {
     const seeLikes = async () => {
       const resp = await getAllLikes();
@@ -28,11 +29,13 @@ export default function HomePostButtons({ item, navigation }) {
     seeLikes();
   }, [buttonActive]);
 
+  //when i go back to home screen
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       async function getLikes() {
         const resp = await getAllLikes();
 
+        console.log("resp", resp);
         console.log("resp FROM UNSCUBSCRIBE", resp);
         resp.map((post) => setButtonActive(post.liked));
 
