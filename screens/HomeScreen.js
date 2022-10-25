@@ -38,10 +38,11 @@ import {
 import PostImage from "../components/home/PostImage";
 import PostHeader from "../components/home/PostHeader";
 import Skeleton from "../Skeleton";
-import ProgressiveImage from "../components/ProgressiveImage";
 import Points from "../views/Points";
 import { useLike } from "../context/LikeContext";
 import { getAllLikes } from "../services/user";
+import ImagePost from "../components/home/ImagePost";
+import VideoPost from "../components/home/VideoPost";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -111,13 +112,6 @@ export default function HomeScreen({ navigation, route }) {
     return resp.body;
   }
 
-  // async function getAllLikes() {
-  //   const userId = supabase.auth.currentUser.id;
-  //   const resp = await supabase.from("likes").select("*").eq("userId", userId);
-
-  //   return resp.body;
-  // }
-
   useEffect(() => {
     const getLikeList = async () => {
       const resp = await getAllLikes();
@@ -129,8 +123,6 @@ export default function HomeScreen({ navigation, route }) {
   useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
-
-      // setFollow(resp);
     };
     getFollowingList();
   }, []);
@@ -248,15 +240,21 @@ export default function HomeScreen({ navigation, route }) {
             data={postList}
             refreshing={refreshing}
             onRefresh={() => refreshFeed()}
-            initialNumToRender={6}
+            initialNumToRender={3}
             contentContainerStyle={{
               borderBottomWidth: 0.8,
               borderBottomColor: "#EDEDED",
             }}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <HomeFeedList item={item} navigation={navigation} />
-            )}
+            renderItem={({ item }) => {
+              if (item.mediaType === "image") {
+                return <ImagePost item={item} navigation={navigation} />;
+              }
+
+              if (item.mediaType === "video") {
+                return <VideoPost navigation={navigation} item={item} />;
+              }
+            }}
           />
         )}
       </View>

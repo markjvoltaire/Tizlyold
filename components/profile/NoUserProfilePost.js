@@ -66,6 +66,12 @@ export default function NoUserProfilePost({ navigation, route }) {
           />
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+        <Image
+          style={styles.settingsButton}
+          source={require("../../assets/settings.png")}
+        />
+      </TouchableOpacity>
       <View style={styles.profileNav}>
         <Text style={styles.home}>Home</Text>
 
@@ -97,6 +103,15 @@ const styles = StyleSheet.create({
     width: 455,
     height: 455,
     alignSelf: "center",
+  },
+
+  settingsButton: {
+    resizeMode: "contain",
+    position: "absolute",
+    bottom: 80,
+    width: 160,
+    height: 29,
+    left: 100,
   },
 
   profileNav: {
@@ -306,5 +321,12 @@ const styles = StyleSheet.create({
     width: 455,
 
     height: 455,
+  },
+  setting: {
+    position: "absolute",
+    height: 22,
+    width: 22,
+    left: 308,
+    top: 29,
   },
 });

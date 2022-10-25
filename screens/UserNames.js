@@ -48,7 +48,7 @@ export default function UserNames({ navigation }) {
       },
     ]);
     if (!error) {
-      navigation.dispatch(pushActionHome);
+      navigation.navigate("HomeScreen");
     }
     if (
       error.message ===

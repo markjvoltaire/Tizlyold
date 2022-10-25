@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../home/UserButtons";
 import CurrentUserButtons from "../home/CurrentUserButtons";
+import PostHeader from "../home/PostHeader";
+import ProfileHeader from "./ProfileHeader";
 
 export default function UserProfileVideoPost({ item, user, navigation }) {
   const video = React.useRef(null);
@@ -36,6 +38,10 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
 
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
+      <View style={{ alignSelf: "center", top: 52 }}>
+        <ProfileHeader navigation={navigation} item={item} />
+      </View>
+
       <Pressable
         onPress={() =>
           navigation.push("Player", {
@@ -59,18 +65,6 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
 
         <Image
           style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 180,
-            width: 400,
-            top: 240,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          source={require("../../assets/fader.png")}
-        />
-        <Image
-          style={{
             position: "absolute",
             width: 60,
             top: 190,
@@ -81,58 +75,41 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
         />
       </Pressable>
 
-      <View style={{ position: "absolute", top: 390, left: 5 }}>
-        <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
-      </View>
-
-      <View style={{ position: "absolute" }}>
-        <Image
-          style={{
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            position: "absolute",
-            left: 5,
-            top: 350,
-          }}
-          source={{ uri: user.profileimage }}
-        />
+      <View style={{ top: 27, right: 10 }}>
         <Text
           style={{
-            position: "absolute",
-            color: "white",
-            top: 360,
-            left: 50,
-            fontWeight: "500",
-            fontSize: 15,
+            left: 13,
+            top: 12,
+            fontWeight: "700",
+            textAlign: "left",
+            width: 390,
+            paddingBottom: 6,
+            lineHeight: 20,
           }}
         >
-          {item.username}
+          {item.title}
         </Text>
-      </View>
-
-      <View>
         <Text
           style={{
-            left: 5,
-            top: 32,
-            fontWeight: "700",
+            left: 13,
+            top: 12,
+            fontWeight: "600",
             color: "#4F4E4E",
             textAlign: "left",
             width: 390,
             paddingBottom: 30,
+            lineHeight: 20,
           }}
         >
           {item.description}
         </Text>
+
+        <Image
+          resizeMode="contain"
+          style={{ width: 70, left: 10, bottom: 30 }}
+          source={require("../../assets/photoBean.png")}
+        />
       </View>
-      {/* <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        item={post}
-      /> */}
 
       <CurrentUserButtons
         isPressed={isPressed}

@@ -31,11 +31,7 @@ async function subtractCoins(points, item) {
     .update({ tizlyPoints: points - 10 })
     .eq("user_id", userId);
 
-  // setUser(profiles);
-
-  error === null ? handleFollow() : console.log("error", error);
-
-  console.log("profiles", profiles);
+  error === null ? handleFollow() : Alert.alert(error);
 
   return profiles;
 }
@@ -46,6 +42,4 @@ async function addCoins(userTizlyPoints, item) {
     .from("profiles")
     .update({ tizlyPoints: userTizlyPoints + item.subCost })
     .eq("user_id", item.user_id);
-
-  // error === null ? handleFollow() : console.log("error", error);
 }

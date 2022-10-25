@@ -31,9 +31,11 @@ export default function SignUp({ navigation }) {
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState("");
   const [input, setInput] = useState(false);
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [validated, setValidated] = useState(false);
 
   const pushActionLogin = StackActions.replace("Login");
-  const pushActionUsername = StackActions.replace("Username");
 
   const signUpWithEmail = async () => {
     const { user, error } = await supabase.auth.signUp({
@@ -41,8 +43,26 @@ export default function SignUp({ navigation }) {
       password: password,
     });
 
+    const userId = supabase.auth.currentUser.id;
+    await supabase.from("profiles").insert([
+      {
+        username: username,
+        user_id: userId,
+        email: email,
+        displayName: displayName,
+      },
+    ]);
+
+    if (password.length < 7) {
+      Alert.alert("Password Should Be 8 or More Characters");
+    }
+
+    if (email === null) {
+      Alert.alert("Please Fill All Field Inputs");
+    }
+
     if (!error) {
-      navigation.dispatch(pushActionUsername);
+      navigation.push("HomeScreen");
     } else {
       Alert.alert(error.message);
     }
@@ -61,6 +81,25 @@ export default function SignUp({ navigation }) {
       <Image
         style={styles.headerIcon}
         source={require("../assets/Tizlymed.png")}
+      />
+
+      <TextInput
+        style={styles.usernameInput}
+        placeholder="Username"
+        autoCapitalize="none"
+        autoFocus={true}
+        onChangeText={(text) =>
+          setUsername(text.toLowerCase()) && setQuery(text.toLowerCase())
+        }
+        value={username}
+      />
+
+      <TextInput
+        style={styles.displayNameInput}
+        placeholder="Display Name"
+        autoCapitalize="none"
+        onChangeText={(text) => setDisplayName(text)}
+        value={displayName}
       />
 
       <TextInput
@@ -84,7 +123,7 @@ export default function SignUp({ navigation }) {
         value={password}
       />
 
-      {password.length < 8 ? (
+      {username.length === 0 ? (
         <TouchableOpacity
           onPress={() => Alert.alert("Password Should Be 8 or More Characters")}
         >
@@ -123,7 +162,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     left: 168,
-    top: 150,
+    top: 50,
     resizeMode: "contain",
   },
   backButton: {
@@ -137,7 +176,7 @@ const styles = StyleSheet.create({
   usernameInput: {
     position: "absolute",
     left: 55,
-    top: 255,
+    top: 185,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -160,6 +199,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 55,
     top: 385,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 10,
+    paddingLeft: 30,
+  },
+  displayNameInput: {
+    position: "absolute",
+    left: 55,
+    top: 250,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,

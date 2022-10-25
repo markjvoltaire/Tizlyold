@@ -17,6 +17,8 @@ import {
   SharedElement,
   createSharedElementStackNavigator,
 } from "react-navigation-shared-element";
+import PostHeader from "../home/PostHeader";
+import ProfileHeader from "./ProfileHeader";
 
 export default function UserProfileImagePost({
   post,
@@ -26,6 +28,8 @@ export default function UserProfileImagePost({
 }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const defaultImageAnimated = new Animated.Value(0);
   const imageAnimated = new Animated.Value(0);
@@ -46,6 +50,10 @@ export default function UserProfileImagePost({
 
   return (
     <View style={{ paddingBottom: 90 }}>
+      <View style={{ alignSelf: "center", top: 32 }}>
+        <ProfileHeader navigation={navigation} item={post} />
+      </View>
+
       <Pressable
         key={post.id}
         onPress={() =>
@@ -88,64 +96,42 @@ export default function UserProfileImagePost({
             onLoad={handleImageLoad}
           />
         </SharedElement>
-        <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 200,
-            width: 398,
-            top: 200,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          resizeMode="stretch"
-          source={require("../../assets/fader.png")}
-        />
       </Pressable>
-      <View style={{ position: "absolute", top: 370, left: 10 }}>
-        <Text style={{ color: "white", fontWeight: "700" }}>{post.title}</Text>
-      </View>
 
-      <View style={{ position: "absolute" }}>
-        <Image
-          style={{
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            position: "absolute",
-            left: 10,
-            top: 330,
-          }}
-          source={{ uri: user.profileimage }}
-        />
+      <View style={{ top: 7, right: 10 }}>
         <Text
           style={{
-            position: "absolute",
-            color: "white",
-            top: 342,
-            left: 50,
-            fontWeight: "500",
-            fontSize: 15,
-          }}
-        >
-          {user.username}
-        </Text>
-      </View>
-
-      <View>
-        <Text
-          style={{
-            left: 5,
+            left: 13,
             top: 12,
             fontWeight: "700",
+            textAlign: "left",
+            width: 390,
+            paddingBottom: 6,
+            lineHeight: 20,
+          }}
+        >
+          {post.title}
+        </Text>
+        <Text
+          style={{
+            left: 13,
+            top: 12,
+            fontWeight: "600",
             color: "#4F4E4E",
             textAlign: "left",
             width: 390,
             paddingBottom: 30,
+            lineHeight: 20,
           }}
         >
           {post.description}
         </Text>
+
+        <Image
+          resizeMode="contain"
+          style={{ width: 70, left: 10, bottom: 30 }}
+          source={require("../../assets/photoBean.png")}
+        />
       </View>
 
       <CurrentUserButtons
@@ -160,4 +146,13 @@ export default function UserProfileImagePost({
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 1.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 428,
+  },
+});

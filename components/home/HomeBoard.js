@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useUser } from "../../context/UserContext";
+import { A } from "@expo/html-elements";
 
 export default function HomeBoard() {
   const HalfSeperator = () => <View style={styles.halfSeperator} />;

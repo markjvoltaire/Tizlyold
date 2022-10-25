@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  Animated,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import UserButtons from "./UserButtons";
@@ -21,11 +22,14 @@ import PostActivity from "../../views/PostActivity";
 import HomePostButtons from "./HomePostButtons";
 import Buttons from "./Buttons";
 import { supabase } from "../../services/supabase";
+import PostSkeleton from "../profile/PostSkeleton";
 
 export default function ImagePost({ item, navigation, followingId }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
   const { user, setUser } = useUser();
+  const [userInfo, setUserInfo] = useState();
 
   const userId = user.user_id;
 
@@ -40,19 +44,34 @@ export default function ImagePost({ item, navigation, followingId }) {
     return resp.body;
   }
 
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
+  async function getSaves() {
+    const resp = await supabase
+      .from("saves")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("saved_Id", item.saved_Id);
+
+    return resp.body;
+  }
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       const seeLikes = async () => {
         const res = await getLikes();
-        console.log("res from userBUTTONS LINE 50", res);
+        const saves = await getSaves();
+
         res.map((post) => setIsPressed(post.liked));
+        saves.map((save) => setSaveIsPressed(save.saved));
 
         if (res.length === 0) {
           setIsPressed(false);
-          console.log("its false");
+        }
+
+        if (saves.length === 0) {
+          setSaveIsPressed(false);
         }
       };
       seeLikes();
@@ -60,23 +79,38 @@ export default function ImagePost({ item, navigation, followingId }) {
     return unsubscribe;
   }, [navigation]);
 
-  // const seeLikes = async () => {
-  //   const res = await getLikes();
-  //   console.log("res from userBUTTONS", res);
-  //   res.map((post) => setIsPressed(post.liked));
-  // };
-  // seeLikes();
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   return (
     <>
-      <View style={{ paddingBottom: 45, top: 60 }}>
+      <View style={{ paddingBottom: 45, top: 60, alignSelf: "center" }}>
         <View style={{ alignSelf: "center", right: 20, bottom: 10 }}>
-          <PostHeader navigation={navigation} item={item} />
+          <PostHeader userInfo={userInfo} navigation={navigation} item={item} />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
           <SharedElement id={item.id}>
-            <Image
+            <View style={{ bottom: 50, alignSelf: "center" }}>
+              <PostSkeleton />
+            </View>
+          </SharedElement>
+          <SharedElement id={item.id}>
+            <Animated.Image
               style={{
                 height: 398,
                 aspectRatio: 1,
@@ -85,8 +119,10 @@ export default function ImagePost({ item, navigation, followingId }) {
                 bottom: 50,
                 borderColor: "#5C5C5C",
                 borderWidth: 0.2,
+                opacity: imageAnimated,
               }}
               source={{ uri: item.media }}
+              onLoad={handleImageLoad}
               resizeMode="cover"
             />
           </SharedElement>

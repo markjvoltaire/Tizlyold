@@ -164,17 +164,16 @@ export default function UserProfile({ navigation, route }) {
 
       <View style={{ position: "absolute", top: 35, left: 16 }}>
         <Image style={styles.setting} source={require("../assets/coin.png")} />
-        <Text style={{ left: 350, top: 31, fontWeight: "700" }}>{points}</Text>
+        <Text style={{ left: 340, top: 31, fontWeight: "700" }}>{points}</Text>
       </View>
 
       <View style={{ bottom: 410 }}>
-        <Text style={styles.displayname}>{user.displayName}</Text>
-        <Text style={styles.username}>@{user.username}</Text>
+        <View style={{ right: 60 }}>
+          <Text style={styles.displayname}>{user.displayName}</Text>
+          <Text style={styles.username}>@{user.username}</Text>
+        </View>
         <Text style={styles.bio}> {user.bio}</Text>
-        <Image
-          style={styles.profileImage}
-          source={{ uri: user.profileimage }}
-        />
+
         <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
             style={styles.subButton}
@@ -191,12 +190,9 @@ export default function UserProfile({ navigation, route }) {
       <View style={styles.profileNav}>
         <Text style={styles.home}>Home</Text>
       </View>
+
+      <FullSeperator />
       <View style={styles.feedContainer}>
-        {/* <FlatList
-          keyExtractor={(item) => item.id}
-          data={posts}
-          initialNumToRender={2}
-          renderItem={({ item }) => ( */}
         {posts.map((item) => {
           return (
             <View key={item.id}>
@@ -229,10 +225,10 @@ const styles = StyleSheet.create({
 
   setting: {
     position: "absolute",
-    height: 29,
-    width: 29,
+    height: 22,
+    width: 22,
     left: 308,
-    top: 26,
+    top: 29,
   },
 
   profileNav: {
@@ -257,7 +253,7 @@ const styles = StyleSheet.create({
 
   feedContainer: {
     alignItems: "center",
-    top: 30,
+    top: 40,
     flex: 1,
   },
   displayNameContainer: {
@@ -285,10 +281,11 @@ const styles = StyleSheet.create({
   },
 
   fullSeperator: {
-    borderBottomColor: "red",
+    borderBottomColor: "black",
     borderBottomWidth: 0.8,
-    opacity: 1.2,
+    opacity: 0.2,
     width: 900,
+    top: 10,
   },
   displayname: {
     position: "absolute",

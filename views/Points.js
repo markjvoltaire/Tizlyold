@@ -14,17 +14,6 @@ export default function Points({ navigation }) {
   const [loading, setLoading] = useState(true);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
-  // async function getUserPoints() {
-  //   const userId = supabase.auth.currentUser.id;
-
-  //   const { data: profiles, error } = await supabase
-  //     .from("profiles")
-  //     .select("tizlyPoints")
-  //     .eq("user_id", userId);
-
-  //   return profiles;
-  // }
-
   useEffect(() => {
     const getPoints = async () => {
       const resp = await getUserPoints();

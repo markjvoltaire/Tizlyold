@@ -14,8 +14,6 @@ export default function GeneralSettings({ navigation }) {
   const { points, setPoints } = usePoints(points);
   const { user, setUser } = useUser();
 
-  console.log("tizlyPoints", tizlyPoints);
-
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <Text style={styles.pageTitle}>General Settings</Text>

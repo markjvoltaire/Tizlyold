@@ -210,7 +210,7 @@ export default function Player({ route, navigation }) {
         />
       </View>
 
-      <KeyboardAvoidingView
+      {/* <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
@@ -252,7 +252,7 @@ export default function Player({ route, navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView> */}
     </View>
   );
 }

@@ -20,7 +20,6 @@ export default function UserButtons({
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
-  // const { likeList, setLikeList } = useLike();
   const { user } = useUser();
 
   const creatorId = item.user_id;
@@ -115,7 +114,7 @@ export default function UserButtons({
   useEffect(() => {
     const seeLikes = async () => {
       const res = await getLikes();
-      console.log("res from userBUTTONS", res);
+
       res.map((post) => setIsPressed(post.liked));
     };
     seeLikes();
@@ -143,7 +142,7 @@ export default function UserButtons({
   useEffect(() => {
     const getLikeList = async () => {
       const resp = await getAllLikes();
-      // setLikeList(resp);
+   
     };
     getLikeList();
   }, []);
@@ -169,8 +168,6 @@ export default function UserButtons({
       <View style={styles.commentButtonContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate("CommentScreen", { item })}
-
-          // onPress={() => console.log("likeList", likeList)}
         >
           <Image
             style={{

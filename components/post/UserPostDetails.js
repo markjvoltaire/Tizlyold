@@ -46,78 +46,6 @@ export default function UserPostDetails({
     getImage();
   }, []);
 
-  // if (commentList.length === 0) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <View style={{ left: 10 }}>
-  //         <Text style={styles.postTitle}>{post.title}</Text>
-  //         <Text style={styles.postDescription}>{post.description}</Text>
-  //         <Text style={styles.date}>{post.posted}</Text>
-  //       </View>
-
-  //       <View style={{ top: 100 }}>
-  //         <UserButtons
-  //           isPressed={isPressed}
-  //           setIsPressed={setIsPressed}
-  //           item={post}
-  //           setSaveIsPressed={setSaveIsPressed}
-  //           saveIsPressed={saveIsPressed}
-  //         />
-  //       </View>
-
-  //       <View>
-  //         <Text style={styles.commentsHeader}>Be the first to comment</Text>
-
-  //         <FullSeperator />
-
-  //         <View style={styles.commentSection}>
-  //           <FlatList
-  //             keyExtractor={(item) => item.id}
-  //             data={commentList}
-  //             renderItem={({ item }) => (
-  //               <View>
-  //                 <Image
-  //                   style={{
-  //                     height: 30,
-  //                     width: 30,
-  //                     borderRadius: 40,
-  //                     bottom: 4,
-  //                   }}
-  //                   source={{ uri: item.userProfileImage }}
-  //                 />
-  //                 <View style={{ left: 35, bottom: 3 }}>
-  //                   <Text style={{ fontWeight: "600" }}>
-  //                     {item.userDisplayName}
-  //                   </Text>
-  //                   <Text
-  //                     style={{
-  //                       color: "#4F4E4E",
-  //                       fontWeight: "500",
-  //                       fontSize: 12,
-  //                     }}
-  //                   >
-  //                     @{item.userUsername}
-  //                   </Text>
-  //                   <Text
-  //                     style={{
-  //                       right: 35,
-  //                       fontWeight: "600",
-  //                       paddingTop: 10,
-  //                       paddingBottom: 10,
-  //                     }}
-  //                   >
-  //                     {item.comment}
-  //                   </Text>
-  //                 </View>
-  //               </View>
-  //             )}
-  //           />
-  //         </View>
-  //       </View>
-  //     </View>
-  //   );
-  // }
-
   return (
     <>
       <View style={{ flex: 1, left: 10 }}>
@@ -165,7 +93,7 @@ export default function UserPostDetails({
             setSaveIsPressed={setSaveIsPressed}
           /> */}
         </View>
-        <ScrollView style={{ top: 60 }}>
+        <View style={{ top: 60 }}>
           <CommentList
             item={post}
             navigation={navigation}
@@ -175,76 +103,11 @@ export default function UserPostDetails({
             saveIsPressed={saveIsPressed}
             setSaveIsPressed={setSaveIsPressed}
           />
-        </ScrollView>
+        </View>
       </View>
     </>
   );
 }
-
-// <View style={styles.container}>
-// <View style={{ left: 10, top: 10 }}>
-
-//   <Text style={styles.postDescription}>{post.description}</Text>
-//   <Text style={styles.date}>{post.posted}</Text>
-// </View>
-
-// <View>
-//   <Text style={styles.commentsHeader}>Comments</Text>
-
-//   <View style={{ top: 20 }}>
-//     <UserButtons
-//       item={post}
-//       isPressed={isPressed}
-//       setIsPressed={setIsPressed}
-//       navigation={navigation}
-//       saveIsPressed={saveIsPressed}
-//       setSaveIsPressed={setSaveIsPressed}
-//     />
-//   </View>
-//   <View style={styles.commentSection}>
-//     <FlatList
-//       keyExtractor={(item) => item.id}
-//       data={commentList}
-//       contentContainerStyle={{
-//         borderBottomWidth: 0.8,
-//         borderBottomColor: "#EDEDED",
-//       }}
-//       renderItem={({ item }) => (
-//         <View style={{ top: 20 }}>
-//           <Image
-//             style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
-//             source={{ uri: item.userProfileImage }}
-//           />
-//           <View style={{ left: 35, bottom: 35 }}>
-//             <Text style={{ fontWeight: "600" }}>
-//               {item.userDisplayName}
-//             </Text>
-//             <Text
-//               style={{
-//                 color: "#4F4E4E",
-//                 fontWeight: "500",
-//                 fontSize: 12,
-//               }}
-//             >
-//               @{item.userUsername}
-//             </Text>
-//             <Text
-//               style={{
-//                 right: 35,
-//                 fontWeight: "600",
-//                 paddingTop: 10,
-//                 paddingBottom: 10,
-//               }}
-//             >
-//               {item.comment}
-//             </Text>
-//           </View>
-//         </View>
-//       )}
-//     />
-//   </View>
-// </View>
-// </View>
 
 const styles = StyleSheet.create({
   header: {

@@ -18,7 +18,7 @@ export default function TopHeader({ navigation, tizlyPoints }) {
   const { user, setUser } = useUser();
   const { points, setPoints } = usePoints();
   const [query, setQuery] = useState();
-  // const [tizlyPoints, setTizlyPoints] = useState(points);
+
   const [loading, setLoading] = useState(true);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -31,7 +31,7 @@ export default function TopHeader({ navigation, tizlyPoints }) {
         <Text
           style={{
             left: 350,
-            top: 22,
+            top: 18,
             fontWeight: "700",
             position: "absolute",
           }}
@@ -54,7 +54,11 @@ export default function TopHeader({ navigation, tizlyPoints }) {
       <View style={{ position: "absolute", top: 35 }}>
         <Image
           style={styles.profileimage}
-          source={{ uri: user.profileimage }}
+          source={
+            user.profileimage === null
+              ? require("../assets/noProfilePic.jpeg")
+              : { uri: user.profileimage }
+          }
         />
       </View>
     </SafeAreaView>
@@ -70,8 +74,8 @@ const styles = StyleSheet.create({
   },
   setting: {
     position: "absolute",
-    height: 29,
-    width: 29,
+    height: 22,
+    width: 22,
     left: 308,
     top: 15,
   },

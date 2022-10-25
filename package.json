@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/html-elements": "^0.2.0",
     "@expo/metro-config": "^0.3.22",
     "@gorhom/bottom-sheet": "^4.4.4",
     "@react-native-async-storage/async-storage": "~1.17.3",

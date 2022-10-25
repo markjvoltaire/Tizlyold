@@ -73,7 +73,7 @@ export default function App() {
           <PointsProvider>
             <LikeProvider>
               <NavigationContainer>
-                {auth !== null ? <AuthStack /> : <NoAuthStack />}
+                {auth ? <AuthStack /> : <NoAuthStack />}
               </NavigationContainer>
             </LikeProvider>
           </PointsProvider>

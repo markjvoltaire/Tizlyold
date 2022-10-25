@@ -41,6 +41,9 @@ import PostHeader from "../components/home/PostHeader";
 import Points from "../views/Points";
 import Buttons from "../components/home/Buttons";
 import ImagePost from "../components/home/ImagePost";
+import ProfileImagePost from "../components/profile/ProfileImagePost";
+import ProfileVideoPost from "../components/profile/ProfileVideoPost";
+import BannerSkeleton from "../components/profile/BannerSkeleton";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -106,13 +109,9 @@ export default function ProfileDetail({ navigation, route }) {
       .update({ tizlyPoints: points - 10 })
       .eq("user_id", userId);
 
-    // setUser(profiles);
-
-    error === null ? handleFollow() : console.log("error", error);
+    error === null ? handleFollow() : Alert.alert(error);
 
     profiles.map((i) => setPoints(i.tizlyPoints));
-
-    // setPoints(profiles);
 
     return profiles;
   }
@@ -123,8 +122,6 @@ export default function ProfileDetail({ navigation, route }) {
       .from("profiles")
       .update({ tizlyPoints: userTizlyPoints + item.subCost })
       .eq("user_id", item.user_id);
-
-    // error === null ? handleFollow() : console.log("error", error);
   }
 
   async function handleSubscriptions() {
@@ -216,16 +213,6 @@ export default function ProfileDetail({ navigation, route }) {
     getFeed();
   }, []);
 
-  // if (loading) {
-  //   return (
-  //     <SafeAreaView>
-  //       <View>
-  //         <Text style={{ fontSize: 300 }}>LOADING</Text>
-  //       </View>
-  //     </SafeAreaView>
-  //   );
-  // }
-
   async function followUser() {
     const resp = await supabase.from("following").insert([
       {
@@ -257,8 +244,6 @@ export default function ProfileDetail({ navigation, route }) {
   }
 
   const handleFollow = () => {
-    // setIsFollowing((current) => !current);
-
     isFollowing === false ? followUser() : unfollowUser();
   };
 
@@ -269,10 +254,6 @@ export default function ProfileDetail({ navigation, route }) {
       </View>
     );
   }
-
-  // const refreshFeed = async () => {
-  //   getProfileDetail();
-  // };
 
   const defaultImageAnimated = new Animated.Value(0);
   const imageAnimated = new Animated.Value(0);
@@ -331,6 +312,14 @@ export default function ProfileDetail({ navigation, route }) {
       ]
     );
 
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <ProfileSkeleton />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <>
       <ScrollView
@@ -338,13 +327,18 @@ export default function ProfileDetail({ navigation, route }) {
         style={{ flex: 1, backgroundColor: "white" }}
       >
         <SharedElement id={item.id}>
+          <View style={{ position: "absolute" }}>
+            <BannerSkeleton />
+          </View>
+        </SharedElement>
+        <SharedElement id={item.id}>
           <Animated.Image
-            source={require("../assets/defaultImage.png")}
             style={{
-              height: 398,
+              width: 455,
+              height: 455,
               position: "absolute",
               opacity: defaultImageAnimated,
-              aspectRatio: 1,
+
               alignSelf: "center",
               borderRadius: 10,
               borderColor: "#5C5C5C",
@@ -352,11 +346,6 @@ export default function ProfileDetail({ navigation, route }) {
             }}
             resizeMode="cover"
             onLoad={handleDefaultImageLoad}
-          />
-        </SharedElement>
-        <SharedElement id={item.id}>
-          <Image
-            style={styles.userBanner}
             source={{ uri: item.profileimage }}
           />
         </SharedElement>
@@ -397,14 +386,20 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
 
           <TouchableOpacity onPress={() => unsubscribeAlert()}>
-            <Image
+            {/* <Image
               style={styles.subButton}
               source={
                 isFollowing === true
                   ? require("../assets/subscribed.png")
                   : require("../assets/blank.png")
               }
-            />
+            /> */}
+            {isFollowing === true ? (
+              <Image
+                style={styles.subButton}
+                source={require("../assets/subscribed.png")}
+              />
+            ) : null}
           </TouchableOpacity>
         </View>
 
@@ -572,126 +567,20 @@ export default function ProfileDetail({ navigation, route }) {
                 </View>
               </>
             ) : (
-              <View style={{ paddingBottom: 20 }}>
+              <View style={{ paddingBottom: 60 }}>
                 {posts.map((item) => {
                   if (item.mediaType === "image") {
                     return (
-                      <View
-                        style={{ top: 30, paddingBottom: 60 }}
-                        key={item.id}
-                      >
-                        <ImagePost item={item} navigation={navigation} />
+                      <View style={{ top: 30 }} key={item.id}>
+                        <ProfileImagePost item={item} navigation={navigation} />
                       </View>
                     );
                   }
 
                   if (item.mediaType === "video") {
                     return (
-                      <View
-                        style={{ top: 90, paddingBottom: 90 }}
-                        key={item.id}
-                      >
-                        <View style={{ alignItems: "center", top: 20 }}>
-                          <PostHeader navigation={navigation} item={item} />
-                        </View>
-                        <Pressable
-                          key={item.id}
-                          onPress={() =>
-                            navigation.navigate("Player", { item })
-                          }
-                        >
-                          <SharedElement id={item.id}>
-                            <Animated.Image
-                              source={require("../assets/defaultImage.png")}
-                              style={{
-                                height: 398,
-                                position: "absolute",
-                                opacity: defaultImageAnimated,
-
-                                alignSelf: "center",
-                                borderRadius: 10,
-                                borderColor: "#5C5C5C",
-                                borderWidth: 0.2,
-                              }}
-                              resizeMode="cover"
-                              onLoad={handleDefaultImageLoad}
-                            />
-                          </SharedElement>
-
-                          <SharedElement id={item.id}>
-                            <Video
-                              source={{ uri: item.media }}
-                              style={{
-                                height: 398,
-                                aspectRatio: 1,
-                                alignSelf: "center",
-                                borderRadius: 10,
-                              }}
-                              resizeMode="cover"
-                              onLoad={handleImageLoad}
-                            />
-                          </SharedElement>
-                          <Image
-                            style={{
-                              alignSelf: "center",
-                              resizeMode: "stretch",
-                              height: 180,
-                              width: 400,
-                              top: 219,
-                              borderRadius: 12,
-                              position: "absolute",
-                            }}
-                            source={require("../assets/fader.png")}
-                          />
-                          <Image
-                            style={{
-                              position: "absolute",
-                              width: 60,
-                              top: 160,
-                              alignSelf: "center",
-                              resizeMode: "contain",
-                            }}
-                            source={require("../assets/playButton.png")}
-                          />
-                        </Pressable>
-
-                        <View>
-                          <Text
-                            style={{
-                              left: 13,
-                              top: 12,
-                              fontWeight: "700",
-                              textAlign: "left",
-                              width: 390,
-                              paddingBottom: 6,
-                              lineHeight: 20,
-                            }}
-                          >
-                            {item.title}
-                          </Text>
-                          <Text
-                            style={{
-                              left: 13,
-                              top: 12,
-                              fontWeight: "600",
-                              color: "#4F4E4E",
-                              textAlign: "left",
-                              width: 390,
-                              paddingBottom: 30,
-                              lineHeight: 20,
-                            }}
-                          >
-                            {item.description}
-                          </Text>
-
-                          <Image
-                            resizeMode="contain"
-                            style={{ width: 70, left: 10, bottom: 30 }}
-                            source={require("../assets/videoBean.png")}
-                          />
-                        </View>
-
-                        <View style={{ bottom: 30 }}></View>
+                      <View style={{ top: 30 }} key={item.id}>
+                        <ProfileVideoPost item={item} navigation={navigation} />
                       </View>
                     );
                   }

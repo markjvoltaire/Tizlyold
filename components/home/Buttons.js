@@ -20,7 +20,7 @@ export default function Buttons({ item, navigation }) {
       const resp = await getAllLikes();
       setLikeList(resp);
       resp.map((post) => setButtonActive(post.liked));
-      console.log("resp FROM BUTONS", resp);
+
     };
     seeLikes();
   }, [buttonActive]);

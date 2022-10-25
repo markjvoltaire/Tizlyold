@@ -185,7 +185,7 @@ export default function AuthStack() {
             <Stack.Screen
               name="UserSubscriber"
               component={UserProfileSubscribers}
-              options={{ headerShown: false, gestureEnabled: false }}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </PostProvider>

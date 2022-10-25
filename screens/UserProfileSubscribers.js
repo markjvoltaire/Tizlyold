@@ -27,74 +27,18 @@ export default function UserProfileSubscribers({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPoints, setUserPoints] = useState();
 
-  const { item } = route.params;
+  async function resetFunction() {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://example.com/update-password",
+    });
+  }
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
-    <View>
-      <SharedElement id={item.id}>
-        <Image style={styles.userBanner} source={{ uri: item.profileimage }} />
-      </SharedElement>
-      <SharedElement id={item.id}>
-        <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 455,
-            width: 445,
-
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          resizeMode="stretch"
-          source={require("../assets/fader.png")}
-        />
-      </SharedElement>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image
-          style={styles.backButton}
-          source={require("../assets/backButton2.png")}
-        />
-      </TouchableOpacity>
-      <View style={{ top: 60, right: 62 }}>
-        <Text style={styles.displayname}>{item.displayName}</Text>
-        <Text style={styles.username}>@{item.username}</Text>
-      </View>
-
-      <View
-        style={{
-          backgroundColor: "white",
-          width: 417,
-          height: 464,
-          borderRadius: 25,
-          top: 385,
-          alignSelf: "center",
-        }}
-      >
-        {/* <Text
-          style={{
-            alignSelf: "center",
-            top: 30,
-            fontWeight: "700",
-            color: "#4F4E4E",
-            fontSize: 18,
-            position: "absolute",
-          }}
-        >
-          Subscription Details
-        </Text> */}
-        <FullSeperator />
-
-        <AnimatedBottomSheet />
-
-        <Image
-          resizeMode="contain"
-          style={{ alignSelf: "center", top: 350, height: 50 }}
-          source={require("../assets/buttonBlue.png")}
-        />
-      </View>
-    </View>
+    <SafeAreaView>
+      <Button title="hello" />
+    </SafeAreaView>
   );
 }
 

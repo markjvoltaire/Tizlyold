@@ -167,7 +167,21 @@ export default function ImageDetails({ navigation, route }) {
         <View>
           <Text
             style={{
-              left: 15,
+              left: 13,
+              top: 12,
+              fontWeight: "700",
+              textAlign: "left",
+              width: 390,
+              paddingBottom: 6,
+              lineHeight: 20,
+            }}
+          >
+            {item.title}
+          </Text>
+
+          <Text
+            style={{
+              left: 13,
               top: 12,
               fontWeight: "700",
               color: "#4F4E4E",
@@ -179,8 +193,12 @@ export default function ImageDetails({ navigation, route }) {
             {item.description}
           </Text>
 
-          <View>
-            <Text style={{ left: 17, fontWeight: "500" }}>Photo</Text>
+          <View style={{ position: "absolute", top: 70 }}>
+            <Image
+              resizeMode="contain"
+              style={{ width: 70, left: 10, bottom: 30 }}
+              source={require("../assets/photoBean.png")}
+            />
           </View>
         </View>
 
@@ -188,62 +206,72 @@ export default function ImageDetails({ navigation, route }) {
           <Text style={styles.commentsHeader}>Comments</Text>
 
           <FullSeperator />
-          {commentList.map((comment) => (
-            <View
-              style={{ left: 10, top: 40, paddingBottom: 20 }}
-              key={comment.id}
-            >
-              <View>
-                <Image
-                  style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
-                  source={{ uri: comment.userProfileImage }}
-                />
-                <View style={{ left: 35, bottom: 35 }}>
-                  <Text style={{ fontWeight: "600" }}>
-                    {comment.userDisplayName}
-                  </Text>
-                  <Text
+          {commentList.length === 0 ? (
+            <View style={{ alignSelf: "center", top: 30 }}>
+              <Text style={{ fontWeight: "700", color: "#4F4E4E" }}>
+                No Comments
+              </Text>
+            </View>
+          ) : (
+            commentList.map((comment) => (
+              <View style={{ top: 30, left: 10 }} key={comment.id}>
+                <View>
+                  <Image
                     style={{
-                      color: "#4F4E4E",
-                      fontWeight: "500",
-                      fontSize: 12,
+                      height: 30,
+                      width: 30,
+                      borderRadius: 40,
+                      bottom: 4,
                     }}
-                  >
-                    @{comment.userUsername}
-                  </Text>
-                  <Text
-                    style={{
-                      right: 35,
-                      fontWeight: "600",
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                    }}
-                  >
-                    {comment.comment}
-                  </Text>
+                    source={{ uri: comment.userProfileImage }}
+                  />
+                  <View style={{ left: 35, bottom: 35 }}>
+                    <Text style={{ fontWeight: "600" }}>
+                      {comment.userDisplayName}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#4F4E4E",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      @{comment.userUsername}
+                    </Text>
+                    <Text
+                      style={{
+                        right: 35,
+                        fontWeight: "600",
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                      }}
+                    >
+                      {comment.comment}
+                    </Text>
 
-                  {comment.userId === user.user_id ? (
-                    <View style={{ left: 270, bottom: 60 }}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          deleteComment(comment).then(() => refreshFeed())
-                        }
-                      >
-                        <Image
-                          style={{
-                            resizeMode: "contain",
-                            position: "absolute",
-                            height: 23,
-                          }}
-                          source={require("../assets/Delete.png")}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ) : null}
+                    {comment.userId === user.user_id ? (
+                      <View style={{ left: 270, bottom: 60 }}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            deleteComment(comment).then(() => refreshFeed())
+                          }
+                        >
+                          <Image
+                            style={{
+                              resizeMode: "contain",
+                              position: "absolute",
+                              height: 23,
+                            }}
+                            source={require("../assets/Delete.png")}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ) : null}
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
+            ))
+          )}
         </View>
       </ScrollView>
       <KeyboardAvoidingView

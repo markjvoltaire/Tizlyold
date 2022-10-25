@@ -25,7 +25,6 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser();
-  // const pushAction = StackActions.navigate("HomeScreen");
   const pushActionSignUp = StackActions.replace("SignUp");
 
   async function loginWithEmail() {

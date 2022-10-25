@@ -18,25 +18,20 @@ export default function HomePostButtons({ item, navigation }) {
     buttonActive === true ? unlikePost(item) : likePost(item, user);
   };
 
-  // when i go to profile
   useEffect(() => {
     const seeLikes = async () => {
       const resp = await getAllLikes();
       setLikeList(resp);
       resp.map((post) => setIsPressed(post.liked));
-      console.log("resp FROM HOME BUTTONS", resp);
     };
     seeLikes();
   }, [buttonActive]);
 
-  //when i go back to home screen
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       async function getLikes() {
         const resp = await getAllLikes();
 
-        console.log("resp", resp);
-        console.log("resp FROM UNSCUBSCRIBE", resp);
         resp.map((post) => setButtonActive(post.liked));
 
         return resp;
@@ -82,7 +77,7 @@ export default function HomePostButtons({ item, navigation }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => console.log(item)}>
+      <TouchableOpacity>
         <Image
           style={{
             top: 30,
