@@ -133,22 +133,40 @@ export default function UserProfile({ navigation, route }) {
         />
       }
     >
-      {user.bannerImageType === "video" ? (
-        <Video
-          ref={video}
-          source={{ uri: user.bannerImage }}
-          isLooping
-          shouldPlay={true}
-          isMuted={true}
+      {/* <Image style={styles.userBanner} source={{ uri: user.bannerImage }} /> */}
+
+      {user.bannerImageType === "image" ? (
+        <Image
+          style={{
+            width: 455,
+            height: 455,
+            position: "absolute",
+
+            alignSelf: "center",
+            borderRadius: 10,
+            borderColor: "#5C5C5C",
+            borderWidth: 0.2,
+          }}
           resizeMode="cover"
-          style={styles.userBanner}
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          source={{ uri: user.bannerImage }}
         />
       ) : (
-        <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
+        <Video
+          source={{ uri: user.bannerImage }}
+          ref={video}
+          isLooping
+          shouldPlay
+          style={{
+            height: 450,
+            aspectRatio: 1,
+            alignSelf: "center",
+            borderRadius: 10,
+            position: "absolute",
+          }}
+          resizeMode="cover"
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        />
       )}
-
-      <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
 
       <Image
         style={styles.userBannerFader}
@@ -168,7 +186,7 @@ export default function UserProfile({ navigation, route }) {
       </View>
 
       <View style={{ bottom: 410 }}>
-        <View style={{ right: 60 }}>
+        <View style={{ right: 6 }}>
           <Text style={styles.displayname}>{user.displayName}</Text>
           <Text style={styles.username}>@{user.username}</Text>
         </View>
@@ -186,6 +204,14 @@ export default function UserProfile({ navigation, route }) {
             source={require("../assets/settings.png")}
           />
         </TouchableOpacity>
+        <Image
+          style={styles.profileImage}
+          source={
+            user.profileimage === null
+              ? require("../assets/noProfilePic.jpeg")
+              : { uri: user.profileimage }
+          }
+        />
       </View>
       <View style={styles.profileNav}>
         <Text style={styles.home}>Home</Text>
@@ -208,8 +234,6 @@ export default function UserProfile({ navigation, route }) {
             </View>
           );
         })}
-        {/* )} */}
-        {/* /> */}
       </View>
     </ScrollView>
   );

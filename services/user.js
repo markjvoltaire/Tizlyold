@@ -115,7 +115,7 @@ export async function getTrendingCreators() {
   const resp = await supabase
     .from("profiles")
     .select("*")
-    .in("id", [179, 180, 181]);
+    .in("id", [217, 176, 210]);
 
   return resp.body;
 }
@@ -124,7 +124,7 @@ export async function getCreatorsYouMayLike() {
   const resp = await supabase
     .from("profiles")
     .select("*")
-    .in("id", [184, 183, 182]);
+    .in("id", [214, 180, 216]);
 
   return resp.body;
 }
@@ -132,10 +132,8 @@ export async function getCreatorsYouMayLike() {
 export async function getNewTrendingCreators() {
   const resp = await supabase
     .from("profiles")
-    .select(
-      "  user_id,id,username, displayName, profileimage, bannerImage, bio"
-    )
-    .in("id", [184, 183, 182]);
+    .select("*")
+    .in("id", [214, 180, 216]);
 
   return resp.body;
 }

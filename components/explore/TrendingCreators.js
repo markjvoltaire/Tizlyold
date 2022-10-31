@@ -87,7 +87,7 @@ export default function TrendingCreators({ navigation, route }) {
                     position: "absolute",
                     top: 105,
                     color: "#D7D8DA",
-                    fontWeight: "600",
+                    fontWeight: "500",
                     left: 2,
                   }}
                 >

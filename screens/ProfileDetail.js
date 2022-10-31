@@ -331,33 +331,43 @@ export default function ProfileDetail({ navigation, route }) {
             <BannerSkeleton />
           </View>
         </SharedElement>
-        <SharedElement id={item.id}>
-          <Animated.Image
-            style={{
-              width: 455,
-              height: 455,
-              position: "absolute",
-              opacity: defaultImageAnimated,
 
+        {item.bannerImageType === "image" ? (
+          <SharedElement id={item.id}>
+            <Animated.Image
+              style={{
+                width: 455,
+                height: 455,
+                position: "absolute",
+                opacity: defaultImageAnimated,
+
+                alignSelf: "center",
+                borderRadius: 10,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+              }}
+              resizeMode="cover"
+              onLoad={handleDefaultImageLoad}
+              source={{ uri: item.bannerImage }}
+            />
+          </SharedElement>
+        ) : (
+          <Video
+            source={{ uri: item.bannerImage }}
+            ref={video}
+            isLooping
+            shouldPlay
+            style={{
+              height: 450,
+              aspectRatio: 1,
               alignSelf: "center",
               borderRadius: 10,
-              borderColor: "#5C5C5C",
-              borderWidth: 0.2,
+              position: "absolute",
             }}
             resizeMode="cover"
-            onLoad={handleDefaultImageLoad}
-            source={{ uri: item.profileimage }}
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
-        </SharedElement>
-
-        <Video
-          source={{ uri: item.bannerimage }}
-          isLooping
-          shouldPlay={true}
-          isMuted={true}
-          resizeMode="cover"
-          style={styles.userBanner}
-        />
+        )}
 
         <Image
           style={styles.userBannerFader}
@@ -370,19 +380,19 @@ export default function ProfileDetail({ navigation, route }) {
             source={require("../assets/backButton2.png")}
           />
         </TouchableOpacity>
-        <View style={{ bottom: 430 }}>
-          <View style={{ top: 70, right: 62 }}>
+        <View style={{ bottom: 440 }}>
+          <View style={{ top: 70, right: 6 }}>
             <Text style={styles.displayname}>{item.displayName}</Text>
             <Text style={styles.username}>@{item.username}</Text>
 
-            {/* <Image
+            <Image
               style={styles.profileImage}
               source={
                 item.profileimage === null
                   ? require("../assets/noProfilePic.jpeg")
                   : { uri: item.profileimage }
               }
-            /> */}
+            />
           </View>
 
           <TouchableOpacity onPress={() => unsubscribeAlert()}>
@@ -697,7 +707,7 @@ const styles = StyleSheet.create({
   },
   subButton: {
     resizeMode: "contain",
-    top: 383,
+    top: 393,
     width: 150,
     height: 32,
     right: 18,

@@ -8,6 +8,8 @@ import {
 import { useUser } from "../../context/UserContext";
 
 export default function ProfileHeader({ item, navigation }) {
+  const { user } = useUser();
+
   return (
     <View style={{ alignSelf: "center" }}>
       <View style={{ alignSelf: "center" }}>
@@ -19,18 +21,18 @@ export default function ProfileHeader({ item, navigation }) {
               borderRadius: 100,
               bottom: 30,
             }}
-            source={{ uri: item.profileimage }}
+            source={{ uri: user.profileimage }}
           />
         </SharedElement>
         <View style={{ bottom: 63, left: 40 }}>
-          <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
+          <Text style={{ fontWeight: "800" }}>{user.displayName}</Text>
           <Text
             style={{
               fontWeight: "600",
               color: "#A1A1B3",
             }}
           >
-            @{item.username}
+            @{user.username}
           </Text>
         </View>
       </View>

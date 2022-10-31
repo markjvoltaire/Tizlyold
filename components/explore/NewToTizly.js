@@ -28,7 +28,7 @@ export default function NewToTizly({ navigation }) {
               onPress={() => {
                 user.id === item.id
                   ? navigation.navigate("UserProfile2")
-                  : navigation.navigate("ProfileDetail2", {
+                  : navigation.push("ProfileDetail2", {
                       item,
                     });
               }}

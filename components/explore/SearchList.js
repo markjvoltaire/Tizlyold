@@ -16,7 +16,7 @@ export default function SearchList({ item, navigation, isPressed, query }) {
   const { user, setUser } = useUser();
 
   return (
-    <View>
+    <View style={{ marginBottom: 80 }}>
       <TouchableOpacity
         style={{ margin: 10 }}
         onPress={() => {
