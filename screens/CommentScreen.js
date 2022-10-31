@@ -149,8 +149,19 @@ export default function CommentScreen({ route, navigation }) {
           </View>
         ) : (
           commentList.map((comment) => (
-            <View style={{ top: 30, left: 10 }} key={comment.id}>
-              <View>
+            <View
+              style={{ top: 30, left: 10, paddingBottom: 10 }}
+              key={comment.id}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  user.user_id === comment.userId
+                    ? navigation.navigate("UserProfile2")
+                    : navigation.push("ProfileDetail2", {
+                        item,
+                      });
+                }}
+              >
                 <Image
                   style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
                   source={{ uri: comment.userProfileImage }}
@@ -168,37 +179,36 @@ export default function CommentScreen({ route, navigation }) {
                   >
                     @{comment.userUsername}
                   </Text>
-                  <Text
-                    style={{
-                      right: 35,
-                      fontWeight: "600",
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                    }}
-                  >
-                    {comment.comment}
-                  </Text>
-
-                  {comment.userId === user.user_id ? (
-                    <View style={{ left: 270, bottom: 60 }}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          deleteComment(comment).then(() => refreshFeed())
-                        }
-                      >
-                        <Image
-                          style={{
-                            resizeMode: "contain",
-                            position: "absolute",
-                            height: 23,
-                          }}
-                          source={require("../assets/Delete.png")}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ) : null}
                 </View>
-              </View>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontWeight: "600",
+                  bottom: 25,
+                  left: 3,
+                }}
+              >
+                {comment.comment}
+              </Text>
+
+              {comment.userId === user.user_id ? (
+                <View style={{ left: 270, bottom: 60 }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      deleteComment(comment).then(() => refreshFeed())
+                    }
+                  >
+                    <Image
+                      style={{
+                        resizeMode: "contain",
+                        position: "absolute",
+                        height: 23,
+                      }}
+                      source={require("../assets/Delete.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ) : null}
             </View>
           ))
         )}

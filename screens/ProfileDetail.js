@@ -357,6 +357,7 @@ export default function ProfileDetail({ navigation, route }) {
             ref={video}
             isLooping
             shouldPlay
+            isMuted
             style={{
               height: 450,
               aspectRatio: 1,

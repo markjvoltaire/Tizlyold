@@ -21,18 +21,22 @@ export default function ProfileHeader({ item, navigation }) {
               borderRadius: 100,
               bottom: 30,
             }}
-            source={{ uri: user.profileimage }}
+            source={
+              user.user_id === item.user_id
+                ? { uri: user.profileimage }
+                : { uri: item.profileimage }
+            }
           />
         </SharedElement>
         <View style={{ bottom: 63, left: 40 }}>
-          <Text style={{ fontWeight: "800" }}>{user.displayName}</Text>
+          <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
           <Text
             style={{
               fontWeight: "600",
               color: "#A1A1B3",
             }}
           >
-            @{user.username}
+            @{item.username}
           </Text>
         </View>
       </View>
