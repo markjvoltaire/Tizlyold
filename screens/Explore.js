@@ -135,6 +135,14 @@ export default function Explore({ navigation }) {
         source={require("../assets/Search.png")}
       />
 
+      {search === "" ? null : (
+        <View style={{ position: "absolute", top: 130, left: 300 }}>
+          <TouchableOpacity onPress={() => setSearch("")}>
+            <Text style={{ fontWeight: "800", color: "#73738B" }}>Clear</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <SearchView
         search={search}
         input={input}
