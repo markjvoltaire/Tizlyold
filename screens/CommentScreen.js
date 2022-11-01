@@ -192,7 +192,7 @@ export default function CommentScreen({ route, navigation }) {
               </Text>
 
               {comment.userId === user.user_id ? (
-                <View style={{ left: 270, bottom: 60 }}>
+                <View style={{ left: 270, bottom: 80 }}>
                   <TouchableOpacity
                     onPress={() =>
                       deleteComment(comment).then(() => refreshFeed())

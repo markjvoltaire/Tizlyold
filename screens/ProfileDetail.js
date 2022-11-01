@@ -55,13 +55,30 @@ export default function ProfileDetail({ navigation, route }) {
   const { points, setPoints } = usePoints([]);
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
-
+  const [userDetails, setUserDetails] = useState([]);
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const { item } = route.params;
+
+  async function getUserById() {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", item.user_id);
+
+    return data;
+  }
+
+  useEffect(() => {
+    const log = async () => {
+      const resp = await getUserById();
+      resp.map((i) => setUserDetails(i));
+    };
+    log();
+  }, []);
 
   async function getUserPoints() {
     const userId = supabase.auth.currentUser.id;
@@ -332,7 +349,7 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
         </SharedElement>
 
-        {item.bannerImageType === "image" ? (
+        {userDetails.bannerImageType === "image" ? (
           <SharedElement id={item.id}>
             <Animated.Image
               style={{
