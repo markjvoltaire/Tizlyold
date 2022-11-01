@@ -29,7 +29,11 @@ export default function ProfileHeader({ item, navigation }) {
           />
         </SharedElement>
         <View style={{ bottom: 63, left: 40 }}>
-          <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
+          {user.user_id === item.user_id ? (
+            <Text style={{ fontWeight: "800" }}>{user.displayName}</Text>
+          ) : (
+            <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
+          )}
           <Text
             style={{
               fontWeight: "600",
