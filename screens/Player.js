@@ -195,7 +195,7 @@ export default function Player({ route, navigation }) {
         </View>
       </View>
 
-      <View style={{ top: 100, flex: 1 }}>
+      <View style={{ top: 101, flex: 1 }}>
         <UserPostDetails
           displayName={displayName}
           postUserId={postUserId}
