@@ -98,8 +98,15 @@ export default function ImagePost({ item, navigation, followingId }) {
 
   return (
     <>
-      <View style={{ paddingBottom: 45, top: 60, alignSelf: "center" }}>
-        <View style={{ alignSelf: "center", right: 20, bottom: 10 }}>
+      <View style={{ paddingBottom: 45, top: 40, alignSelf: "center" }}>
+        <View
+          style={{
+            alignSelf: "center",
+            right: 20,
+            paddingBottom: 25,
+            top: 12,
+          }}
+        >
           <PostHeader userInfo={userInfo} navigation={navigation} item={item} />
         </View>
 
@@ -157,20 +164,6 @@ export default function ImagePost({ item, navigation, followingId }) {
               left: 13,
               top: 12,
               fontWeight: "700",
-              textAlign: "left",
-              width: 390,
-              paddingBottom: 6,
-              lineHeight: 20,
-            }}
-          >
-            {item.title}
-          </Text>
-          <Text
-            style={{
-              left: 13,
-              top: 12,
-              fontWeight: "600",
-              color: "#4F4E4E",
               textAlign: "left",
               width: 390,
               paddingBottom: 30,

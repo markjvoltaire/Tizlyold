@@ -132,28 +132,12 @@ export default function VideoPost({ item, navigation, route }) {
             fontWeight: "700",
             textAlign: "left",
             width: 390,
-            paddingBottom: 6,
-            lineHeight: 20,
-          }}
-        >
-          {item.title}
-        </Text>
-
-        <Text
-          style={{
-            left: 13,
-            top: 12,
-            fontWeight: "700",
-            color: "#4F4E4E",
-            textAlign: "left",
-            width: 390,
             paddingBottom: 30,
             lineHeight: 20,
           }}
         >
           {item.description}
         </Text>
-
         <Image
           resizeMode="contain"
           style={{ width: 70, left: 10, bottom: 30 }}

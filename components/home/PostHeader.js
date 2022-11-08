@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import {
   SharedElement,
@@ -7,13 +14,49 @@ import {
 import { supabase } from "../../services/supabase";
 
 import { useUser } from "../../context/UserContext";
+import ImageHeader from "../post/ImageHeader";
 
-export default function PostHeader({ item, navigation, userInfo }) {
+export default function PostHeader({ item, navigation }) {
   const { user, setUser } = useUser();
+  const [userInfo, setUserinfo] = useState();
+  const [loading, setLoading] = useState(true);
+
+  async function getAvi() {
+    const resp = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", item.user_id);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const resp = await getAvi();
+      setUserinfo(resp);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    };
+    getUserInfo();
+  }, []);
+
+  if (loading) {
+    return <Text> loading</Text>;
+  }
 
   return (
     <View style={{ alignSelf: "center" }}>
-      <View style={{ alignSelf: "center" }}>
+      <ImageHeader navigation={navigation} userInfo={userInfo} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});
+
+{
+  /* <View style={{ alignSelf: "center" }}>
         <TouchableOpacity
           onPress={() => navigation.push("ProfileDetail2", { item })}
         >
@@ -40,9 +83,5 @@ export default function PostHeader({ item, navigation, userInfo }) {
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
-    </View>
-  );
+      </View> */
 }
-
-const styles = StyleSheet.create({});
