@@ -70,7 +70,7 @@ export default function VideoPost({ item, navigation, route }) {
   }, [navigation]);
 
   return (
-    <View style={{ paddingBottom: 55, top: 10 }}>
+    <View style={{ paddingBottom: 35, top: 10 }}>
       <View style={{ alignSelf: "center", right: 20, top: 40 }}>
         <PostHeader navigation={navigation} item={item} />
       </View>
@@ -178,6 +178,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    top: 40,
+    top: 10,
   },
 });

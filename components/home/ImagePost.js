@@ -29,7 +29,6 @@ export default function ImagePost({ item, navigation, followingId }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const { user, setUser } = useUser();
-  const [userInfo, setUserInfo] = useState();
 
   const userId = user.user_id;
 
@@ -98,7 +97,7 @@ export default function ImagePost({ item, navigation, followingId }) {
 
   return (
     <>
-      <View style={{ paddingBottom: 45, top: 40, alignSelf: "center" }}>
+      <View style={{ paddingBottom: 4, top: 40, alignSelf: "center" }}>
         <View
           style={{
             alignSelf: "center",
@@ -107,7 +106,7 @@ export default function ImagePost({ item, navigation, followingId }) {
             top: 12,
           }}
         >
-          <PostHeader userInfo={userInfo} navigation={navigation} item={item} />
+          <PostHeader navigation={navigation} item={item} />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>

@@ -56,12 +56,11 @@ export default function ProfileDetail({ navigation, route }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [userDetails, setUserDetails] = useState([]);
-  const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
 
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const { item } = route.params;
+  const [userInfo, setUserInfo] = useState(item);
 
   async function getUserById() {
     const { data } = await supabase
@@ -600,7 +599,11 @@ export default function ProfileDetail({ navigation, route }) {
                   if (item.mediaType === "image") {
                     return (
                       <View style={{ top: 30 }} key={item.id}>
-                        <ProfileImagePost item={item} navigation={navigation} />
+                        <ProfileImagePost
+                          userInfo={userInfo}
+                          item={item}
+                          navigation={navigation}
+                        />
                       </View>
                     );
                   }
@@ -608,7 +611,11 @@ export default function ProfileDetail({ navigation, route }) {
                   if (item.mediaType === "video") {
                     return (
                       <View style={{ top: 30 }} key={item.id}>
-                        <ProfileVideoPost item={item} navigation={navigation} />
+                        <ProfileVideoPost
+                          userInfo={userInfo}
+                          item={item}
+                          navigation={navigation}
+                        />
                       </View>
                     );
                   }

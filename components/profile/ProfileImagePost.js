@@ -24,12 +24,19 @@ import Buttons from "../home/Buttons";
 import { supabase } from "../../services/supabase";
 import PostSkeleton from "./PostSkeleton";
 
-export default function ProfileImagePost({ item, navigation, followingId }) {
+export default function ProfileImagePost({
+  item,
+  navigation,
+  followingId,
+  userInfo,
+}) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const { user, setUser } = useUser();
 
   const userId = user.user_id;
+
+  console.log("userInfo", userInfo);
 
   async function getLikes() {
     const resp = await supabase
@@ -81,7 +88,11 @@ export default function ProfileImagePost({ item, navigation, followingId }) {
     <>
       <View style={{ paddingBottom: 45, top: 60 }}>
         <View style={{ alignSelf: "center", right: 20, bottom: 10 }}>
-          <ProfileHeader navigation={navigation} item={item} />
+          <ProfileHeader
+            userInfo={userInfo}
+            navigation={navigation}
+            item={item}
+          />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>

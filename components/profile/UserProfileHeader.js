@@ -7,7 +7,7 @@ import {
 
 import { useUser } from "../../context/UserContext";
 
-export default function ProfileHeader({ item, navigation, userInfo }) {
+export default function UserProfileHeader({ item, navigation, userInfo }) {
   const { user } = useUser();
 
   return (
@@ -21,26 +21,19 @@ export default function ProfileHeader({ item, navigation, userInfo }) {
               borderRadius: 100,
               bottom: 30,
             }}
-            source={
-              user.user_id === item.user_id
-                ? { uri: user.profileimage }
-                : { uri: userInfo.profileimage }
-            }
+            source={{ uri: user.profileimage }}
           />
         </SharedElement>
         <View style={{ bottom: 63, left: 40 }}>
-          {user.user_id === item.user_id ? (
-            <Text style={{ fontWeight: "800" }}>{user.displayName}</Text>
-          ) : (
-            <Text style={{ fontWeight: "800" }}>{userInfo.displayName}</Text>
-          )}
+          <Text style={{ fontWeight: "800" }}>{user.displayName}</Text>
+
           <Text
             style={{
               fontWeight: "600",
               color: "#A1A1B3",
             }}
           >
-            @{userInfo.username}
+            @{user.username}
           </Text>
         </View>
       </View>

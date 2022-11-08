@@ -12,6 +12,7 @@ import UserButtons from "../home/UserButtons";
 import CurrentUserButtons from "../home/CurrentUserButtons";
 import PostHeader from "../home/PostHeader";
 import ProfileHeader from "./ProfileHeader";
+import UserProfileHeader from "./UserProfileHeader";
 
 export default function UserProfileVideoPost({ item, user, navigation }) {
   const video = React.useRef(null);
@@ -39,7 +40,7 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
       <View style={{ alignSelf: "center", top: 52 }}>
-        <ProfileHeader navigation={navigation} item={item} />
+        <UserProfileHeader navigation={navigation} item={item} />
       </View>
 
       <Pressable
@@ -81,20 +82,6 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
             left: 13,
             top: 12,
             fontWeight: "700",
-            textAlign: "left",
-            width: 390,
-            paddingBottom: 6,
-            lineHeight: 20,
-          }}
-        >
-          {item.title}
-        </Text>
-        <Text
-          style={{
-            left: 13,
-            top: 12,
-            fontWeight: "600",
-            color: "#4F4E4E",
             textAlign: "left",
             width: 390,
             paddingBottom: 30,

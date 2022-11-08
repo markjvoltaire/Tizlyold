@@ -14,7 +14,7 @@ import ProfileHeader from "./ProfileHeader";
 import { useUser } from "../../context/UserContext";
 import PostSkeleton from "./PostSkeleton";
 
-export default function ProfileVideoPost({ item, navigation }) {
+export default function ProfileVideoPost({ item, navigation, userInfo }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
@@ -29,7 +29,11 @@ export default function ProfileVideoPost({ item, navigation }) {
     <View style={{ paddingBottom: 90, top: 10.5 }}>
       <View style={{ top: 10 }}>
         <View style={{ alignSelf: "center", right: 20, top: 40 }}>
-          <ProfileHeader navigation={navigation} item={item} />
+          <ProfileHeader
+            userInfo={userInfo}
+            navigation={navigation}
+            item={item}
+          />
         </View>
         <Pressable
           onPress={() =>

@@ -173,14 +173,9 @@ export default function PostForm({ navigation }) {
 
   return (
     <View style={styles.postHeader}>
-      <TextInput
-        style={styles.postTitle}
-        fontWeight="600"
-        placeholder="Post Title"
-        placeholderTextColor="#393939"
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-      />
+      <Text style={styles.postTitle} fontWeight="600">
+        Post Details
+      </Text>
 
       <Text style={styles.postText}>Post</Text>
 

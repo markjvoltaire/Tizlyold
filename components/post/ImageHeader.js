@@ -5,7 +5,7 @@ export default function ImageHeader({ userInfo, navigation }) {
   return (
     <View>
       {userInfo.map((item) => (
-        <View>
+        <View key={item.id}>
           <View style={{ alignSelf: "center" }}>
             <TouchableOpacity
               onPress={() => navigation.push("ProfileDetail2", { item })}

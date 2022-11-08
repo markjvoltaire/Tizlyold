@@ -19,6 +19,7 @@ import {
 } from "react-navigation-shared-element";
 import PostHeader from "../home/PostHeader";
 import ProfileHeader from "./ProfileHeader";
+import UserProfileHeader from "./UserProfileHeader";
 
 export default function UserProfileImagePost({
   post,
@@ -51,7 +52,7 @@ export default function UserProfileImagePost({
   return (
     <View style={{ paddingBottom: 90 }}>
       <View style={{ alignSelf: "center", top: 32 }}>
-        <ProfileHeader navigation={navigation} item={post} user={user} />
+        <UserProfileHeader navigation={navigation} item={post} user={user} />
       </View>
 
       <Pressable
@@ -106,27 +107,12 @@ export default function UserProfileImagePost({
             fontWeight: "700",
             textAlign: "left",
             width: 390,
-            paddingBottom: 6,
-            lineHeight: 20,
-          }}
-        >
-          {post.title}
-        </Text>
-        <Text
-          style={{
-            left: 13,
-            top: 12,
-            fontWeight: "600",
-            color: "#4F4E4E",
-            textAlign: "left",
-            width: 390,
             paddingBottom: 30,
             lineHeight: 20,
           }}
         >
           {post.description}
         </Text>
-
         <Image
           resizeMode="contain"
           style={{ width: 70, left: 10, bottom: 30 }}
