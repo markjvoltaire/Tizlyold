@@ -28,6 +28,8 @@ export default function UserPostDetails({
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
+  const { item } = route.params;
+
   async function getProfilePic() {
     const respon = commentList;
     const list = respon.map((item) => item.userId);
@@ -50,49 +52,39 @@ export default function UserPostDetails({
     <>
       <View style={{ flex: 1, left: 10 }}>
         <View>
-          {post.title ? (
-            <Text style={styles.postTitle}>{post.title}</Text>
+          {post.description ? (
+            <Text style={styles.postTitle}>{post.description}</Text>
           ) : (
             <Text style={styles.postTitle}>No Title was added</Text>
           )}
         </View>
 
         <View>
-          {post.description ? (
-            <Text style={styles.postDescription}>{post.description}</Text>
-          ) : (
-            <Text style={styles.postTitle}>No description was added</Text>
-          )}
-          <View style={{ top: 40 }}>
-            <Image
-              style={{
-                height: 30,
-                width: 30,
-                borderRadius: 100,
-                position: "absolute",
-              }}
-              source={{ uri: post.profileimage }}
-            />
-            <View style={{ left: 40 }}>
-              <Text style={{ fontWeight: "500" }}>{post.displayName}</Text>
-              <Text style={{ fontWeight: "400", color: "#A1A1B3" }}>
-                @{post.username}
-              </Text>
-            </View>
+          <View style={{ top: 20 }}>
+            <TouchableOpacity
+              onPress={() => navigation.push("ProfileDetail", { item })}
+            >
+              <Image
+                style={{
+                  height: 30,
+                  width: 30,
+                  borderRadius: 100,
+                  position: "absolute",
+                }}
+                source={{ uri: post.profileimage }}
+              />
+              <View style={{ left: 40 }}>
+                <Text style={{ fontWeight: "500" }}>{post.displayName}</Text>
+                <Text style={{ fontWeight: "400", color: "#A1A1B3" }}>
+                  @{post.username}
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
 
         <FullSeperator />
-        <View style={{ top: 50 }}>
-          {/* <UserButtons
-            item={post}
-            isPressed={isPressed}
-            setIsPressed={setIsPressed}
-            navigation={navigation}
-            saveIsPressed={saveIsPressed}
-            setSaveIsPressed={setSaveIsPressed}
-          /> */}
-        </View>
+        <View style={{ top: 50 }}></View>
         <View style={{ top: 60 }}>
           <CommentList
             item={post}

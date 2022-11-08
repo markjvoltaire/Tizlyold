@@ -209,50 +209,6 @@ export default function Player({ route, navigation }) {
           setSaveIsPressed={setSaveIsPressed}
         />
       </View>
-
-      {/* <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <View style={styles.inner}>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={true}
-            placeholder="Leave A Comment"
-            value={comment}
-            onChangeText={(text) => setComment(text)}
-            style={styles.commentInput}
-          />
-          <View
-            style={{
-              position: "absolute",
-              top: 207,
-              left: 80,
-              backgroundColor: "white",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() =>
-                createComment()
-                  .then(() => refreshFeed().then(() => Keyboard.dismiss()))
-                  .then(() => setComment())
-              }
-            >
-              <Image
-                style={{
-                  width: 100,
-                  bottom: 117,
-                  left: 200,
-                  resizeMode: "contain",
-
-                  position: "absolute",
-                }}
-                source={require("../assets/commentPost.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView> */}
     </View>
   );
 }
