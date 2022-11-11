@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
@@ -260,6 +261,9 @@ export default function EditProfile({ navigation }) {
     }
   }
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <Text style={styles.pageTitle}>Edit Profile</Text>
@@ -273,7 +277,18 @@ export default function EditProfile({ navigation }) {
       <View style={styles.userProfileImages}>
         <TouchableOpacity onPress={() => pickProfileImage()}>
           <Image
-            style={styles.profileImage}
+            style={{
+              position: "absolute",
+              left: width * 0.1,
+              aspectRatio: 1,
+
+              height: height * 0.13,
+              resizeMode: "contain",
+              top: height * 0.18,
+              borderRadius: 200,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+            }}
             source={
               image === null
                 ? require("../assets/noProfilePic.jpeg")
@@ -281,7 +296,14 @@ export default function EditProfile({ navigation }) {
             }
           />
           <Image
-            style={styles.bluePlusProfile}
+            style={{
+              position: "absolute",
+              resizeMode: "contain",
+              top: height * 0.27,
+              height: height * 0.035,
+
+              left: width * 0.15,
+            }}
             source={require("../assets/bluePlus.png")}
           />
         </TouchableOpacity>
@@ -299,7 +321,16 @@ export default function EditProfile({ navigation }) {
             />
           ) : (
             <Image
-              style={styles.userBanner}
+              style={{
+                position: "absolute",
+                top: height * 0.17,
+                height: height * 0.14,
+                aspectRatio: 1,
+                left: width * 0.6,
+                borderRadius: 10,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+              }}
               source={
                 user.bannerImage === null
                   ? require("../assets/noProfilePic.jpeg")
@@ -308,39 +339,88 @@ export default function EditProfile({ navigation }) {
             />
           )}
           <Image
-            style={styles.bluePlusBanner}
+            style={{
+              position: "absolute",
+              resizeMode: "contain",
+              top: height * 0.28,
+              height: height * 0.035,
+
+              left: width * 0.68,
+            }}
             source={require("../assets/bluePlus.png")}
           />
         </TouchableOpacity>
       </View>
 
       <Image
-        style={styles.verticleDiv}
+        style={{
+          position: "absolute",
+          top: height * 0.17,
+          left: width * 0.48,
+          height: 120,
+        }}
         source={require("../assets/verticleDiv.png")}
       />
 
       <TextInput
         placeholder="Username"
-        style={styles.username}
+        style={{
+          position: "absolute",
+          width: width * 0.78,
+          height: height * 0.07,
+          borderRadius: 15,
+          borderColor: "grey",
+          top: height * 0.34,
+          alignSelf: "center",
+          borderWidth: 0.5,
+          paddingLeft: width * 0.07,
+        }}
         value={username}
         onChangeText={(text) => setUsername(text.toLowerCase())}
       />
       <TextInput
         placeholder="Display Name"
-        style={styles.displayName}
+        style={{
+          position: "absolute",
+          width: width * 0.78,
+          height: height * 0.07,
+          borderRadius: 15,
+          borderColor: "grey",
+          top: height * 0.42,
+          alignSelf: "center",
+          borderWidth: 0.5,
+          paddingLeft: width * 0.07,
+        }}
         value={displayName}
         onChangeText={(text) => setDisplayName(text)}
       />
 
       <TextInput
         placeholder="Bio"
-        style={styles.bio}
+        style={{
+          position: "absolute",
+          width: width * 0.78,
+          height: height * 0.07,
+          borderRadius: 15,
+          borderColor: "grey",
+          top: height * 0.5,
+          alignSelf: "center",
+          borderWidth: 0.5,
+          paddingLeft: width * 0.07,
+        }}
         value={bio}
         onChangeText={(text) => setBio(text)}
       />
       <TouchableOpacity onPress={() => editProfile()}>
         <Image
-          style={styles.button}
+          resizeMode="contain"
+          style={{
+            position: "absolute",
+            height: height * 0.062,
+            aspectRatio: 1,
+            alignSelf: "center",
+            top: height * 0.7,
+          }}
           source={require("../assets/continueButton.png")}
         />
       </TouchableOpacity>
