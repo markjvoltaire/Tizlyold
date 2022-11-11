@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableOpacity,
   Animated,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import UserButtons from "../home/UserButtons";
@@ -49,6 +50,9 @@ export default function UserProfileImagePost({
     }).start();
   };
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={{ paddingBottom: 90 }}>
       <View style={{ alignSelf: "center", top: 32 }}>
@@ -67,7 +71,7 @@ export default function UserProfileImagePost({
           <Animated.Image
             source={require("../../assets/defaultImage.png")}
             style={{
-              height: 398,
+              height: height * 0.452,
               position: "absolute",
               opacity: defaultImageAnimated,
               aspectRatio: 1,
@@ -85,7 +89,7 @@ export default function UserProfileImagePost({
           <Animated.Image
             source={{ uri: post.media }}
             style={{
-              height: 398,
+              height: height * 0.452,
               opacity: imageAnimated,
               aspectRatio: 1,
               alignSelf: "center",
@@ -99,10 +103,10 @@ export default function UserProfileImagePost({
         </SharedElement>
       </Pressable>
 
-      <View style={{ top: 7, right: 10 }}>
+      <View style={{ top: 7 }}>
         <Text
           style={{
-            left: 13,
+            left: width * 0.03,
             top: 12,
             fontWeight: "700",
             textAlign: "left",

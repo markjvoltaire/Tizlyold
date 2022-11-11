@@ -188,8 +188,20 @@ export default function UserProfile({ navigation, route }) {
       </View>
 
       <View style={{ position: "absolute", top: height * 0.036, left: 16 }}>
-        <Image style={styles.setting} source={require("../assets/coin.png")} />
-        <Text style={{ left: 340, top: 31, fontWeight: "700" }}>{points}</Text>
+        <Image
+          style={{
+            height: height * 0.027,
+            top: height * 0.032,
+            left: width * 0.73,
+            aspectRatio: 1,
+          }}
+          source={require("../assets/coin.png")}
+        />
+        <Text
+          style={{ left: width * 0.82, top: height * 0.009, fontWeight: "600" }}
+        >
+          {points}
+        </Text>
       </View>
 
       <View style={{ bottom: 410 }}>
