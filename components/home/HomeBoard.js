@@ -23,13 +23,14 @@ export default function HomeBoard() {
 
   return (
     <View style={{ height: height * 0.3, bottom: 50 }}>
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: "center", bottom: 10 }}>
         <TouchableOpacity onPress={() => console.log(height)}>
           <Image
             style={{
               width: width * 0.95,
               height: height * 0.42,
               position: "absolute",
+
               alignSelf: "center",
               resizeMode: "contain",
             }}

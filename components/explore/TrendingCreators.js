@@ -78,10 +78,11 @@ export default function TrendingCreators({ navigation, route }) {
                 <Text
                   style={{
                     position: "absolute",
-                    top: 90,
+                    top: height * 0.115,
                     color: "white",
                     fontWeight: "800",
-                    left: 2,
+                    fontSize: 10.5,
+                    left: width * 0.008,
                   }}
                 >
                   {item.displayName}
@@ -89,10 +90,12 @@ export default function TrendingCreators({ navigation, route }) {
                 <Text
                   style={{
                     position: "absolute",
-                    top: 105,
+
                     color: "#D7D8DA",
                     fontWeight: "500",
-                    left: 2,
+                    left: width * 0.008,
+                    fontSize: 10.5,
+                    top: height * 0.13,
                   }}
                 >
                   @{item.username}

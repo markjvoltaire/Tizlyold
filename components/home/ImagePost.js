@@ -6,6 +6,7 @@ import {
   Image,
   Pressable,
   Animated,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import UserButtons from "./UserButtons";
@@ -95,6 +96,9 @@ export default function ImagePost({ item, navigation, followingId }) {
     }).start();
   };
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <>
       <View style={{ paddingBottom: 4, top: 40, alignSelf: "center" }}>
@@ -118,7 +122,7 @@ export default function ImagePost({ item, navigation, followingId }) {
           <SharedElement id={item.id}>
             <Animated.Image
               style={{
-                height: 398,
+                height: height * 0.454,
                 aspectRatio: 1,
                 alignSelf: "center",
                 borderRadius: 10,
@@ -133,29 +137,6 @@ export default function ImagePost({ item, navigation, followingId }) {
             />
           </SharedElement>
         </Pressable>
-        {/* 
-        <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 200,
-            width: 398,
-            top: 217,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          resizeMode="stretch"
-          source={require("../../assets/fader.png")}
-        /> */}
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("ProfileDetail2", {
-              user_id: item.user_id,
-            });
-          }}
-          style={{ position: "absolute" }}
-        ></TouchableOpacity>
 
         <View style={{ bottom: 50 }}>
           <Text

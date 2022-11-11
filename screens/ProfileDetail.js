@@ -44,6 +44,7 @@ import ImagePost from "../components/home/ImagePost";
 import ProfileImagePost from "../components/profile/ProfileImagePost";
 import ProfileVideoPost from "../components/profile/ProfileVideoPost";
 import BannerSkeleton from "../components/profile/BannerSkeleton";
+import { Dimensions } from "react-native";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -336,6 +337,9 @@ export default function ProfileDetail({ navigation, route }) {
     );
   }
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <>
       <ScrollView
@@ -430,24 +434,34 @@ export default function ProfileDetail({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
-        <View style={{ position: "absolute", top: 55, left: 320 }}>
+        <View
+          style={{
+            position: "absolute",
+            top: height * 0.06,
+            left: width * 0.75,
+          }}
+        >
           <Image
             style={{ height: 40, width: 70, borderRadius: 10 }}
             source={require("../assets/backgroundBlur.png")}
           />
         </View>
 
-        <View style={{ position: "absolute", top: 35, left: 16 }}>
+        <View style={{ position: "absolute", top: height * 0.036, left: 16 }}>
           <Image
-            style={styles.setting}
+            style={{
+              height: height * 0.027,
+              top: height * 0.032,
+              left: width * 0.72,
+              aspectRatio: 1,
+            }}
             source={require("../assets/coin.png")}
           />
           <Text
             style={{
-              left: 344,
-              top: 31,
-              fontWeight: "700",
-              position: "absolute",
+              left: width * 0.8,
+              top: height * 0.009,
+              fontWeight: "600",
             }}
           >
             {points}
@@ -488,7 +502,11 @@ export default function ProfileDetail({ navigation, route }) {
                 >
                   <View>
                     <Image
-                      style={{ height: 130, width: 130, right: 5 }}
+                      style={{
+                        height: height * 0.145,
+                        aspectRatio: 1,
+                        right: 5,
+                      }}
                       source={require("../assets/subBox.png")}
                     />
                     <Text
@@ -519,7 +537,7 @@ export default function ProfileDetail({ navigation, route }) {
 
                   <View>
                     <Image
-                      style={{ height: 130, width: 130 }}
+                      style={{ height: height * 0.145, aspectRatio: 1 }}
                       source={require("../assets/subBox.png")}
                     />
                     <Text
@@ -550,7 +568,11 @@ export default function ProfileDetail({ navigation, route }) {
 
                   <View>
                     <Image
-                      style={{ height: 130, width: 130, left: 5 }}
+                      style={{
+                        height: height * 0.145,
+                        aspectRatio: 1,
+                        left: 5,
+                      }}
                       source={require("../assets/subBox.png")}
                     />
                     <Text

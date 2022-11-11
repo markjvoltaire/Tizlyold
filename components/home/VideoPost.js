@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
 } from "react-native";
 import { Video, AVPlaybackStatus } from "expo-av";
 import React, { useState, useEffect } from "react";
@@ -69,6 +70,9 @@ export default function VideoPost({ item, navigation, route }) {
     return unsubscribe;
   }, [navigation]);
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={{ paddingBottom: 35, top: 10 }}>
       <View style={{ alignSelf: "center", right: 20, top: 40 }}>
@@ -90,7 +94,7 @@ export default function VideoPost({ item, navigation, route }) {
           source={{ uri: item.media }}
           ref={video}
           style={{
-            height: 398,
+            height: height * 0.454,
             aspectRatio: 1,
             alignSelf: "center",
             borderRadius: 10,
@@ -99,18 +103,19 @@ export default function VideoPost({ item, navigation, route }) {
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
 
-        <Image
+        {/* <Image
           style={{
             alignSelf: "center",
             resizeMode: "stretch",
-            height: 180,
-            width: 400,
-            top: 219,
+
+            height: height * 0.454,
+            width: width * 0.8,
+
             borderRadius: 12,
             position: "absolute",
           }}
           source={require("../../assets/fader.png")}
-        />
+        /> */}
 
         <Image
           style={{

@@ -134,7 +134,13 @@ export default function Explore({ navigation }) {
         }}
       />
       <Image
-        style={styles.searchIcon}
+        style={{
+          height: height * 0.02,
+          width: width * 0.026,
+          left: width * 0.18,
+          bottom: height * 0.019,
+          aspectRatio: 1,
+        }}
         source={require("../assets/Search.png")}
       />
 

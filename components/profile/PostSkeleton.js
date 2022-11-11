@@ -1,8 +1,11 @@
-import { StyleSheet, Text, View, Animated } from "react-native";
+import { StyleSheet, Text, View, Animated, Dimensions } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 
 export default function PostSkeleton() {
   const opacity = useRef(new Animated.Value(0.3));
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   useEffect(() => {
     Animated.loop(
@@ -25,8 +28,8 @@ export default function PostSkeleton() {
       <Animated.View
         style={{
           opacity: opacity.current,
+          height: height * 0.454,
 
-          height: 398,
           aspectRatio: 1,
           borderRadius: 10,
           backgroundColor: "#CFCFCF",
