@@ -12,6 +12,7 @@ import {
   FlatList,
   RefreshControl,
   Animated,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
@@ -85,6 +86,9 @@ export default function UserProfile({ navigation, route }) {
     getUserById();
     getPost();
   };
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   if (loading) {
     return (
@@ -174,14 +178,16 @@ export default function UserProfile({ navigation, route }) {
         source={require("../assets/fader.png")}
       />
 
-      <View style={{ position: "absolute", top: 55, left: 320 }}>
+      <View
+        style={{ position: "absolute", top: height * 0.06, left: width * 0.75 }}
+      >
         <Image
           style={{ height: 40, width: 70, borderRadius: 10 }}
           source={require("../assets/backgroundBlur.png")}
         />
       </View>
 
-      <View style={{ position: "absolute", top: 35, left: 16 }}>
+      <View style={{ position: "absolute", top: height * 0.036, left: 16 }}>
         <Image style={styles.setting} source={require("../assets/coin.png")} />
         <Text style={{ left: 340, top: 31, fontWeight: "700" }}>{points}</Text>
       </View>
