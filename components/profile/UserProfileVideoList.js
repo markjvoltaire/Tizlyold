@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   Animated,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
@@ -37,6 +38,9 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
     }).start();
   };
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
       <View style={{ alignSelf: "center", top: 52 }}>
@@ -54,7 +58,7 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
           source={{ uri: item.media }}
           ref={video}
           style={{
-            height: 400,
+            height: height * 0.452,
             aspectRatio: 1,
             borderRadius: 12,
             alignSelf: "center",
@@ -76,10 +80,10 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
         />
       </Pressable>
 
-      <View style={{ top: 27, right: 10 }}>
+      <View style={{ top: 27 }}>
         <Text
           style={{
-            left: 13,
+            left: width * 0.03,
             top: 12,
             fontWeight: "700",
             textAlign: "left",
