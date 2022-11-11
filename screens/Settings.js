@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   Alert,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { supabase } from "../services/supabase";
@@ -15,6 +16,7 @@ import { addUsername, createProfileImage } from "../services/user";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
 import { usePoints } from "../context/PointsContext";
+import BackHeader from "../components/BackHeader";
 
 export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
@@ -23,114 +25,84 @@ export default function Settings({ navigation }) {
     await supabase.auth.signOut();
   }
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: "white",
       }}
     >
-      <View>
-        <Image
-          style={styles.logo}
-          source={require("../assets/tizlyicon.jpg")}
-        />
+      <BackHeader navigation={navigation} />
+      <Text
+        style={{
+          fontWeight: "700",
+          fontSize: 18,
+          top: 165,
+          position: "absolute",
+          left: 100,
+        }}
+      >
+        {user.username}
+      </Text>
+      <Image
+        style={{
+          height: 60,
+          width: 60,
+          borderRadius: 100,
+          top: 150,
+          left: 10,
+          position: "absolute",
+        }}
+        source={
+          user.profileimage
+            ? { uri: user.profileimage }
+            : require("../assets/noProfilePic.jpeg")
+        }
+      />
 
-        <View style={{ position: "absolute", top: 45, left: 20 }}>
+      <View style={{ position: "absolute", top: 300, left: 10 }}>
+        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
-            style={styles.profileimage}
-            source={require("../assets/coin.png")}
+            style={{ width: 24, height: 24 }}
+            source={require("../assets/Profile.jpg")}
           />
-          <Text style={{ left: 340, bottom: 12, fontWeight: "700" }}>
-            {points}
-          </Text>
-        </View>
-
-        <Text
-          style={{
-            fontWeight: "700",
-            fontSize: 18,
-            top: 165,
-            position: "absolute",
-            left: 100,
-          }}
-        >
-          {user.username}
-        </Text>
-        <Image
-          style={{
-            height: 60,
-            width: 60,
-            borderRadius: 100,
-            top: 150,
-            left: 10,
-            position: "absolute",
-          }}
-          source={
-            user.profileimage
-              ? { uri: user.profileimage }
-              : require("../assets/noProfilePic.jpeg")
-          }
-        />
-
-        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
+            resizeMode="contain"
             style={{
-              position: "absolute",
-              resizeMode: "contain",
-              width: 25,
-              height: 30,
-              left: 20,
-              top: 60,
+              height: height * 0.02,
+              left: width * 0.78,
+              bottom: height * 0.023,
             }}
-            source={require("../assets/backButton.png")}
+            source={require("../assets/arrow.png")}
+          />
+          <Text
+            style={{
+              fontWeight: "400",
+              left: width * 0.19,
+              bottom: height * 0.043,
+            }}
+          >
+            Account Settings
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ position: "absolute", alignSelf: "center", top: 400 }}>
+        <TouchableOpacity
+          onPress={() =>
+            signOutUser().then(() => navigation.navigate("Welcome"))
+          }
+        >
+          <Image
+            style={styles.signoutButton}
+            source={require("../assets/signoutButton.png")}
           />
         </TouchableOpacity>
-
-        <View style={{ position: "absolute", top: 300, left: 10 }}>
-          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
-            <Image
-              style={{ width: 24, height: 24 }}
-              source={require("../assets/Profile.jpg")}
-            />
-            <Image
-              style={styles.arrow}
-              source={require("../assets/arrow.png")}
-            />
-            <Text style={styles.accountSettingsText}> Account Settings</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* <View style={{ position: "absolute", top: 400, left: 10 }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("GeneralSettings")}
-          >
-            <Image
-              style={{ width: 24, height: 24 }}
-              source={require("../assets/Setting.jpg")}
-            />
-            <Image
-              style={styles.arrow}
-              source={require("../assets/arrow.png")}
-            />
-            <Text style={styles.accountSettingsText}> General Settings</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        <View style={{ position: "absolute", alignSelf: "center", top: 400 }}>
-          <TouchableOpacity
-            onPress={() =>
-              signOutUser().then(() => navigation.navigate("Welcome"))
-            }
-          >
-            <Image
-              style={styles.signoutButton}
-              source={require("../assets/signoutButton.png")}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
