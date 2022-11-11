@@ -112,6 +112,9 @@ export default function Explore({ navigation }) {
     },
   });
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={styles.container}>
       <Points navigation={navigation} />

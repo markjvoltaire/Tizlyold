@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { getNewTrendingCreators } from "../../services/user";
 import { useUser } from "../../context/UserContext";
@@ -7,6 +14,9 @@ export default function NewToTizly({ navigation }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser();
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -36,8 +46,8 @@ export default function NewToTizly({ navigation }) {
               <View>
                 <Image
                   style={{
-                    width: 124,
-                    height: 130,
+                    width: width * 0.3,
+                    height: height * 0.15,
                     borderRadius: 13,
                     borderColor: "#5C5C5C",
                     borderWidth: 0.2,
@@ -46,9 +56,9 @@ export default function NewToTizly({ navigation }) {
                 />
                 <Image
                   style={{
-                    width: 124,
-                    height: 93,
-                    top: 37,
+                    width: width * 0.3,
+                    height: height * 0.15,
+
                     borderRadius: 13,
                     position: "absolute",
                   }}

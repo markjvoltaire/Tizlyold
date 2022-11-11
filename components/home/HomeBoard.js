@@ -5,26 +5,36 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useUser } from "../../context/UserContext";
-import { A } from "@expo/html-elements";
 
 export default function HomeBoard() {
   const HalfSeperator = () => <View style={styles.halfSeperator} />;
   const { user } = useUser();
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
+  console.log("height", height);
+  console.log("width", width);
+
   return (
-    <View style={styles.container}>
+    <View style={{ height: height * 0.3, bottom: 50 }}>
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity>
-          <View style={styles.homeboardContainer}>
-            <Image
-              style={styles.homeboard}
-              source={require("../../assets/exploreBoardBig.png")}
-            />
-          </View>
+        <TouchableOpacity onPress={() => console.log(height)}>
+          <Image
+            style={{
+              width: width * 0.95,
+              height: height * 0.42,
+              position: "absolute",
+              alignSelf: "center",
+              resizeMode: "contain",
+            }}
+            source={require("../../assets/exploreBoardBig.png")}
+          />
         </TouchableOpacity>
         <HalfSeperator />
       </View>
@@ -35,6 +45,7 @@ export default function HomeBoard() {
 const styles = StyleSheet.create({
   container: {
     height: 300,
+    bottom: 40,
   },
   halfSeperator: {
     borderBottomColor: "grey",
@@ -54,7 +65,7 @@ const styles = StyleSheet.create({
 
   homeboard: {
     height: 210,
-    resizeMode: "contain",
+
     alignSelf: "center",
     bottom: 20,
   },

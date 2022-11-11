@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -20,6 +21,9 @@ export default function TrendingCreators({ navigation, route }) {
 
   const { user, setUser } = useUser();
   const pushAction = StackActions.push("UserProfile");
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -53,8 +57,8 @@ export default function TrendingCreators({ navigation, route }) {
               <View>
                 <Image
                   style={{
-                    width: 124,
-                    height: 130,
+                    width: width * 0.3,
+                    height: height * 0.15,
                     borderRadius: 13,
                     borderColor: "#5C5C5C",
                     borderWidth: 0.2,
@@ -63,9 +67,9 @@ export default function TrendingCreators({ navigation, route }) {
                 />
                 <Image
                   style={{
-                    width: 124,
-                    height: 93,
-                    top: 37,
+                    width: width * 0.3,
+                    height: height * 0.15,
+
                     borderRadius: 13,
                     position: "absolute",
                   }}

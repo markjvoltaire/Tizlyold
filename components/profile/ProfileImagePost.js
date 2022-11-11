@@ -36,8 +36,6 @@ export default function ProfileImagePost({
 
   const userId = user.user_id;
 
-  console.log("userInfo", userInfo);
-
   async function getLikes() {
     const resp = await supabase
       .from("likes")

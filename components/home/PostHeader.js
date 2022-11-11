@@ -43,7 +43,7 @@ export default function PostHeader({ item, navigation }) {
   }, []);
 
   if (loading) {
-    return <Text> loading</Text>;
+    return <Text style={{ bottom: 20 }}> loading</Text>;
   }
 
   return (

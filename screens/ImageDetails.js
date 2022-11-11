@@ -107,6 +107,8 @@ export default function ImageDetails({ navigation, route }) {
       .eq("userId", user.user_id);
   }
 
+  console.log("item", item);
+
   return (
     <View style={{ flex: 1, top: 50, backgroundColor: "white" }}>
       <ScrollView style={{ backgroundColor: "white" }}>

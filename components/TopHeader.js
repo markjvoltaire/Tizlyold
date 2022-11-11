@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
@@ -20,40 +21,43 @@ export default function TopHeader({ navigation, tizlyPoints }) {
   const [query, setQuery] = useState();
 
   const [loading, setLoading] = useState(true);
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.8,
+        width: 900,
+        left: 1,
+        top: height * 0.06,
+        height: 3,
+      }}
+    />
+  );
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   return (
-    <SafeAreaView style={styles.componentContainer}>
-      <Image style={styles.logo} source={require("../assets/tizlyicon.jpg")} />
-
-      <View style={{ position: "absolute", top: 35, left: 16 }}>
-        <Image style={styles.setting} source={require("../assets/coin.png")} />
-        <Text
+    <SafeAreaView style={{ backgroundColor: "white", height: height * 0.11 }}>
+      <View style={{ alignSelf: "center", bottom: height * 0.01 }}>
+        <Image
+          resizeMode="contain"
           style={{
-            left: 350,
-            top: 18,
-            fontWeight: "700",
-            position: "absolute",
+            width: width * 0.12,
           }}
-        >
-          {points}
-        </Text>
+          source={require("../assets/tizlyicon.jpg")}
+        />
       </View>
 
-      {/* <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("SettingsScreen");
-        }}
-      >
+      <View style={{ bottom: height * 0.07, left: width * 0.03 }}>
         <Image
-          style={styles.setting}
-          source={require("../assets/Setting.jpg")}
-        />
-      </TouchableOpacity> */}
-
-      <View style={{ position: "absolute", top: 35 }}>
-        <Image
-          style={styles.profileimage}
+          resizeMode="contain"
+          style={{
+            width: width * 0.09,
+            aspectRatio: 1,
+            borderRadius: 100,
+          }}
           source={
             user.profileimage === null
               ? require("../assets/noProfilePic.jpeg")
@@ -61,8 +65,59 @@ export default function TopHeader({ navigation, tizlyPoints }) {
           }
         />
       </View>
+
+      <View style={{ bottom: height * 0.1, left: width * 0.78 }}>
+        <Image
+          resizeMode="contain"
+          style={{ width: 20, height: 20, borderRadius: 100 }}
+          source={require("../assets/coin.png")}
+        />
+
+        <View style={{ left: width * 0.08, bottom: height * 0.022 }}>
+          <Text style={{ fontWeight: "600" }}>{points}</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
+}
+
+{
+  /* <FullSeperator />
+      <Image
+        style={{
+          height: height * 0.039,
+          left: width * 0.05,
+          aspectRatio: 1,
+          borderRadius: 100,
+          position: "absolute",
+        }}
+        source={
+          user.profileimage === null
+            ? require("../assets/noProfilePic.jpeg")
+            : { uri: user.profileimage }
+        }
+      />
+      <Text style={{ left: width * 0.87, fontWeight: "600" }}>{points}</Text>
+      <Image
+        style={{
+          aspectRatio: 1,
+          alignSelf: "center",
+          resizeMode: "contain",
+          bottom: "43%",
+          height: height * 0.06,
+        }}
+        source={require("../assets/tizlyicon.jpg")}
+      />
+      <View style={{ left: width * 0.78, bottom: "20%" }}>
+        <Image
+          style={{
+            aspectRatio: 1,
+            height: height * 0.025,
+            bottom: height * 0.06,
+          }}
+          source={require("../assets/coin.png")}
+        />
+      </View> */
 }
 
 const styles = StyleSheet.create({
@@ -114,5 +169,14 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     left: 16,
     top: 12,
+  },
+  fullSeperator: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 1.8,
+    width: 900,
+    left: 1,
+    top: 54,
+    height: 3,
   },
 });
