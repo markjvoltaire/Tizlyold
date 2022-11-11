@@ -10,6 +10,7 @@ import {
   Alert,
   SafeAreaView,
   Platform,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import SelectList from "react-native-dropdown-select-list";
@@ -171,8 +172,11 @@ export default function PostForm({ navigation }) {
     }
   };
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
-    <View style={styles.postHeader}>
+    <View style={{ alignItems: "center", bottom: height * 0.36 }}>
       <Text style={styles.postTitle} fontWeight="600">
         Post Details
       </Text>
@@ -187,7 +191,20 @@ export default function PostForm({ navigation }) {
       </TouchableOpacity>
 
       <TextInput
-        style={styles.postDescription}
+        style={{
+          position: "absolute",
+          top: height * 0.115,
+          height: height * 0.2,
+          width: width * 0.9,
+          borderRadius: 8,
+          fontSize: 16,
+          paddingBottom: height * 0.02,
+          paddingLeft: height * 0.02,
+
+          paddingTop: height * 0.04,
+          backgroundColor: "#EBEBF1",
+          fontWeight: "500",
+        }}
         placeholder="Post Description"
         placeholderTextColor="#393939"
         value={description}
@@ -195,14 +212,27 @@ export default function PostForm({ navigation }) {
       />
 
       <View style={{ bottom: 50 }}>
-        <Text style={styles.subHead}>Select From Gallery</Text>
+        <Text
+          style={{
+            position: "absolute",
+            top: height * 0.38,
+            right: width * 0.12,
+            fontWeight: "700",
+          }}
+        >
+          Select From Gallery
+        </Text>
 
-        <View style={styles.addCategory}>
-          <TouchableOpacity></TouchableOpacity>
-        </View>
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
-            style={styles.plusButton}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+
+              height: height * 0.13,
+              top: height * 0.43,
+              right: width * 0.19,
+            }}
             source={
               image.uri === undefined
                 ? require("../../assets/plusButton.png")
