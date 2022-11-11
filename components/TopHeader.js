@@ -39,7 +39,14 @@ export default function TopHeader({ navigation, tizlyPoints }) {
   let width = Dimensions.get("window").width;
 
   return (
-    <SafeAreaView style={{ backgroundColor: "white", height: height * 0.11 }}>
+    <SafeAreaView
+      style={{
+        backgroundColor: "white",
+        height: height * 0.11,
+        borderBottomWidth: 0.8,
+        borderBottomColor: "#EDEDED",
+      }}
+    >
       <View style={{ alignSelf: "center", bottom: height * 0.01 }}>
         <Image
           resizeMode="contain"

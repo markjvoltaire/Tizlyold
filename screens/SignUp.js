@@ -9,6 +9,7 @@ import {
   Alert,
   Button,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Animated, {
@@ -70,6 +71,9 @@ export default function SignUp({ navigation }) {
     return { user, error };
   };
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <ScrollView
       style={{
@@ -79,12 +83,28 @@ export default function SignUp({ navigation }) {
     >
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
       <Image
-        style={styles.headerIcon}
+        style={{
+          position: "absolute",
+          height: height * 0.03,
+          alignSelf: "center",
+          top: height * 0.08,
+          resizeMode: "contain",
+        }}
         source={require("../assets/Tizlymed.png")}
       />
 
       <TextInput
-        style={styles.usernameInput}
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.2,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
         placeholder="Username"
         autoCapitalize="none"
         autoFocus={true}
@@ -95,7 +115,17 @@ export default function SignUp({ navigation }) {
       />
 
       <TextInput
-        style={styles.displayNameInput}
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.27,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
         placeholder="Display Name"
         autoCapitalize="none"
         onChangeText={(text) => setDisplayName(text)}
@@ -103,7 +133,17 @@ export default function SignUp({ navigation }) {
       />
 
       <TextInput
-        style={styles.emailInput}
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.34,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
         placeholder="Email"
         autoCapitalize="none"
         keyboardType="email-address"
@@ -113,7 +153,17 @@ export default function SignUp({ navigation }) {
         value={email}
       />
       <TextInput
-        style={styles.passwordInput}
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.41,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
         placeholder="Password"
         autoCapitalize="none"
         autoCorrect={false}
@@ -128,30 +178,48 @@ export default function SignUp({ navigation }) {
           onPress={() => Alert.alert("Password Should Be 8 or More Characters")}
         >
           <Image
-            style={styles.continueButton}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              height: height * 0.06,
+              aspectRatio: 1,
+              top: height * 0.5,
+              alignSelf: "center",
+            }}
             source={require("../assets/buttonGrey.png")}
           />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={() => signUpWithEmail()}>
           <Image
-            style={styles.continueButton}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              height: height * 0.06,
+              aspectRatio: 1,
+              top: height * 0.5,
+              alignSelf: "center",
+            }}
             source={require("../assets/buttonBlue.png")}
           />
         </TouchableOpacity>
       )}
 
-      <View>
-        <Text style={styles.signupRedirect}>Already have an account?</Text>
-        <TouchableOpacity>
-          <Text
-            onPress={() => navigation.dispatch(pushActionLogin)}
-            style={styles.signupButton}
-          >
-            Sign in Here
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity>
+        <Text
+          onPress={() => navigation.dispatch(pushActionLogin)}
+          style={{
+            position: "absolute",
+            fontWeight: "600",
+            top: height * 0.68,
+            alignSelf: "center",
+            fontSize: 16,
+            color: "#00A3FF",
+          }}
+        >
+          Sign in Here
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }

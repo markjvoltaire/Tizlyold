@@ -97,7 +97,13 @@ export default function Settings({ navigation }) {
           }
         >
           <Image
-            style={styles.signoutButton}
+            style={{
+              position: "absolute",
+              height: 54,
+              width: 315,
+              right: -160,
+              top: height * 0.28,
+            }}
             source={require("../assets/signoutButton.png")}
           />
         </TouchableOpacity>
