@@ -83,7 +83,7 @@ export default function NewToTizly({ navigation }) {
                     color: "#D7D8DA",
                     fontWeight: "600",
                     left: width * 0.008,
-                    fontSize: 10.5,
+                    fontSize: 9.5,
                     top: height * 0.129,
                   }}
                 >
