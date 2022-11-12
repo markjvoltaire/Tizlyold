@@ -18,13 +18,10 @@ export default function HomeBoard() {
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
 
-  console.log("height", height);
-  console.log("width", width);
-
   return (
     <View style={{ height: height * 0.3, bottom: 50 }}>
       <View style={{ alignItems: "center", bottom: 10 }}>
-        <TouchableOpacity onPress={() => console.log(height)}>
+        <TouchableOpacity>
           <Image
             style={{
               width: width * 0.95,
