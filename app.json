@@ -3,7 +3,9 @@
     "name": "Tizly",
     "slug": "tizly",
     "owner": "tizly",
-    "version": "1.3",
+
+    "version": "1.4",
+
     "orientation": "portrait",
     "icon": "./assets/appIcons/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +24,8 @@
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.tizly.Tizly",
-      "buildNumber": "8"
+
+      "buildNumber": "9"
     },
     "android": {
       "adaptiveIcon": {
