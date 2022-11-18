@@ -44,6 +44,7 @@ export default function PostForm({ navigation }) {
   const [hasGalleryPermissions, setHasGalleryPermission] = useState();
   const pushAction = StackActions.replace("Checkout");
   const [imageURL, setImageURL] = useState("");
+  const [imagePreview, setImagePreview] = useState();
 
   const username = user.username;
   const displayName = user.displayName;
@@ -76,87 +77,87 @@ export default function PostForm({ navigation }) {
     setImage({});
   }
 
-  async function addPost() {
-    const userId = supabase.auth.currentUser.id;
-    const ext = image.uri.substring(image.uri.lastIndexOf(".") + 1);
-    const fileName = image.uri.replace(/^.*[\\\/]/, "");
+  // async function addPost() {
+  //   const userId = supabase.auth.currentUser.id;
+  //   const ext = image.uri.substring(image.uri.lastIndexOf(".") + 1);
+  //   const fileName = image.uri.replace(/^.*[\\\/]/, "");
 
-    setUploadProgress("loading");
+  //   setUploadProgress("loading");
 
-    var formData = new FormData();
-    formData.append("files", {
-      uri: image.uri,
-      name: fileName,
-      type: image.type ? `image/${ext}` : `video/${ext}`,
-    });
+  //   var formData = new FormData();
+  //   formData.append("files", {
+  //     uri: image.uri,
+  //     name: fileName,
+  //     type: image.type ? `image/${ext}` : `video/${ext}`,
+  //   });
 
-    try {
-      const { data, error } = await supabase.storage
-        .from("posts")
-        .upload(fileName, formData, {
-          upsert: true,
-        });
+  //   try {
+  //     const { data, error } = await supabase.storage
+  //       .from("posts")
+  //       .upload(fileName, formData, {
+  //         upsert: true,
+  //       });
 
-      const { publicURL } = await supabase.storage
-        .from("posts")
-        .getPublicUrl(`${fileName}`);
+  //     const { publicURL } = await supabase.storage
+  //       .from("posts")
+  //       .getPublicUrl(`${fileName}`);
 
-      const url = `${supabase.supabaseUrl}/storage/v1/object/posts/${data.Key}`;
-      const headers = supabase._getAuthHeaders();
-      const req = new XMLHttpRequest();
+  //     const url = `${supabase.supabaseUrl}/storage/v1/object/posts/${data.Key}`;
+  //     const headers = supabase._getAuthHeaders();
+  //     const req = new XMLHttpRequest();
 
-      function transferComplete(evt) {
-        setUploadProgress("done");
-        clear();
-        navigation.dispatch(pushAction);
-      }
+  //     function transferComplete(evt) {
+  //       setUploadProgress("done");
+  //       clear();
+  //       navigation.dispatch(pushAction);
+  //     }
 
-      req.addEventListener("load", transferComplete);
+  //     req.addEventListener("load", transferComplete);
 
-      req.open("POST", url);
-      for (const [key, value] of Object.entries(headers)) {
-        req.setRequestHeader(key, value);
-      }
-      req.setRequestHeader("Authorization", data.authorization);
+  //     req.open("POST", url);
+  //     for (const [key, value] of Object.entries(headers)) {
+  //       req.setRequestHeader(key, value);
+  //     }
+  //     req.setRequestHeader("Authorization", data.authorization);
 
-      req.send(data);
+  //     req.send(data);
 
-      let imageLink = publicURL;
-      let type = image.type;
+  //     let imageLink = publicURL;
+  //     let type = image.type;
 
-      setImageURL(imageLink);
-      if (image.type === "image") {
-        setMediaType("image");
-      }
-      if (image.type === "video") {
-        setMediaType("video");
-      }
-      if (image.type === "text") {
-        setMediaType("text");
-      }
+  //     setImageURL(imageLink);
+  //     if (image.type === "image") {
+  //       setMediaType("image");
+  //     }
+  //     if (image.type === "video") {
+  //       setMediaType("video");
+  //     }
+  //     if (image.type === "text") {
+  //       setMediaType("text");
+  //     }
 
-      const resp = await supabase.from("post").insert([
-        {
-          username: username,
-          user_id: userId,
-          displayName: displayName,
-          title: title,
-          description: description,
-          profileimage: profileImage,
-          media: imageLink,
-          mediaType: type,
-          bannerImage: bannerImage,
-          bio: bio,
-          category: selected,
-          followingId: followingId,
-        },
-      ]);
+  //     const resp = await supabase.from("post").insert([
+  //       {
+  //         username: username,
+  //         user_id: userId,
+  //         displayName: displayName,
+  //         title: title,
+  //         description: description,
+  //         profileimage: profileImage,
+  //         media: imageLink,
+  //         mediaType: type,
+  //         bannerImage: bannerImage,
+  //         bio: bio,
+  //         category: selected,
+  //         followingId: followingId,
+  //       },
+  //     ]);
 
-      return resp;
-    } catch (e) {
-      return null;
-    }
-  }
+  //     return resp;
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
   const pickPost = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
@@ -168,8 +169,31 @@ export default function PostForm({ navigation }) {
     });
 
     if (!photo.cancelled) {
-      setImage(photo);
+      let newfile = {
+        uri: photo.uri,
+        type: `test/${photo.uri.split(".")[1]}`,
+        name: `test.${photo.uri.split(".")[1]}`,
+      };
+
+      handleUpload(newfile);
     }
+  };
+
+  const handleUpload = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "TizlyUpload");
+    data.append("cloud_name", "doz01gvsj");
+
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // this needs to be the link that that goes to supabase
+        setImage(data.url);
+      });
   };
 
   let height = Dimensions.get("window").height;

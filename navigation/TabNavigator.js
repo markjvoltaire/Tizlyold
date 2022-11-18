@@ -2,21 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Image, Text, View, Pressable } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  HomeStackNavigator,
-  ExploreStackNavigator,
-  SubscriptionStackNavigator,
-  SettingsStackNavigator,
-  PostStackNavigator,
-  ProfileStackNavigator,
-  ProfileSubscriberStackNavigator,
-  ProfileDetailStackNavigator,
-  NotificationsStackNavigator,
-} from "./StackNavigator";
+import { HomeStackNavigator } from "./StackNavigator";
 import UserProfile from "../screens/UserProfile";
-import * as ImagePicker from "expo-image-picker";
-import { supabase } from "../services/supabase";
-import { useUser } from "../context/UserContext";
+
 import Notifications from "../screens/Notifications";
 import Explore from "../screens/Explore";
 import Post from "../screens/Post";

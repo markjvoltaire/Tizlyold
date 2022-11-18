@@ -14,29 +14,11 @@ import {
   Animated,
 } from "react-native";
 
-import { Link } from "@react-navigation/native";
-
 import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
-import { getPosts, getFollowing } from "../services/user";
-import { usePosts } from "../context/PostContext";
-import { Video, AVPlaybackStatus } from "expo-av";
-import UserButtons from "../components/home/UserButtons";
-import TopHeader from "../components/TopHeader";
-import NoPost from "../components/home/NoPost";
-import HomeFeedList from "../components/home/HomeFeedList";
-import { fromPairs } from "lodash";
-import { useFollow } from "../context/FollowContext";
-import { useScreens } from "react-native-screens";
-import LottieView from "lottie-react-native";
 import { StackActions } from "@react-navigation/native";
-import {
-  SharedElement,
-  createSharedElementStackNavigator,
-} from "react-navigation-shared-element";
-import PostImage from "../components/home/PostImage";
-import PostHeader from "../components/home/PostHeader";
+
 import Skeleton from "../Skeleton";
 import Points from "../views/Points";
 import { useLike } from "../context/LikeContext";

@@ -14,6 +14,7 @@ import { Permissions, Contacts } from "expo-permissions";
 import React, { useRef, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../services/supabase";
+
 import {
   SharedElement,
   createSharedElementStackNavigator,
@@ -26,6 +27,7 @@ import AnimatedBottomSheet from "../components/home/AnimatedBottomSheet";
 export default function UserProfileSubscribers({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPoints, setUserPoints] = useState();
+  const [image, setImage] = useState({});
 
   async function resetFunction() {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -33,11 +35,50 @@ export default function UserProfileSubscribers({ navigation, route }) {
     });
   }
 
+  const pickPost = async () => {
+    let photo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [9, 16],
+      canAskAgain: true,
+      quality: 0,
+    });
+
+    if (!photo.cancelled) {
+      let newfile = {
+        uri: photo.uri,
+        type: `test/${photo.uri.split(".")[1]}`,
+        name: `test.${photo.uri.split(".")[1]}`,
+      };
+
+      handleUpload(newfile);
+    }
+  };
+
+  const handleUpload = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "TizlyUpload");
+    data.append("cloud_name", "doz01gvsj");
+
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // this needs to be the link that that goes to supabase
+        setImage(data.url);
+      });
+  };
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
     <SafeAreaView>
-      <Button title="hello" />
+      <Button title="hello" onPress={() => pickPost()} />
+
+      <Button title="CHECK" onPress={() => console.log("image", image)} />
     </SafeAreaView>
   );
 }

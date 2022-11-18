@@ -48,6 +48,9 @@ export default function TopHeader({ navigation, tizlyPoints }) {
       }}
     >
       <View style={{ alignSelf: "center", bottom: height * 0.01 }}>
+        <TouchableOpacity onPress={() => navigation.navigate("UserSubscriber")}>
+          <Text>Yooo∂</Text>
+        </TouchableOpacity>
         <Image
           resizeMode="contain"
           style={{
