@@ -74,7 +74,7 @@ export default function VideoPost({ item, navigation, route }) {
   let width = Dimensions.get("window").width;
 
   return (
-    <View style={{ paddingBottom: 35, top: 10 }}>
+    <View style={{ top: 10 }}>
       <View style={{ alignSelf: "center", right: 20, top: 40 }}>
         <PostHeader navigation={navigation} item={item} />
       </View>
@@ -183,6 +183,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    top: 10,
+    bottom: 45,
   },
 });

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Image, Text, View, Pressable } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeStackNavigator } from "./StackNavigator";
+import { ExploreStackNavigator, HomeStackNavigator } from "./StackNavigator";
 import UserProfile from "../screens/UserProfile";
 
 import Notifications from "../screens/Notifications";
@@ -74,7 +74,7 @@ const BottomTabNavigator = (route, navigation) => {
           },
         }}
         name="Explore"
-        component={Explore}
+        component={ExploreStackNavigator}
       />
 
       <Tab.Screen

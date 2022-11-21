@@ -340,9 +340,21 @@ export default function ProfileDetail({ navigation, route }) {
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
 
+  const scrollY = new Animated.Value(0);
+
+  const diffclamp = Animated.diffClamp(scrollY, 0, 45);
+
+  const translateY = diffclamp.interpolate({
+    inputRange: [0, height * 0.5],
+    outputRange: [0, height * -0.5],
+  });
   return (
     <>
       <ScrollView
+        scrollEventThrottle={16}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+        }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, backgroundColor: "white" }}
       >
@@ -395,12 +407,6 @@ export default function ProfileDetail({ navigation, route }) {
           source={require("../assets/fader.png")}
         />
 
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            style={styles.backButton}
-            source={require("../assets/backButton2.png")}
-          />
-        </TouchableOpacity>
         <View style={{ bottom: 440 }}>
           <View style={{ top: 70, right: 6 }}>
             <Text style={styles.displayname}>{item.displayName}</Text>
@@ -434,39 +440,6 @@ export default function ProfileDetail({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
-        <View
-          style={{
-            position: "absolute",
-            top: height * 0.06,
-            left: width * 0.75,
-          }}
-        >
-          <Image
-            style={{ height: 40, width: 70, borderRadius: 10 }}
-            source={require("../assets/backgroundBlur.png")}
-          />
-        </View>
-
-        <View style={{ position: "absolute", top: height * 0.036, left: 16 }}>
-          <Image
-            style={{
-              height: height * 0.027,
-              top: height * 0.032,
-              left: width * 0.72,
-              aspectRatio: 1,
-            }}
-            source={require("../assets/coin.png")}
-          />
-          <Text
-            style={{
-              left: width * 0.8,
-              top: height * 0.009,
-              fontWeight: "600",
-            }}
-          >
-            {points}
-          </Text>
-        </View>
         <View style={styles.profileNav}>
           <Text style={styles.home}>Home</Text>
 
@@ -647,9 +620,151 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
         )}
       </ScrollView>
+
+      <Animated.View
+        style={{
+          position: "absolute",
+          bottom: height * 0.8,
+          width: width * 1,
+          height: height * 0.2,
+          backgroundColor: "white",
+          borderBottomColor: "red",
+          borderBottomWidth: 2.0,
+          borderBottomColor: "#EDEDED",
+          flex: 1,
+          alignSelf: "center",
+          opacity: scrollY.interpolate({
+            inputRange: [1, height * 0.2],
+            outputRange: [0, 1],
+          }),
+        }}
+      >
+        <Text
+          style={{
+            position: "absolute",
+            alignSelf: "center",
+            top: height * 0.16,
+            fontWeight: "800",
+          }}
+        >
+          {item.displayName}
+        </Text>
+      </Animated.View>
+
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={{
+            position: "absolute",
+            resizeMode: "contain",
+            width: 35,
+            height: 50,
+            left: 21,
+            bottom: height * 0.8,
+          }}
+          source={require("../assets/backButton2.png")}
+        />
+      </TouchableOpacity>
+
+      <Image
+        style={{
+          height: height * 0.04,
+          width: width * 0.17,
+          borderRadius: 10,
+          position: "absolute",
+          left: width * 0.8,
+          top: height * 0.058,
+        }}
+        source={require("../assets/rectangleBlur.png")}
+      />
+
+      <Image
+        resizeMode="contain"
+        style={{
+          height: height * 0.02,
+          position: "absolute",
+          top: height * 0.068,
+          left: width * 0.22,
+          aspectRatio: 1,
+        }}
+        source={require("../assets/coin.png")}
+      />
+
+      <Text
+        style={{
+          left: width * 0.885,
+          top: height * 0.069,
+          fontWeight: "600",
+          position: "absolute",
+        }}
+      >
+        {points}
+      </Text>
     </>
   );
 }
+
+{
+  /* <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={{
+            position: "absolute",
+            resizeMode: "contain",
+            width: 35,
+            height: 50,
+            left: 21,
+            bottom: height * 0.8,
+          }}
+          source={require("../assets/backButton2.png")}
+        />
+      </TouchableOpacity>
+
+      <View
+        style={{
+          position: "absolute",
+          top: height * 0.06,
+          left: width * 0.75,
+        }}
+      >
+        <Image
+          style={{ height: 40, width: 70, borderRadius: 10 }}
+          source={require("../assets/backgroundBlur.png")}
+        />
+      </View>
+
+      <View style={{ position: "absolute", top: height * 0.036, left: 16 }}>
+        <Image
+          style={{
+            height: height * 0.027,
+            top: height * 0.032,
+            left: width * 0.72,
+            aspectRatio: 1,
+          }}
+          source={require("../assets/coin.png")}
+        />
+        <Text
+          style={{
+            left: width * 0.8,
+            top: height * 0.009,
+            fontWeight: "600",
+          }}
+        >
+          {points}
+        </Text>
+      </View> */
+}
+
+// {
+//   /* <Animated.View
+//         style={{
+//           bottom: height * 0.8,
+//           alignSelf: "center",
+//           position: "absolute",
+//           transform: [{ translateY: translateY }],
+//         }}
+//       >
+//         <Text>HELLO</Text>
+//       </Animated.View> */
+// }
 const styles = StyleSheet.create({
   logo: {
     position: "absolute",
@@ -810,7 +925,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    bottom: 350,
+    bottom: 565,
   },
   photoBox: {
     position: "absolute",
