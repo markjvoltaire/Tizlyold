@@ -61,7 +61,7 @@ export default function UserProfileSubscribers({ navigation, route }) {
     data.append("upload_preset", "TizlyUpload");
     data.append("cloud_name", "doz01gvsj");
 
-    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/image/upload", {
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/image/upload/q_60", {
       method: "post",
       body: data,
     })

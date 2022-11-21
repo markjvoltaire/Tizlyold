@@ -17,16 +17,11 @@ import SelectList from "react-native-dropdown-select-list";
 
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
-import { createPost } from "../../services/user";
+
 import * as ImagePicker from "expo-image-picker";
-import { usePosts } from "../../context/PostContext";
-import Post from "../../screens/Post";
-import PostButtons from "./PostButtons";
-import AddCategory from "../AddCategory";
+
 import { StackActions } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
-
-import { ViewPropTypes } from "deprecated-react-native-prop-types";
 
 import { Video, AVPlaybackStatus } from "expo-av";
 export default function PostForm({ navigation }) {
@@ -38,10 +33,10 @@ export default function PostForm({ navigation }) {
   const [image, setImage] = useState({});
   const [post, setPost] = useState();
   const [mediaType, setMediaType] = useState("text");
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData] = useState();
   const [uploadProgress, setUploadProgress] = useState("");
   const pushActionGoHome = StackActions.push("HomeScreen");
-  const [hasGalleryPermissions, setHasGalleryPermission] = useState();
+
   const pushAction = StackActions.replace("Checkout");
   const [imageURL, setImageURL] = useState("");
   const [imagePreview, setImagePreview] = useState();
@@ -63,19 +58,15 @@ export default function PostForm({ navigation }) {
     }
 
     if (status === "granted") {
-      const response = await pickPost();
-
-      if (!response.cancelled) {
-        setImage(photo);
-      }
+      await pickPost();
     }
   };
 
-  function clear() {
-    setTitle("");
-    setDescription("");
-    setImage({});
-  }
+  // function clear() {
+  //   setTitle("");
+  //   setDescription("");
+  //   setImage({});
+  // }
 
   // async function addPost() {
   //   const userId = supabase.auth.currentUser.id;
@@ -168,14 +159,18 @@ export default function PostForm({ navigation }) {
       quality: 0,
     });
 
+    console.log("photo", photo);
+
     if (!photo.cancelled) {
       let newfile = {
         uri: photo.uri,
         type: `test/${photo.uri.split(".")[1]}`,
         name: `test.${photo.uri.split(".")[1]}`,
+        mediaType: photo.type,
       };
 
       handleUpload(newfile);
+      setImagePreview(photo);
     }
   };
 
@@ -185,26 +180,59 @@ export default function PostForm({ navigation }) {
     data.append("upload_preset", "TizlyUpload");
     data.append("cloud_name", "doz01gvsj");
 
-    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/image/upload", {
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
       method: "post",
       body: data,
     })
       .then((res) => res.json())
       .then((data) => {
         // this needs to be the link that that goes to supabase
-        setImage(data.url);
+        console.log("data", data);
+        setImage(data);
       });
+  };
+
+  const addPost = async () => {
+    const userId = supabase.auth.currentUser.id;
+
+    const resp = await supabase.from("post").insert([
+      {
+        username: username,
+        user_id: userId,
+        displayName: displayName,
+
+        description: description,
+        profileimage: profileImage,
+        media: image.url,
+        mediaType: image.resource_type,
+        bannerImage: bannerImage,
+        bio: bio,
+        category: selected,
+        followingId: followingId,
+      },
+    ]);
+
+    return resp;
   };
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
 
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.8,
+        width: 900,
+        left: 1,
+        top: height * 0.03,
+        height: 3,
+      }}
+    />
+  );
   return (
     <View style={{ alignItems: "center", bottom: height * 0.36 }}>
-      <Text style={styles.postTitle} fontWeight="600">
-        Post Details
-      </Text>
-
       <Text style={styles.postText}>Post</Text>
 
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -214,10 +242,12 @@ export default function PostForm({ navigation }) {
         />
       </TouchableOpacity>
 
+      <FullSeperator />
+
       <TextInput
         style={{
           position: "absolute",
-          top: height * 0.115,
+          top: height * 0.1,
           height: height * 0.2,
           width: width * 0.9,
           borderRadius: 8,
@@ -239,7 +269,7 @@ export default function PostForm({ navigation }) {
         <Text
           style={{
             position: "absolute",
-            top: height * 0.38,
+            top: height * 0.39,
             right: width * 0.12,
             fontWeight: "700",
           }}
@@ -252,41 +282,18 @@ export default function PostForm({ navigation }) {
             resizeMode="contain"
             style={{
               position: "absolute",
-
-              height: height * 0.13,
-              top: height * 0.43,
-              right: width * 0.19,
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.45,
+              right: width * 0.15,
+              borderRadius: 10,
             }}
             source={
-              image.uri === undefined
-                ? require("../../assets/plusButton.png")
-                : { uri: image.uri }
+              imagePreview
+                ? { uri: imagePreview.uri }
+                : require("../../assets/plusButton.png")
             }
           />
-
-          <>
-            <Video
-              ref={video}
-              resizeMode="cover"
-              style={styles.plusButton}
-              source={
-                image
-                  ? { uri: image.uri }
-                  : require("../../assets/plusButton.png")
-              }
-            />
-            {/* <Image
-                style={{
-                  position: "absolute",
-                  width: 55,
-                  height: 55,
-                  top: 410,
-                  right: 105,
-                }}
-                resizeMode="contain"
-                source={require("../../assets/playButton.png")}
-              /> */}
-          </>
         </TouchableOpacity>
       </View>
 

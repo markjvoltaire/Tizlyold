@@ -48,9 +48,6 @@ export default function TopHeader({ navigation, tizlyPoints }) {
       }}
     >
       <View style={{ alignSelf: "center", bottom: height * 0.01 }}>
-        <TouchableOpacity onPress={() => navigation.navigate("UserSubscriber")}>
-          <Text>Yooo∂</Text>
-        </TouchableOpacity>
         <Image
           resizeMode="contain"
           style={{
@@ -89,45 +86,6 @@ export default function TopHeader({ navigation, tizlyPoints }) {
       </View>
     </SafeAreaView>
   );
-}
-
-{
-  /* <FullSeperator />
-      <Image
-        style={{
-          height: height * 0.039,
-          left: width * 0.05,
-          aspectRatio: 1,
-          borderRadius: 100,
-          position: "absolute",
-        }}
-        source={
-          user.profileimage === null
-            ? require("../assets/noProfilePic.jpeg")
-            : { uri: user.profileimage }
-        }
-      />
-      <Text style={{ left: width * 0.87, fontWeight: "600" }}>{points}</Text>
-      <Image
-        style={{
-          aspectRatio: 1,
-          alignSelf: "center",
-          resizeMode: "contain",
-          bottom: "43%",
-          height: height * 0.06,
-        }}
-        source={require("../assets/tizlyicon.jpg")}
-      />
-      <View style={{ left: width * 0.78, bottom: "20%" }}>
-        <Image
-          style={{
-            aspectRatio: 1,
-            height: height * 0.025,
-            bottom: height * 0.06,
-          }}
-          source={require("../assets/coin.png")}
-        />
-      </View> */
 }
 
 const styles = StyleSheet.create({

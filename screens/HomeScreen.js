@@ -18,6 +18,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
+import { useScrollToTop } from "@react-navigation/native";
 
 import Skeleton from "../Skeleton";
 import Points from "../views/Points";
@@ -39,6 +40,8 @@ export default function HomeScreen({ navigation, route }) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const ref = React.useRef(null);
+  useScrollToTop(ref);
 
   const { likeList, setLikeList } = useLike();
 
@@ -218,6 +221,7 @@ export default function HomeScreen({ navigation, route }) {
           </ScrollView>
         ) : (
           <FlatList
+            ref={ref}
             keyExtractor={(item) => item.id}
             data={postList}
             refreshing={refreshing}
