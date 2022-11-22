@@ -33,7 +33,7 @@ const screenOptionStyle = {
   headerShown: false,
 };
 
-const HomeStackNavigator = () => {
+const HomeStackNavigator = ({ route }) => {
   const { user, setUser } = useUser();
 
   return (
@@ -99,7 +99,7 @@ const HomeStackNavigator = () => {
   );
 };
 
-const ExploreStackNavigator = () => {
+const ExploreStackNavigator = ({ route }) => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ExploreScreen" component={Explore} />

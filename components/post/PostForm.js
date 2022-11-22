@@ -174,6 +174,8 @@ export default function PostForm({ navigation }) {
     }
   };
 
+  console.log("imagePreview", imagePreview);
+
   const handleUpload = (image) => {
     const data = new FormData();
     data.append("file", image);
@@ -195,6 +197,25 @@ export default function PostForm({ navigation }) {
   const addPost = async () => {
     const userId = supabase.auth.currentUser.id;
 
+    setUploadProgress("loading");
+    const req = new XMLHttpRequest();
+
+    function transferComplete(evt) {
+      setUploadProgress("done");
+      clear();
+      navigation.dispatch(pushAction);
+    }
+
+    req.addEventListener("load", transferComplete);
+
+    // // req.open("POST", url);
+    // for (const [key, value] of Object.entries(headers)) {
+    //   req.setRequestHeader(key, value);
+    // }
+    // req.setRequestHeader("Authorization", data.authorization);
+
+    // req.send(data);
+
     const resp = await supabase.from("post").insert([
       {
         username: username,
@@ -211,6 +232,15 @@ export default function PostForm({ navigation }) {
         followingId: followingId,
       },
     ]);
+
+    if (media === null) {
+      Alert.alert("An error has occured");
+    }
+
+    if (resp.error === [null]) {
+      setUploadProgress("done");
+      navigation.dispatch(pushAction);
+    }
 
     return resp;
   };
@@ -305,12 +335,35 @@ export default function PostForm({ navigation }) {
         />
       ) : null}
 
-      <TouchableOpacity onPress={() => addPost()}>
-        <Image
-          style={styles.postButton}
-          source={require("../../assets/post.png")}
-        />
-      </TouchableOpacity>
+      {imagePreview ? (
+        <TouchableOpacity
+          style={{ bottom: height * 0.09, left: width * 0.28 }}
+          onPress={() => addPost()}
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              width: width * 0.14,
+            }}
+            source={require("../../assets/post.png")}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View
+          style={{ bottom: height * 0.09, left: width * 0.28 }}
+          onPress={() => addPost()}
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              width: width * 0.14,
+            }}
+            source={require("../../assets/postButtonGrey.png")}
+          />
+        </View>
+      )}
     </View>
   );
 }

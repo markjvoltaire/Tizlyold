@@ -413,7 +413,16 @@ export default function ProfileDetail({ navigation, route }) {
             <Text style={styles.username}>@{item.username}</Text>
 
             <Image
-              style={styles.profileImage}
+              style={{
+                position: "absolute",
+                left: 10,
+                width: 50,
+                height: 50,
+                resizeMode: "contain",
+                top: 250,
+                borderRadius: 100,
+                aspectRatio: 1,
+              }}
               source={
                 item.profileimage === null
                   ? require("../assets/noProfilePic.jpeg")
@@ -647,7 +656,7 @@ export default function ProfileDetail({ navigation, route }) {
             fontWeight: "800",
           }}
         >
-          {item.displayName}
+          {item.username}
         </Text>
       </Animated.View>
 

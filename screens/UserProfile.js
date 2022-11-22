@@ -272,7 +272,7 @@ export default function UserProfile({ navigation, route }) {
             fontWeight: "800",
           }}
         >
-          {user.displayName}
+          {user.username}
         </Text>
       </Animated.View>
       <TouchableOpacity onPress={() => navigation.goBack()}>

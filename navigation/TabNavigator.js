@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Image, Text, View, Pressable } from "react-native";
-
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ExploreStackNavigator, HomeStackNavigator } from "./StackNavigator";
 import UserProfile from "../screens/UserProfile";
@@ -24,7 +24,7 @@ const BottomTabNavigator = (route, navigation) => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/HomeLight.jpg")}
+                  source={require("../assets/bottomtab/home.jpg")}
                 />
                 <Text
                   style={{
@@ -32,6 +32,7 @@ const BottomTabNavigator = (route, navigation) => {
                     fontSize: 10,
                     fontWeight: "800",
                     lineHeight: 10,
+
                     letterSpacing: -0.01,
                     top: 30,
                     right: -6,
@@ -49,7 +50,7 @@ const BottomTabNavigator = (route, navigation) => {
 
       <Tab.Screen
         options={{
-          tabBarIcon: () => {
+          tabBarIcon: ({ focused }) => {
             return (
               <View>
                 <Image
@@ -108,7 +109,7 @@ const BottomTabNavigator = (route, navigation) => {
               <View>
                 <Image
                   style={{ width: 24, height: 24 }}
-                  source={require("../assets/bottomtab/noti.png")}
+                  source={require("../assets/bottomtab/notification.png")}
                 />
                 <Text
                   style={{
