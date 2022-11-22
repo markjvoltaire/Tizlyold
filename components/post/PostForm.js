@@ -174,8 +174,6 @@ export default function PostForm({ navigation }) {
     }
   };
 
-  console.log("imagePreview", imagePreview);
-
   const handleUpload = (image) => {
     const data = new FormData();
     data.append("file", image);
@@ -189,7 +187,7 @@ export default function PostForm({ navigation }) {
       .then((res) => res.json())
       .then((data) => {
         // this needs to be the link that that goes to supabase
-        console.log("data", data);
+
         setImage(data);
       });
   };
@@ -233,13 +231,16 @@ export default function PostForm({ navigation }) {
       },
     ]);
 
-    if (media === null) {
-      Alert.alert("An error has occured");
-    }
+    const response = resp.body;
 
-    if (resp.error === [null]) {
+    setImageData(response);
+
+    if (resp.error === null) {
       setUploadProgress("done");
       navigation.dispatch(pushAction);
+    } else {
+      setUploadProgress("");
+      Alert.alert("Something Went Wrong");
     }
 
     return resp;
