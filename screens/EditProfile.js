@@ -24,9 +24,6 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function EditProfile({ navigation }) {
-  const [bannerType, setBannerType] = useState();
-  const [bannerData, setBannerData] = useState({});
-  const [imageData, setImageData] = useState({});
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState(true);
   const video = React.useRef(null);
@@ -35,6 +32,9 @@ export default function EditProfile({ navigation }) {
   const [username, setUsername] = useState(user.username);
   const [displayName, setDisplayName] = useState(user.displayName);
   const [bio, setBio] = useState(user.bio);
+  const [imageInfo, setImageInfo] = useState();
+  const [imagePreview, setImagePreview] = useState(user.profileimage);
+  const [profilePreview, setProfilePreview] = useState();
 
   async function sendAlert() {
     Alert.alert(
@@ -72,32 +72,80 @@ export default function EditProfile({ navigation }) {
 
   const pickProfileImage = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [9, 16],
+      canAskAgain: true,
       quality: 0,
     });
 
     if (!photo.cancelled) {
-      setImage(photo.uri);
-      setImageData(photo);
+      let newfile = {
+        uri: photo.uri,
+        type: `test/${photo.uri.split(".")[1]}`,
+        name: `test.${photo.uri.split(".")[1]}`,
+        mediaType: photo.type,
+      };
+
+      handleUpload(newfile);
     }
   };
 
-  const pickBannerImage = async () => {
+  const pickBanner = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      videoMaxDuration: 10,
-      aspect: [4, 3],
+      aspect: [9, 16],
+      canAskAgain: true,
       quality: 0,
     });
 
     if (!photo.cancelled) {
-      setBanner(photo.uri);
-      setBannerData(photo);
-      setBannerType(photo.type);
+      let newfile = {
+        uri: photo.uri,
+        type: `test/${photo.uri.split(".")[1]}`,
+        name: `test.${photo.uri.split(".")[1]}`,
+        mediaType: photo.type,
+      };
+
+      handleBannerUpload(newfile);
     }
+  };
+
+  const handleUpload = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "TizlyUpload");
+    data.append("cloud_name", "doz01gvsj");
+
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // this needs to be the link that that goes to supabase
+        console.log("data", data);
+        setImage(data.url);
+      });
+  };
+
+  const handleBannerUpload = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "TizlyUpload");
+    data.append("cloud_name", "doz01gvsj");
+
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // this needs to be the link that that goes to supabase
+        console.log("data", data);
+        setBanner(data.url);
+      });
   };
 
   let profileDisplay;
@@ -122,147 +170,32 @@ export default function EditProfile({ navigation }) {
     profileBanner = user.bannerImage;
   }
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   async function editProfile() {
     const userId = supabase.auth.currentUser.id;
 
     const { data, error } = await supabase
       .from("profiles")
-      .update({ username: username, displayName: displayName, bio: bio })
+      .update({
+        profileimage: image,
+        bannerImage: banner,
+        username: username,
+        displayName: displayName,
+        bio: bio,
+      })
       .eq("user_id", userId);
 
-    const editProfileImage = async () => {
-      const userId = supabase.auth.currentUser.id;
-
-      const resp = await supabase
-        .from("comments")
-        .update({ userProfileImage: image })
-        .eq("userId", userId);
-    };
-
-    const editLikeProfileImage = async () => {
-      const userId = supabase.auth.currentUser.id;
-
-      const resp = await supabase
-        .from("likes")
-        .update({ userProfileImage: image })
-        .eq("userId", userId);
-    };
-
-    const editSaveProfileImage = async () => {
-      const userId = supabase.auth.currentUser.id;
-
-      const resp = await supabase
-        .from("saves")
-        .update({ userProfileImage: image })
-        .eq("userId", userId);
-    };
-
-    const uploadBannerFromUri = async () => {
-      const userId = supabase.auth.currentUser.id;
-      const ext = banner.substring(banner.lastIndexOf(".") + 1);
-      const fileName = banner.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: banner,
-        name: fileName,
-        type: bannerData.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      try {
-        const { data, error } = await supabase.storage
-          .from("profile-images")
-          .upload(fileName, formData, {
-            upsert: false,
-          });
-
-        const { publicURL } = await supabase.storage
-          .from("profile-images")
-          .getPublicUrl(`${fileName}`);
-
-        let imageLink = publicURL;
-        let type = bannerData.type;
-
-        setBannerType(type);
-
-        const resp = await supabase
-          .from("profiles")
-          .update({ bannerImage: publicURL, bannerImageType: type })
-
-          .eq("user_id", userId);
-      } catch (e) {
-        return null;
-      }
-
-      if (error) {
-        Alert.alert(error.message);
-      }
-
-      return { ...banner, imageData: data };
-    };
-
-    const uploadProfileImageFromUri = async () => {
-      const userId = supabase.auth.currentUser.id;
-      const ext = image.substring(banner.lastIndexOf(".") + 1);
-      const fileName = image.replace(/^.*[\\\/]/, "");
-
-      var formData = new FormData();
-      formData.append("files", {
-        uri: image,
-        name: fileName,
-        type: imageData.type ? `image/${ext}` : `video/${ext}`,
-      });
-
-      try {
-        const { data, error } = await supabase.storage
-          .from("profile-images")
-          .upload(fileName, formData, {
-            upsert: false,
-          });
-
-        const { publicURL } = await supabase.storage
-          .from("profile-images")
-          .getPublicUrl(`${fileName}`);
-
-        const resp = await supabase
-          .from("profiles")
-          .update({ profileimage: publicURL })
-
-          .eq("user_id", userId);
-      } catch (e) {
-        return null;
-      }
-
-      if (imageData.type === null) {
-        return null;
-      }
-
-      if (error === null) {
-        return undefined;
-      } else {
-        Alert.alert(error.message);
-      }
-
-      return { ...image, imageData: data };
-    };
-
-    uploadBannerFromUri();
-    uploadProfileImageFromUri();
-    editProfileImage();
-    editLikeProfileImage();
-    editSaveProfileImage();
-    sendAlert();
-
-    if (
+    if (error) {
       error.message ===
       'duplicate key value violates unique constraint "profiles_username_key"'
-    ) {
-      Alert.alert("This Username Is Already Taken");
+        ? Alert.alert("This Username Is Already Taken")
+        : Alert.alert("An error has occured");
+    } else {
+      sendAlert();
     }
   }
-
-  let height = Dimensions.get("window").height;
-  let width = Dimensions.get("window").width;
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -290,11 +223,10 @@ export default function EditProfile({ navigation }) {
               borderWidth: 0.2,
             }}
             source={
-              image === null
-                ? require("../assets/noProfilePic.jpeg")
-                : { uri: image }
+              image ? { uri: image } : require("../assets/noProfilePic.jpeg")
             }
           />
+
           <Image
             style={{
               position: "absolute",
@@ -308,7 +240,7 @@ export default function EditProfile({ navigation }) {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => pickBannerImage()}>
+        <TouchableOpacity onPress={() => pickBanner()}>
           {banner.endsWith(".mov") ? (
             <Video
               ref={video}
@@ -427,6 +359,42 @@ export default function EditProfile({ navigation }) {
     </View>
   );
 }
+
+// async function editProfile() {
+//   const userId = supabase.auth.currentUser.id;
+
+//   const { data, error } = await supabase
+//     .from("profiles")
+//     .update({ username: username, displayName: displayName, bio: bio })
+//     .eq("user_id", userId);
+
+//   const editProfileImage = async () => {
+//     const userId = supabase.auth.currentUser.id;
+
+//     const resp = await supabase
+//       .from("profiles")
+//       .update({ profileimage: image })
+//       .eq("userId", userId);
+
+//     return resp;
+//   };
+
+//   editProfileImage();
+
+//   console.log("error", error);
+//   sendAlert();
+
+//   if (
+//     error.message ===
+//     'duplicate key value violates unique constraint "profiles_username_key"'
+//   ) {
+//     Alert.alert("This Username Is Already Taken");
+//   } else if (error === null) {
+//     null;
+//   } else {
+//     Alert.alert("Something Went Wrong");
+//   }
+// }
 
 const styles = StyleSheet.create({
   container: {
