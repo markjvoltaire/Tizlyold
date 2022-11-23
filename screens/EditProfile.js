@@ -72,7 +72,7 @@ export default function EditProfile({ navigation }) {
 
   const pickProfileImage = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [9, 16],
       canAskAgain: true,
@@ -93,7 +93,7 @@ export default function EditProfile({ navigation }) {
 
   const pickBanner = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [9, 16],
       canAskAgain: true,
