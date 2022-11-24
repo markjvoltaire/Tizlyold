@@ -96,13 +96,13 @@ export default function Notifications({ navigation, route, image }) {
             top: 25,
           }}
         >
-          Notifications
+          Notifications Coming Soon
         </Text>
 
-        <NotificationsView
+        {/* <NotificationsView
           navigation={navigation}
           notifications={notifications}
-        />
+        /> */}
       </ScrollView>
     </View>
   );
