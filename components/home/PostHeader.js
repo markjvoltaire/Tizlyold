@@ -5,6 +5,7 @@ import { supabase } from "../../services/supabase";
 
 import { useUser } from "../../context/UserContext";
 import ImageHeader from "../post/ImageHeader";
+import ProfilePostHeader from "../post/ProfilePostHeader";
 
 export default function PostHeader({ item, navigation }) {
   const { user, setUser } = useUser();

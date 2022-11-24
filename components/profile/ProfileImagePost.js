@@ -17,24 +17,18 @@ import {
 import CurrentUserButtons from "../home/CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
 import { useLike } from "../../context/LikeContext";
-import VideoHeader from "../post/VideoHeader";
-import ProfileHeader from "./ProfileHeader";
-import PostActivity from "../../views/PostActivity";
-import HomePostButtons from "../home/HomePostButtons";
-import Buttons from "../home/Buttons";
+
 import { supabase } from "../../services/supabase";
 import PostSkeleton from "./PostSkeleton";
 import PostHeader from "../home/PostHeader";
+import ProfilePostHeader from "../post/ProfilePostHeader";
 
-export default function ProfileImagePost({
-  item,
-  navigation,
-  followingId,
-  userInfo,
-}) {
+export default function ProfileImagePost({ item, navigation, followingId }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const { user, setUser } = useUser();
+  const [userInfo, setUserinfo] = useState();
+  const [loading, setLoading] = useState(true);
 
   const userId = user.user_id;
 
@@ -48,6 +42,27 @@ export default function ProfileImagePost({
 
     return resp.body;
   }
+
+  async function getAvi() {
+    const resp = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", item.user_id);
+
+    return resp.body;
+  }
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const resp = await getAvi();
+      setUserinfo(resp);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    };
+    getUserInfo();
+  }, []);
 
   const [saveIsPressed, setSaveIsPressed] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -88,41 +103,42 @@ export default function ProfileImagePost({
 
   return (
     <>
-      <View style={{ paddingBottom: 4, top: 40, alignSelf: "center" }}>
+      <View
+        style={{ paddingBottom: 4, top: height * 0.06, alignSelf: "center" }}
+      >
         <View
           style={{
             alignSelf: "center",
-            right: 20,
-            paddingBottom: 25,
-            top: 12,
+            bottom: 50,
+            paddingBottom: 3,
           }}
         >
-          <PostHeader navigation={navigation} item={item} />
+          <ProfilePostHeader item={item} />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
-          <SharedElement id={item.id}>
-            <View style={{ bottom: 50, alignSelf: "center" }}>
-              <PostSkeleton />
-            </View>
-          </SharedElement>
-          <SharedElement id={item.id}>
-            <Animated.Image
-              style={{
-                height: height * 0.454,
-                aspectRatio: 1,
-                alignSelf: "center",
-                borderRadius: 10,
-                bottom: 50,
-                borderColor: "#5C5C5C",
-                borderWidth: 0.2,
-                opacity: imageAnimated,
-              }}
-              source={{ uri: item.media }}
-              onLoad={handleImageLoad}
-              resizeMode="cover"
-            />
-          </SharedElement>
+          {/* <SharedElement id={item.id}> */}
+          <View style={{ bottom: 50, alignSelf: "center" }}>
+            <PostSkeleton />
+          </View>
+          {/* </SharedElement> */}
+          {/* <SharedElement id={item.id}> */}
+          <Animated.Image
+            style={{
+              height: height * 0.454,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              bottom: 50,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+              opacity: imageAnimated,
+            }}
+            source={{ uri: item.media }}
+            onLoad={handleImageLoad}
+            resizeMode="cover"
+          />
+          {/* </SharedElement> */}
         </Pressable>
 
         <View style={{ bottom: 50 }}>

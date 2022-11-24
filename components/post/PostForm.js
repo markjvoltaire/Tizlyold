@@ -13,7 +13,6 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import SelectList from "react-native-dropdown-select-list";
 
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
@@ -40,7 +39,7 @@ export default function PostForm({ navigation }) {
   const pushAction = StackActions.replace("Checkout");
   const [imageURL, setImageURL] = useState("");
   const [imagePreview, setImagePreview] = useState();
-
+  const [status, setStatus] = React.useState({});
   const username = user.username;
   const displayName = user.displayName;
   const profileImage = user.profileimage;
@@ -97,7 +96,7 @@ export default function PostForm({ navigation }) {
       .then((res) => res.json())
       .then((data) => {
         // this needs to be the link that that goes to supabase
-
+        console.log("data", data);
         setImage(data);
       });
   };
@@ -147,6 +146,8 @@ export default function PostForm({ navigation }) {
 
     return resp;
   };
+
+  console.log("imagePreview", imagePreview);
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
@@ -209,7 +210,9 @@ export default function PostForm({ navigation }) {
         >
           Select From Gallery
         </Text>
+      </View>
 
+      {imagePreview === undefined ? (
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
             resizeMode="contain"
@@ -217,18 +220,46 @@ export default function PostForm({ navigation }) {
               position: "absolute",
               aspectRatio: 1,
               width: width * 0.3,
-              top: height * 0.45,
+              top: height * 0.38,
               right: width * 0.15,
               borderRadius: 10,
             }}
-            source={
-              imagePreview
-                ? { uri: imagePreview.uri }
-                : require("../../assets/plusButton.png")
-            }
+            source={require("../../assets/plusButton.png")}
           />
         </TouchableOpacity>
-      </View>
+      ) : imagePreview.type === "image" ? (
+        <TouchableOpacity onPress={() => openImageLibrary()}>
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.38,
+              right: width * 0.15,
+              borderRadius: 10,
+            }}
+            source={{ uri: imagePreview.uri }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => openImageLibrary()}>
+          <Video
+            source={{ uri: imagePreview.uri }}
+            ref={video}
+            style={{
+              position: "absolute",
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.38,
+              right: width * 0.15,
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          />
+        </TouchableOpacity>
+      )}
 
       {uploadProgress === "" ? null : uploadProgress === "loading" ? (
         <LottieView

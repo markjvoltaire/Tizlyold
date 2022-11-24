@@ -11,6 +11,7 @@ import { Video } from "expo-av";
 import UserButtons from "../home/UserButtons";
 import { useUser } from "../../context/UserContext";
 import PostHeader from "../home/PostHeader";
+import ProfilePostHeader from "../post/ProfilePostHeader";
 
 export default function ProfileVideoPost({ item, navigation, userInfo }) {
   const video = React.useRef(null);
@@ -37,8 +38,8 @@ export default function ProfileVideoPost({ item, navigation, userInfo }) {
   return (
     <>
       <View style={{ top: 10 }}>
-        <View style={{ alignSelf: "center", right: 20, top: 40 }}>
-          <PostHeader navigation={navigation} item={item} />
+        <View style={{ alignSelf: "center", top: height * 0.001 }}>
+          <ProfilePostHeader item={item} />
         </View>
         <Pressable
           onPress={() =>

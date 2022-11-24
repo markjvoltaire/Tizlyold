@@ -100,8 +100,8 @@ export default function ImagePost({ item, navigation, followingId }) {
           style={{
             alignSelf: "center",
             right: 20,
-            paddingBottom: 25,
-            top: 12,
+            paddingBottom: 2,
+            bottom: height * 0.02,
           }}
         >
           <PostHeader navigation={navigation} item={item} />
@@ -113,23 +113,23 @@ export default function ImagePost({ item, navigation, followingId }) {
               <PostSkeleton />
             </View>
           </SharedElement>
-          <SharedElement id={item.id}>
-            <Animated.Image
-              style={{
-                height: height * 0.454,
-                aspectRatio: 1,
-                alignSelf: "center",
-                borderRadius: 10,
-                bottom: 50,
-                borderColor: "#5C5C5C",
-                borderWidth: 0.2,
-                opacity: imageAnimated,
-              }}
-              source={{ uri: item.media }}
-              onLoad={handleImageLoad}
-              resizeMode="cover"
-            />
-          </SharedElement>
+          {/* <SharedElement id={item.id}> */}
+          <Animated.Image
+            style={{
+              height: height * 0.454,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              bottom: 50,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+              opacity: imageAnimated,
+            }}
+            source={{ uri: item.media }}
+            onLoad={handleImageLoad}
+            resizeMode="cover"
+          />
+          {/* </SharedElement> */}
         </Pressable>
 
         <View style={{ bottom: 50 }}>

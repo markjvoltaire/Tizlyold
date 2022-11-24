@@ -16,11 +16,9 @@ import {
 import React, { useState, useEffect } from "react";
 import { SharedElement } from "react-navigation-shared-element";
 
-
 import { useUser } from "../context/UserContext";
 import { supabase } from "../services/supabase";
 import { useLike } from "../context/LikeContext";
-
 
 export default function ImageDetails({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -110,31 +108,19 @@ export default function ImageDetails({ navigation, route }) {
   return (
     <View style={{ flex: 1, top: 50, backgroundColor: "white" }}>
       <ScrollView style={{ backgroundColor: "white" }}>
-        <SharedElement id={item.id}>
-          <Image
-            source={{ uri: item.media }}
-            style={{
-              height: 448,
-              width: 400,
-              alignSelf: "center",
-              borderRadius: 10,
-            }}
-            resizeMode="cover"
-          />
-        </SharedElement>
-        {/* <Image
+        {/* <SharedElement id={item.id}> */}
+        <Image
+          source={{ uri: item.media }}
           style={{
+            height: 448,
+            width: 400,
             alignSelf: "center",
-            resizeMode: "stretch",
-            height: 200,
-            width: 398,
-            top: 200,
-            borderRadius: 12,
-            position: "absolute",
+            borderRadius: 10,
           }}
-          resizeMode="stretch"
-          source={require("../assets/fader.png")}
-        /> */}
+          resizeMode="cover"
+        />
+        {/* </SharedElement> */}
+
         <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
           <Image
             style={styles.backButton}
