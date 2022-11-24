@@ -1,16 +1,6 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import {
-  SharedElement,
-  createSharedElementStackNavigator,
-} from "react-navigation-shared-element";
+import { StyleSheet, Text, View, Animated, Dimensions } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+
 import { supabase } from "../../services/supabase";
 
 import { useUser } from "../../context/UserContext";
@@ -20,6 +10,8 @@ export default function PostHeader({ item, navigation }) {
   const { user, setUser } = useUser();
   const [userInfo, setUserinfo] = useState();
   const [loading, setLoading] = useState(true);
+
+  const opacity = useRef(new Animated.Value(0.3));
 
   async function getAvi() {
     const resp = await supabase
@@ -42,8 +34,58 @@ export default function PostHeader({ item, navigation }) {
     getUserInfo();
   }, []);
 
+  const height = Dimensions.get("window").height;
+  const width = Dimensions.get("window").width;
+
   if (loading) {
-    return <Text style={{ bottom: 20 }}> loading</Text>;
+    return (
+      <View style={{ alignSelf: "center" }}>
+        <View style={{ alignSelf: "center" }}>
+          <View
+            style={{ paddingTop: height * 0.03, paddingBottom: height * 0.01 }}
+          >
+            <Animated.View
+              style={{
+                opacity: opacity.current,
+                alignSelf: "center",
+                height: 5,
+                width: 125,
+                left: 35,
+                borderRadius: 100,
+                bottom: 60,
+                backgroundColor: "#CFCFCF",
+              }}
+            />
+            <Animated.View
+              style={{
+                opacity: opacity.current,
+                alignSelf: "center",
+                height: 5,
+                width: 70,
+                left: 10,
+                borderRadius: 100,
+                bottom: 55,
+                backgroundColor: "#CFCFCF",
+              }}
+            />
+
+            <Animated.View
+              style={{
+                position: "absolute",
+                opacity: opacity.current,
+                alignSelf: "center",
+                height: height * 0.04,
+                aspectRatio: 1,
+                right: width * 0.25,
+                borderRadius: 500,
+                bottom: height * 0.06,
+                backgroundColor: "#CFCFCF",
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    );
   }
 
   return (
@@ -54,34 +96,3 @@ export default function PostHeader({ item, navigation }) {
 }
 
 const styles = StyleSheet.create({});
-
-{
-  /* <View style={{ alignSelf: "center" }}>
-        <TouchableOpacity
-          onPress={() => navigation.push("ProfileDetail2", { item })}
-        >
-          <SharedElement id={item.id}>
-            <Image
-              style={{
-                height: 35,
-                width: 35,
-                borderRadius: 100,
-                bottom: 30,
-              }}
-              source={{ uri: item.profileimage }}
-            />
-          </SharedElement>
-          <View style={{ bottom: 63, left: 40 }}>
-            <Text style={{ fontWeight: "800" }}>{item.displayName}</Text>
-            <Text
-              style={{
-                fontWeight: "600",
-                color: "#A1A1B3",
-              }}
-            >
-              @{item.username}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View> */
-}

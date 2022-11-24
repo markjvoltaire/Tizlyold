@@ -1,40 +1,26 @@
 import {
   StyleSheet,
   Text,
-  View,
   TextInput,
   Image,
   TouchableOpacity,
   ScrollView,
   Alert,
-  Button,
-  SafeAreaView,
   Dimensions,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import Animated, {
-  useAnimatedGestureHandler,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
+import React, { useState } from "react";
 
 import { supabase } from "../services/supabase";
-import { signUp } from "../services/user";
+
 import { StackActions } from "@react-navigation/native";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [query, setQuery] = useState("");
-  const [isPressed, setIsPressed] = useState(false);
-  const [filterData, setFilterData] = useState([]);
-  const [masterData, setMasterData] = useState([]);
-  const [search, setSearch] = useState("");
-  const [input, setInput] = useState(false);
+
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [validated, setValidated] = useState(false);
 
   const pushActionLogin = StackActions.replace("Login");
 

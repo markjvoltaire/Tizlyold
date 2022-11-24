@@ -5,42 +5,20 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  RefreshControl,
-  Pressable,
   Animated,
   Alert,
-  Button,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-import ProfileNav from "../components/profile/ProfileNav";
-import UserButtons from "../components/home/UserButtons";
-import UserProfileFeed from "../components/profile/UserProfileFeed";
-import UserProfileNav from "../components/profile/UserProfileNav";
-import HomeScreen from "../screens/HomeScreen";
-
-import LottieView from "lottie-react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
-import { getCurrentUserPosts, getProfileDetail } from "../services/user";
-import ProfileDetailSub from "../components/profile/ProfileDetailSub";
-import ProfileFeedList from "../components/profile/ProfileFeedList";
-import { StackActions } from "@react-navigation/native";
-import { Video, AVPlaybackStatus } from "expo-av";
-import NoProfilePost from "../components/profile/NoProfilePost";
-import UserProfile from "./UserProfile";
-import {
-  SharedElement,
-  createSharedElementStackNavigator,
-} from "react-navigation-shared-element";
+
+import { Video } from "expo-av";
+
+import { SharedElement } from "react-navigation-shared-element";
 import ProfileSkeleton from "../ProfileSkeleton";
 import { usePoints } from "../context/PointsContext";
-import TopHeader from "../components/TopHeader";
-import PostHeader from "../components/home/PostHeader";
-import Points from "../views/Points";
-import Buttons from "../components/home/Buttons";
-import ImagePost from "../components/home/ImagePost";
+
 import ProfileImagePost from "../components/profile/ProfileImagePost";
 import ProfileVideoPost from "../components/profile/ProfileVideoPost";
 import BannerSkeleton from "../components/profile/BannerSkeleton";
@@ -49,7 +27,7 @@ import { Dimensions } from "react-native";
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPosts, setUserPosts] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
+
   const [userTizlyPoints, setUserTizlyPoints] = useState();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
@@ -344,10 +322,6 @@ export default function ProfileDetail({ navigation, route }) {
 
   const diffclamp = Animated.diffClamp(scrollY, 0, 45);
 
-  const translateY = diffclamp.interpolate({
-    inputRange: [0, height * 0.5],
-    outputRange: [0, height * -0.5],
-  });
   return (
     <>
       <ScrollView
@@ -432,14 +406,6 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
 
           <TouchableOpacity onPress={() => unsubscribeAlert()}>
-            {/* <Image
-              style={styles.subButton}
-              source={
-                isFollowing === true
-                  ? require("../assets/subscribed.png")
-                  : require("../assets/blank.png")
-              }
-            /> */}
             {isFollowing === true ? (
               <Image
                 style={styles.subButton}

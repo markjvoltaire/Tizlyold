@@ -5,12 +5,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Button,
-  SafeAreaView,
   FlatList,
-  useWindowDimensions,
   RefreshControl,
-  Pressable,
   Animated,
 } from "react-native";
 

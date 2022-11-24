@@ -15,12 +15,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SharedElement } from "react-navigation-shared-element";
-import UserButtons from "../components/home/UserButtons";
-import CommentList from "../components/post/CommentList";
+
+
 import { useUser } from "../context/UserContext";
 import { supabase } from "../services/supabase";
 import { useLike } from "../context/LikeContext";
-import HomePostButtons from "../components/home/HomePostButtons";
+
 
 export default function ImageDetails({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);

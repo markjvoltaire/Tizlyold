@@ -13,19 +13,16 @@ import {
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
-import { signIn, signInUser } from "../services/user";
+
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import Validator from "email-validator";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useUser();
+
   const pushActionSignUp = StackActions.replace("SignUp");
 
   async function loginWithEmail() {

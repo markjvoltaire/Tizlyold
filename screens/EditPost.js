@@ -10,9 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import TopHeader from "../components/TopHeader";
 import { supabase } from "../services/supabase";
-import { useUser } from "../context/UserContext";
-import { editPost } from "../services/supabase";
-import { getCurrentUserPosts } from "../services/user";
+
 import { Video, AVPlaybackStatus } from "expo-av";
 
 export default function EditPost({ route, navigation }) {
@@ -158,20 +156,6 @@ export default function EditPost({ route, navigation }) {
           );
         })}
         <View style={{ bottom: 30 }}>
-          <TextInput
-            style={{
-              top: 300,
-              borderRadius: 25,
-              borderColor: "grey",
-              borderWidth: 0.5,
-              width: 311,
-              height: 50,
-              paddingLeft: 30,
-            }}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-
           <TextInput
             style={{
               top: 320,

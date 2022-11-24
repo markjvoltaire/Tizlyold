@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   Image,
   Pressable,
   Animated,
@@ -16,12 +15,7 @@ import {
 } from "react-navigation-shared-element";
 import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
-import { useLike } from "../../context/LikeContext";
-import VideoHeader from "../post/VideoHeader";
 import PostHeader from "./PostHeader";
-import PostActivity from "../../views/PostActivity";
-import HomePostButtons from "./HomePostButtons";
-import Buttons from "./Buttons";
 import { supabase } from "../../services/supabase";
 import PostSkeleton from "../profile/PostSkeleton";
 
@@ -180,10 +174,6 @@ export default function ImagePost({ item, navigation, followingId }) {
                 item={item}
                 navigation={navigation}
               />
-
-              {/* <HomePostButtons item={item} /> */}
-
-              {/* <Buttons navigation={navigation} item={item} /> */}
             </>
           )}
         </View>
@@ -191,32 +181,6 @@ export default function ImagePost({ item, navigation, followingId }) {
       <FullSeperator />
     </>
   );
-}
-
-{
-  /* <Image
-            style={{
-              height: 35,
-              width: 35,
-              borderRadius: 100,
-              position: "absolute",
-              left: 20,
-              top: 330,
-            }}
-            source={{ uri: item.profileimage }}
-          />
-          <Text
-            style={{
-              position: "absolute",
-              color: "white",
-              top: 342,
-              left: 60,
-              fontWeight: "500",
-              fontSize: 15,
-            }}
-          >
-            {item.username}
-          </Text> */
 }
 
 const styles = StyleSheet.create({

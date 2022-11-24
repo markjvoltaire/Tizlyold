@@ -6,6 +6,7 @@ import {
   Image,
   Pressable,
   Animated,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import UserButtons from "../home/UserButtons";
@@ -23,6 +24,7 @@ import HomePostButtons from "../home/HomePostButtons";
 import Buttons from "../home/Buttons";
 import { supabase } from "../../services/supabase";
 import PostSkeleton from "./PostSkeleton";
+import PostHeader from "../home/PostHeader";
 
 export default function ProfileImagePost({
   item,
@@ -82,26 +84,32 @@ export default function ProfileImagePost({
     }).start();
   };
 
+  let height = Dimensions.get("window").height;
+
   return (
     <>
-      <View style={{ paddingBottom: 45, top: 60 }}>
-        <View style={{ alignSelf: "center", right: 20, bottom: 10 }}>
-          <ProfileHeader
-            userInfo={userInfo}
-            navigation={navigation}
-            item={item}
-          />
+      <View style={{ paddingBottom: 4, top: 40, alignSelf: "center" }}>
+        <View
+          style={{
+            alignSelf: "center",
+            right: 20,
+            paddingBottom: 25,
+            top: 12,
+          }}
+        >
+          <PostHeader navigation={navigation} item={item} />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
-          <View style={{ bottom: 50, alignSelf: "center" }}>
-            <PostSkeleton />
-          </View>
-
+          <SharedElement id={item.id}>
+            <View style={{ bottom: 50, alignSelf: "center" }}>
+              <PostSkeleton />
+            </View>
+          </SharedElement>
           <SharedElement id={item.id}>
             <Animated.Image
               style={{
-                height: 398,
+                height: height * 0.454,
                 aspectRatio: 1,
                 alignSelf: "center",
                 borderRadius: 10,
@@ -111,34 +119,11 @@ export default function ProfileImagePost({
                 opacity: imageAnimated,
               }}
               source={{ uri: item.media }}
-              resizeMode="cover"
               onLoad={handleImageLoad}
+              resizeMode="cover"
             />
           </SharedElement>
         </Pressable>
-        {/* 
-        <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 200,
-            width: 398,
-            top: 217,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          resizeMode="stretch"
-          source={require("../../assets/fader.png")}
-        /> */}
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("ProfileDetail2", {
-              user_id: item.user_id,
-            });
-          }}
-          style={{ position: "absolute" }}
-        ></TouchableOpacity>
 
         <View style={{ bottom: 50 }}>
           <Text
@@ -146,20 +131,6 @@ export default function ProfileImagePost({
               left: 13,
               top: 12,
               fontWeight: "700",
-              textAlign: "left",
-              width: 390,
-              paddingBottom: 6,
-              lineHeight: 20,
-            }}
-          >
-            {item.title}
-          </Text>
-          <Text
-            style={{
-              left: 13,
-              top: 12,
-              fontWeight: "600",
-              color: "#4F4E4E",
               textAlign: "left",
               width: 390,
               paddingBottom: 30,
@@ -196,10 +167,6 @@ export default function ProfileImagePost({
                 item={item}
                 navigation={navigation}
               />
-
-              {/* <HomePostButtons item={item} /> */}
-
-              {/* <Buttons navigation={navigation} item={item} /> */}
             </>
           )}
         </View>

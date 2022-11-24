@@ -55,7 +55,12 @@ export default function UserProfileImagePost({
 
   return (
     <View style={{ paddingBottom: 90 }}>
-      <View style={{ alignSelf: "center", top: 32 }}>
+      <View
+        style={{
+          top: 32,
+          flex: 1,
+        }}
+      >
         <UserProfileHeader navigation={navigation} item={post} user={user} />
       </View>
 

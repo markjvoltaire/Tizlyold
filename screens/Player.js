@@ -1,27 +1,10 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import { useUser } from "../context/UserContext";
-import UserButtons from "../components/home/UserButtons";
 
 export default function Player({ route, navigation }) {
   const [comment, setComment] = useState("");

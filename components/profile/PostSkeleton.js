@@ -28,7 +28,7 @@ export default function PostSkeleton() {
       <Animated.View
         style={{
           opacity: opacity.current,
-          height: height * 0.454,
+          height: height * 0.43,
 
           aspectRatio: 1,
           borderRadius: 10,

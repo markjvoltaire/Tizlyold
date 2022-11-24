@@ -1,26 +1,22 @@
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
   Image,
-  TextInput,
-  Alert,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import react from "react";
 import { supabase } from "../services/supabase";
-import { addUsername, createProfileImage } from "../services/user";
+
 import { useUser } from "../context/UserContext";
-import { StackActions } from "@react-navigation/native";
-import { usePoints } from "../context/PointsContext";
+
 import BackHeader from "../components/BackHeader";
 
 export default function Settings({ navigation }) {
   const { user, setUser } = useUser();
-  const { points, setPoints } = usePoints();
+
   async function signOutUser() {
     await supabase.auth.signOut();
   }

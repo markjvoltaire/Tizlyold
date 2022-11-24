@@ -3,14 +3,13 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   Dimensions,
 } from "react-native";
-import { Video, AVPlaybackStatus } from "expo-av";
+import { Video } from "expo-av";
 import React, { useState, useEffect } from "react";
 import UserButtons from "./UserButtons";
-import TrendingCreators from "../explore/TrendingCreators";
+
 import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
 import PostHeader from "./PostHeader";
@@ -102,20 +101,6 @@ export default function VideoPost({ item, navigation, route }) {
           resizeMode="cover"
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
-
-        {/* <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-
-            height: height * 0.454,
-            width: width * 0.8,
-
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          source={require("../../assets/fader.png")}
-        /> */}
 
         <Image
           style={{
