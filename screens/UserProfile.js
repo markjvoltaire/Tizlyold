@@ -224,26 +224,21 @@ export default function UserProfile({ navigation, route }) {
 
         <FullSeperator />
         <View style={styles.feedContainer}>
-          <FlatList
-            ref={ref}
-            keyExtractor={(item) => item.id}
-            data={posts}
-            renderItem={({ item }) => {
-              return (
-                <View key={item.id}>
-                  <UserProfileFeed
-                    navigation={navigation}
-                    route={route}
-                    post={item}
-                    navState={navState}
-                    setPosts={setPosts}
-                    user={user}
-                    setUser={setUser}
-                  />
-                </View>
-              );
-            }}
-          />
+          {posts.map((item) => {
+            return (
+              <View key={item.id}>
+                <UserProfileFeed
+                  navigation={navigation}
+                  route={route}
+                  post={item}
+                  navState={navState}
+                  setPosts={setPosts}
+                  user={user}
+                  setUser={setUser}
+                />
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
       <Animated.View
