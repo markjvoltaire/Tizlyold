@@ -43,7 +43,7 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
 
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
-      <View style={{ alignSelf: "center", top: 52 }}>
+      <View style={{ alignSelf: "center", top: height * 0.04 }}>
         <UserProfileHeader navigation={navigation} item={item} />
       </View>
 
@@ -62,7 +62,6 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
             aspectRatio: 1,
             borderRadius: 12,
             alignSelf: "center",
-            top: 20,
           }}
           resizeMode="cover"
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
@@ -80,7 +79,7 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
         />
       </Pressable>
 
-      <View style={{ top: 27 }}>
+      <View style={{ top: height * 0.01 }}>
         <Text
           style={{
             left: width * 0.03,
@@ -102,14 +101,16 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
         />
       </View>
 
-      <CurrentUserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        navigation={navigation}
-        item={item}
-      />
+      <View style={{ bottom: height * 0.005 }}>
+        <CurrentUserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+          navigation={navigation}
+          item={item}
+        />
+      </View>
     </View>
   );
 }
