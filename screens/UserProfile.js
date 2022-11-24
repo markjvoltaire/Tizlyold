@@ -11,8 +11,10 @@ import {
   ErrorAlert,
   FlatList,
   RefreshControl,
+  Animated,
+  Dimensions,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import BottomTabNavigator from "../navigation/TabNavigator";
 import ProfileNav from "../components/profile/ProfileNav";
 import LottieView from "lottie-react-native";
@@ -23,9 +25,13 @@ import UserProfileFeed from "../components/profile/UserProfileFeed";
 import UserProfileNav from "../components/profile/UserProfileNav";
 import NoUserProfilePost from "../components/profile/NoUserProfilePost";
 import { Video, AVPlaybackStatus } from "expo-av";
+import ProfileSkeleton from "../ProfileSkeleton";
+import { usePoints } from "../context/PointsContext";
+import { useScrollToTop } from "@react-navigation/native";
 
 export default function UserProfile({ navigation, route }) {
   const { user, setUser } = useUser();
+  const { points, setPoints } = usePoints();
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +42,8 @@ export default function UserProfile({ navigation, route }) {
   const [status, setStatus] = React.useState({});
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const FullSeperatorTwo = () => <View style={styles.FullSeperatorTwo} />;
-
+  const ref = React.useRef(null);
+  useScrollToTop(ref);
   const [posts, setPosts] = useState();
 
   async function getCurrentUserPosts() {
@@ -50,14 +57,6 @@ export default function UserProfile({ navigation, route }) {
     return post;
   }
 
-  function seeEdit() {
-    return (
-      <View>
-        <EditCurrentUser />
-      </View>
-    );
-  }
-
   useEffect(() => {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
@@ -68,24 +67,6 @@ export default function UserProfile({ navigation, route }) {
       setLoading(false);
     }, 1000);
   }, []);
-
-  if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-        <LottieView
-          style={{
-            top: 60,
-            height: 400,
-            width: 400,
-            position: "absolute",
-            alignSelf: "center",
-          }}
-          source={require("../assets/lottie/fasterGreyLoader.json")}
-          autoPlay
-        />
-      </SafeAreaView>
-    );
-  }
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -108,6 +89,32 @@ export default function UserProfile({ navigation, route }) {
     getPost();
   };
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
+  const scrollY = new Animated.Value(0);
+
+  const diffclamp = Animated.diffClamp(scrollY, 0, 45);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        {/* <LottieView
+          style={{
+            top: 60,
+            height: 400,
+            width: 400,
+            position: "absolute",
+            alignSelf: "center",
+          }}
+          source={require("../assets/lottie/fasterGreyLoader.json")}
+          autoPlay
+        /> */}
+        <ProfileSkeleton />
+      </SafeAreaView>
+    );
+  }
+
   if (posts.length === 0) {
     return (
       <ScrollView
@@ -126,95 +133,197 @@ export default function UserProfile({ navigation, route }) {
   }
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{ flex: 1, backgroundColor: "white" }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => refreshFeed()}
-        />
-      }
-    >
-      {user.bannerImageType === "video" ? (
-        <Video
-          ref={video}
-          source={{ uri: user.bannerImage }}
-          isLooping
-          shouldPlay={true}
-          isMuted={true}
-          resizeMode="cover"
-          style={styles.userBanner}
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
-      ) : (
-        <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
-      )}
-
-      <Image style={styles.userBanner} source={{ uri: user.bannerImage }} />
-
-      <Image
-        style={styles.userBannerFader}
-        source={require("../assets/fader.png")}
-      />
-
-      <View style={{ bottom: 410 }}>
-        <Text style={styles.displayname}>{user.displayName}</Text>
-        <Text style={styles.username}>@{user.username}</Text>
-        <Text style={styles.bio}> {user.bio}</Text>
-        <Image
-          style={styles.profileImage}
-          source={{ uri: user.profileimage }}
-        />
-        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
-          <Image
-            style={styles.subButton}
-            source={require("../assets/editprofile.png")}
+    <>
+      <ScrollView
+        ref={ref}
+        scrollEventThrottle={16}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+        }}
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, backgroundColor: "white" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
           />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.profileNav}>
-        <Text style={styles.home}>Home</Text>
+        }
+      >
+        {/* <Image style={styles.userBanner} source={{ uri: user.bannerImage }} /> */}
+
+        {user.bannerImageType === "image" ? (
+          <Image
+            style={{
+              width: 455,
+              height: 455,
+              position: "absolute",
+
+              alignSelf: "center",
+              borderRadius: 10,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.2,
+            }}
+            resizeMode="cover"
+            source={{ uri: user.bannerImage }}
+          />
+        ) : (
+          <Video
+            source={{ uri: user.bannerImage }}
+            ref={video}
+            isLooping
+            shouldPlay
+            isMuted
+            style={{
+              height: 450,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              position: "absolute",
+            }}
+            resizeMode="cover"
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          />
+        )}
+
+        <Image
+          style={styles.userBannerFader}
+          source={require("../assets/fader.png")}
+        />
+
+        <View style={{ bottom: 410 }}>
+          <View style={{ right: 6 }}>
+            <Text style={styles.displayname}>{user.displayName}</Text>
+            <Text style={styles.username}>@{user.username}</Text>
+          </View>
+          <Text style={styles.bio}> {user.bio}</Text>
+
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+            <Image
+              style={styles.subButton}
+              source={require("../assets/editprofile.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+            <Image
+              style={styles.settingsButton}
+              source={require("../assets/settings.png")}
+            />
+          </TouchableOpacity>
+          <Image
+            style={styles.profileImage}
+            source={
+              user.profileimage === null
+                ? require("../assets/noProfilePic.jpeg")
+                : { uri: user.profileimage }
+            }
+          />
+        </View>
+        <View style={styles.profileNav}>
+          <Text style={styles.home}>Home</Text>
+        </View>
 
         <FullSeperator />
-      </View>
-      <View style={styles.feedContainer}>
-        {/* {posts.map((post) => {
-          return (
-            <View style={{ bottom: 90 }} key={post.id}>
-              <UserProfileFeed
-                navigation={navigation}
-                route={route}
-                post={post}
-                navState={navState}
-                setPosts={setPosts}
-                user={user}
-                setUser={setUser}
-              />
-            </View>
-          );
-        })} */}
-
-        <FlatList
-          keyExtractor={(item) => item.id}
-          data={posts}
-          initialNumToRender={2}
-          renderItem={({ item }) => (
-            <View>
-              <UserProfileFeed
-                navigation={navigation}
-                route={route}
-                post={item}
-                navState={navState}
-                setPosts={setPosts}
-                user={user}
-                setUser={setUser}
-              />
-            </View>
-          )}
+        <View style={styles.feedContainer}>
+          <FlatList
+            ref={ref}
+            keyExtractor={(item) => item.id}
+            data={posts}
+            renderItem={({ item }) => {
+              return (
+                <View key={item.id}>
+                  <UserProfileFeed
+                    navigation={navigation}
+                    route={route}
+                    post={item}
+                    navState={navState}
+                    setPosts={setPosts}
+                    user={user}
+                    setUser={setUser}
+                  />
+                </View>
+              );
+            }}
+          />
+        </View>
+      </ScrollView>
+      <Animated.View
+        style={{
+          position: "absolute",
+          bottom: height * 0.8,
+          width: width * 1,
+          height: height * 0.2,
+          backgroundColor: "white",
+          borderBottomColor: "red",
+          borderBottomWidth: 2.0,
+          borderBottomColor: "#EDEDED",
+          flex: 1,
+          alignSelf: "center",
+          opacity: scrollY.interpolate({
+            inputRange: [1, height * 0.2],
+            outputRange: [0, 1],
+          }),
+        }}
+      >
+        <Text
+          style={{
+            position: "absolute",
+            alignSelf: "center",
+            top: height * 0.16,
+            fontWeight: "800",
+          }}
+        >
+          {user.username}
+        </Text>
+      </Animated.View>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={{
+            position: "absolute",
+            resizeMode: "contain",
+            width: 35,
+            height: 50,
+            left: 21,
+            bottom: height * 0.8,
+          }}
+          source={require("../assets/backButton2.png")}
         />
-      </View>
-    </ScrollView>
+      </TouchableOpacity>
+
+      <Image
+        style={{
+          height: height * 0.04,
+          width: width * 0.17,
+          borderRadius: 10,
+          position: "absolute",
+          left: width * 0.8,
+          top: height * 0.058,
+        }}
+        source={require("../assets/rectangleBlur.png")}
+      />
+
+      <Image
+        resizeMode="contain"
+        style={{
+          height: height * 0.02,
+          position: "absolute",
+          top: height * 0.068,
+          left: width * 0.22,
+          aspectRatio: 1,
+        }}
+        source={require("../assets/coin.png")}
+      />
+
+      <Text
+        style={{
+          left: width * 0.885,
+          top: height * 0.069,
+          fontWeight: "600",
+          position: "absolute",
+        }}
+      >
+        {points}
+      </Text>
+    </>
   );
 }
 
@@ -224,6 +333,14 @@ const styles = StyleSheet.create({
     width: 455,
     height: 455,
     alignSelf: "center",
+  },
+
+  setting: {
+    position: "absolute",
+    height: 22,
+    width: 22,
+    left: 308,
+    top: 29,
   },
 
   profileNav: {
@@ -248,7 +365,7 @@ const styles = StyleSheet.create({
 
   feedContainer: {
     alignItems: "center",
-    top: 30,
+    top: 40,
     flex: 1,
   },
   displayNameContainer: {
@@ -276,12 +393,11 @@ const styles = StyleSheet.create({
   },
 
   fullSeperator: {
-    borderBottomColor: "grey",
+    borderBottomColor: "black",
     borderBottomWidth: 0.8,
     opacity: 0.2,
     width: 900,
-    left: 1,
-    top: 429,
+    top: 10,
   },
   displayname: {
     position: "absolute",
@@ -306,6 +422,15 @@ const styles = StyleSheet.create({
     width: 160,
     height: 30,
     right: 20,
+  },
+
+  settingsButton: {
+    resizeMode: "contain",
+    position: "absolute",
+    top: 300,
+    width: 160,
+    height: 29,
+    left: 100,
   },
 
   bio: {

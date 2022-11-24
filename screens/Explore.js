@@ -33,6 +33,7 @@ import Animated, {
 import { supabase } from "../services/supabase";
 import SearchView from "../components/explore/SearchView";
 import { useUser } from "../context/UserContext";
+import Points from "../views/Points";
 
 export default function Explore({ navigation }) {
   const { user, setUser } = useUser();
@@ -111,9 +112,12 @@ export default function Explore({ navigation }) {
     },
   });
 
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={styles.container}>
-      <TopHeader navigation={navigation} />
+      <Points navigation={navigation} />
 
       <TextInput
         style={styles.searchInput}
@@ -130,9 +134,23 @@ export default function Explore({ navigation }) {
         }}
       />
       <Image
-        style={styles.searchIcon}
+        style={{
+          height: height * 0.02,
+          width: width * 0.026,
+          left: width * 0.18,
+          bottom: height * 0.019,
+          aspectRatio: 1,
+        }}
         source={require("../assets/Search.png")}
       />
+
+      {search === "" ? null : (
+        <View style={{ position: "absolute", top: 130, left: 300 }}>
+          <TouchableOpacity onPress={() => setSearch("")}>
+            <Text style={{ fontWeight: "800", color: "#73738B" }}>Clear</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <SearchView
         search={search}

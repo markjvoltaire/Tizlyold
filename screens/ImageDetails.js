@@ -15,10 +15,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SharedElement } from "react-navigation-shared-element";
-import UserButtons from "../components/home/UserButtons";
-import CommentList from "../components/post/CommentList";
+
+
 import { useUser } from "../context/UserContext";
 import { supabase } from "../services/supabase";
+import { useLike } from "../context/LikeContext";
+
 
 export default function ImageDetails({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -32,6 +34,7 @@ export default function ImageDetails({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   const { user, setUser } = useUser();
+  const { like, setLike } = useLike();
 
   const postId = item.id;
 
@@ -96,21 +99,30 @@ export default function ImageDetails({ navigation, route }) {
     getPostComments();
   }, []);
 
+  async function deleteComment(comment) {
+    const resp = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", comment.id)
+      .eq("userId", user.user_id);
+  }
+
   return (
-    <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ backgroundColor: "white" }}></SafeAreaView>
+    <View style={{ flex: 1, top: 50, backgroundColor: "white" }}>
       <ScrollView style={{ backgroundColor: "white" }}>
-        <Image
-          source={{ uri: item.media }}
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-          }}
-          resizeMode="cover"
-        />
-        <Image
+        <SharedElement id={item.id}>
+          <Image
+            source={{ uri: item.media }}
+            style={{
+              height: 448,
+              width: 400,
+              alignSelf: "center",
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+          />
+        </SharedElement>
+        {/* <Image
           style={{
             alignSelf: "center",
             resizeMode: "stretch",
@@ -122,18 +134,14 @@ export default function ImageDetails({ navigation, route }) {
           }}
           resizeMode="stretch"
           source={require("../assets/fader.png")}
-        />
+        /> */}
         <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
           <Image
             style={styles.backButton}
             source={require("../assets/backButton2.png")}
           />
         </TouchableOpacity>
-        <View style={{ position: "absolute", top: 370, left: 20 }}>
-          <Text style={{ color: "white", fontWeight: "700" }}>
-            {item.title}
-          </Text>
-        </View>
+        <View style={{ position: "absolute", top: 370, left: 20 }}></View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("ProfileDetail2", {
@@ -143,7 +151,7 @@ export default function ImageDetails({ navigation, route }) {
           style={{ position: "absolute" }}
         >
           <View style={{ position: "absolute" }}>
-            <Image
+            {/* <Image
               style={{
                 height: 35,
                 width: 35,
@@ -153,25 +161,27 @@ export default function ImageDetails({ navigation, route }) {
                 top: 330,
               }}
               source={{ uri: item.profileimage }}
-            />
-            <Text
-              style={{
-                position: "absolute",
-                color: "white",
-                top: 342,
-                left: 60,
-                fontWeight: "500",
-                fontSize: 15,
-              }}
-            >
-              {item.username}
-            </Text>
+            /> */}
           </View>
         </TouchableOpacity>
         <View>
           <Text
             style={{
-              left: 15,
+              left: 13,
+              top: 12,
+              fontWeight: "700",
+              textAlign: "left",
+              width: 390,
+              paddingBottom: 6,
+              lineHeight: 20,
+            }}
+          >
+            {item.title}
+          </Text>
+
+          <Text
+            style={{
+              left: 13,
               top: 12,
               fontWeight: "700",
               color: "#4F4E4E",
@@ -183,58 +193,85 @@ export default function ImageDetails({ navigation, route }) {
             {item.description}
           </Text>
 
-          <View>
-            <Text style={{ left: 17, fontWeight: "500" }}>Photo</Text>
+          <View style={{ position: "absolute", top: 70 }}>
+            <Image
+              resizeMode="contain"
+              style={{ width: 70, left: 10, bottom: 30 }}
+              source={require("../assets/photoBean.png")}
+            />
           </View>
         </View>
 
-        <UserButtons
-          isPressed={isPressed}
-          setIsPressed={setIsPressed}
-          saveIsPressed={saveIsPressed}
-          setSaveIsPressed={setSaveIsPressed}
-          item={item}
-          navigation={navigation}
-        />
-
-        <View>
+        <View style={{ paddingBottom: 60 }}>
           <Text style={styles.commentsHeader}>Comments</Text>
 
           <FullSeperator />
-          {commentList.map((comment) => (
-            <View style={{ top: 30, left: 10 }} key={comment.id}>
-              <View>
-                <Image
-                  style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
-                  source={{ uri: comment.userProfileImage }}
-                />
-                <View style={{ left: 35, bottom: 35 }}>
-                  <Text style={{ fontWeight: "600" }}>
-                    {comment.userDisplayName}
-                  </Text>
-                  <Text
+          {commentList.length === 0 ? (
+            <View style={{ alignSelf: "center", top: 30 }}>
+              <Text style={{ fontWeight: "700", color: "#4F4E4E" }}>
+                No Comments
+              </Text>
+            </View>
+          ) : (
+            commentList.map((comment) => (
+              <View style={{ top: 30, left: 10 }} key={comment.id}>
+                <View>
+                  <Image
                     style={{
-                      color: "#4F4E4E",
-                      fontWeight: "500",
-                      fontSize: 12,
+                      height: 30,
+                      width: 30,
+                      borderRadius: 40,
+                      bottom: 4,
                     }}
-                  >
-                    @{comment.userUsername}
-                  </Text>
-                  <Text
-                    style={{
-                      right: 35,
-                      fontWeight: "600",
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                    }}
-                  >
-                    {comment.comment}
-                  </Text>
+                    source={{ uri: comment.userProfileImage }}
+                  />
+                  <View style={{ left: 35, bottom: 35 }}>
+                    <Text style={{ fontWeight: "600" }}>
+                      {comment.userDisplayName}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#4F4E4E",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      @{comment.userUsername}
+                    </Text>
+                    <Text
+                      style={{
+                        right: 35,
+                        fontWeight: "600",
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                      }}
+                    >
+                      {comment.comment}
+                    </Text>
+
+                    {comment.userId === user.user_id ? (
+                      <View style={{ left: 270, bottom: 60 }}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            deleteComment(comment).then(() => refreshFeed())
+                          }
+                        >
+                          <Image
+                            style={{
+                              resizeMode: "contain",
+                              position: "absolute",
+                              height: 23,
+                            }}
+                            source={require("../assets/Delete.png")}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ) : null}
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
+            ))
+          )}
         </View>
       </ScrollView>
       <KeyboardAvoidingView
@@ -287,6 +324,7 @@ export default function ImageDetails({ navigation, route }) {
 const styles = StyleSheet.create({
   inner: {
     padding: 14,
+    bottom: 40,
     borderTopColor: "#EDEDED",
     opacity: 7.8,
     borderTopWidth: 1.8,
@@ -319,7 +357,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     top: 65,
     color: "#73738B",
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: "600",
     paddingBottom: 70,
   },

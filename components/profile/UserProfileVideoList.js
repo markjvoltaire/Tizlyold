@@ -1,33 +1,64 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  Animated,
+  Dimensions,
+} from "react-native";
 import React, { useState } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import UserButtons from "../home/UserButtons";
 import CurrentUserButtons from "../home/CurrentUserButtons";
+import PostHeader from "../home/PostHeader";
+import ProfileHeader from "./ProfileHeader";
+import UserProfileHeader from "./UserProfileHeader";
 
-export default function UserProfileVideoPost({ post, user, navigation }) {
+export default function UserProfileVideoPost({ item, user, navigation }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   return (
     <View style={{ paddingBottom: 90, bottom: 10 }}>
+      <View style={{ alignSelf: "center", top: 52 }}>
+        <UserProfileHeader navigation={navigation} item={item} />
+      </View>
+
       <Pressable
         onPress={() =>
           navigation.push("Player", {
-            id: post.id,
-            username: post.username,
-            profileimage: post.profileimage,
-            displayName: post.displayName,
-            user_id: post.user_id,
+            item,
           })
         }
       >
         <Video
-          source={{ uri: post.media }}
+          source={{ uri: item.media }}
           ref={video}
           style={{
-            height: 400,
+            height: height * 0.452,
             aspectRatio: 1,
             borderRadius: 12,
             alignSelf: "center",
@@ -37,18 +68,6 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
 
-        <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 180,
-            width: 400,
-            top: 240,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          source={require("../../assets/fader.png")}
-        />
         <Image
           style={{
             position: "absolute",
@@ -61,58 +80,27 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
         />
       </Pressable>
 
-      <View style={{ position: "absolute", top: 390, left: 5 }}>
-        <Text style={{ color: "white", fontWeight: "700" }}>{post.title}</Text>
-      </View>
-
-      <View style={{ position: "absolute" }}>
-        <Image
-          style={{
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            position: "absolute",
-            left: 5,
-            top: 350,
-          }}
-          source={{ uri: user.profileimage }}
-        />
+      <View style={{ top: 27 }}>
         <Text
           style={{
-            position: "absolute",
-            color: "white",
-            top: 360,
-            left: 50,
-            fontWeight: "500",
-            fontSize: 15,
-          }}
-        >
-          {post.username}
-        </Text>
-      </View>
-
-      <View>
-        <Text
-          style={{
-            left: 5,
-            top: 32,
+            left: width * 0.03,
+            top: 12,
             fontWeight: "700",
-            color: "#4F4E4E",
             textAlign: "left",
             width: 390,
             paddingBottom: 30,
+            lineHeight: 20,
           }}
         >
-          {post.description}
+          {item.description}
         </Text>
+
+        <Image
+          resizeMode="contain"
+          style={{ width: 70, left: 10, bottom: 30 }}
+          source={require("../../assets/photoBean.png")}
+        />
       </View>
-      {/* <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        item={post}
-      /> */}
 
       <CurrentUserButtons
         isPressed={isPressed}
@@ -120,7 +108,7 @@ export default function UserProfileVideoPost({ post, user, navigation }) {
         saveIsPressed={saveIsPressed}
         setSaveIsPressed={setSaveIsPressed}
         navigation={navigation}
-        item={post}
+        item={item}
       />
     </View>
   );

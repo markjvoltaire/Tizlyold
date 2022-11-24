@@ -3,127 +3,135 @@ import {
   Text,
   View,
   Pressable,
-  TouchableOpacity,
   Image,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
-import { Video, AVPlaybackStatus } from "expo-av";
+import { Video } from "expo-av";
 import UserButtons from "../home/UserButtons";
+import { useUser } from "../../context/UserContext";
+import PostHeader from "../home/PostHeader";
 
-export default function ProfileVideoPost({ item, navigation }) {
+export default function ProfileVideoPost({ item, navigation, userInfo }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.3,
+        width: 390,
+        alignSelf: "center",
+        bottom: height * 0.03,
+      }}
+    />
+  );
 
-  const milliseconds = status.durationMillis;
+  const { user, setUser } = useUser();
+
+  let height = Dimensions.get("window").height;
 
   return (
-    <View style={{ paddingBottom: 90, top: 10.5 }}>
-      <Pressable
-        onPress={() =>
-          navigation.navigate("Player", {
-            id: item.id,
-            username: item.username,
-            profileimage: item.profileimage,
-            displayName: item.displayName,
-            user_id: item.user_id,
-          })
-        }
-      >
-        <Video
-          source={{ uri: item.media }}
-          ref={video}
-          style={{
-            height: 260,
-            width: 400,
-            borderRadius: 12,
-            alignSelf: "center",
-          }}
-          resizeMode="cover"
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
-        <Image
-          style={{
-            alignSelf: "center",
-            resizeMode: "stretch",
-            height: 180,
-            width: 400,
-            top: 80,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          source={require("../../assets/fader.png")}
-        />
-        <Image
-          style={{
-            position: "absolute",
-            width: 50,
-            top: 100,
-            alignSelf: "center",
-            resizeMode: "contain",
-          }}
-          source={require("../../assets/playButton.png")}
-        />
-      </Pressable>
-
-      <View style={{ position: "absolute", top: 230, left: 5 }}>
-        <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
-      </View>
-
-      <View style={{ position: "absolute" }}>
-        <Image
-          style={{
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            position: "absolute",
-            left: 5,
-            top: 190,
-          }}
-          source={{ uri: item.profileimage }}
-        />
-        <Text
-          style={{
-            position: "absolute",
-            color: "white",
-            top: 200,
-            left: 50,
-            fontWeight: "500",
-            fontSize: 15,
-          }}
+    <>
+      <View style={{ top: 10 }}>
+        <View style={{ alignSelf: "center", right: 20, top: 40 }}>
+          <PostHeader navigation={navigation} item={item} />
+        </View>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("Player", {
+              id: item.id,
+              username: item.username,
+              profileimage: item.profileimage,
+              displayName: item.displayName,
+              user_id: item.user_id,
+              item,
+            })
+          }
         >
-          {item.username}
-        </Text>
-      </View>
+          <Video
+            source={{ uri: item.media }}
+            ref={video}
+            style={{
+              height: height * 0.454,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          />
 
-      <View>
-        <Text
-          style={{
-            left: 5,
-            top: 12,
-            fontWeight: "700",
-            color: "#4F4E4E",
-            textAlign: "left",
-            width: 390,
-            paddingBottom: 30,
-          }}
-        >
-          {item.description}
-        </Text>
-      </View>
+          <Image
+            style={{
+              position: "absolute",
+              width: 50,
+              top: 160,
+              alignSelf: "center",
+              resizeMode: "contain",
+            }}
+            source={require("../../assets/playButton.png")}
+          />
+        </Pressable>
 
-      <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        item={item}
-        navigation={navigation}
-      />
-    </View>
+        <View style={{ paddingBottom: 30 }}>
+          <Text
+            style={{
+              left: 13,
+              top: 12,
+              fontWeight: "700",
+              textAlign: "left",
+              width: 390,
+              paddingBottom: 30,
+              lineHeight: 20,
+            }}
+          >
+            {item.description}
+          </Text>
+          <Image
+            resizeMode="contain"
+            style={{ width: 70, left: 10, bottom: 30 }}
+            source={require("../../assets/videoBean.png")}
+          />
+        </View>
+
+        <View style={{ bottom: 90 }}>
+          {item.user_id === user.user_id ? (
+            <CurrentUserButtons
+              isPressed={isPressed}
+              setIsPressed={setIsPressed}
+              saveIsPressed={saveIsPressed}
+              setSaveIsPressed={setSaveIsPressed}
+              navigation={navigation}
+              item={item}
+            />
+          ) : (
+            <UserButtons
+              isPressed={isPressed}
+              setIsPressed={setIsPressed}
+              saveIsPressed={saveIsPressed}
+              setSaveIsPressed={setSaveIsPressed}
+              item={item}
+              navigation={navigation}
+            />
+          )}
+        </View>
+
+        <FullSeperator />
+      </View>
+    </>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fullSeperator: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 1.3,
+    width: 390,
+    alignSelf: "center",
+  },
+});

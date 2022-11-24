@@ -10,6 +10,7 @@ import {
   ScrollView,
   Platform,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabase";
@@ -24,6 +25,14 @@ export default function CommentScreen({ route, navigation }) {
   const { item } = route.params;
 
   const { user, setUser } = useUser();
+
+  async function deleteComment(comment) {
+    const resp = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", comment.id)
+      .eq("userId", user.user_id);
+  }
 
   const postId = item.id;
 
@@ -40,8 +49,6 @@ export default function CommentScreen({ route, navigation }) {
       .in("user_id", [list]);
 
     const comments = { users: users, comments: resp };
-
-
 
     return resp.body;
   }
@@ -77,6 +84,26 @@ export default function CommentScreen({ route, navigation }) {
     getPostComments();
   }, []);
 
+  const handleDelete = () =>
+    Alert.alert("Would You Like To Delete This Comment ?", " ", [
+      {
+        text: "Delete",
+        onPress: () =>
+          navigation.navigate("EditPost", {
+            user_id: item.user_id,
+            description: item.description,
+            title: item.title,
+            id: item.id,
+          }),
+      },
+      {
+        text: "Cancel",
+
+        onPress: () => null,
+        type: "cancel",
+      },
+    ]);
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <SafeAreaView>
@@ -101,9 +128,7 @@ export default function CommentScreen({ route, navigation }) {
         </View>
 
         <FullSeperatorTwo />
-        <Text style={{ alignSelf: "center", fontWeight: "700" }}>
-          {item.title}
-        </Text>
+        <Text style={{ alignSelf: "center", fontWeight: "700" }}>Comments</Text>
         <Text style={{ alignSelf: "center", fontWeight: "400" }}>
           @{item.username}
         </Text>
@@ -116,40 +141,77 @@ export default function CommentScreen({ route, navigation }) {
       </TouchableOpacity>
       <ScrollView>
         <FullSeperator />
-        {commentList.map((comment) => (
-          <View style={{ top: 30, left: 10 }} key={comment.id}>
-            <View>
-              <Image
-                style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
-                source={{ uri: comment.userProfileImage }}
-              />
-              <View style={{ left: 35, bottom: 35 }}>
-                <Text style={{ fontWeight: "600" }}>
-                  {comment.userDisplayName}
-                </Text>
-                <Text
-                  style={{
-                    color: "#4F4E4E",
-                    fontWeight: "500",
-                    fontSize: 12,
-                  }}
-                >
-                  @{comment.userUsername}
-                </Text>
-                <Text
-                  style={{
-                    right: 35,
-                    fontWeight: "600",
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                  }}
-                >
-                  {comment.comment}
-                </Text>
-              </View>
-            </View>
+        {commentList.length === 0 ? (
+          <View style={{ alignSelf: "center", top: 30 }}>
+            <Text style={{ fontWeight: "700", color: "#4F4E4E" }}>
+              No Comments
+            </Text>
           </View>
-        ))}
+        ) : (
+          commentList.map((comment) => (
+            <View
+              style={{ top: 30, left: 10, paddingBottom: 10 }}
+              key={comment.id}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  user.user_id === comment.userId
+                    ? navigation.navigate("UserProfile2")
+                    : navigation.push("ProfileDetail2", {
+                        item,
+                      });
+                }}
+              >
+                <Image
+                  style={{ height: 30, width: 30, borderRadius: 40, bottom: 4 }}
+                  source={{ uri: comment.userProfileImage }}
+                />
+                <View style={{ left: 35, bottom: 35 }}>
+                  <Text style={{ fontWeight: "600" }}>
+                    {comment.userDisplayName}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#4F4E4E",
+                      fontWeight: "500",
+                      fontSize: 12,
+                    }}
+                  >
+                    @{comment.userUsername}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontWeight: "600",
+                  bottom: 25,
+                  left: 3,
+                }}
+              >
+                {comment.comment}
+              </Text>
+
+              {comment.userId === user.user_id ? (
+                <View style={{ left: 270, bottom: 80 }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      deleteComment(comment).then(() => refreshFeed())
+                    }
+                  >
+                    <Image
+                      style={{
+                        resizeMode: "contain",
+                        position: "absolute",
+                        height: 23,
+                      }}
+                      source={require("../assets/Delete.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+            </View>
+          ))
+        )}
       </ScrollView>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

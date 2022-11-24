@@ -19,6 +19,8 @@ import ImageDetails from "../screens/ImageDetails";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CommentScreen from "../screens/CommentScreen";
 import UserNames from "../screens/UserNames";
+import { useUser } from "../context/UserContext";
+import GeneralSettings from "../screens/GeneralSettings";
 
 const Stack = createSharedElementStackNavigator();
 
@@ -31,18 +33,11 @@ const screenOptionStyle = {
   headerShown: false,
 };
 
-const HomeStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen
-        name="CheckoutScreen"
-        component={HomeScreen}
-        options={{
-          headerBackVisible: false,
-          headerTitle: () => <Header />,
-        }}
-      />
+const HomeStackNavigator = ({ route }) => {
+  const { user, setUser } = useUser();
 
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
@@ -51,6 +46,7 @@ const HomeStackNavigator = () => {
           headerTitle: () => <Header />,
         }}
       />
+      <Stack.Screen name="SettingsScreen" component={Settings} />
 
       <Stack.Screen
         name="ProfileDetail2"
@@ -62,21 +58,48 @@ const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="UserSub"
+        component={UserProfileSubscribers}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
+        name="GeneralSettings"
+        component={GeneralSettings}
+        options={{
+          headerBackVisible: false,
+          headerTitle: () => <Header />,
+        }}
+      />
+
+      <Stack.Screen
         name="ImageDetails"
         sharedElements={(route) => {
-          return [route.params.item.id];
+          const { item } = route.params;
+          return [item];
         }}
         component={ImageDetails}
       />
 
       <Stack.Screen name="UserProfile2" component={UserProfile} />
-
+      <Stack.Screen name="UserProfilePost" component={UserProfilePostDetail} />
+      <Stack.Screen
+        name="UserSubcriber"
+        component={UserProfileSubscribers}
+        sharedElements={(route) => {
+          const { item } = route.params;
+          return [item];
+        }}
+      />
       <Stack.Screen name="NotificationsScreen" component={Notifications} />
     </Stack.Navigator>
   );
 };
 
-const ExploreStackNavigator = () => {
+const ExploreStackNavigator = ({ route }) => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="ExploreScreen" component={Explore} />

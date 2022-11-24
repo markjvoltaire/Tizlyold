@@ -1,5 +1,5 @@
-import { SUPABASE_KEY } from "react-native-dotenv";
+// import { SUPABASE_KEY } from "react-native-dotenv";
 
-export default {
-  SUPABASE_KEY,
-};
+// export default {
+//   SUPABASE_KEY,
+// };

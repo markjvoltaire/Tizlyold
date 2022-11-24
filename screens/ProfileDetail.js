@@ -4,41 +4,130 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  FlatList,
   ScrollView,
-  SafeAreaView,
+  Animated,
   Alert,
-  Button,
-  RefreshControl,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import ProfileNav from "../components/profile/ProfileNav";
-import UserButtons from "../components/home/UserButtons";
-import UserProfileFeed from "../components/profile/UserProfileFeed";
-import UserProfileNav from "../components/profile/UserProfileNav";
-import HomeScreen from "../screens/HomeScreen";
-
-import LottieView from "lottie-react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useEffect, useState, useRef } from "react";
 
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
-import { getCurrentUserPosts, getProfileDetail } from "../services/user";
-import ProfileDetailSub from "../components/profile/ProfileDetailSub";
-import ProfileFeedList from "../components/profile/ProfileFeedList";
-import { StackActions } from "@react-navigation/native";
-import { Video, AVPlaybackStatus } from "expo-av";
-import NoProfilePost from "../components/profile/NoProfilePost";
-import UserProfile from "./UserProfile";
 
-export default function ProfileDetail({ navigation, route, item }) {
+import { Video } from "expo-av";
+
+import { SharedElement } from "react-navigation-shared-element";
+import ProfileSkeleton from "../ProfileSkeleton";
+import { usePoints } from "../context/PointsContext";
+
+import ProfileImagePost from "../components/profile/ProfileImagePost";
+import ProfileVideoPost from "../components/profile/ProfileVideoPost";
+import BannerSkeleton from "../components/profile/BannerSkeleton";
+import { Dimensions } from "react-native";
+
+export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
   const [userPosts, setUserPosts] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
+
+  const [userTizlyPoints, setUserTizlyPoints] = useState();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const { points, setPoints } = usePoints([]);
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+  const [userDetails, setUserDetails] = useState([]);
+
   const [profile, setProfile] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const { item } = route.params;
+  const [userInfo, setUserInfo] = useState(item);
+
+  async function getUserById() {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", item.user_id);
+
+    return data;
+  }
+
+  useEffect(() => {
+    const log = async () => {
+      const resp = await getUserById();
+      resp.map((i) => setUserDetails(i));
+    };
+    log();
+  }, []);
+
+  async function getUserPoints() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("tizlyPoints")
+      .eq("user_id", userId);
+
+    return profiles;
+  }
+
+  async function getUser() {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", item.user_id);
+
+    return profiles;
+  }
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const resp = await getUser();
+      resp.map((i) => setUserTizlyPoints(i.tizlyPoints));
+    };
+
+    getUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const getPoints = async () => {
+      const resp = await getUserPoints();
+      resp.map((i) => setPoints(i.tizlyPoints));
+    };
+    getPoints();
+  }, []);
+
+  async function subtractCoins() {
+    const userId = supabase.auth.currentUser.id;
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .update({ tizlyPoints: points - 10 })
+      .eq("user_id", userId);
+
+    error === null ? handleFollow() : Alert.alert(error);
+
+    profiles.map((i) => setPoints(i.tizlyPoints));
+
+    return profiles;
+  }
+
+  async function addCoins() {
+    const userId = supabase.auth.currentUser.id;
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .update({ tizlyPoints: userTizlyPoints + item.subCost })
+      .eq("user_id", item.user_id);
+  }
+
+  async function handleSubscriptions() {
+    if (points - item.subCost < 0) {
+      Alert.alert("Insufficent Coins To Access Content");
+    } else {
+      subtractCoins();
+      addCoins();
+      setIsFollowing(true);
+    }
+  }
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
@@ -46,7 +135,7 @@ export default function ProfileDetail({ navigation, route, item }) {
     let { data: post, error } = await supabase
       .from("post")
       .select("*")
-      .eq("user_id", user_id)
+      .eq("user_id", item.user_id)
       .order("id", { ascending: false });
 
     return post;
@@ -57,8 +146,8 @@ export default function ProfileDetail({ navigation, route, item }) {
     const resp = await supabase
       .from("following")
       .select("*")
-      .eq("creatorId", user_id)
-      .eq("userId", user.user_id);
+      .eq("creatorId", item.user_id)
+      .eq("userId", userId);
 
     return resp.body;
   }
@@ -74,6 +163,7 @@ export default function ProfileDetail({ navigation, route, item }) {
   useEffect(() => {
     const getPost = async () => {
       const resp = await getPosts();
+
       setPosts(resp);
       setLoading(false);
     };
@@ -118,29 +208,18 @@ export default function ProfileDetail({ navigation, route, item }) {
     getFeed();
   }, []);
 
-  if (loading) {
-    return (
-      <SafeAreaView>
-        <View>
-          <Text style={{ fontSize: 300 }}>LOADING</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   async function followUser() {
     const resp = await supabase.from("following").insert([
       {
-        creatorId: profile.user_id,
+        creatorId: item.user_id,
         userId: user.user_id,
         userProfileImage: user.profileimage,
-
         userUsername: user.username,
-        creatorUsername: profile.username,
-        followingId: profile.following_Id,
-        creatorDisplayname: profile.displayName,
+        creatorUsername: item.username,
+        followingId: item.following_Id,
+        creatorDisplayname: item.displayName,
         userDisplayname: user.displayName,
-        creatorProfileImage: profile.profileimage,
+        creatorProfileImage: item.profileimage,
       },
     ]);
 
@@ -152,94 +231,190 @@ export default function ProfileDetail({ navigation, route, item }) {
       .from("following")
       .delete()
       .eq("userId", user.user_id)
-      .eq("creatorId", profile.user_id);
+      .eq("creatorId", item.user_id);
+
+    setIsFollowing(false);
 
     return resp;
   }
 
   const handleFollow = () => {
-    setIsFollowing((current) => !current);
-
-    isFollowing === true ? unfollowUser() : followUser();
+    isFollowing === false ? followUser() : unfollowUser();
   };
 
   if (loading) {
     return (
       <View>
-        <Text>Loading</Text>
+        <ProfileSkeleton navigation={navigation} />
       </View>
     );
   }
 
-  const refreshFeed = async () => {
-    getProfileDetail();
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
   };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const photoCount = posts.filter((item) => item.mediaType === "image");
+  const videoCount = posts.filter((item) => item.mediaType === "video");
+  const textCount = posts.filter((item) => item.mediaType === "text");
+
+  const createThreeButtonAlert = () =>
+    Alert.alert(
+      `subscribe to @${item.username}`,
+      `Would you like to subscribe to @${item.username} for ${item.subCost} Coins`,
+      [
+        {
+          text: "Subscribe",
+          onPress: () => handleSubscriptions(),
+        },
+        {
+          text: "Not Now",
+
+          onPress: () => null,
+          type: "cancel",
+        },
+      ]
+    );
+
+  const unsubscribeAlert = () =>
+    Alert.alert(
+      `unsubscribe to @${item.username}`,
+      `Would you like to unsubscribe to @${item.username} `,
+      [
+        {
+          text: "Unsubscribe",
+          onPress: () => unfollowUser(),
+        },
+        {
+          text: "Not Now",
+
+          onPress: () => null,
+          type: "cancel",
+        },
+      ]
+    );
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <ProfileSkeleton />
+      </SafeAreaView>
+    );
+  }
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
+  const scrollY = new Animated.Value(0);
+
+  const diffclamp = Animated.diffClamp(scrollY, 0, 45);
 
   return (
     <>
-      <View style={{ width: 200, backgroundColor: "white" }}></View>
-
       <ScrollView
+        scrollEventThrottle={16}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+        }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, backgroundColor: "white" }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-          />
-        }
       >
-        <Image
-          style={styles.userBanner}
-          source={{ uri: route.params.bannerImage }}
-        />
+        <SharedElement id={item.id}>
+          <View style={{ position: "absolute" }}>
+            <BannerSkeleton />
+          </View>
+        </SharedElement>
 
-        <Video
-          source={{ uri: route.params.bannerImage }}
-          isLooping
-          shouldPlay={true}
-          isMuted={true}
-          resizeMode="cover"
-          style={styles.userBanner}
-        />
+        {userDetails.bannerImageType === "image" ? (
+          <SharedElement id={item.id}>
+            <Animated.Image
+              style={{
+                width: 455,
+                height: 455,
+                position: "absolute",
+                opacity: defaultImageAnimated,
+
+                alignSelf: "center",
+                borderRadius: 10,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+              }}
+              resizeMode="cover"
+              onLoad={handleDefaultImageLoad}
+              source={{ uri: item.bannerImage }}
+            />
+          </SharedElement>
+        ) : (
+          <Video
+            source={{ uri: item.bannerImage }}
+            ref={video}
+            isLooping
+            shouldPlay
+            isMuted
+            style={{
+              height: 450,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              position: "absolute",
+            }}
+            resizeMode="cover"
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          />
+        )}
 
         <Image
           style={styles.userBannerFader}
           source={require("../assets/fader.png")}
         />
 
-        <TouchableOpacity onPress={() => navigation.goBack({ item: item })}>
-          <Image
-            style={styles.backButton}
-            source={require("../assets/backButton2.png")}
-          />
-        </TouchableOpacity>
-        <View style={{ bottom: 410 }}>
-          <View style={{ top: 30 }}>
-            <Text style={styles.displayname}>{profile.displayName}</Text>
-            <Text style={styles.username}>@{route.params.username}</Text>
+        <View style={{ bottom: 440 }}>
+          <View style={{ top: 70, right: 6 }}>
+            <Text style={styles.displayname}>{item.displayName}</Text>
+            <Text style={styles.username}>@{item.username}</Text>
 
             <Image
-              style={styles.profileImage}
+              style={{
+                position: "absolute",
+                left: 10,
+                width: 50,
+                height: 50,
+                resizeMode: "contain",
+                top: 250,
+                borderRadius: 100,
+                aspectRatio: 1,
+              }}
               source={
-                profile.profileimage === null
+                item.profileimage === null
                   ? require("../assets/noProfilePic.jpeg")
-                  : { uri: route.params.profileimage }
+                  : { uri: item.profileimage }
               }
             />
           </View>
 
-          <TouchableOpacity onPress={() => handleFollow()}>
-            <Image
-              style={styles.subButton}
-              source={
-                isFollowing === true
-                  ? require("../assets/followingbutton.png")
-                  : require("../assets/followbutton.png")
-              }
-            />
+          <TouchableOpacity onPress={() => unsubscribeAlert()}>
+            {isFollowing === true ? (
+              <Image
+                style={styles.subButton}
+                source={require("../assets/subscribed.png")}
+              />
+            ) : null}
           </TouchableOpacity>
         </View>
+
         <View style={styles.profileNav}>
           <Text style={styles.home}>Home</Text>
 
@@ -255,7 +430,7 @@ export default function ProfileDetail({ navigation, route, item }) {
                 color: "#686877",
               }}
             >
-              @{route.params.username} Has No Content Yet.
+              @{item.username} Has No Content Yet.
             </Text>
             <Image
               style={{ height: 170, resizeMode: "contain", bottom: 20 }}
@@ -263,24 +438,308 @@ export default function ProfileDetail({ navigation, route, item }) {
             />
           </View>
         ) : (
-          <View style={styles.feedContainer}>
-            {posts.map((item) => {
-              return (
-                <View key={item.id}>
-                  <ProfileFeedList
-                    navigation={navigation}
-                    route={route}
-                    item={item}
-                  />
+          <View>
+            {isFollowing === false ? (
+              <>
+                <View
+                  style={{
+                    top: 100,
+                    flexDirection: "row",
+                    alignSelf: "center",
+                  }}
+                >
+                  <View>
+                    <Image
+                      style={{
+                        height: height * 0.145,
+                        aspectRatio: 1,
+                        right: 5,
+                      }}
+                      source={require("../assets/subBox.png")}
+                    />
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        fontWeight: "600",
+                        color: "white",
+                        top: 15,
+                        fontSize: 17,
+                      }}
+                    >
+                      Photos
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        top: 55,
+                        fontWeight: "600",
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    >
+                      {photoCount.length}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <Image
+                      style={{ height: height * 0.145, aspectRatio: 1 }}
+                      source={require("../assets/subBox.png")}
+                    />
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        fontWeight: "600",
+                        color: "white",
+                        top: 15,
+                        fontSize: 17,
+                      }}
+                    >
+                      Videos
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        top: 55,
+                        fontWeight: "600",
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    >
+                      {videoCount.length}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <Image
+                      style={{
+                        height: height * 0.145,
+                        aspectRatio: 1,
+                        left: 5,
+                      }}
+                      source={require("../assets/subBox.png")}
+                    />
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        fontWeight: "600",
+                        color: "white",
+                        top: 15,
+                        fontSize: 17,
+                      }}
+                    >
+                      Text
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        top: 55,
+                        fontWeight: "600",
+                        fontSize: 28,
+                        color: "white",
+                      }}
+                    >
+                      {textCount.length}
+                    </Text>
+                  </View>
                 </View>
-              );
-            })}
+                <View style={{ alignItems: "center", top: 65 }}>
+                  <TouchableOpacity onPress={() => createThreeButtonAlert()}>
+                    <Image
+                      style={{
+                        resizeMode: "contain",
+                        height: 215,
+                        width: 215,
+                        alignSelf: "center",
+                      }}
+                      source={require("../assets/accessButton.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <View style={{ paddingBottom: 60 }}>
+                {posts.map((item) => {
+                  if (item.mediaType === "image") {
+                    return (
+                      <View style={{ top: 30 }} key={item.id}>
+                        <ProfileImagePost
+                          userInfo={userInfo}
+                          item={item}
+                          navigation={navigation}
+                        />
+                      </View>
+                    );
+                  }
+
+                  if (item.mediaType === "video") {
+                    return (
+                      <View style={{ top: 30 }} key={item.id}>
+                        <ProfileVideoPost
+                          userInfo={userInfo}
+                          item={item}
+                          navigation={navigation}
+                        />
+                      </View>
+                    );
+                  }
+                })}
+              </View>
+            )}
           </View>
         )}
       </ScrollView>
+
+      <Animated.View
+        style={{
+          position: "absolute",
+          bottom: height * 0.8,
+          width: width * 1,
+          height: height * 0.2,
+          backgroundColor: "white",
+          borderBottomColor: "red",
+          borderBottomWidth: 2.0,
+          borderBottomColor: "#EDEDED",
+          flex: 1,
+          alignSelf: "center",
+          opacity: scrollY.interpolate({
+            inputRange: [1, height * 0.2],
+            outputRange: [0, 1],
+          }),
+        }}
+      >
+        <Text
+          style={{
+            position: "absolute",
+            alignSelf: "center",
+            top: height * 0.16,
+            fontWeight: "800",
+          }}
+        >
+          {item.username}
+        </Text>
+      </Animated.View>
+
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={{
+            position: "absolute",
+            resizeMode: "contain",
+            width: 35,
+            height: 50,
+            left: 21,
+            bottom: height * 0.8,
+          }}
+          source={require("../assets/backButton2.png")}
+        />
+      </TouchableOpacity>
+
+      <Image
+        style={{
+          height: height * 0.04,
+          width: width * 0.17,
+          borderRadius: 10,
+          position: "absolute",
+          left: width * 0.8,
+          top: height * 0.058,
+        }}
+        source={require("../assets/rectangleBlur.png")}
+      />
+
+      <Image
+        resizeMode="contain"
+        style={{
+          height: height * 0.02,
+          position: "absolute",
+          top: height * 0.068,
+          left: width * 0.22,
+          aspectRatio: 1,
+        }}
+        source={require("../assets/coin.png")}
+      />
+
+      <Text
+        style={{
+          left: width * 0.885,
+          top: height * 0.069,
+          fontWeight: "600",
+          position: "absolute",
+        }}
+      >
+        {points}
+      </Text>
     </>
   );
 }
+
+{
+  /* <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          style={{
+            position: "absolute",
+            resizeMode: "contain",
+            width: 35,
+            height: 50,
+            left: 21,
+            bottom: height * 0.8,
+          }}
+          source={require("../assets/backButton2.png")}
+        />
+      </TouchableOpacity>
+
+      <View
+        style={{
+          position: "absolute",
+          top: height * 0.06,
+          left: width * 0.75,
+        }}
+      >
+        <Image
+          style={{ height: 40, width: 70, borderRadius: 10 }}
+          source={require("../assets/backgroundBlur.png")}
+        />
+      </View>
+
+      <View style={{ position: "absolute", top: height * 0.036, left: 16 }}>
+        <Image
+          style={{
+            height: height * 0.027,
+            top: height * 0.032,
+            left: width * 0.72,
+            aspectRatio: 1,
+          }}
+          source={require("../assets/coin.png")}
+        />
+        <Text
+          style={{
+            left: width * 0.8,
+            top: height * 0.009,
+            fontWeight: "600",
+          }}
+        >
+          {points}
+        </Text>
+      </View> */
+}
+
+// {
+//   /* <Animated.View
+//         style={{
+//           bottom: height * 0.8,
+//           alignSelf: "center",
+//           position: "absolute",
+//           transform: [{ translateY: translateY }],
+//         }}
+//       >
+//         <Text>HELLO</Text>
+//       </Animated.View> */
+// }
 const styles = StyleSheet.create({
   logo: {
     position: "absolute",
@@ -290,6 +749,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignSelf: "center",
     top: 60,
+  },
+
+  setting: {
+    position: "absolute",
+    height: 29,
+    width: 29,
+    left: 308,
+    top: 26,
   },
 
   userBanner: {
@@ -377,10 +844,10 @@ const styles = StyleSheet.create({
   },
   subButton: {
     resizeMode: "contain",
-    top: 360,
-    width: 160,
-    height: 30,
-    right: 30,
+    top: 393,
+    width: 150,
+    height: 32,
+    right: 18,
   },
 
   displayname: {
@@ -433,7 +900,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 50,
     left: 21,
-    bottom: 300,
+    bottom: 565,
   },
   photoBox: {
     position: "absolute",

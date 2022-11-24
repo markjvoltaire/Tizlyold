@@ -15,22 +15,15 @@ import { useUser } from "../../context/UserContext";
 export default function SearchList({ item, navigation, isPressed, query }) {
   const { user, setUser } = useUser();
 
-
   return (
-    <View>
+    <View style={{ marginBottom: 80 }}>
       <TouchableOpacity
         style={{ margin: 10 }}
         onPress={() => {
           user.user_id === item.user_id
             ? navigation.navigate("UserProfile2")
-            : navigation.navigate("ProfileDetail2", {
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bannerImage: item.bannerImage,
-                bio: item.bio,
-                id: item.id,
-                user_id: item.user_id,
+            : navigation.push("ProfileDetail2", {
+                item,
               });
         }}
       >

@@ -3,21 +3,14 @@ import {
   Text,
   View,
   SafeAreaView,
-  Button,
   Image,
-  Alert,
-  ViewPropTypes,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
-import * as ImagePicker from "expo-image-picker";
-import { supabase } from "../services/supabase";
+import React from "react";
+
 import LottieView from "lottie-react-native";
 
 export default function Checkout({ navigation }) {
-  const [image, setImage] = useState();
-  const [uploadProgress, setUploadProgress] = useState();
-  const animation = useRef(null);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ top: 150 }}>

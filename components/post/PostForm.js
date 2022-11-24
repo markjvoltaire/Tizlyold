@@ -10,22 +10,18 @@ import {
   Alert,
   SafeAreaView,
   Platform,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import SelectList from "react-native-dropdown-select-list";
 
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
-import { createPost } from "../../services/user";
+
 import * as ImagePicker from "expo-image-picker";
-import { usePosts } from "../../context/PostContext";
-import Post from "../../screens/Post";
-import PostButtons from "./PostButtons";
-import AddCategory from "../AddCategory";
+
 import { StackActions } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
-
-import { ViewPropTypes } from "deprecated-react-native-prop-types";
 
 import { Video, AVPlaybackStatus } from "expo-av";
 export default function PostForm({ navigation }) {
@@ -37,12 +33,13 @@ export default function PostForm({ navigation }) {
   const [image, setImage] = useState({});
   const [post, setPost] = useState();
   const [mediaType, setMediaType] = useState("text");
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData] = useState();
   const [uploadProgress, setUploadProgress] = useState("");
   const pushActionGoHome = StackActions.push("HomeScreen");
-  const [hasGalleryPermissions, setHasGalleryPermission] = useState();
+
   const pushAction = StackActions.replace("Checkout");
   const [imageURL, setImageURL] = useState("");
+  const [imagePreview, setImagePreview] = useState();
 
   const username = user.username;
   const displayName = user.displayName;
@@ -61,101 +58,9 @@ export default function PostForm({ navigation }) {
     }
 
     if (status === "granted") {
-      const response = await pickPost();
-
-      if (!response.cancelled) {
-        setImage(photo);
-      }
+      await pickPost();
     }
   };
-
-  function clear() {
-    setTitle("");
-    setDescription("");
-    setImage({});
-  }
-
-  async function addPost() {
-    const userId = supabase.auth.currentUser.id;
-    const ext = image.uri.substring(image.uri.lastIndexOf(".") + 1);
-    const fileName = image.uri.replace(/^.*[\\\/]/, "");
-
-    setUploadProgress("loading");
-
-    var formData = new FormData();
-    formData.append("files", {
-      uri: image.uri,
-      name: fileName,
-      type: image.type ? `image/${ext}` : `video/${ext}`,
-    });
-
-    try {
-      const { data, error } = await supabase.storage
-        .from("posts")
-        .upload(fileName, formData, {
-          upsert: true,
-        });
-
-      const { publicURL } = await supabase.storage
-        .from("posts")
-        .getPublicUrl(`${fileName}`);
-
-      const url = `${supabase.supabaseUrl}/storage/v1/object/posts/${data.Key}`;
-      const headers = supabase._getAuthHeaders();
-      const req = new XMLHttpRequest();
-
-      function transferComplete(evt) {
-        setUploadProgress("done");
-        clear();
-        navigation.dispatch(pushAction);
-      }
-
-      req.addEventListener("load", transferComplete);
-
-      req.open("POST", url);
-      for (const [key, value] of Object.entries(headers)) {
-        req.setRequestHeader(key, value);
-      }
-      req.setRequestHeader("Authorization", data.authorization);
-
-      req.send(data);
-
-      let imageLink = publicURL;
-      let type = image.type;
-
-      setImageURL(imageLink);
-      if (image.type === "image") {
-        setMediaType("image");
-      }
-      if (image.type === "video") {
-        setMediaType("video");
-      }
-      if (image.type === "text") {
-        setMediaType("text");
-      }
-
-      const resp = await supabase.from("post").insert([
-        {
-          username: username,
-          user_id: userId,
-          displayName: displayName,
-          title: title,
-          description: description,
-          profileimage: profileImage,
-          media: imageLink,
-          mediaType: type,
-          bannerImage: bannerImage,
-          bio: bio,
-          category: selected,
-          followingId: followingId,
-        },
-      ]);
-
-      return resp;
-    } catch (e) {
-      return null;
-    }
-  }
 
   const pickPost = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
@@ -167,21 +72,100 @@ export default function PostForm({ navigation }) {
     });
 
     if (!photo.cancelled) {
-      setImage(photo);
+      let newfile = {
+        uri: photo.uri,
+        type: `test/${photo.uri.split(".")[1]}`,
+        name: `test.${photo.uri.split(".")[1]}`,
+        mediaType: photo.type,
+      };
+
+      handleUpload(newfile);
+      setImagePreview(photo);
     }
   };
 
-  return (
-    <View style={styles.postHeader}>
-      <TextInput
-        style={styles.postTitle}
-        fontWeight="600"
-        placeholder="Post Title"
-        placeholderTextColor="#393939"
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-      />
+  const handleUpload = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "TizlyUpload");
+    data.append("cloud_name", "doz01gvsj");
 
+    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // this needs to be the link that that goes to supabase
+
+        setImage(data);
+      });
+  };
+
+  const addPost = async () => {
+    const userId = supabase.auth.currentUser.id;
+
+    setUploadProgress("loading");
+    const req = new XMLHttpRequest();
+
+    function transferComplete(evt) {
+      setUploadProgress("done");
+      clear();
+      navigation.dispatch(pushAction);
+    }
+
+    req.addEventListener("load", transferComplete);
+
+    const resp = await supabase.from("post").insert([
+      {
+        username: username,
+        user_id: userId,
+        displayName: displayName,
+
+        description: description,
+        profileimage: profileImage,
+        media: image.url,
+        mediaType: image.resource_type,
+        bannerImage: bannerImage,
+        bio: bio,
+        category: selected,
+        followingId: followingId,
+      },
+    ]);
+
+    const response = resp.body;
+
+    setImageData(response);
+
+    if (resp.error === null) {
+      setUploadProgress("done");
+      navigation.dispatch(pushAction);
+    } else {
+      setUploadProgress("");
+      Alert.alert("Something Went Wrong");
+    }
+
+    return resp;
+  };
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.8,
+        width: 900,
+        left: 1,
+        top: height * 0.03,
+        height: 3,
+      }}
+    />
+  );
+  return (
+    <View style={{ alignItems: "center", bottom: height * 0.36 }}>
       <Text style={styles.postText}>Post</Text>
 
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -191,8 +175,23 @@ export default function PostForm({ navigation }) {
         />
       </TouchableOpacity>
 
+      <FullSeperator />
+
       <TextInput
-        style={styles.postDescription}
+        style={{
+          position: "absolute",
+          top: height * 0.1,
+          height: height * 0.2,
+          width: width * 0.9,
+          borderRadius: 8,
+          fontSize: 16,
+          paddingBottom: height * 0.02,
+          paddingLeft: height * 0.02,
+
+          paddingTop: height * 0.04,
+          backgroundColor: "#EBEBF1",
+          fontWeight: "500",
+        }}
         placeholder="Post Description"
         placeholderTextColor="#393939"
         value={description}
@@ -200,44 +199,34 @@ export default function PostForm({ navigation }) {
       />
 
       <View style={{ bottom: 50 }}>
-        <Text style={styles.subHead}>Select From Gallery</Text>
+        <Text
+          style={{
+            position: "absolute",
+            top: height * 0.39,
+            right: width * 0.12,
+            fontWeight: "700",
+          }}
+        >
+          Select From Gallery
+        </Text>
 
-        <View style={styles.addCategory}>
-          <TouchableOpacity></TouchableOpacity>
-        </View>
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
-            style={styles.plusButton}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.45,
+              right: width * 0.15,
+              borderRadius: 10,
+            }}
             source={
-              image.uri === undefined
-                ? require("../../assets/plusButton.png")
-                : { uri: image.uri }
+              imagePreview
+                ? { uri: imagePreview.uri }
+                : require("../../assets/plusButton.png")
             }
           />
-
-          <>
-            <Video
-              ref={video}
-              resizeMode="cover"
-              style={styles.plusButton}
-              source={
-                image
-                  ? { uri: image.uri }
-                  : require("../../assets/plusButton.png")
-              }
-            />
-            {/* <Image
-                style={{
-                  position: "absolute",
-                  width: 55,
-                  height: 55,
-                  top: 410,
-                  right: 105,
-                }}
-                resizeMode="contain"
-                source={require("../../assets/playButton.png")}
-              /> */}
-          </>
         </TouchableOpacity>
       </View>
 
@@ -249,12 +238,35 @@ export default function PostForm({ navigation }) {
         />
       ) : null}
 
-      <TouchableOpacity onPress={() => addPost()}>
-        <Image
-          style={styles.postButton}
-          source={require("../../assets/post.png")}
-        />
-      </TouchableOpacity>
+      {imagePreview ? (
+        <TouchableOpacity
+          style={{ bottom: height * 0.09, left: width * 0.28 }}
+          onPress={() => addPost()}
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              width: width * 0.14,
+            }}
+            source={require("../../assets/post.png")}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View
+          style={{ bottom: height * 0.09, left: width * 0.28 }}
+          onPress={() => addPost()}
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              width: width * 0.14,
+            }}
+            source={require("../../assets/postButtonGrey.png")}
+          />
+        </View>
+      )}
     </View>
   );
 }

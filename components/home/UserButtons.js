@@ -5,6 +5,8 @@ import { useUser } from "../../context/UserContext";
 import { FlatList } from "react-native-gesture-handler";
 import { set } from "react-native-reanimated";
 import { getPosts, getFollowing } from "../../services/user";
+import { useLike } from "../../context/LikeContext";
+import { getAllLikes } from "../../services/user";
 
 export default function UserButtons({
   item,
@@ -14,11 +16,10 @@ export default function UserButtons({
   setSaveIsPressed,
   post,
   navigation,
+  likeList,
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
-
-
   const { user } = useUser();
 
   const creatorId = item.user_id;
@@ -82,17 +83,6 @@ export default function UserButtons({
     return resp;
   }
 
-  async function getLikes() {
-    const resp = await supabase
-      .from("likes")
-      .select("*")
-      .eq("userId", userId)
-      .eq("postId", item.id)
-      .eq("liked_Id", item.likeId);
-
-    return resp.body;
-  }
-
   async function getSaves() {
     const resp = await supabase
       .from("saves")
@@ -104,9 +94,27 @@ export default function UserButtons({
     return resp.body;
   }
 
+  async function getAllLikedPost() {
+    const resp = await supabase.from("post").select("*").eq("user_id", userId);
+
+    return resp;
+  }
+
+  async function getLikes() {
+    const resp = await supabase
+      .from("likes")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("liked_Id", item.likeId);
+
+    return resp.body;
+  }
+
   useEffect(() => {
     const seeLikes = async () => {
       const res = await getLikes();
+
       res.map((post) => setIsPressed(post.liked));
     };
     seeLikes();
@@ -121,9 +129,8 @@ export default function UserButtons({
   }, []);
 
   const handlePress = () => {
-    setIsPressed((current) => !current);
-
     isPressed === true ? unlikePost() : likePost();
+    setIsPressed((current) => !current);
   };
 
   const handleSavePress = () => {
@@ -131,6 +138,14 @@ export default function UserButtons({
 
     saveIsPressed === true ? unSavePost() : savePost();
   };
+
+  useEffect(() => {
+    const getLikeList = async () => {
+      const resp = await getAllLikes();
+   
+    };
+    getLikeList();
+  }, []);
 
   return (
     <View style={styles.userButtonsContainer}>

@@ -9,23 +9,20 @@ import {
   ScrollView,
   Button,
   Alert,
+  Dimensions,
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
-import { signIn, signInUser } from "../services/user";
+
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 import { StackActions } from "@react-navigation/native";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import Validator from "email-validator";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
-  const { user, setUser } = useUser();
-  // const pushAction = StackActions.navigate("HomeScreen");
+
   const pushActionSignUp = StackActions.replace("SignUp");
 
   async function loginWithEmail() {
@@ -39,6 +36,8 @@ export default function Login({ navigation }) {
       navigation.push("HomeScreen");
     }
   }
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   return (
     <ScrollView
@@ -50,17 +49,29 @@ export default function Login({ navigation }) {
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
 
       <Image
-        style={styles.headerIcon}
-        source={require("../assets/Tizlymed.png")}
-      />
+        style={{
+          position: "absolute",
 
-      <Image
-        style={styles.headerIcon}
+          height: height * 0.06,
+          alignSelf: "center",
+          top: height * 0.19,
+          resizeMode: "contain",
+        }}
         source={require("../assets/Tizlymed.png")}
       />
 
       <TextInput
-        style={styles.emailInput}
+        style={{
+          position: "absolute",
+          alignSelf: "center",
+          top: height * 0.33,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: 50,
+          width: 311,
+          borderRadius: 10,
+          paddingLeft: 30,
+        }}
         placeholder="Email"
         autoCapitalize="none"
         keyboardType="email-address"
@@ -71,7 +82,17 @@ export default function Login({ navigation }) {
       />
 
       <TextInput
-        style={styles.passwordInput}
+        style={{
+          position: "absolute",
+          alignSelf: "center",
+          top: height * 0.42,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: 50,
+          width: 311,
+          borderRadius: 10,
+          paddingLeft: 30,
+        }}
         placeholder="Password"
         autoCapitalize="none"
         autoCorrect={false}
@@ -83,16 +104,30 @@ export default function Login({ navigation }) {
 
       <TouchableOpacity onPress={() => loginWithEmail()}>
         <Image
-          style={styles.continueButton}
+          resizeMode="contain"
+          style={{
+            position: "absolute",
+
+            height: height * 0.06,
+            aspectRatio: 1,
+            top: height * 0.54,
+            alignSelf: "center",
+          }}
           source={require("../assets/buttonBlue.png")}
         />
       </TouchableOpacity>
       <View>
-        <Text style={styles.signupRedirect}>Don't have an account?</Text>
         <TouchableOpacity>
           <Text
             onPress={() => navigation.dispatch(pushActionSignUp)}
-            style={styles.signupButton}
+            style={{
+              alignSelf: "center",
+              top: height * 0.65,
+              color: "#00A3FF",
+              fontSize: 16,
+              position: "absolute",
+              fontWeight: "600",
+            }}
           >
             Sign Up Here
           </Text>

@@ -38,7 +38,7 @@ export default function ProfileHomeView({
           user={user}
           setUser={setUser}
           navigation={navigation}
-          post={post}
+          item={post}
         />
         <FullSeperator />
       </>

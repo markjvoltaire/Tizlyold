@@ -14,7 +14,10 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import HomeScreen from "../screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MainStackNavigator } from "../navigation/StackNavigator";
+import {
+  ExploreStackNavigator,
+  MainStackNavigator,
+} from "../navigation/StackNavigator";
 import Welcome from "../screens/Welcome";
 import Login from "../screens/Login";
 import SignUp from "../screens/SignUp";
@@ -49,6 +52,7 @@ import ImageDetails from "../screens/ImageDetails";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CommentScreen from "../screens/CommentScreen";
 import { supabase } from "../services/supabase";
+import GeneralSettings from "../screens/GeneralSettings";
 
 export default function AuthStack() {
   const Stack = createSharedElementStackNavigator();
@@ -57,11 +61,23 @@ export default function AuthStack() {
     <UserProvider>
       <FollowProvider>
         <PostProvider>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false, presentation: "card" }}
+          >
             <Stack.Screen
               name="HomeScreen"
               component={BottomTabNavigator}
-              options={{ headerShown: false, gestureEnabled: false }}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="ImageDetails"
+              sharedElements={(route) => {
+                const { item } = route.params;
+
+                return [item];
+              }}
+              component={ImageDetails}
             />
 
             <Stack.Screen
@@ -71,19 +87,23 @@ export default function AuthStack() {
             />
 
             <Stack.Screen
+              name="GeneralSettings"
+              component={GeneralSettings}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="ExploreScreen"
+              component={ExploreStackNavigator}
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
+
+            <Stack.Screen
               name="EditPost"
               component={EditPost}
               options={{ headerShown: false, gestureEnabled: false }}
             />
 
-            <Stack.Screen
-              name="ImageDetails"
-              component={ImageDetails}
-              sharedElements={(route) => {
-                return [route.params.item.id];
-              }}
-              options={{ headerShown: false }}
-            />
             <Stack.Screen
               name="UserProfilePostDetail"
               component={UserProfilePostDetail}
@@ -165,7 +185,7 @@ export default function AuthStack() {
             <Stack.Screen
               name="UserSubscriber"
               component={UserProfileSubscribers}
-              options={{ headerShown: false, gestureEnabled: false }}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </PostProvider>

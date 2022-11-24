@@ -1,27 +1,10 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Video, AVPlaybackStatus } from "expo-av";
 import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import { useUser } from "../context/UserContext";
-import UserButtons from "../components/home/UserButtons";
 
 export default function Player({ route, navigation }) {
   const [comment, setComment] = useState("");
@@ -38,6 +21,8 @@ export default function Player({ route, navigation }) {
   const [commenter, setCommenter] = useState([]);
 
   const windowWidth = Dimensions.get("window").width;
+
+  const { item } = route.params;
 
   const postUserId = route.params.user_id;
   const postId = route.params.id;
@@ -178,95 +163,35 @@ export default function Player({ route, navigation }) {
     getDetails();
   }, []);
 
-  const { item } = route.params;
-
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
         <VideoHeader navigation={navigation} route={route} />
-        {post.map((item) => {
-          return (
-            <View key={item.id} style={{ top: 80 }}>
-              <Video
-                source={{ uri: item.media }}
-                isLooping
-                useNativeControls
-                shouldPlay={true}
-                style={{ height: 229, width: 415 }}
-              />
-            </View>
-          );
-        })}
+        <View key={item.id} style={{ top: 80 }}>
+          <Video
+            source={{ uri: item.media }}
+            isLooping
+            useNativeControls
+            shouldPlay={true}
+            style={{ height: 229, width: 415 }}
+          />
+        </View>
       </View>
 
-      <View style={{ top: 100, flex: 1 }}>
-        <FlatList
-          refreshing={refreshing}
-          onRefresh={() => refreshFeed()}
-          keyExtractor={(item) => item.id}
-          data={post}
-          renderItem={({ item }) => (
-            <View>
-              <UserPostDetails
-                displayName={displayName}
-                postUserId={postUserId}
-                navigation={navigation}
-                post={item}
-                commentList={commentList}
-                route={route}
-                commentUser={commentUser}
-                commenter={commenter}
-                saveIsPressed={saveIsPressed}
-                setSaveIsPressed={setSaveIsPressed}
-              />
-            </View>
-          )}
+      <View style={{ top: 101, flex: 1 }}>
+        <UserPostDetails
+          displayName={displayName}
+          postUserId={postUserId}
+          navigation={navigation}
+          post={item}
+          commentList={commentList}
+          route={route}
+          commentUser={commentUser}
+          commenter={commenter}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
         />
       </View>
-      <FullSeperator />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <View style={styles.inner}>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={true}
-            placeholder="Leave A Comment"
-            value={comment}
-            onChangeText={(text) => setComment(text)}
-            style={styles.commentInput}
-          />
-          <View
-            style={{
-              position: "absolute",
-              top: 207,
-              left: 80,
-              backgroundColor: "white",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() =>
-                createComment()
-                  .then(() => refreshFeed().then(() => Keyboard.dismiss()))
-                  .then(() => setComment())
-              }
-            >
-              <Image
-                style={{
-                  width: 100,
-                  bottom: 117,
-                  left: 200,
-                  resizeMode: "contain",
-
-                  position: "absolute",
-                }}
-                source={require("../assets/commentPost.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -344,4 +269,3 @@ resizeMode="contain"
 onPlaybackStatusUpdate={(status) => setStatus(() => status)}
 /> */
 }
-

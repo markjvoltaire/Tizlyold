@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { getNewTrendingCreators } from "../../services/user";
 import { useUser } from "../../context/UserContext";
@@ -7,6 +14,9 @@ export default function NewToTizly({ navigation }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useUser();
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -28,22 +38,16 @@ export default function NewToTizly({ navigation }) {
               onPress={() => {
                 user.id === item.id
                   ? navigation.navigate("UserProfile2")
-                  : navigation.navigate("ProfileDetail2", {
-                      username: item.username,
-                      displayName: item.displayName,
-                      profileimage: item.profileimage,
-                      bannerImage: item.bannerImage,
-                      bio: item.bio,
-                      id: item.id,
-                      user_id: item.user_id,
+                  : navigation.push("ProfileDetail2", {
+                      item,
                     });
               }}
             >
               <View>
                 <Image
                   style={{
-                    width: 124,
-                    height: 130,
+                    width: width * 0.3,
+                    height: height * 0.15,
                     borderRadius: 13,
                     borderColor: "#5C5C5C",
                     borderWidth: 0.2,
@@ -52,9 +56,9 @@ export default function NewToTizly({ navigation }) {
                 />
                 <Image
                   style={{
-                    width: 124,
-                    height: 93,
-                    top: 37,
+                    width: width * 0.3,
+                    height: height * 0.15,
+
                     borderRadius: 13,
                     position: "absolute",
                   }}
@@ -63,10 +67,11 @@ export default function NewToTizly({ navigation }) {
                 <Text
                   style={{
                     position: "absolute",
-                    top: 90,
+                    top: height * 0.115,
                     color: "white",
                     fontWeight: "800",
-                    left: 2,
+                    fontSize: 10.5,
+                    left: width * 0.008,
                   }}
                 >
                   {item.displayName}
@@ -74,10 +79,12 @@ export default function NewToTizly({ navigation }) {
                 <Text
                   style={{
                     position: "absolute",
-                    top: 105,
+
                     color: "#D7D8DA",
                     fontWeight: "600",
-                    left: 2,
+                    left: width * 0.008,
+                    fontSize: 9.5,
+                    top: height * 0.129,
                   }}
                 >
                   @{item.username}

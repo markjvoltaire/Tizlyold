@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -20,6 +21,9 @@ export default function TrendingCreators({ navigation, route }) {
 
   const { user, setUser } = useUser();
   const pushAction = StackActions.push("UserProfile");
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   useEffect(() => {
     const loadTrendingCreators = async () => {
@@ -46,21 +50,15 @@ export default function TrendingCreators({ navigation, route }) {
                 user.id === item.id
                   ? navigation.navigate("UserProfile2")
                   : navigation.push("ProfileDetail2", {
-                      username: item.username,
-                      displayName: item.displayName,
-                      profileimage: item.profileimage,
-                      bannerImage: item.bannerImage,
-                      bio: item.bio,
-                      id: item.id,
-                      user_id: item.user_id,
+                      item,
                     });
               }}
             >
               <View>
                 <Image
                   style={{
-                    width: 124,
-                    height: 130,
+                    width: width * 0.3,
+                    height: height * 0.15,
                     borderRadius: 13,
                     borderColor: "#5C5C5C",
                     borderWidth: 0.2,
@@ -69,9 +67,9 @@ export default function TrendingCreators({ navigation, route }) {
                 />
                 <Image
                   style={{
-                    width: 124,
-                    height: 93,
-                    top: 37,
+                    width: width * 0.3,
+                    height: height * 0.15,
+
                     borderRadius: 13,
                     position: "absolute",
                   }}
@@ -80,10 +78,11 @@ export default function TrendingCreators({ navigation, route }) {
                 <Text
                   style={{
                     position: "absolute",
-                    top: 90,
+                    top: height * 0.115,
                     color: "white",
                     fontWeight: "800",
-                    left: 2,
+                    fontSize: 10.5,
+                    left: width * 0.008,
                   }}
                 >
                   {item.displayName}
@@ -91,10 +90,12 @@ export default function TrendingCreators({ navigation, route }) {
                 <Text
                   style={{
                     position: "absolute",
-                    top: 105,
+
                     color: "#D7D8DA",
-                    fontWeight: "600",
-                    left: 2,
+                    fontWeight: "500",
+                    left: width * 0.008,
+                    fontSize: 10.5,
+                    top: height * 0.13,
                   }}
                 >
                   @{item.username}

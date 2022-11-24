@@ -2,108 +2,212 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable,
-  Image,
   TouchableOpacity,
+  Image,
+  Pressable,
+  Animated,
+  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserButtons from "../home/UserButtons";
+import {
+  SharedElement,
+  createSharedElementStackNavigator,
+} from "react-navigation-shared-element";
+import CurrentUserButtons from "../home/CurrentUserButtons";
+import { useUser } from "../../context/UserContext";
+import { useLike } from "../../context/LikeContext";
+import VideoHeader from "../post/VideoHeader";
+import ProfileHeader from "./ProfileHeader";
+import PostActivity from "../../views/PostActivity";
+import HomePostButtons from "../home/HomePostButtons";
+import Buttons from "../home/Buttons";
+import { supabase } from "../../services/supabase";
+import PostSkeleton from "./PostSkeleton";
+import PostHeader from "../home/PostHeader";
 
-export default function ProfileImagePost({ item, navigation }) {
+export default function ProfileImagePost({
+  item,
+  navigation,
+  followingId,
+  userInfo,
+}) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
+  const { user, setUser } = useUser();
+
+  const userId = user.user_id;
+
+  async function getLikes() {
+    const resp = await supabase
+      .from("likes")
+      .select("*")
+      .eq("userId", userId)
+      .eq("postId", item.id)
+      .eq("liked_Id", item.likeId);
+
+    return resp.body;
+  }
+
   const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const [loading, setLoading] = useState(false);
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      const seeLikes = async () => {
+        const res = await getLikes();
+        res.map((post) => setIsPressed(post.liked));
+
+        if (res.length === 0) {
+          setIsPressed(false);
+        }
+      };
+      seeLikes();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  let height = Dimensions.get("window").height;
+
   return (
-    <View style={{ paddingBottom: 90, top: 10.5 }}>
-      <Pressable onPress={() => navigation.navigate("ImageDetails", { item })}>
-        <Image
-          source={{ uri: item.media }}
-          style={{
-            height: 398,
-            aspectRatio: 1,
-            alignSelf: "center",
-            borderRadius: 10,
-          }}
-          resizeMode="cover"
-        />
-        <Image
+    <>
+      <View style={{ paddingBottom: 4, top: 40, alignSelf: "center" }}>
+        <View
           style={{
             alignSelf: "center",
-            resizeMode: "stretch",
-            height: 200,
-            width: 398,
-            top: 200,
-            borderRadius: 12,
-            position: "absolute",
-          }}
-          resizeMode="stretch"
-          source={require("../../assets/fader.png")}
-        />
-      </Pressable>
-
-      <View style={{ position: "absolute", top: 370, left: 10 }}>
-        <Text style={{ color: "white", fontWeight: "700" }}>{item.title}</Text>
-      </View>
-
-      <View style={{ position: "absolute" }}>
-        <Image
-          style={{
-            height: 35,
-            width: 35,
-            borderRadius: 100,
-            position: "absolute",
-            left: 10,
-            top: 330,
-          }}
-          source={{ uri: item.profileimage }}
-        />
-        <Text
-          style={{
-            position: "absolute",
-            color: "white",
-            top: 342,
-            left: 55,
-            fontWeight: "500",
-            fontSize: 15,
-          }}
-        >
-          {item.username}
-        </Text>
-      </View>
-
-      <View>
-        <Text
-          style={{
-            left: 10,
+            right: 20,
+            paddingBottom: 25,
             top: 12,
-            fontWeight: "700",
-            color: "#4F4E4E",
-            textAlign: "left",
-            width: 390,
-            paddingBottom: 30,
           }}
         >
-          {item.description}
-        </Text>
+          <PostHeader navigation={navigation} item={item} />
+        </View>
 
-        {/* <Text style={{ left: 17, fontWeight: "700", color: "#4F4E4E" }}>
-          {postDate}
-        </Text> */}
+        <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
+          <SharedElement id={item.id}>
+            <View style={{ bottom: 50, alignSelf: "center" }}>
+              <PostSkeleton />
+            </View>
+          </SharedElement>
+          <SharedElement id={item.id}>
+            <Animated.Image
+              style={{
+                height: height * 0.454,
+                aspectRatio: 1,
+                alignSelf: "center",
+                borderRadius: 10,
+                bottom: 50,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+                opacity: imageAnimated,
+              }}
+              source={{ uri: item.media }}
+              onLoad={handleImageLoad}
+              resizeMode="cover"
+            />
+          </SharedElement>
+        </Pressable>
+
+        <View style={{ bottom: 50 }}>
+          <Text
+            style={{
+              left: 13,
+              top: 12,
+              fontWeight: "700",
+              textAlign: "left",
+              width: 390,
+              paddingBottom: 30,
+              lineHeight: 20,
+            }}
+          >
+            {item.description}
+          </Text>
+
+          <Image
+            resizeMode="contain"
+            style={{ width: 70, left: 10, bottom: 30 }}
+            source={require("../../assets/photoBean.png")}
+          />
+        </View>
+
+        <View style={{ bottom: 90 }}>
+          {item.user_id === user.user_id ? (
+            <CurrentUserButtons
+              isPressed={isPressed}
+              setIsPressed={setIsPressed}
+              saveIsPressed={saveIsPressed}
+              setSaveIsPressed={setSaveIsPressed}
+              navigation={navigation}
+              item={item}
+            />
+          ) : (
+            <>
+              <UserButtons
+                isPressed={isPressed}
+                setIsPressed={setIsPressed}
+                saveIsPressed={saveIsPressed}
+                setSaveIsPressed={setSaveIsPressed}
+                item={item}
+                navigation={navigation}
+              />
+            </>
+          )}
+        </View>
       </View>
-
-      <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        navigation={navigation}
-        item={item}
-      />
-    </View>
+      <FullSeperator />
+    </>
   );
 }
 
-const styles = StyleSheet.create({});
+{
+  /* <Image
+            style={{
+              height: 35,
+              width: 35,
+              borderRadius: 100,
+              position: "absolute",
+              left: 20,
+              top: 330,
+            }}
+            source={{ uri: item.profileimage }}
+          />
+          <Text
+            style={{
+              position: "absolute",
+              color: "white",
+              top: 342,
+              left: 60,
+              fontWeight: "500",
+              fontSize: 15,
+            }}
+          >
+            {item.username}
+          </Text> */
+}
+
+const styles = StyleSheet.create({
+  fullSeperator: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 1.3,
+    width: 390,
+    alignSelf: "center",
+  },
+});

@@ -1,39 +1,28 @@
 import {
   StyleSheet,
   Text,
-  View,
   TextInput,
   Image,
   TouchableOpacity,
   ScrollView,
   Alert,
-  Button,
-  SafeAreaView,
+  Dimensions,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import Animated, {
-  useAnimatedGestureHandler,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
+import React, { useState } from "react";
 
 import { supabase } from "../services/supabase";
-import { signUp } from "../services/user";
+
 import { StackActions } from "@react-navigation/native";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [query, setQuery] = useState("");
-  const [isPressed, setIsPressed] = useState(false);
-  const [filterData, setFilterData] = useState([]);
-  const [masterData, setMasterData] = useState([]);
-  const [search, setSearch] = useState("");
-  const [input, setInput] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   const pushActionLogin = StackActions.replace("Login");
-  const pushActionUsername = StackActions.replace("Username");
 
   const signUpWithEmail = async () => {
     const { user, error } = await supabase.auth.signUp({
@@ -41,14 +30,35 @@ export default function SignUp({ navigation }) {
       password: password,
     });
 
+    const userId = supabase.auth.currentUser.id;
+    await supabase.from("profiles").insert([
+      {
+        username: username,
+        user_id: userId,
+        email: email,
+        displayName: displayName,
+      },
+    ]);
+
+    if (password.length < 7) {
+      Alert.alert("Password Should Be 8 or More Characters");
+    }
+
+    if (email === null) {
+      Alert.alert("Please Fill All Field Inputs");
+    }
+
     if (!error) {
-      navigation.dispatch(pushActionUsername);
+      navigation.push("HomeScreen");
     } else {
       Alert.alert(error.message);
     }
 
     return { user, error };
   };
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   return (
     <ScrollView
@@ -59,12 +69,67 @@ export default function SignUp({ navigation }) {
     >
       <Image style={styles.logoBg} source={require("../assets/bg.png")} />
       <Image
-        style={styles.headerIcon}
+        style={{
+          position: "absolute",
+          height: height * 0.03,
+          alignSelf: "center",
+          top: height * 0.08,
+          resizeMode: "contain",
+        }}
         source={require("../assets/Tizlymed.png")}
       />
 
       <TextInput
-        style={styles.emailInput}
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.2,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
+        placeholder="Username"
+        autoCapitalize="none"
+        autoFocus={true}
+        onChangeText={(text) =>
+          setUsername(text.toLowerCase()) && setQuery(text.toLowerCase())
+        }
+        value={username}
+      />
+
+      <TextInput
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.27,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
+        placeholder="Display Name"
+        autoCapitalize="none"
+        onChangeText={(text) => setDisplayName(text)}
+        value={displayName}
+      />
+
+      <TextInput
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.34,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
         placeholder="Email"
         autoCapitalize="none"
         keyboardType="email-address"
@@ -74,7 +139,17 @@ export default function SignUp({ navigation }) {
         value={email}
       />
       <TextInput
-        style={styles.passwordInput}
+        style={{
+          position: "absolute",
+          left: width * 0.1,
+          top: height * 0.41,
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: height * 0.055,
+          width: width * 0.83,
+          borderRadius: 10,
+          paddingLeft: width * 0.05,
+        }}
         placeholder="Password"
         autoCapitalize="none"
         autoCorrect={false}
@@ -84,35 +159,53 @@ export default function SignUp({ navigation }) {
         value={password}
       />
 
-      {password.length < 8 ? (
+      {username.length === 0 ? (
         <TouchableOpacity
           onPress={() => Alert.alert("Password Should Be 8 or More Characters")}
         >
           <Image
-            style={styles.continueButton}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              height: height * 0.06,
+              aspectRatio: 1,
+              top: height * 0.5,
+              alignSelf: "center",
+            }}
             source={require("../assets/buttonGrey.png")}
           />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={() => signUpWithEmail()}>
           <Image
-            style={styles.continueButton}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              height: height * 0.06,
+              aspectRatio: 1,
+              top: height * 0.5,
+              alignSelf: "center",
+            }}
             source={require("../assets/buttonBlue.png")}
           />
         </TouchableOpacity>
       )}
 
-      <View>
-        <Text style={styles.signupRedirect}>Already have an account?</Text>
-        <TouchableOpacity>
-          <Text
-            onPress={() => navigation.dispatch(pushActionLogin)}
-            style={styles.signupButton}
-          >
-            Sign in Here
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity>
+        <Text
+          onPress={() => navigation.dispatch(pushActionLogin)}
+          style={{
+            position: "absolute",
+            fontWeight: "600",
+            top: height * 0.68,
+            alignSelf: "center",
+            fontSize: 16,
+            color: "#00A3FF",
+          }}
+        >
+          Sign in Here
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -123,7 +216,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     left: 168,
-    top: 150,
+    top: 50,
     resizeMode: "contain",
   },
   backButton: {
@@ -137,7 +230,7 @@ const styles = StyleSheet.create({
   usernameInput: {
     position: "absolute",
     left: 55,
-    top: 255,
+    top: 185,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,
@@ -160,6 +253,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 55,
     top: 385,
+    borderColor: "grey",
+    borderWidth: 0.5,
+    height: 50,
+    width: 311,
+    borderRadius: 10,
+    paddingLeft: 30,
+  },
+  displayNameInput: {
+    position: "absolute",
+    left: 55,
+    top: 250,
     borderColor: "grey",
     borderWidth: 0.5,
     height: 50,

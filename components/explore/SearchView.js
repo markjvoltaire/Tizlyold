@@ -44,7 +44,7 @@ export default function SearchView({
     );
   } else {
     return (
-      <View>
+      <View style={{ paddingBottom: 100 }}>
         <Text
           style={{
             fontWeight: "600",
@@ -56,14 +56,16 @@ export default function SearchView({
           Results
         </Text>
         <FlatList
-          style={{ marginBottom: 100, alignSelf: "center", top: 60 }}
+          style={{
+            marginBottom: 100,
+            alignSelf: "center",
+            top: 60,
+          }}
           numColumns={3}
           data={filterData}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={() => (
-            <View style={{ backgroundColor: "red" }} />
-          )}
+          ItemSeparatorComponent={() => <View />}
           renderItem={({ item }) => (
             <SearchList
               isPressed={isPressed}

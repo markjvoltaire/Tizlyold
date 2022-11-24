@@ -5,40 +5,58 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Button,
-  SafeAreaView,
   FlatList,
-  useWindowDimensions,
   RefreshControl,
+  Animated,
 } from "react-native";
-
-import { Link } from "@react-navigation/native";
 
 import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
-import { getPosts, getFollowing } from "../services/user";
-import { usePosts } from "../context/PostContext";
-import { Video, AVPlaybackStatus } from "expo-av";
-import UserButtons from "../components/home/UserButtons";
-import TopHeader from "../components/TopHeader";
-import NoPost from "../components/home/NoPost";
-import HomeFeedList from "../components/home/HomeFeedList";
-import { fromPairs } from "lodash";
-import { useFollow } from "../context/FollowContext";
-import { useScreens } from "react-native-screens";
-import LottieView from "lottie-react-native";
 import { StackActions } from "@react-navigation/native";
+import { useScrollToTop } from "@react-navigation/native";
+
+import Skeleton from "../Skeleton";
+import Points from "../views/Points";
+import { useLike } from "../context/LikeContext";
+import { getAllLikes } from "../services/user";
+import ImagePost from "../components/home/ImagePost";
+import VideoPost from "../components/home/VideoPost";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
-
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
   const [userFollowingId, setUserFollowingId] = useState();
   const pushAction = StackActions.replace("Explore");
+  const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const ref = React.useRef(null);
+  useScrollToTop(ref);
+
+  const { likeList, setLikeList } = useLike();
+
+  const defaultImageAnimated = new Animated.Value(0);
+  const imageAnimated = new Animated.Value(0);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleImageLoad = () => {
+    Animated.timing(imageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const [follow, setFollow] = useState([]);
 
@@ -66,7 +84,7 @@ export default function HomeScreen({ navigation, route }) {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
       .from("following")
-      .select(" creatorId, followingId, creatorUsername, userId")
+      .select("*")
       .eq("following", true)
       .eq("userId", userId);
 
@@ -76,10 +94,16 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   useEffect(() => {
+    const getLikeList = async () => {
+      const resp = await getAllLikes();
+      setLikeList(resp);
+    };
+    getLikeList();
+  }, []);
+
+  useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
-
-      setFollow(resp);
     };
     getFollowingList();
   }, []);
@@ -118,7 +142,8 @@ export default function HomeScreen({ navigation, route }) {
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [userPostList.list]);
+      .in("followingId", [userPostList.list])
+      .order("date", { ascending: false });
 
     setPostList(resp.body);
 
@@ -135,17 +160,7 @@ export default function HomeScreen({ navigation, route }) {
   if (loading) {
     return (
       <View style={{ backgroundColor: "white", flex: 1 }}>
-        <LottieView
-          style={{
-            top: 70,
-            height: 400,
-            width: 400,
-            position: "absolute",
-            alignSelf: "center",
-          }}
-          source={require("../assets/lottie/fasterGreyLoader.json")}
-          autoPlay
-        />
+        <Skeleton />
       </View>
     );
   }
@@ -156,11 +171,12 @@ export default function HomeScreen({ navigation, route }) {
 
   return (
     <View style={styles.homeScreenContainer}>
-      <TopHeader user={user} navigation={navigation} />
+      <Points navigation={navigation} />
 
       <View style={styles.feedContainer}>
         {postList.length === 0 ? (
           <ScrollView
+            showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -201,19 +217,26 @@ export default function HomeScreen({ navigation, route }) {
           </ScrollView>
         ) : (
           <FlatList
-            data={postList}
+            ref={ref}
             keyExtractor={(item) => item.id}
+            data={postList}
             refreshing={refreshing}
             onRefresh={() => refreshFeed()}
-            initialNumToRender={2}
-            showsVerticalScrollIndicator={false}
+            initialNumToRender={3}
             contentContainerStyle={{
               borderBottomWidth: 0.8,
               borderBottomColor: "#EDEDED",
             }}
-            renderItem={({ item }) => (
-              <HomeFeedList item={item} navigation={navigation} />
-            )}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              if (item.mediaType === "image") {
+                return <ImagePost item={item} navigation={navigation} />;
+              }
+
+              if (item.mediaType === "video") {
+                return <VideoPost navigation={navigation} item={item} />;
+              }
+            }}
           />
         )}
       </View>
@@ -244,12 +267,12 @@ const styles = StyleSheet.create({
 
   fullSeperator: {
     position: "absolute",
+    top: 680,
     alignSelf: "center",
     borderBottomColor: "grey",
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: 0.5,
     width: 600,
-    top: 370,
   },
 
   fullSeperator2: {

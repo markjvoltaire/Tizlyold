@@ -6,50 +6,84 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { usePoints } from "../context/PointsContext";
+import { supabase } from "../services/supabase";
 
-export default function TopHeader({ navigation }) {
+import { getUserPoints } from "../services/points";
+
+export default function TopHeader({ navigation, tizlyPoints }) {
   const { user, setUser } = useUser();
+  const { points, setPoints } = usePoints();
   const [query, setQuery] = useState();
+
   const [loading, setLoading] = useState(true);
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.8,
+        width: 900,
+        left: 1,
+        top: height * 0.06,
+        height: 3,
+      }}
+    />
+  );
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   return (
-    <SafeAreaView style={styles.componentContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("UserSubscriber")}>
+    <SafeAreaView
+      style={{
+        backgroundColor: "white",
+        height: height * 0.11,
+        borderBottomWidth: 0.8,
+        borderBottomColor: "#EDEDED",
+      }}
+    >
+      <View style={{ alignSelf: "center", bottom: height * 0.01 }}>
         <Image
-          style={styles.logo}
+          resizeMode="contain"
+          style={{
+            width: width * 0.12,
+          }}
           source={require("../assets/tizlyicon.jpg")}
         />
-      </TouchableOpacity>
+      </View>
 
-      {/* <TouchableOpacity onPress={() => navigation.navigate("Checkout")}>
+      <View style={{ bottom: height * 0.07, left: width * 0.03 }}>
         <Image
-          style={styles.notification}
-          source={require("../assets/noti.png")}
+          resizeMode="contain"
+          style={{
+            width: width * 0.09,
+            aspectRatio: 1,
+            borderRadius: 100,
+          }}
+          source={
+            user.profileimage === null
+              ? require("../assets/noProfilePic.jpeg")
+              : { uri: user.profileimage }
+          }
         />
-      </TouchableOpacity> */}
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Settings");
-        }}
-      >
-        <Image
-          style={styles.setting}
-          source={require("../assets/Setting.jpg")}
-        />
-      </TouchableOpacity>
+      </View>
 
-      <Image
-        style={styles.profileimage}
-        source={
-          user.profileimage === null
-            ? require("../assets/noProfilePic.jpeg")
-            : { uri: user.profileimage }
-        }
-      />
+      <View style={{ bottom: height * 0.1, left: width * 0.78 }}>
+        <Image
+          resizeMode="contain"
+          style={{ width: 20, height: 20, borderRadius: 100 }}
+          source={require("../assets/coin.png")}
+        />
+
+        <View style={{ left: width * 0.08, bottom: height * 0.022 }}>
+          <Text style={{ fontWeight: "600" }}>{points}</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -63,10 +97,10 @@ const styles = StyleSheet.create({
   },
   setting: {
     position: "absolute",
-    height: 29,
-    width: 29,
-    left: 368,
-    top: 17,
+    height: 22,
+    width: 22,
+    left: 308,
+    top: 15,
   },
 
   logo: {
@@ -76,6 +110,7 @@ const styles = StyleSheet.create({
     height: 26,
     backgroundColor: "white",
     alignSelf: "center",
+    top: 50,
   },
   logoContainer: {
     alignItems: "center",
@@ -97,10 +132,19 @@ const styles = StyleSheet.create({
     left: 320,
   },
   profileimage: {
-    height: 34,
-    width: 34,
+    height: 35,
+    width: 35,
     borderRadius: 100,
     left: 16,
     top: 12,
+  },
+  fullSeperator: {
+    borderBottomColor: "#EDEDED",
+    borderBottomWidth: 2.0,
+    opacity: 1.8,
+    width: 900,
+    left: 1,
+    top: 54,
+    height: 3,
   },
 });
