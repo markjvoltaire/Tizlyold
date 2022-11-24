@@ -40,7 +40,7 @@ export default function PostHeader({ item, navigation }) {
 
   if (loading) {
     return (
-      <View style={{ alignSelf: "center" }}>
+      <View style={{ alignSelf: "center", left: width * 0.03 }}>
         <View style={{ alignSelf: "center" }}>
           <View
             style={{ paddingTop: height * 0.03, paddingBottom: height * 0.01 }}
