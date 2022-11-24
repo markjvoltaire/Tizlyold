@@ -73,7 +73,7 @@ export default function VideoPost({ item, navigation, route }) {
   let width = Dimensions.get("window").width;
 
   return (
-    <View style={{ top: 10 }}>
+    <View style={{ top: height * 0.01 }}>
       <View style={{ alignSelf: "center", right: 20, top: 40 }}>
         <PostHeader navigation={navigation} item={item} />
       </View>
