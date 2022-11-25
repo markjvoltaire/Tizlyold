@@ -58,7 +58,6 @@ export default function UserProfileImagePost({
       <View
         style={{
           top: height * 0.02,
-          flex: 1,
         }}
       >
         <UserProfileHeader navigation={navigation} item={post} user={user} />
