@@ -96,7 +96,7 @@ export default function ImagePost({ item, navigation, followingId }) {
   return (
     <>
       <View
-        style={{ paddingBottom: 4, top: height * 0.04, alignSelf: "center" }}
+        style={{ paddingBottom: 4, top: height * 0.068, alignSelf: "center" }}
       >
         <View
           style={{

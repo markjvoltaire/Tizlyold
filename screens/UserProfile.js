@@ -83,6 +83,7 @@ export default function UserProfile({ navigation, route }) {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
       setPosts(resp);
+      console.log("resp", resp);
       setLoading(false);
     };
     getUserById();
