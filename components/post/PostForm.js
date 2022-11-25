@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   Platform,
   Dimensions,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -77,9 +78,11 @@ export default function PostForm({ navigation }) {
         name: `test.${photo.uri.split(".")[1]}`,
         mediaType: photo.type,
       };
+      const imageData = photo.assets.map((item) => item);
+      console.log("imageData", imageData);
 
       handleUpload(newfile);
-      setImagePreview(photo);
+      setImagePreview(imageData);
     }
   };
 
@@ -165,6 +168,9 @@ export default function PostForm({ navigation }) {
       }}
     />
   );
+
+  console.log("image", image);
+
   return (
     <View style={{ alignItems: "center", bottom: height * 0.36 }}>
       <Text style={styles.postText}>Post</Text>
@@ -177,6 +183,7 @@ export default function PostForm({ navigation }) {
       </TouchableOpacity>
 
       <FullSeperator />
+      <Text>{image.resource_type}</Text>
 
       <TextInput
         style={{
@@ -212,7 +219,7 @@ export default function PostForm({ navigation }) {
         </Text>
       </View>
 
-      {imagePreview === undefined ? (
+      {image === undefined ? (
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
             resizeMode="contain"
@@ -227,7 +234,7 @@ export default function PostForm({ navigation }) {
             source={require("../../assets/plusButton.png")}
           />
         </TouchableOpacity>
-      ) : imagePreview.type === "image" ? (
+      ) : image.resource_type === "image" ? (
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Image
             resizeMode="contain"
@@ -239,13 +246,13 @@ export default function PostForm({ navigation }) {
               right: width * 0.15,
               borderRadius: 10,
             }}
-            source={{ uri: imagePreview.uri }}
+            source={{ uri: image.url }}
           />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={() => openImageLibrary()}>
           <Video
-            source={{ uri: imagePreview.uri }}
+            source={{ uri: image.url }}
             ref={video}
             style={{
               position: "absolute",
