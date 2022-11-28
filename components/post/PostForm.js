@@ -29,16 +29,13 @@ export default function PostForm({ navigation }) {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(true);
   const video = React.useRef(null);
+  const [postInfo, setPostInfo] = useState();
   const { user, setUser } = useUser();
   const [image, setImage] = useState({});
-  const [post, setPost] = useState();
-  const [mediaType, setMediaType] = useState("text");
-  const [imageData, setImageData] = useState();
+  const [postURI, setPostURI] = useState({});
   const [uploadProgress, setUploadProgress] = useState("");
   const pushActionGoHome = StackActions.push("HomeScreen");
-
   const pushAction = StackActions.replace("Checkout");
-  const [imageURL, setImageURL] = useState("");
   const [imagePreview, setImagePreview] = useState();
   const [status, setStatus] = React.useState({});
   const username = user.username;
@@ -71,63 +68,59 @@ export default function PostForm({ navigation }) {
       quality: 0,
     });
 
-    if (!photo.cancelled) {
+    if (!photo.canceled) {
       let newfile = {
-        uri: photo.uri,
-        type: `test/${photo.uri.split(".")[1]}`,
-        name: `test.${photo.uri.split(".")[1]}`,
-        mediaType: photo.type,
+        uri: photo.assets[0].uri,
+        type: `test/${photo.assets[0].uri.split(".")[1]}`,
+        name: `test.${photo.assets[0].uri.split(".")[1]}`,
+        mediaType: photo.assets[0].type,
       };
-      const imageData = photo.assets.map((item) => item);
-      console.log("imageData", imageData);
 
-      handleUpload(newfile);
-      setImagePreview(imageData);
+      setPostURI(newfile);
+      setImagePreview(photo.assets);
+
+      return newfile;
     }
-  };
-
-  const handleUpload = (image) => {
-    const data = new FormData();
-    data.append("file", image);
-    data.append("upload_preset", "TizlyUpload");
-    data.append("cloud_name", "doz01gvsj");
-
-    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
-      method: "post",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // this needs to be the link that that goes to supabase
-        console.log("data", data);
-        setImage(data);
-      });
   };
 
   const addPost = async () => {
+    postURI === {} || null || undefined
+      ? Alert.alert("Something Went Wrong")
+      : uploadToCLoudinary(postURI);
+    setUploadProgress("loading");
+  };
+
+  async function uploadToCLoudinary(postURI) {
+    const data = new FormData();
+    data.append("file", postURI);
+    data.append("upload_preset", "TizlyUpload");
+    data.append("cloud_name", "doz01gvsj");
+
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/doz01gvsj/upload",
+      {
+        method: "post",
+        body: data,
+      }
+    );
+
+    const resp = await response.json();
+
+    uploadToSupabase(resp);
+  }
+
+  async function uploadToSupabase(resp) {
     const userId = supabase.auth.currentUser.id;
 
-    setUploadProgress("loading");
-    const req = new XMLHttpRequest();
-
-    function transferComplete(evt) {
-      setUploadProgress("done");
-      clear();
-      navigation.dispatch(pushAction);
-    }
-
-    req.addEventListener("load", transferComplete);
-
-    const resp = await supabase.from("post").insert([
+    const res = await supabase.from("post").insert([
       {
         username: username,
         user_id: userId,
         displayName: displayName,
-
         description: description,
         profileimage: profileImage,
-        media: image.url,
-        mediaType: image.resource_type,
+        media: resp.url,
+        mediaType: resp.resource_type,
         bannerImage: bannerImage,
         bio: bio,
         category: selected,
@@ -135,11 +128,7 @@ export default function PostForm({ navigation }) {
       },
     ]);
 
-    const response = resp.body;
-
-    setImageData(response);
-
-    if (resp.error === null) {
+    if (res.error === null) {
       setUploadProgress("done");
       navigation.dispatch(pushAction);
     } else {
@@ -147,10 +136,8 @@ export default function PostForm({ navigation }) {
       Alert.alert("Something Went Wrong");
     }
 
-    return resp;
-  };
-
-  console.log("imagePreview", imagePreview);
+    return res;
+  }
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
@@ -165,11 +152,12 @@ export default function PostForm({ navigation }) {
         left: 1,
         top: height * 0.03,
         height: 3,
+        flex: 1,
+        backgroundColor: "#FFFFFF",
+        justifyContent: "center",
       }}
     />
   );
-
-  console.log("image", image);
 
   return (
     <View style={{ alignItems: "center", bottom: height * 0.36 }}>
@@ -183,7 +171,6 @@ export default function PostForm({ navigation }) {
       </TouchableOpacity>
 
       <FullSeperator />
-      <Text>{image.resource_type}</Text>
 
       <TextInput
         style={{
@@ -219,8 +206,38 @@ export default function PostForm({ navigation }) {
         </Text>
       </View>
 
-      {image === undefined ? (
-        <TouchableOpacity onPress={() => openImageLibrary()}>
+      <View style={{ position: "absolute" }}>
+        {imagePreview === undefined ? (
+          <TouchableOpacity
+            onPress={() => Alert.alert("Select a photo or video first")}
+          >
+            <Image
+              resizeMode="contain"
+              style={{
+                width: width * 0.15,
+                left: width * 0.35,
+                bottom: height * 0.055,
+              }}
+              source={require("../../assets/postButtonGrey.png")}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => addPost()}>
+            <Image
+              resizeMode="contain"
+              style={{
+                width: width * 0.15,
+                left: width * 0.35,
+                bottom: height * 0.055,
+              }}
+              source={require("../../assets/post.png")}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {imagePreview === undefined ? (
+        <TouchableOpacity onPress={() => pickPost()}>
           <Image
             resizeMode="contain"
             style={{
@@ -234,38 +251,84 @@ export default function PostForm({ navigation }) {
             source={require("../../assets/plusButton.png")}
           />
         </TouchableOpacity>
-      ) : image.resource_type === "image" ? (
-        <TouchableOpacity onPress={() => openImageLibrary()}>
-          <Image
-            resizeMode="contain"
-            style={{
-              position: "absolute",
-              aspectRatio: 1,
-              width: width * 0.3,
-              top: height * 0.38,
-              right: width * 0.15,
-              borderRadius: 10,
-            }}
-            source={{ uri: image.url }}
-          />
-        </TouchableOpacity>
       ) : (
-        <TouchableOpacity onPress={() => openImageLibrary()}>
-          <Video
-            source={{ uri: image.url }}
-            ref={video}
-            style={{
-              position: "absolute",
-              aspectRatio: 1,
-              width: width * 0.3,
-              top: height * 0.38,
-              right: width * 0.15,
-              borderRadius: 10,
-            }}
-            resizeMode="cover"
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-          />
-        </TouchableOpacity>
+        <View>
+          {imagePreview.map((item) => {
+            if (item.duration === null) {
+              return (
+                <View>
+                  <TouchableOpacity onPress={() => openImageLibrary()}>
+                    <Image
+                      resizeMode="contain"
+                      style={{
+                        position: "absolute",
+                        aspectRatio: 1,
+                        width: width * 0.3,
+                        top: height * 0.38,
+                        right: width * 0.15,
+                        borderRadius: 10,
+                        borderWidth: 0.9,
+                        borderColor: "#73738B",
+                      }}
+                      source={{ uri: item.uri }}
+                    />
+                    <Image
+                      resizeMode="contain"
+                      style={{
+                        position: "absolute",
+                        width: width * 0.08,
+                        top: height * 0.425,
+                        right: width * 0.12,
+                      }}
+                      source={require("../../assets/bluePlus.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              );
+            } else {
+              return (
+                <TouchableOpacity onPress={() => openImageLibrary()}>
+                  <Video
+                    source={{ uri: item.uri }}
+                    ref={video}
+                    style={{
+                      position: "absolute",
+                      aspectRatio: 1,
+                      width: width * 0.3,
+                      top: height * 0.38,
+                      right: width * 0.15,
+                      borderRadius: 10,
+                    }}
+                    resizeMode="cover"
+                    onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+                  />
+                  <Image
+                    style={{
+                      position: "absolute",
+                      aspectRatio: 1,
+                      width: width * 0.1,
+                      top: height * 0.41,
+                      right: width * 0.25,
+                      borderRadius: 10,
+                    }}
+                    resizeMode="contain"
+                    source={require("../../assets/playButton.png")}
+                  />
+                  <Image
+                    resizeMode="contain"
+                    style={{
+                      position: "absolute",
+                      width: width * 0.08,
+                      top: height * 0.425,
+                      right: width * 0.12,
+                    }}
+                    source={require("../../assets/bluePlus.png")}
+                  />
+                </TouchableOpacity>
+              );
+            }
+          })}
+        </View>
       )}
 
       {uploadProgress === "" ? null : uploadProgress === "loading" ? (
@@ -275,36 +338,6 @@ export default function PostForm({ navigation }) {
           autoPlay
         />
       ) : null}
-
-      {imagePreview ? (
-        <TouchableOpacity
-          style={{ bottom: height * 0.09, left: width * 0.28 }}
-          onPress={() => addPost()}
-        >
-          <Image
-            resizeMode="contain"
-            style={{
-              position: "absolute",
-              width: width * 0.14,
-            }}
-            source={require("../../assets/post.png")}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View
-          style={{ bottom: height * 0.09, left: width * 0.28 }}
-          onPress={() => addPost()}
-        >
-          <Image
-            resizeMode="contain"
-            style={{
-              position: "absolute",
-              width: width * 0.14,
-            }}
-            source={require("../../assets/postButtonGrey.png")}
-          />
-        </View>
-      )}
     </View>
   );
 }
@@ -424,3 +457,54 @@ const styles = StyleSheet.create({
     right: 10,
   },
 });
+
+{
+  /* {imagePreview === undefined || {} ? (
+        <TouchableOpacity onPress={() => openImageLibrary()}>
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.38,
+              right: width * 0.15,
+              borderRadius: 10,
+            }}
+            source={require("../../assets/plusButton.png")}
+          />
+        </TouchableOpacity>
+      ) : image.resource_type === "image" ? (
+        <TouchableOpacity onPress={() => openImageLibrary()}>
+          <Image
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.38,
+              right: width * 0.15,
+              borderRadius: 10,
+            }}
+            source={{ uri: image.url }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => openImageLibrary()}>
+          <Video
+            source={{ uri: image.url }}
+            ref={video}
+            style={{
+              position: "absolute",
+              aspectRatio: 1,
+              width: width * 0.3,
+              top: height * 0.38,
+              right: width * 0.15,
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          />
+        </TouchableOpacity>
+      )} */
+}
