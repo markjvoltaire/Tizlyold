@@ -216,28 +216,30 @@ export default function HomeScreen({ navigation, route }) {
             </TouchableOpacity>
           </ScrollView>
         ) : (
-          <FlatList
-            ref={ref}
-            keyExtractor={(item) => item.id}
-            data={postList}
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-            initialNumToRender={3}
-            contentContainerStyle={{
-              borderBottomWidth: 0.8,
-              borderBottomColor: "#EDEDED",
-            }}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
-              if (item.mediaType === "image") {
-                return <ImagePost item={item} navigation={navigation} />;
-              }
+          <>
+            <FlatList
+              ref={ref}
+              keyExtractor={(item) => item.id}
+              data={postList}
+              refreshing={refreshing}
+              onRefresh={() => refreshFeed()}
+              initialNumToRender={3}
+              contentContainerStyle={{
+                borderBottomWidth: 0.8,
+                borderBottomColor: "#EDEDED",
+              }}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => {
+                if (item.mediaType === "image") {
+                  return <ImagePost item={item} navigation={navigation} />;
+                }
 
-              if (item.mediaType === "video") {
-                return <VideoPost navigation={navigation} item={item} />;
-              }
-            }}
-          />
+                if (item.mediaType === "video") {
+                  return <VideoPost navigation={navigation} item={item} />;
+                }
+              }}
+            />
+          </>
         )}
       </View>
     </View>

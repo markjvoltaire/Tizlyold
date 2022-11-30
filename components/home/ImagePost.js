@@ -124,7 +124,7 @@ export default function ImagePost({ item, navigation, followingId }) {
               borderRadius: 10,
               bottom: 50,
               borderColor: "#5C5C5C",
-              borderWidth: 0.2,
+              borderWidth: 0.8,
               opacity: imageAnimated,
             }}
             source={{ uri: item.media }}

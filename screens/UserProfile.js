@@ -83,12 +83,19 @@ export default function UserProfile({ navigation, route }) {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
       setPosts(resp);
-      console.log("resp", resp);
+
       setLoading(false);
     };
     getUserById();
     getPost();
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refreshFeed();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;

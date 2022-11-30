@@ -54,7 +54,7 @@ import CommentScreen from "../screens/CommentScreen";
 import { supabase } from "../services/supabase";
 import GeneralSettings from "../screens/GeneralSettings";
 
-export default function AuthStack() {
+export default function AuthStack({ route }) {
   const Stack = createSharedElementStackNavigator();
 
   return (

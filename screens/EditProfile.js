@@ -20,8 +20,9 @@ import { useUser } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
 import { StackActions } from "@react-navigation/native";
 import { Video, AVPlaybackStatus } from "expo-av";
-
+import LottieView from "lottie-react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UpdateLoading from "../components/profile/UpdateLoading";
 
 export default function EditProfile({ navigation }) {
   const { user, setUser } = useUser();
@@ -32,9 +33,13 @@ export default function EditProfile({ navigation }) {
   const [username, setUsername] = useState(user.username);
   const [displayName, setDisplayName] = useState(user.displayName);
   const [bio, setBio] = useState(user.bio);
-  const [imageInfo, setImageInfo] = useState();
-  const [imagePreview, setImagePreview] = useState(user.profileimage);
-  const [profilePreview, setProfilePreview] = useState();
+  const [profilePreview, setProfilePreview] = useState(user.profileimage);
+  const [bannerPreview, setBannerPreview] = useState(user.bannerImage);
+  const [profilePostURI, setProfilePostURI] = useState({});
+  const [bannerPostURI, setBannerPostURI] = useState({});
+  const [profileImageLink, setProfileLink] = useState(user.profileimage);
+  const [bannerLink, setBannerLink] = useState(user.bannerImage);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   async function sendAlert() {
     Alert.alert(
@@ -79,15 +84,17 @@ export default function EditProfile({ navigation }) {
       quality: 0,
     });
 
-    if (!photo.cancelled) {
+    if (!photo.canceled) {
       let newfile = {
-        uri: photo.uri,
-        type: `test/${photo.uri.split(".")[1]}`,
-        name: `test.${photo.uri.split(".")[1]}`,
-        mediaType: photo.type,
+        uri: photo.assets[0].uri,
+        type: `test/${photo.assets[0].uri.split(".")[1]}`,
+        name: `test.${photo.assets[0].uri.split(".")[1]}`,
+        mediaType: photo.assets[0].type,
       };
 
-      handleUpload(newfile);
+      setProfilePostURI(newfile);
+      setProfilePreview(photo.assets[0].uri);
+      return newfile;
     }
   };
 
@@ -100,53 +107,56 @@ export default function EditProfile({ navigation }) {
       quality: 0,
     });
 
-    if (!photo.cancelled) {
+    if (!photo.canceled) {
       let newfile = {
-        uri: photo.uri,
-        type: `test/${photo.uri.split(".")[1]}`,
-        name: `test.${photo.uri.split(".")[1]}`,
-        mediaType: photo.type,
+        uri: photo.assets[0].uri,
+        type: `test/${photo.assets[0].uri.split(".")[1]}`,
+        name: `test.${photo.assets[0].uri.split(".")[1]}`,
+        mediaType: photo.assets[0].type,
       };
-
-      handleBannerUpload(newfile);
+      setBannerPostURI(newfile);
+      setBannerPreview(photo.assets[0].uri);
+      return newfile;
     }
   };
 
-  const handleUpload = (image) => {
+  async function profileImageToCloudinary() {
     const data = new FormData();
-    data.append("file", image);
+    data.append("file", profilePostURI);
     data.append("upload_preset", "TizlyUpload");
     data.append("cloud_name", "doz01gvsj");
 
-    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
-      method: "post",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // this needs to be the link that that goes to supabase
-        console.log("data", data);
-        setImage(data.url);
-      });
-  };
+    console.log("profilePostURI", profilePostURI);
 
-  const handleBannerUpload = (image) => {
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/doz01gvsj/upload",
+      {
+        method: "post",
+        body: data,
+      }
+    );
+
+    const resp = await response.json();
+    updateProfileImage(resp);
+  }
+
+  async function bannerToCloudinary() {
     const data = new FormData();
-    data.append("file", image);
+    data.append("file", bannerPostURI);
     data.append("upload_preset", "TizlyUpload");
     data.append("cloud_name", "doz01gvsj");
 
-    fetch("https://api.cloudinary.com/v1_1/doz01gvsj/upload", {
-      method: "post",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // this needs to be the link that that goes to supabase
-        console.log("data", data);
-        setBanner(data.url);
-      });
-  };
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/doz01gvsj/upload",
+      {
+        method: "post",
+        body: data,
+      }
+    );
+
+    const resp = await response.json();
+    updateBanner(resp);
+  }
 
   let profileDisplay;
 
@@ -175,12 +185,19 @@ export default function EditProfile({ navigation }) {
 
   async function editProfile() {
     const userId = supabase.auth.currentUser.id;
+    setUpdateLoading(true);
+
+    if (profileImageLink != profilePreview) {
+      await profileImageToCloudinary();
+    }
+
+    if (bannerLink != bannerPreview) {
+      await bannerToCloudinary();
+    }
 
     const { data, error } = await supabase
       .from("profiles")
       .update({
-        profileimage: image,
-        bannerImage: banner,
         username: username,
         displayName: displayName,
         bio: bio,
@@ -188,12 +205,45 @@ export default function EditProfile({ navigation }) {
       .eq("user_id", userId);
 
     if (error) {
+      console.log("error", error);
       error.message ===
       'duplicate key value violates unique constraint "profiles_username_key"'
         ? Alert.alert("This Username Is Already Taken")
         : Alert.alert("An error has occured");
     } else {
+      setUpdateLoading(false);
       sendAlert();
+    }
+  }
+
+  async function updateProfileImage(resp) {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({
+        profileimage: resp.url,
+      })
+      .eq("user_id", userId);
+
+    if (error) {
+      Alert.alert("An error has occured");
+    }
+  }
+
+  async function updateBanner(resp) {
+    const userId = supabase.auth.currentUser.id;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({
+        bannerImage: resp.url,
+        bannerImageType: resp.resouce_type,
+      })
+      .eq("user_id", userId);
+
+    if (error) {
+      Alert.alert("An error has occured");
     }
   }
 
@@ -223,7 +273,9 @@ export default function EditProfile({ navigation }) {
               borderWidth: 0.2,
             }}
             source={
-              image ? { uri: image } : require("../assets/noProfilePic.jpeg")
+              profilePreview
+                ? { uri: profilePreview }
+                : require("../assets/noProfilePic.jpeg")
             }
           />
 
@@ -244,7 +296,7 @@ export default function EditProfile({ navigation }) {
           {banner.endsWith(".mov") ? (
             <Video
               ref={video}
-              source={{ uri: banner }}
+              source={{ uri: bannerPreview }}
               isLooping
               shouldPlay={true}
               isMuted={true}
@@ -264,9 +316,9 @@ export default function EditProfile({ navigation }) {
                 borderWidth: 0.2,
               }}
               source={
-                user.bannerImage === null
+                bannerPreview === null
                   ? require("../assets/noProfilePic.jpeg")
-                  : { uri: banner }
+                  : { uri: bannerPreview }
               }
             />
           )}
@@ -343,6 +395,35 @@ export default function EditProfile({ navigation }) {
         value={bio}
         onChangeText={(text) => setBio(text)}
       />
+
+      {/* {updateLoading === true ? (
+        <View
+          style={{
+            position: "absolute",
+            height: height * 0.3,
+            aspectRatio: 1,
+            backgroundColor: "#EEEEEE",
+            alignSelf: "center",
+            top: height * 0.35,
+            borderRadius: 20,
+            alignItems: "center",
+          }}
+        >
+          <LottieView
+            style={{
+              height: height * 0.2,
+              position: "absolute",
+              top: height * 0.03,
+            }}
+            source={require("../assets/lottie/blueCircle.json")}
+            autoPlay
+          />
+          <Text style={{ fontSize: 15, top: height * 0.03, fontWeight: "600" }}>
+            Updating Profile
+          </Text>
+        </View>
+      ) : null} */}
+
       <TouchableOpacity onPress={() => editProfile()}>
         <Image
           resizeMode="contain"
@@ -359,42 +440,6 @@ export default function EditProfile({ navigation }) {
     </View>
   );
 }
-
-// async function editProfile() {
-//   const userId = supabase.auth.currentUser.id;
-
-//   const { data, error } = await supabase
-//     .from("profiles")
-//     .update({ username: username, displayName: displayName, bio: bio })
-//     .eq("user_id", userId);
-
-//   const editProfileImage = async () => {
-//     const userId = supabase.auth.currentUser.id;
-
-//     const resp = await supabase
-//       .from("profiles")
-//       .update({ profileimage: image })
-//       .eq("userId", userId);
-
-//     return resp;
-//   };
-
-//   editProfileImage();
-
-//   console.log("error", error);
-//   sendAlert();
-
-//   if (
-//     error.message ===
-//     'duplicate key value violates unique constraint "profiles_username_key"'
-//   ) {
-//     Alert.alert("This Username Is Already Taken");
-//   } else if (error === null) {
-//     null;
-//   } else {
-//     Alert.alert("Something Went Wrong");
-//   }
-// }
 
 const styles = StyleSheet.create({
   container: {

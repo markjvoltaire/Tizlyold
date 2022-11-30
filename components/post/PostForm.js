@@ -86,11 +86,11 @@ export default function PostForm({ navigation }) {
   const addPost = async () => {
     postURI === {} || null || undefined
       ? Alert.alert("Something Went Wrong")
-      : uploadToCLoudinary(postURI);
+      : uploadToCloudinary(postURI);
     setUploadProgress("loading");
   };
 
-  async function uploadToCLoudinary(postURI) {
+  async function uploadToCloudinary(postURI) {
     const data = new FormData();
     data.append("file", postURI);
     data.append("upload_preset", "TizlyUpload");
