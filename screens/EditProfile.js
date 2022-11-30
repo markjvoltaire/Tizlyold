@@ -126,8 +126,6 @@ export default function EditProfile({ navigation }) {
     data.append("upload_preset", "TizlyUpload");
     data.append("cloud_name", "doz01gvsj");
 
-    console.log("profilePostURI", profilePostURI);
-
     const response = await fetch(
       "https://api.cloudinary.com/v1_1/doz01gvsj/upload",
       {
@@ -205,11 +203,12 @@ export default function EditProfile({ navigation }) {
       .eq("user_id", userId);
 
     if (error) {
-      console.log("error", error);
       error.message ===
       'duplicate key value violates unique constraint "profiles_username_key"'
         ? Alert.alert("This Username Is Already Taken")
-        : Alert.alert("An error has occured");
+        : Alert.alert("An error has occured").then(() =>
+            setUpdateLoading(false)
+          );
     } else {
       setUpdateLoading(false);
       sendAlert();
