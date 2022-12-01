@@ -169,11 +169,13 @@ export default function Player({ route, navigation }) {
         <VideoHeader navigation={navigation} route={route} />
         <View key={item.id} style={{ top: 80 }}>
           <Video
+            ref={video}
             source={{ uri: item.media }}
             isLooping
             useNativeControls
             shouldPlay={true}
             style={{ height: 229, width: 415 }}
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
         </View>
       </View>

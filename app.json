@@ -2,10 +2,8 @@
   "expo": {
     "name": "Tizly",
     "slug": "tizly",
-    "owner": "tizly",
-
-    "version": "1.5",
-
+    "owner": "markjvoltaire",
+    "version": "1.5.1",
     "orientation": "portrait",
     "icon": "./assets/appIcons/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +22,6 @@
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.tizly.Tizly",
-
       "buildNumber": "10"
     },
     "android": {
@@ -47,7 +44,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "9f796f6e-9bef-444e-a342-2b5f10529e1b"
+        "projectId": "b2467dea-2503-4843-b4ef-97ad4a30aa58"
       }
     }
   }
