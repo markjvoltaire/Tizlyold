@@ -133,7 +133,7 @@ export async function getNewTrendingCreators() {
   const resp = await supabase
     .from("profiles")
     .select("*")
-    .in("id", [214, 180, 216]);
+    .in("id", [229, 180, 230]);
 
   return resp.body;
 }

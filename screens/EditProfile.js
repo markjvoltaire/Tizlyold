@@ -399,7 +399,7 @@ export default function EditProfile({ navigation }) {
         onChangeText={(text) => setBio(text)}
       />
 
-      {/* {updateLoading === true ? (
+      {updateLoading === true ? (
         <View
           style={{
             position: "absolute",
@@ -425,7 +425,7 @@ export default function EditProfile({ navigation }) {
             Updating Profile
           </Text>
         </View>
-      ) : null} */}
+      ) : null}
 
       <TouchableOpacity onPress={() => editProfile()}>
         <Image
