@@ -6,7 +6,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import { Video } from "expo-av";
+import { Video, AVPlaybackStatus } from "expo-av";
 import React, { useState, useEffect } from "react";
 import UserButtons from "./UserButtons";
 

@@ -66,6 +66,7 @@ export default function PostForm({ navigation }) {
       aspect: [9, 16],
       canAskAgain: true,
       quality: 0,
+      videoMaxDuration: 60,
     });
 
     if (!photo.canceled) {
@@ -112,6 +113,8 @@ export default function PostForm({ navigation }) {
   async function uploadToSupabase(resp) {
     const userId = supabase.auth.currentUser.id;
 
+    console.log("resp", resp);
+
     const res = await supabase.from("post").insert([
       {
         username: username,
@@ -119,11 +122,10 @@ export default function PostForm({ navigation }) {
         displayName: displayName,
         description: description,
         profileimage: profileImage,
-        media: resp.url,
+        media: resp.secure_url,
         mediaType: resp.resource_type,
         bannerImage: bannerImage,
         bio: bio,
-        category: selected,
         followingId: followingId,
       },
     ]);
@@ -134,6 +136,7 @@ export default function PostForm({ navigation }) {
     } else {
       setUploadProgress("");
       Alert.alert("Something Went Wrong");
+      console.log("res.error", res.error);
     }
 
     return res;

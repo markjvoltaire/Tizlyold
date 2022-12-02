@@ -100,11 +100,13 @@ export default function EditProfile({ navigation }) {
 
   const pickBanner = async () => {
     let photo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [9, 16],
       canAskAgain: true,
       quality: 0,
+      videoMaxDuration: 10,
+      videoQuality: 0,
     });
 
     if (!photo.canceled) {
@@ -233,11 +235,13 @@ export default function EditProfile({ navigation }) {
   async function updateBanner(resp) {
     const userId = supabase.auth.currentUser.id;
 
+    console.log("resp", resp);
+
     const { data, error } = await supabase
       .from("profiles")
       .update({
         bannerImage: resp.url,
-        bannerImageType: resp.resouce_type,
+        bannerImageType: resp.resource_type,
       })
       .eq("user_id", userId);
 

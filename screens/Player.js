@@ -5,6 +5,7 @@ import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import { useUser } from "../context/UserContext";
+import LottieView from "lottie-react-native";
 
 export default function Player({ route, navigation }) {
   const [comment, setComment] = useState("");
@@ -168,13 +169,32 @@ export default function Player({ route, navigation }) {
       <View>
         <VideoHeader navigation={navigation} route={route} />
         <View key={item.id} style={{ top: 80 }}>
+          <View
+            style={{
+              height: 229,
+              width: 414,
+              backgroundColor: "black",
+            }}
+          >
+            <LottieView
+              style={{
+                height: 130,
+                width: 130,
+                position: "absolute",
+                alignSelf: "center",
+                top: 15,
+              }}
+              source={require("../assets/lottie/fullBlueCircle.json")}
+              autoPlay
+            />
+          </View>
           <Video
             ref={video}
             source={{ uri: item.media }}
             isLooping
             useNativeControls
             shouldPlay={true}
-            style={{ height: 229, width: 415 }}
+            style={{ height: 229, width: 415, position: "absolute" }}
             onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
         </View>
