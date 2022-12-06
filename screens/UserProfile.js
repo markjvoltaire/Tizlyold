@@ -140,6 +140,8 @@ export default function UserProfile({ navigation, route }) {
     );
   }
 
+  console.log("user", user);
+
   return (
     <>
       <ScrollView

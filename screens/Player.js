@@ -21,7 +21,8 @@ export default function Player({ route, navigation }) {
   const [commentUser, setcommentUser] = useState([]);
   const [commenter, setCommenter] = useState([]);
 
-  const windowWidth = Dimensions.get("window").width;
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   const { item } = route.params;
 
@@ -171,18 +172,18 @@ export default function Player({ route, navigation }) {
         <View key={item.id} style={{ top: 80 }}>
           <View
             style={{
-              height: 229,
-              width: 414,
+              height: height * 0.26,
+              width: width,
               backgroundColor: "black",
             }}
           >
             <LottieView
               style={{
-                height: 130,
-                width: 130,
+                height: height * 0.4,
+                width: width * 0.4,
                 position: "absolute",
                 alignSelf: "center",
-                top: 15,
+                bottom: height * -0.02,
               }}
               source={require("../assets/lottie/fullBlueCircle.json")}
               autoPlay
@@ -194,7 +195,11 @@ export default function Player({ route, navigation }) {
             isLooping
             useNativeControls
             shouldPlay={true}
-            style={{ height: 229, width: 415, position: "absolute" }}
+            style={{
+              height: height * 0.26,
+              width: width,
+              position: "absolute",
+            }}
             onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
         </View>

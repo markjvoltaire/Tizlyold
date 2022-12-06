@@ -49,16 +49,14 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
 
       <Pressable
         onPress={() =>
-          status.isPlaying
-            ? video.current.pauseAsync()
-            : video.current.playAsync() &&
-              video.current.presentFullscreenPlayer()
+          navigation.push("Player", {
+            item,
+          })
         }
       >
         <Video
           source={{ uri: item.media }}
           ref={video}
-          isLooping
           style={{
             height: height * 0.452,
             aspectRatio: 1,
