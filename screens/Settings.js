@@ -59,7 +59,9 @@ export default function Settings({ navigation }) {
         }
       />
 
-      <View style={{ position: "absolute", top: 300, left: 10 }}>
+      <View
+        style={{ position: "absolute", top: height * 0.3, left: width * 0.05 }}
+      >
         <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Image
             style={{ width: 24, height: 24 }}
@@ -81,7 +83,36 @@ export default function Settings({ navigation }) {
               bottom: height * 0.043,
             }}
           >
-            Account Settings
+            Profile Settings
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{ position: "absolute", top: height * 0.4, left: width * 0.05 }}
+      >
+        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+          <Image
+            style={{ width: 24, height: 24 }}
+            source={require("../assets/Lock.png")}
+          />
+          <Image
+            resizeMode="contain"
+            style={{
+              height: height * 0.02,
+              left: width * 0.78,
+              bottom: height * 0.023,
+            }}
+            source={require("../assets/arrow.png")}
+          />
+          <Text
+            style={{
+              fontWeight: "400",
+              left: width * 0.19,
+              bottom: height * 0.043,
+            }}
+          >
+            Change Password
           </Text>
         </TouchableOpacity>
       </View>

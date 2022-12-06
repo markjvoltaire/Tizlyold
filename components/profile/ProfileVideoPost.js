@@ -43,14 +43,11 @@ export default function ProfileVideoPost({ item, navigation, userInfo }) {
         </View>
         <Pressable
           onPress={() =>
-            navigation.navigate("Player", {
-              id: item.id,
-              username: item.username,
-              profileimage: item.profileimage,
-              displayName: item.displayName,
-              user_id: item.user_id,
-              item,
-            })
+            status.isPlaying
+              ? video.current.pauseAsync()
+              : video.current.presentFullscreenPlayer().then(() => {
+                  video.current.playAsync();
+                })
           }
         >
           <Video

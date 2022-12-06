@@ -53,6 +53,7 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import CommentScreen from "../screens/CommentScreen";
 import { supabase } from "../services/supabase";
 import GeneralSettings from "../screens/GeneralSettings";
+import ForgotPassword from "../screens/ForgotPassword";
 
 export default function AuthStack({ route }) {
   const Stack = createSharedElementStackNavigator();
@@ -89,6 +90,12 @@ export default function AuthStack({ route }) {
             <Stack.Screen
               name="GeneralSettings"
               component={GeneralSettings}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPassword}
               options={{ headerShown: false }}
             />
 
