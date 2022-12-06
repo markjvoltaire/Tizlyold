@@ -51,14 +51,14 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
         onPress={() =>
           status.isPlaying
             ? video.current.pauseAsync()
-            : video.current.presentFullscreenPlayer().then(() => {
-                video.current.playAsync();
-              })
+            : video.current.playAsync() &&
+              video.current.presentFullscreenPlayer()
         }
       >
         <Video
           source={{ uri: item.media }}
           ref={video}
+          isLooping
           style={{
             height: height * 0.452,
             aspectRatio: 1,
@@ -99,7 +99,7 @@ export default function UserProfileVideoPost({ item, user, navigation }) {
         <Image
           resizeMode="contain"
           style={{ width: 70, left: 10, bottom: 30 }}
-          source={require("../../assets/photoBean.png")}
+          source={require("../../assets/videoBean.png")}
         />
       </View>
 

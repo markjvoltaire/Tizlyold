@@ -19,83 +19,82 @@ export default function ForgotPassword({ navigation }) {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <BackHeader navigation={navigation} />
 
-      <View style={{ bottom: height * 0.07 }}>
-        <View
-          style={{
-            position: "absolute",
-            top: height * 0.16,
-            left: width * 0.14,
-          }}
-        >
-          <Text style={{ fontWeight: "600" }}>Enter Current Password</Text>
-        </View>
-        <TextInput
-          secureTextEntry={true}
-          textContentType="password"
-          style={{
-            borderColor: "grey",
-            borderWidth: 0.5,
-            height: 50,
-            width: 311,
-            borderRadius: 10,
-            paddingLeft: 30,
-            alignSelf: "center",
-            top: height * 0.2,
-          }}
-          placeholder="Current Password"
-        />
-
-        <View
-          style={{
-            position: "absolute",
-            top: height * 0.3,
-            left: width * 0.14,
-          }}
-        >
-          <Text style={{ fontWeight: "600" }}>Enter New Password</Text>
-        </View>
-        <TextInput
-          secureTextEntry={true}
-          textContentType="password"
-          style={{
-            borderColor: "grey",
-            borderWidth: 0.5,
-            height: 50,
-            width: 311,
-            borderRadius: 10,
-            paddingLeft: 30,
-            alignSelf: "center",
-            top: height * 0.28,
-          }}
-          placeholder="Current Password"
-        />
-
-        <View
-          style={{
-            position: "absolute",
-            top: height * 0.425,
-            left: width * 0.14,
-          }}
-        >
-          <Text style={{ fontWeight: "600" }}>Confirm New Password</Text>
-        </View>
-        <TextInput
-          secureTextEntry={true}
-          textContentType="password"
-          style={{
-            borderColor: "grey",
-            borderWidth: 0.5,
-            height: 50,
-            width: 311,
-            borderRadius: 10,
-            paddingLeft: 30,
-            alignSelf: "center",
-            top: height * 0.35,
-          }}
-          placeholder="Current Password"
-        />
+      <View
+        style={{
+          position: "absolute",
+          top: height * 0.2,
+          left: width * 0.14,
+        }}
+      >
+        <Text style={{ fontWeight: "600" }}>Enter Current Password</Text>
       </View>
-      <TouchableOpacity style={{ top: height * 0.22 }}>
+      <TextInput
+        secureTextEntry={true}
+        textContentType="password"
+        style={{
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: 50,
+          width: 311,
+          borderRadius: 10,
+          paddingLeft: 30,
+          alignSelf: "center",
+          top: height * 0.13,
+        }}
+        placeholder="Current Password"
+      />
+
+      <View
+        style={{
+          position: "absolute",
+          top: height * 0.35,
+          left: width * 0.14,
+        }}
+      >
+        <Text style={{ fontWeight: "600" }}>Enter New Password</Text>
+      </View>
+      <TextInput
+        secureTextEntry={true}
+        textContentType="password"
+        style={{
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: 50,
+          width: 311,
+          borderRadius: 10,
+          paddingLeft: 30,
+          alignSelf: "center",
+          top: height * 0.23,
+        }}
+        placeholder="Current Password"
+      />
+
+      <View
+        style={{
+          position: "absolute",
+          top: height * 0.5,
+          left: width * 0.14,
+        }}
+      >
+        <Text style={{ fontWeight: "600" }}>Confirm New Password</Text>
+      </View>
+      <TextInput
+        secureTextEntry={true}
+        textContentType="password"
+        style={{
+          borderColor: "grey",
+          borderWidth: 0.5,
+          height: 50,
+          width: 311,
+          borderRadius: 10,
+          paddingLeft: 30,
+          alignSelf: "center",
+          top: height * 0.32,
+        }}
+        placeholder="Current Password"
+      />
+
+      <TouchableOpacity style={{ top: height * 0.3 }}>
         <Image
           style={{
             aspectRatio: 1,

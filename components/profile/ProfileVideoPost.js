@@ -35,6 +35,8 @@ export default function ProfileVideoPost({ item, navigation, userInfo }) {
 
   let height = Dimensions.get("window").height;
 
+  console.log("video", video.current);
+
   return (
     <>
       <View style={{ top: 10 }}>
@@ -45,9 +47,9 @@ export default function ProfileVideoPost({ item, navigation, userInfo }) {
           onPress={() =>
             status.isPlaying
               ? video.current.pauseAsync()
-              : video.current.presentFullscreenPlayer().then(() => {
-                  video.current.playAsync();
-                })
+              : video.current.playAsync() &&
+                video.current.presentFullscreenPlayer() &&
+                video.current.isPlaying
           }
         >
           <Video

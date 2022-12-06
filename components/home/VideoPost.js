@@ -81,7 +81,8 @@ export default function VideoPost({ item, navigation, route }) {
         onPress={() =>
           status.isPlaying
             ? video.current.pauseAsync()
-            : video.current.playAsync()
+            : video.current.playAsync() &&
+              video.current.presentFullscreenPlayer()
         }
       >
         <Video
