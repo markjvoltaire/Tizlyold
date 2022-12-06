@@ -94,17 +94,18 @@ export default function ForgotPassword({ navigation }) {
         placeholder="Current Password"
       />
 
-      <TouchableOpacity style={{ top: height * 0.3 }}>
-        <Image
-          style={{
-            aspectRatio: 1,
-            resizeMode: "contain",
-            height: height * 0.35,
-            alignSelf: "center",
-          }}
-          source={require("../assets/buttonBlue.png")}
-        />
-      </TouchableOpacity>
+      <View style={{ top: height * 0.4 }}>
+        <TouchableOpacity>
+          <Image
+            style={{
+              resizeMode: "contain",
+              height: height * 0.06,
+              alignSelf: "center",
+            }}
+            source={require("../assets/buttonBlue.png")}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
