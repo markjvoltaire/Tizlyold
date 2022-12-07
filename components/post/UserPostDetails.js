@@ -8,6 +8,7 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../services/supabase";
@@ -23,7 +24,21 @@ export default function UserPostDetails({
   commenter,
   navigation,
 }) {
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+  const FullSeperator = () => (
+    <View
+      style={{
+        position: "absolute",
+        alignSelf: "center",
+        borderBottomColor: "grey",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        opacity: 0.5,
+        width: 600,
+        top: height * 0.25,
+      }}
+    />
+  );
   const FullSeperator2 = () => <View style={styles.fullSeperator2} />;
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
@@ -52,11 +67,9 @@ export default function UserPostDetails({
     <>
       <View style={{ flex: 1, left: 10 }}>
         <View>
-          {post.description ? (
-            <Text style={styles.postTitle}>{post.description}</Text>
-          ) : (
-            <Text style={styles.postTitle}>No Title was added</Text>
-          )}
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>
+            {post.description}
+          </Text>
         </View>
 
         <View>
