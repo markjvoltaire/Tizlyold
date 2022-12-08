@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-
+import Purchases from "react-native-purchases";
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 
@@ -49,6 +49,21 @@ export default function ProfileDetail({ navigation, route }) {
 
     return data;
   }
+
+  useEffect(() => {
+    const main = async () => {
+      Purchases.setDebugLogsEnabled(true);
+
+      await Purchases.configure({
+        apiKey: "appl_vAdusVXkOaSFpbVEVXsXwJfzlVk",
+      });
+
+      const products = await Purchases.getProducts(["Monthly"]);
+
+      console.log("products", products);
+    };
+    main();
+  }, []);
 
   useEffect(() => {
     const log = async () => {
