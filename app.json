@@ -3,7 +3,7 @@
     "name": "Tizly",
     "slug": "tizly",
     "owner": "markjvoltaire",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "orientation": "portrait",
     "icon": "./assets/appIcons/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
       },
       "supportsTablet": true,
       "bundleIdentifier": "com.tizly.Tizly",
-      "buildNumber": "10"
+      "buildNumber": "11"
     },
     "android": {
       "adaptiveIcon": {
