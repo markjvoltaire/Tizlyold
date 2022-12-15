@@ -22,6 +22,7 @@ import { useLike } from "../context/LikeContext";
 import { getAllLikes } from "../services/user";
 import ImagePost from "../components/home/ImagePost";
 import VideoPost from "../components/home/VideoPost";
+import Status from "../components/post/Status";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -145,6 +146,11 @@ export default function HomeScreen({ navigation, route }) {
       .in("followingId", [userPostList.list])
       .order("date", { ascending: false });
 
+    const currentUserPost = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", userId);
+
     setPostList(resp.body);
 
     return resp.body;
@@ -236,6 +242,10 @@ export default function HomeScreen({ navigation, route }) {
 
                 if (item.mediaType === "video") {
                   return <VideoPost navigation={navigation} item={item} />;
+                }
+
+                if (item.mediaType === "status") {
+                  return <Status navigation={navigation} item={item} />;
                 }
               }}
             />

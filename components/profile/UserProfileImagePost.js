@@ -128,7 +128,7 @@ export default function UserProfileImagePost({
           />
         </View>
 
-        <View style={{ bottom: height * 0.056 }}>
+        <View style={{ bottom: height * 0.1 }}>
           <CurrentUserButtons
             isPressed={isPressed}
             setIsPressed={setIsPressed}

@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-import Purchases from "react-native-purchases";
+
 import { supabase } from "../services/supabase";
 import { useUser } from "../context/UserContext";
 
@@ -23,6 +23,7 @@ import ProfileImagePost from "../components/profile/ProfileImagePost";
 import ProfileVideoPost from "../components/profile/ProfileVideoPost";
 import BannerSkeleton from "../components/profile/BannerSkeleton";
 import { Dimensions } from "react-native";
+import ProfileTextPost from "../components/profile/ProfileTextPost";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -49,29 +50,6 @@ export default function ProfileDetail({ navigation, route }) {
 
     return data;
   }
-
-  useEffect(() => {
-    const main = async () => {
-      Purchases.setDebugLogsEnabled(true);
-
-      await Purchases.configure({
-        apiKey: "appl_vAdusVXkOaSFpbVEVXsXwJfzlVk",
-      });
-
-      const products = await Purchases.getProducts(["Monthly"]);
-
-      console.log("products", products);
-    };
-    main();
-  }, []);
-
-  useEffect(() => {
-    const log = async () => {
-      const resp = await getUserById();
-      resp.map((i) => setUserDetails(i));
-    };
-    log();
-  }, []);
 
   async function getUserPoints() {
     const userId = supabase.auth.currentUser.id;
@@ -284,7 +262,7 @@ export default function ProfileDetail({ navigation, route }) {
 
   const photoCount = posts.filter((item) => item.mediaType === "image");
   const videoCount = posts.filter((item) => item.mediaType === "video");
-  const textCount = posts.filter((item) => item.mediaType === "text");
+  const textCount = posts.filter((item) => item.mediaType === null);
 
   const createThreeButtonAlert = () =>
     Alert.alert(
@@ -600,6 +578,19 @@ export default function ProfileDetail({ navigation, route }) {
                           userInfo={userInfo}
                           item={item}
                           navigation={navigation}
+                        />
+                      </View>
+                    );
+                  }
+
+                  if (item.mediaType === "status") {
+                    return (
+                      <View style={{ top: 30 }} key={item.id}>
+                        <ProfileTextPost
+                          user={user}
+                          setUser={setUser}
+                          navigation={navigation}
+                          item={item}
                         />
                       </View>
                     );

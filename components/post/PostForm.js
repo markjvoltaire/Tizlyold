@@ -84,6 +84,37 @@ export default function PostForm({ navigation }) {
     }
   };
 
+  const addStatus = async () => {
+    const userId = supabase.auth.currentUser.id;
+
+    setUploadProgress("loading");
+    const resp = await supabase.from("post").insert([
+      {
+        username: username,
+        user_id: userId,
+        displayName: displayName,
+        description: description,
+        profileimage: profileImage,
+        media: null,
+        mediaType: "status",
+        bannerImage: bannerImage,
+        bio: bio,
+        followingId: followingId,
+      },
+    ]);
+
+    if (resp.error === null) {
+      setUploadProgress("done");
+      navigation.dispatch(pushAction);
+    } else {
+      setUploadProgress("");
+      Alert.alert("Something Went Wrong");
+      console.log("res.error", resp.error);
+    }
+
+    return resp;
+  };
+
   const addPost = async () => {
     postURI === {} || null || undefined
       ? Alert.alert("Something Went Wrong")
@@ -144,6 +175,10 @@ export default function PostForm({ navigation }) {
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
+
+  const handleUpload = async () => {
+    imagePreview === undefined ? addStatus() : addPost();
+  };
 
   const FullSeperator = () => (
     <View
@@ -210,7 +245,7 @@ export default function PostForm({ navigation }) {
       </View>
 
       <View style={{ position: "absolute" }}>
-        {imagePreview === undefined ? (
+        {imagePreview === undefined && description === "" ? (
           <TouchableOpacity
             onPress={() => Alert.alert("Select a photo or video first")}
           >
@@ -225,7 +260,7 @@ export default function PostForm({ navigation }) {
             />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={() => addPost()}>
+          <TouchableOpacity onPress={() => handleUpload()}>
             <Image
               resizeMode="contain"
               style={{
@@ -286,48 +321,78 @@ export default function PostForm({ navigation }) {
                       source={require("../../assets/bluePlus.png")}
                     />
                   </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => setImagePreview(undefined)}>
+                    <Image
+                      style={{
+                        position: "absolute",
+                        aspectRatio: 1,
+                        resizeMode: "contain",
+                        width: width * 0.09,
+                        top: height * 0.4,
+                      }}
+                      source={require("../../assets/Delete.png")}
+                    />
+                  </TouchableOpacity>
                 </View>
               );
             } else {
               return (
-                <TouchableOpacity onPress={() => openImageLibrary()}>
-                  <Video
-                    source={{ uri: item.uri }}
-                    ref={video}
-                    style={{
-                      position: "absolute",
-                      aspectRatio: 1,
-                      width: width * 0.3,
-                      top: height * 0.38,
-                      right: width * 0.15,
-                      borderRadius: 10,
-                    }}
-                    resizeMode="cover"
-                    onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-                  />
-                  <Image
-                    style={{
-                      position: "absolute",
-                      aspectRatio: 1,
-                      width: width * 0.1,
-                      top: height * 0.41,
-                      right: width * 0.25,
-                      borderRadius: 10,
-                    }}
-                    resizeMode="contain"
-                    source={require("../../assets/playButton.png")}
-                  />
-                  <Image
-                    resizeMode="contain"
-                    style={{
-                      position: "absolute",
-                      width: width * 0.08,
-                      top: height * 0.425,
-                      right: width * 0.12,
-                    }}
-                    source={require("../../assets/bluePlus.png")}
-                  />
-                </TouchableOpacity>
+                <>
+                  <TouchableOpacity onPress={() => openImageLibrary()}>
+                    <Video
+                      source={{ uri: item.uri }}
+                      ref={video}
+                      style={{
+                        position: "absolute",
+                        aspectRatio: 1,
+                        width: width * 0.3,
+                        top: height * 0.38,
+                        right: width * 0.15,
+                        borderRadius: 10,
+                      }}
+                      resizeMode="cover"
+                      onPlaybackStatusUpdate={(status) =>
+                        setStatus(() => status)
+                      }
+                    />
+                    <Image
+                      style={{
+                        position: "absolute",
+                        aspectRatio: 1,
+                        width: width * 0.1,
+                        top: height * 0.41,
+                        right: width * 0.25,
+                        borderRadius: 10,
+                      }}
+                      resizeMode="contain"
+                      source={require("../../assets/playButton.png")}
+                    />
+                    <Image
+                      resizeMode="contain"
+                      style={{
+                        position: "absolute",
+                        width: width * 0.08,
+                        top: height * 0.425,
+                        right: width * 0.12,
+                      }}
+                      source={require("../../assets/bluePlus.png")}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => setImagePreview(undefined)}>
+                    <Image
+                      style={{
+                        position: "absolute",
+                        aspectRatio: 1,
+                        resizeMode: "contain",
+                        width: width * 0.09,
+                        top: height * 0.4,
+                      }}
+                      source={require("../../assets/Delete.png")}
+                    />
+                  </TouchableOpacity>
+                </>
               );
             }
           })}

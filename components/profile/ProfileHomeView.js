@@ -3,6 +3,7 @@ import React from "react";
 import UserProfileFeed from "./UserProfileFeed";
 import UserProfileImagePost from "./UserProfileImagePost";
 import UserProfileVideoPost from "./UserProfileVideoList";
+import ProfileTextPost from "./ProfileTextPost";
 
 export default function ProfileHomeView({
   item,
@@ -44,6 +45,19 @@ export default function ProfileHomeView({
       </>
     );
   }
+
+  if (post.mediaType === "status") {
+    return (
+      <>
+        <ProfileTextPost
+          user={user}
+          setUser={setUser}
+          navigation={navigation}
+          item={post}
+        />
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -52,7 +66,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.0,
     opacity: 1.8,
     width: 900,
-    bottom: 35,
+    bottom: 80,
     position: "absolute",
   },
 });
