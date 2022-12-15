@@ -110,7 +110,6 @@ export default function PostForm({ navigation }) {
     } else {
       setUploadProgress("");
       Alert.alert("Something Went Wrong");
-      console.log("res.error", resp.error);
     }
 
     return resp;
@@ -166,7 +165,6 @@ export default function PostForm({ navigation }) {
     } else {
       setUploadProgress("");
       Alert.alert("Something Went Wrong");
-      console.log("res.error", res.error);
     }
 
     return res;
@@ -195,8 +193,6 @@ export default function PostForm({ navigation }) {
       }}
     />
   );
-
-  console.log("description", description);
 
   return (
     <View style={{ alignItems: "center", bottom: height * 0.36 }}>

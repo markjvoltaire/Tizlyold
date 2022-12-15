@@ -6,8 +6,8 @@ import {
   Pressable,
   Image,
 } from "react-native";
-import React, { useState } from "react";
-import { Video } from "expo-av";
+import React, { useState, useRef } from "react";
+import { Video, AVPlaybackStatus } from "expo-av";
 import { useUser } from "../../context/UserContext";
 import ProfilePostHeader from "../post/ProfilePostHeader";
 import UserButtons from "./UserButtons";

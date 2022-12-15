@@ -235,8 +235,6 @@ export default function EditProfile({ navigation }) {
   async function updateBanner(resp) {
     const userId = supabase.auth.currentUser.id;
 
-    console.log("resp", resp);
-
     const { data, error } = await supabase
       .from("profiles")
       .update({
