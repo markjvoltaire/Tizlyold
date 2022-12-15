@@ -23,7 +23,8 @@ import ProfileImagePost from "../components/profile/ProfileImagePost";
 import ProfileVideoPost from "../components/profile/ProfileVideoPost";
 import BannerSkeleton from "../components/profile/BannerSkeleton";
 import { Dimensions } from "react-native";
-import ProfileTextPost from "../components/profile/ProfileTextPost";
+import ProfileTextPost from "../components/profile/CurrentUserTextPost";
+import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -179,7 +180,7 @@ export default function ProfileDetail({ navigation, route }) {
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", route.params.user_id)
+      .eq("user_id", item.user_id)
       .single();
 
     return data;
@@ -188,6 +189,7 @@ export default function ProfileDetail({ navigation, route }) {
   useEffect(() => {
     const getUser = async () => {
       const resp = await getProfileDetail();
+
       setProfile(resp);
     };
     getUser();
@@ -262,7 +264,7 @@ export default function ProfileDetail({ navigation, route }) {
 
   const photoCount = posts.filter((item) => item.mediaType === "image");
   const videoCount = posts.filter((item) => item.mediaType === "video");
-  const textCount = posts.filter((item) => item.mediaType === null);
+  const textCount = posts.filter((item) => item.mediaType === "status");
 
   const createThreeButtonAlert = () =>
     Alert.alert(
@@ -331,7 +333,7 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
         </SharedElement>
 
-        {userDetails.bannerImageType === "image" ? (
+        {profile.bannerImageType === "image" ? (
           <SharedElement id={item.id}>
             <Animated.Image
               style={{
@@ -347,12 +349,12 @@ export default function ProfileDetail({ navigation, route }) {
               }}
               resizeMode="cover"
               onLoad={handleDefaultImageLoad}
-              source={{ uri: item.bannerImage }}
+              source={{ uri: profile.bannerImage }}
             />
           </SharedElement>
         ) : (
           <Video
-            source={{ uri: item.bannerImage }}
+            source={{ uri: profile.bannerImage }}
             ref={video}
             isLooping
             shouldPlay
@@ -586,7 +588,7 @@ export default function ProfileDetail({ navigation, route }) {
                   if (item.mediaType === "status") {
                     return (
                       <View style={{ top: 30 }} key={item.id}>
-                        <ProfileTextPost
+                        <ProfileDetailStatus
                           user={user}
                           setUser={setUser}
                           navigation={navigation}

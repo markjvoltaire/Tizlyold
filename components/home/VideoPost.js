@@ -74,7 +74,7 @@ export default function VideoPost({ item, navigation, route }) {
 
   return (
     <View style={{ top: height * 0.01 }}>
-      <View style={{ alignSelf: "center", right: 20, top: 40 }}>
+      <View style={{ paddingBottom: height * 0.01 }}>
         <PostHeader navigation={navigation} item={item} />
       </View>
       <Pressable

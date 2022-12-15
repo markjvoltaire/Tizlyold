@@ -105,7 +105,8 @@ export default function PostForm({ navigation }) {
 
     if (resp.error === null) {
       setUploadProgress("done");
-      navigation.dispatch(pushAction);
+      setDescription("");
+      navigation.navigate("Checkout");
     } else {
       setUploadProgress("");
       Alert.alert("Something Went Wrong");
@@ -143,8 +144,6 @@ export default function PostForm({ navigation }) {
 
   async function uploadToSupabase(resp) {
     const userId = supabase.auth.currentUser.id;
-
-    console.log("resp", resp);
 
     const res = await supabase.from("post").insert([
       {
@@ -197,6 +196,8 @@ export default function PostForm({ navigation }) {
     />
   );
 
+  console.log("description", description);
+
   return (
     <View style={{ alignItems: "center", bottom: height * 0.36 }}>
       <Text style={styles.postText}>Post</Text>
@@ -211,6 +212,8 @@ export default function PostForm({ navigation }) {
       <FullSeperator />
 
       <TextInput
+        maxLength={280}
+        multiline
         style={{
           position: "absolute",
           top: height * 0.1,
@@ -219,13 +222,13 @@ export default function PostForm({ navigation }) {
           borderRadius: 8,
           fontSize: 16,
           paddingBottom: height * 0.02,
-          paddingLeft: height * 0.02,
-
+          paddingLeft: width * 0.01,
+          paddingRight: width * 0.01,
           paddingTop: height * 0.04,
           backgroundColor: "#EBEBF1",
           fontWeight: "500",
         }}
-        placeholder="Post Description"
+        placeholder="What's on your mind?"
         placeholderTextColor="#393939"
         value={description}
         onChangeText={(text) => setDescription(text)}

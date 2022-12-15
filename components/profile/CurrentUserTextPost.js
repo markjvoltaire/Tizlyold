@@ -10,8 +10,14 @@ import React, { useState, useEffect } from "react";
 import UserProfileHeader from "./UserProfileHeader";
 import CurrentUserButtons from "../home/CurrentUserButtons";
 import ProfilePostHeader from "../post/ProfilePostHeader";
+import StatusText from "../post/StatusText";
 
-export default function ProfileTextPost({ user, setUser, navigation, item }) {
+export default function CurrentUserTextPost({
+  user,
+  setUser,
+  navigation,
+  item,
+}) {
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
 
@@ -26,33 +32,26 @@ export default function ProfileTextPost({ user, setUser, navigation, item }) {
         opacity: 1.3,
         width: 390,
         alignSelf: "center",
-        top: height * 0.07,
       }}
     />
   );
   return (
-    <View style={{ paddingBottom: 90, bottom: 10 }}>
-      <View style={{ alignSelf: "center", top: height * 0.04 }}>
+    <View
+      style={{
+        width: width * 0.95,
+        alignSelf: "center",
+        paddingBottom: height * 0.04,
+      }}
+    >
+      <View style={{ paddingBottom: height * 0.01 }}>
         <ProfilePostHeader item={item} />
       </View>
 
-      <View style={{ top: height * 0.01 }}>
-        <Text
-          style={{
-            top: 12,
-            fontWeight: "500",
-            textAlign: "center",
-            width: 390,
-            fontSize: 17,
-            paddingBottom: 30,
-            lineHeight: 20,
-          }}
-        >
-          {item.description}
-        </Text>
+      <View style={{ paddingBottom: height * 0.06 }}>
+        <StatusText item={item} />
       </View>
 
-      <View style={{ bottom: height * 0.002 }}>
+      <View style={{ bottom: height * 0.04 }}>
         <CurrentUserButtons
           isPressed={isPressed}
           setIsPressed={setIsPressed}

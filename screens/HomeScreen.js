@@ -23,6 +23,11 @@ import { getAllLikes } from "../services/user";
 import ImagePost from "../components/home/ImagePost";
 import VideoPost from "../components/home/VideoPost";
 import Status from "../components/post/Status";
+import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
+import HomeStatus from "../components/post/HomeStatus";
+import HomeImagePost from "../components/home/HomeImagePost";
+import HomeVideoPost from "../components/home/HomeVideoPost";
+import HomeStatusPost from "../components/home/HomeStatusPost";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -176,9 +181,8 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.homeScreenContainer}>
+    <>
       <Points navigation={navigation} />
-
       <View style={styles.feedContainer}>
         {postList.length === 0 ? (
           <ScrollView
@@ -237,29 +241,28 @@ export default function HomeScreen({ navigation, route }) {
               showsVerticalScrollIndicator={false}
               renderItem={({ item }) => {
                 if (item.mediaType === "image") {
-                  return <ImagePost item={item} navigation={navigation} />;
+                  return <HomeImagePost item={item} navigation={navigation} />;
                 }
 
                 if (item.mediaType === "video") {
-                  return <VideoPost navigation={navigation} item={item} />;
+                  return <HomeVideoPost navigation={navigation} item={item} />;
                 }
 
                 if (item.mediaType === "status") {
-                  return <Status navigation={navigation} item={item} />;
+                  return <HomeStatusPost navigation={navigation} item={item} />;
                 }
               }}
             />
           </>
         )}
       </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   homeScreenContainer: {
     backgroundColor: "white",
-    justifyContent: "center",
   },
 
   profileimage: {

@@ -3,9 +3,9 @@ import React from "react";
 
 export default function ImageHeader({ userInfo, navigation }) {
   return (
-    <View>
+    <View style={{ alignSelf: "center" }}>
       {userInfo.map((item) => (
-        <View key={item.id}>
+        <View style={{ alignSelf: "center" }} key={item.id}>
           <View style={{ alignSelf: "center" }}>
             <TouchableOpacity
               onPress={() => navigation.push("ProfileDetail2", { item })}

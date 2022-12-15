@@ -2,9 +2,11 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import UserProfileHeader from "../profile/UserProfileHeader";
 import UserButtons from "../home/UserButtons";
+import CurrentUserButtons from "../home/CurrentUserButtons";
 import PostHeader from "../home/PostHeader";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
+import StatusText from "./StatusText";
 
 export default function Status({ item, navigation }) {
   let height = Dimensions.get("window").height;
@@ -65,40 +67,36 @@ export default function Status({ item, navigation }) {
         opacity: 1.3,
         width: 390,
         alignSelf: "center",
-        top: height * 0.07,
+        top: height * 0.035,
       }}
     />
   );
   return (
-    <View style={{ paddingBottom: 90, top: 10 }}>
-      <View style={{ alignSelf: "center", top: height * 0.04, right: 20 }}>
+    <View
+      style={{
+        width: width * 0.95,
+        alignSelf: "center",
+        paddingBottom: height * 0.04,
+      }}
+    >
+      <View style={{ paddingBottom: height * 0.01, top: height * 0.05 }}>
         <PostHeader navigation={navigation} item={item} />
       </View>
 
-      <View style={{ top: height * 0.01 }}>
-        <Text
-          style={{
-            top: 12,
-            fontWeight: "500",
-            textAlign: "center",
-            width: 390,
-            fontSize: 17,
-            paddingBottom: 30,
-            lineHeight: 20,
-          }}
-        >
-          {item.description}
-        </Text>
+      <View style={{ paddingBottom: height * 0.06 }}>
+        <StatusText item={item} />
       </View>
-      <UserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        item={item}
-        navigation={navigation}
-      />
 
+      <View>
+        <UserButtons
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+          saveIsPressed={saveIsPressed}
+          setSaveIsPressed={setSaveIsPressed}
+          navigation={navigation}
+          item={item}
+        />
+      </View>
       <FullSeperator />
     </View>
   );

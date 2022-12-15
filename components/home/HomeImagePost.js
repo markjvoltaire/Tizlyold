@@ -2,28 +2,27 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
   Image,
   Pressable,
   Animated,
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import UserButtons from "./UserButtons";
-import {
-  SharedElement,
-  createSharedElementStackNavigator,
-} from "react-navigation-shared-element";
 import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
-import PostHeader from "./PostHeader";
 import { supabase } from "../../services/supabase";
 import PostSkeleton from "../profile/PostSkeleton";
+import ProfilePostHeader from "../post/ProfilePostHeader";
+import UserButtons from "./UserButtons";
+import HomePostHeader from "../post/HomePostHeader";
 
-export default function ImagePost({ item, navigation, followingId }) {
+export default function HomeImagePost({ navigation, item }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
   const { user, setUser } = useUser();
+  const [userInfo, setUserinfo] = useState();
+  const [loading, setLoading] = useState(true);
 
   const userId = user.user_id;
 
@@ -38,32 +37,48 @@ export default function ImagePost({ item, navigation, followingId }) {
     return resp.body;
   }
 
-  async function getSaves() {
+  async function getAvi() {
     const resp = await supabase
-      .from("saves")
+      .from("profiles")
       .select("*")
-      .eq("userId", userId)
-      .eq("postId", item.id)
-      .eq("saved_Id", item.saved_Id);
+      .eq("user_id", item.user_id);
 
     return resp.body;
   }
 
   useEffect(() => {
+    const getUserInfo = async () => {
+      const resp = await getAvi();
+      setUserinfo(resp);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    };
+    getUserInfo();
+  }, []);
+
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.3,
+        width: 390,
+        alignSelf: "center",
+      }}
+    />
+  );
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       const seeLikes = async () => {
         const res = await getLikes();
-        const saves = await getSaves();
-
         res.map((post) => setIsPressed(post.liked));
-        saves.map((save) => setSaveIsPressed(save.saved));
 
         if (res.length === 0) {
           setIsPressed(false);
-        }
-
-        if (saves.length === 0) {
-          setSaveIsPressed(false);
         }
       };
       seeLikes();
@@ -89,39 +104,28 @@ export default function ImagePost({ item, navigation, followingId }) {
   };
 
   let height = Dimensions.get("window").height;
-  let width = Dimensions.get("window").width;
 
-  const FullSeperator = () => (
-    <View
-      style={{
-        borderBottomColor: "#EDEDED",
-        borderBottomWidth: 2.0,
-        opacity: 1.3,
-        width: 390,
-        alignSelf: "center",
-      }}
-    />
-  );
   return (
     <>
-      <View style={{ paddingBottom: 4, alignSelf: "center" }}>
+      <View
+        style={{ paddingBottom: 4, top: height * 0.06, alignSelf: "center" }}
+      >
         <View
           style={{
             alignSelf: "center",
-            right: 20,
-            paddingBottom: height * 0.04,
-            bottom: height * 0.02,
+            bottom: 50,
+            paddingBottom: 3,
           }}
         >
-          <PostHeader navigation={navigation} item={item} />
+          <HomePostHeader navigation={navigation} item={item} />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
-          <SharedElement id={item.id}>
-            <View style={{ bottom: 50, alignSelf: "center" }}>
-              <PostSkeleton />
-            </View>
-          </SharedElement>
+          {/* <SharedElement id={item.id}> */}
+          <View style={{ bottom: 50, alignSelf: "center" }}>
+            <PostSkeleton />
+          </View>
+          {/* </SharedElement> */}
           {/* <SharedElement id={item.id}> */}
           <Animated.Image
             style={{
@@ -131,7 +135,7 @@ export default function ImagePost({ item, navigation, followingId }) {
               borderRadius: 10,
               bottom: 50,
               borderColor: "#5C5C5C",
-              borderWidth: 0.8,
+              borderWidth: 0.2,
               opacity: imageAnimated,
             }}
             source={{ uri: item.media }}
@@ -186,18 +190,10 @@ export default function ImagePost({ item, navigation, followingId }) {
             </>
           )}
         </View>
-        <FullSeperator />
       </View>
+      <FullSeperator />
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  fullSeperator: {
-    borderBottomColor: "#EDEDED",
-    borderBottomWidth: 2.0,
-    opacity: 1.3,
-    width: 390,
-    alignSelf: "center",
-  },
-});
+const styles = StyleSheet.create({});
