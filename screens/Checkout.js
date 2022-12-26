@@ -26,7 +26,7 @@ export default function Checkout({ navigation }) {
           Upload Complete!
         </Text>
         <View style={{ position: "absolute", alignSelf: "center", top: 350 }}>
-          <TouchableOpacity onPress={() => navigation.navigate("Explore")}>
+          <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
             <Image
               style={{
                 position: "absolute",
