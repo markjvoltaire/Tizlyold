@@ -28,6 +28,8 @@ import HomeStatus from "../components/post/HomeStatus";
 import HomeImagePost from "../components/home/HomeImagePost";
 import HomeVideoPost from "../components/home/HomeVideoPost";
 import HomeStatusPost from "../components/home/HomeStatusPost";
+import { usePosts } from "../context/PostContext";
+import PostUploading from "../components/PostUploading";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -44,6 +46,9 @@ export default function HomeScreen({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const ref = React.useRef(null);
   useScrollToTop(ref);
+  const { postUploading } = usePosts();
+
+  console.log("post", postUploading);
 
   const { likeList, setLikeList } = useLike();
 
@@ -183,6 +188,8 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <>
       <Points navigation={navigation} />
+      {postUploading === true ? <PostUploading /> : null}
+
       <View style={styles.feedContainer}>
         {postList.length === 0 ? (
           <ScrollView

@@ -22,6 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import { StackActions } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
+import { usePosts } from "../../context/PostContext";
 
 import { Video, AVPlaybackStatus } from "expo-av";
 export default function PostForm({ navigation }) {
@@ -35,7 +36,7 @@ export default function PostForm({ navigation }) {
   const [postURI, setPostURI] = useState({});
   const [uploadProgress, setUploadProgress] = useState("");
   const pushActionGoHome = StackActions.push("HomeScreen");
-  const pushAction = StackActions.replace("Checkout");
+  const pushAction = StackActions.replace("HomeScreen");
   const [imagePreview, setImagePreview] = useState();
   const [status, setStatus] = React.useState({});
   const username = user.username;
@@ -46,6 +47,10 @@ export default function PostForm({ navigation }) {
   const followingId = user.following_Id;
 
   const [selected, setSelected] = useState("");
+
+  const { setPostUploading, postUploading } = usePosts();
+
+  console.log("postLoading", postUploading);
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -88,6 +93,9 @@ export default function PostForm({ navigation }) {
     const userId = supabase.auth.currentUser.id;
 
     setUploadProgress("loading");
+    setPostUploading(true);
+    navigation.goBack();
+
     const resp = await supabase.from("post").insert([
       {
         username: username,
@@ -106,7 +114,7 @@ export default function PostForm({ navigation }) {
     if (resp.error === null) {
       setUploadProgress("done");
       setDescription("");
-      navigation.navigate("Checkout");
+      setPostUploading(false);
     } else {
       setUploadProgress("");
       Alert.alert("Something Went Wrong");
@@ -120,6 +128,8 @@ export default function PostForm({ navigation }) {
       ? Alert.alert("Something Went Wrong")
       : uploadToCloudinary(postURI);
     setUploadProgress("loading");
+    setPostUploading(true);
+    navigation.goBack();
   };
 
   async function uploadToCloudinary(postURI) {
@@ -161,7 +171,8 @@ export default function PostForm({ navigation }) {
 
     if (res.error === null) {
       setUploadProgress("done");
-      navigation.dispatch(pushAction);
+      setPostUploading(false);
+      setImagePreview();
     } else {
       setUploadProgress("");
       Alert.alert("Something Went Wrong");

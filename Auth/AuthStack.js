@@ -54,9 +54,13 @@ import CommentScreen from "../screens/CommentScreen";
 import { supabase } from "../services/supabase";
 import GeneralSettings from "../screens/GeneralSettings";
 import ForgotPassword from "../screens/ForgotPassword";
-
+import { usePosts } from "../context/PostContext";
 export default function AuthStack({ route }) {
   const Stack = createSharedElementStackNavigator();
+
+  const { postUploading } = usePosts();
+
+  console.log("post", postUploading);
 
   return (
     <UserProvider>

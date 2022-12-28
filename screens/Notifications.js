@@ -56,6 +56,7 @@ export default function Notifications({ navigation, route, image }) {
     return (
       <View style={{ flex: 1, backgroundColor: "white" }}>
         <TopHeader navigation={navigation} />
+        <Text>Hello</Text>
 
         <ScrollView
           refreshControl={

@@ -3,10 +3,10 @@ import { createContext, useContext, useState } from "react";
 const UserContext = createContext();
 
 function PostProvider({ children }) {
-  const [post, setPost] = useState([]);
+  const [postUploading, setPostUploading] = useState(false);
 
   return (
-    <UserContext.Provider value={{ post, setPost }}>
+    <UserContext.Provider value={{ postUploading, setPostUploading }}>
       {children}
     </UserContext.Provider>
   );
