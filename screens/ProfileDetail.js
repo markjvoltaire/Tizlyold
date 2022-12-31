@@ -25,6 +25,7 @@ import BannerSkeleton from "../components/profile/BannerSkeleton";
 import { Dimensions } from "react-native";
 import ProfileTextPost from "../components/profile/CurrentUserTextPost";
 import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
+import Purchases from "react-native-purchases";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -42,6 +43,7 @@ export default function ProfileDetail({ navigation, route }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const { item } = route.params;
   const [userInfo, setUserInfo] = useState(item);
+  const [subscriptions, setSubscriptions] = useState();
 
   async function getUserById() {
     const { data } = await supabase
@@ -72,55 +74,6 @@ export default function ProfileDetail({ navigation, route }) {
       .eq("user_id", item.user_id);
 
     return profiles;
-  }
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const resp = await getUser();
-      resp.map((i) => setUserTizlyPoints(i.tizlyPoints));
-    };
-
-    getUserInfo();
-  }, []);
-
-  useEffect(() => {
-    const getPoints = async () => {
-      const resp = await getUserPoints();
-      resp.map((i) => setPoints(i.tizlyPoints));
-    };
-    getPoints();
-  }, []);
-
-  async function subtractCoins() {
-    const userId = supabase.auth.currentUser.id;
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .update({ tizlyPoints: points - 10 })
-      .eq("user_id", userId);
-
-    error === null ? handleFollow() : Alert.alert(error);
-
-    profiles.map((i) => setPoints(i.tizlyPoints));
-
-    return profiles;
-  }
-
-  async function addCoins() {
-    const userId = supabase.auth.currentUser.id;
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .update({ tizlyPoints: userTizlyPoints + item.subCost })
-      .eq("user_id", item.user_id);
-  }
-
-  async function handleSubscriptions() {
-    if (points - item.subCost < 0) {
-      Alert.alert("Insufficent Coins To Access Content");
-    } else {
-      subtractCoins();
-      addCoins();
-      setIsFollowing(true);
-    }
   }
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -221,6 +174,65 @@ export default function ProfileDetail({ navigation, route }) {
     return resp;
   }
 
+  const listOfProducts = [
+    "TizlySub1",
+    "TizlySub2",
+    "TizlySub3",
+    "TizlyUserSubscription004",
+    "TizlyUserSubscription005",
+    "TizlyUserSubscription006",
+    "TizlyUserSubscription007",
+    "TizlyUserSubscription008",
+  ];
+
+  useEffect(() => {
+    const main = async () => {
+      Purchases.setDebugLogsEnabled(true);
+
+      await Purchases.configure({
+        apiKey: "appl_YzNJKcRtIKShkjSciXgXIqfSDqc",
+      });
+
+      const prods = await Purchases.getProducts(listOfProducts);
+
+      const customerInfo = await Purchases.getCustomerInfo();
+
+      const currentSubscription = customerInfo.activeSubscriptions;
+
+      async function findProduct() {
+        const box = {
+          allProducts: prods.map((i) => i.identifier),
+          userSubs: currentSubscription,
+        };
+
+        const intersection = box.allProducts.filter(
+          (element) => !box.userSubs.includes(element)
+        );
+
+        let availableSubscription =
+          intersection[Math.floor(Math.random() * intersection.length)];
+
+        console.log("currentSubscription", currentSubscription);
+        console.log("availableSubscription", availableSubscription);
+
+        setSubscriptions(availableSubscription);
+      }
+
+      findProduct();
+    };
+    main();
+  }, []);
+
+  async function subscribeToUser() {
+    const resp = await Purchases.purchaseProduct(
+      subscriptions,
+      null,
+      Purchases.PURCHASE_TYPE.INAPP
+    );
+
+    return resp;
+  }
+
   async function unfollowUser() {
     const resp = await supabase
       .from("following")
@@ -265,42 +277,6 @@ export default function ProfileDetail({ navigation, route }) {
   const photoCount = posts.filter((item) => item.mediaType === "image");
   const videoCount = posts.filter((item) => item.mediaType === "video");
   const textCount = posts.filter((item) => item.mediaType === "status");
-
-  const createThreeButtonAlert = () =>
-    Alert.alert(
-      `subscribe to @${item.username}`,
-      `Would you like to subscribe to @${item.username} for ${item.subCost} Coins`,
-      [
-        {
-          text: "Subscribe",
-          onPress: () => handleSubscriptions(),
-        },
-        {
-          text: "Not Now",
-
-          onPress: () => null,
-          type: "cancel",
-        },
-      ]
-    );
-
-  const unsubscribeAlert = () =>
-    Alert.alert(
-      `unsubscribe to @${item.username}`,
-      `Would you like to unsubscribe to @${item.username} `,
-      [
-        {
-          text: "Unsubscribe",
-          onPress: () => unfollowUser(),
-        },
-        {
-          text: "Not Now",
-
-          onPress: () => null,
-          type: "cancel",
-        },
-      ]
-    );
 
   if (loading) {
     return (
@@ -545,7 +521,7 @@ export default function ProfileDetail({ navigation, route }) {
                   </View>
                 </View>
                 <View style={{ alignItems: "center", top: 65 }}>
-                  <TouchableOpacity onPress={() => createThreeButtonAlert()}>
+                  <TouchableOpacity onPress={() => subscribeToUser()}>
                     <Image
                       style={{
                         resizeMode: "contain",
@@ -647,41 +623,6 @@ export default function ProfileDetail({ navigation, route }) {
           source={require("../assets/backButton2.png")}
         />
       </TouchableOpacity>
-
-      <Image
-        style={{
-          height: height * 0.04,
-          width: width * 0.17,
-          borderRadius: 10,
-          position: "absolute",
-          left: width * 0.8,
-          top: height * 0.058,
-        }}
-        source={require("../assets/rectangleBlur.png")}
-      />
-
-      <Image
-        resizeMode="contain"
-        style={{
-          height: height * 0.02,
-          position: "absolute",
-          top: height * 0.068,
-          left: width * 0.22,
-          aspectRatio: 1,
-        }}
-        source={require("../assets/coin.png")}
-      />
-
-      <Text
-        style={{
-          left: width * 0.885,
-          top: height * 0.069,
-          fontWeight: "600",
-          position: "absolute",
-        }}
-      >
-        {points}
-      </Text>
     </>
   );
 }

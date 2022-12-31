@@ -48,8 +48,6 @@ export default function HomeScreen({ navigation, route }) {
   useScrollToTop(ref);
   const { postUploading } = usePosts();
 
-  console.log("post", postUploading);
-
   const { likeList, setLikeList } = useLike();
 
   const defaultImageAnimated = new Animated.Value(0);
