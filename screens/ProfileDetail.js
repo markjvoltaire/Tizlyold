@@ -44,15 +44,7 @@ export default function ProfileDetail({ navigation, route }) {
   const { item } = route.params;
   const [userInfo, setUserInfo] = useState(item);
   const [subscriptions, setSubscriptions] = useState();
-
-  async function getUserById() {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", item.user_id);
-
-    return data;
-  }
+  const [subStatus, setSubStatus] = useState(false);
 
   async function getUserPoints() {
     const userId = supabase.auth.currentUser.id;
@@ -65,15 +57,18 @@ export default function ProfileDetail({ navigation, route }) {
     return profiles;
   }
 
-  async function getUser() {
+  async function checkSubStatus() {
     const userId = supabase.auth.currentUser.id;
 
-    const { data: profiles, error } = await supabase
-      .from("profiles")
+    const resp = await supabase
+      .from("subscriptions")
       .select("*")
-      .eq("user_id", item.user_id);
+      .eq("creatorId", item.user_id)
+      .eq("userId", userId);
 
-    return profiles;
+    console.log("resp.body", resp.body);
+
+    return resp.body;
   }
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -187,13 +182,17 @@ export default function ProfileDetail({ navigation, route }) {
 
   useEffect(() => {
     const main = async () => {
+      const userId = supabase.auth.currentUser.id;
       Purchases.setDebugLogsEnabled(true);
 
       await Purchases.configure({
         apiKey: "appl_YzNJKcRtIKShkjSciXgXIqfSDqc",
+        appUserID: userId,
       });
 
       const prods = await Purchases.getProducts(listOfProducts);
+
+      console.log("prods", prods);
 
       const customerInfo = await Purchases.getCustomerInfo();
 
@@ -212,8 +211,9 @@ export default function ProfileDetail({ navigation, route }) {
         let availableSubscription =
           intersection[Math.floor(Math.random() * intersection.length)];
 
-        console.log("currentSubscription", currentSubscription);
+        // console.log("currentSubscription", currentSubscription);
         console.log("availableSubscription", availableSubscription);
+        // console.log("customerInfo", customerInfo);
 
         setSubscriptions(availableSubscription);
       }
@@ -224,13 +224,37 @@ export default function ProfileDetail({ navigation, route }) {
   }, []);
 
   async function subscribeToUser() {
-    const resp = await Purchases.purchaseProduct(
-      subscriptions,
-      null,
-      Purchases.PURCHASE_TYPE.INAPP
-    );
+    const customerInfo = await Purchases.getCustomerInfo();
+    try {
+      const resp = await Purchases.purchaseProduct(
+        subscriptions,
+        null,
+        Purchases.PURCHASE_TYPE.INAPP
+      );
 
-    return resp;
+      const res = await supabase.from("subscriptions").insert([
+        {
+          userId: supabase.auth.currentUser.id,
+          creatorId: item.user_id,
+          creatorProfileImage: item.profileimage,
+          userProfileImage: user.profileimage,
+          creatorUsername: item.username,
+          userUsername: user.username,
+          creatorDisplayname: item.displayName,
+          userDisplayname: user.displayName,
+          subscriptionName: subscriptions,
+          subscriptionId: customerInfo.originalAppUserId,
+        },
+      ]);
+
+      console.log("res", res.body);
+
+      return res && resp;
+    } catch (error) {
+      if (error.userCancelled) {
+        return null;
+      }
+    }
   }
 
   async function unfollowUser() {
@@ -410,7 +434,7 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
         ) : (
           <View>
-            {isFollowing === false ? (
+            {subStatus === false ? (
               <>
                 <View
                   style={{
@@ -535,7 +559,7 @@ export default function ProfileDetail({ navigation, route }) {
                 </View>
               </>
             ) : (
-              <View style={{ paddingBottom: 60 }}>
+              <View style={{ paddingBottom: 60, top: height * 0.05 }}>
                 {posts.map((item) => {
                   if (item.mediaType === "image") {
                     return (
