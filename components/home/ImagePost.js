@@ -49,8 +49,6 @@ export default function ImagePost({ item, navigation, followingId }) {
     return resp.body;
   }
 
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
-
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       const seeLikes = async () => {
@@ -93,15 +91,26 @@ export default function ImagePost({ item, navigation, followingId }) {
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
 
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.3,
+        width: 390,
+        alignSelf: "center",
+      }}
+    />
+  );
   return (
     <>
-      <View style={{ paddingBottom: 4, top: 40, alignSelf: "center" }}>
+      <View style={{ paddingBottom: 4, alignSelf: "center" }}>
         <View
           style={{
             alignSelf: "center",
             right: 20,
-            paddingBottom: 25,
-            top: 12,
+            paddingBottom: height * 0.04,
+            bottom: height * 0.02,
           }}
         >
           <PostHeader navigation={navigation} item={item} />
@@ -113,23 +122,23 @@ export default function ImagePost({ item, navigation, followingId }) {
               <PostSkeleton />
             </View>
           </SharedElement>
-          <SharedElement id={item.id}>
-            <Animated.Image
-              style={{
-                height: height * 0.454,
-                aspectRatio: 1,
-                alignSelf: "center",
-                borderRadius: 10,
-                bottom: 50,
-                borderColor: "#5C5C5C",
-                borderWidth: 0.2,
-                opacity: imageAnimated,
-              }}
-              source={{ uri: item.media }}
-              onLoad={handleImageLoad}
-              resizeMode="cover"
-            />
-          </SharedElement>
+          {/* <SharedElement id={item.id}> */}
+          <Animated.Image
+            style={{
+              height: height * 0.454,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              bottom: 50,
+              borderColor: "#5C5C5C",
+              borderWidth: 0.8,
+              opacity: imageAnimated,
+            }}
+            source={{ uri: item.media }}
+            onLoad={handleImageLoad}
+            resizeMode="cover"
+          />
+          {/* </SharedElement> */}
         </Pressable>
 
         <View style={{ bottom: 50 }}>
@@ -177,8 +186,8 @@ export default function ImagePost({ item, navigation, followingId }) {
             </>
           )}
         </View>
+        <FullSeperator />
       </View>
-      <FullSeperator />
     </>
   );
 }

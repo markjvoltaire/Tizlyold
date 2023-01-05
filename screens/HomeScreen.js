@@ -22,6 +22,14 @@ import { useLike } from "../context/LikeContext";
 import { getAllLikes } from "../services/user";
 import ImagePost from "../components/home/ImagePost";
 import VideoPost from "../components/home/VideoPost";
+import Status from "../components/post/Status";
+import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
+import HomeStatus from "../components/post/HomeStatus";
+import HomeImagePost from "../components/home/HomeImagePost";
+import HomeVideoPost from "../components/home/HomeVideoPost";
+import HomeStatusPost from "../components/home/HomeStatusPost";
+import { usePosts } from "../context/PostContext";
+import PostUploading from "../components/PostUploading";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -38,6 +46,7 @@ export default function HomeScreen({ navigation, route }) {
   const FullSeperator = () => <View style={styles.fullSeperator} />;
   const ref = React.useRef(null);
   useScrollToTop(ref);
+  const { postUploading } = usePosts();
 
   const { likeList, setLikeList } = useLike();
 
@@ -145,6 +154,11 @@ export default function HomeScreen({ navigation, route }) {
       .in("followingId", [userPostList.list])
       .order("date", { ascending: false });
 
+    const currentUserPost = await supabase
+      .from("post")
+      .select("*")
+      .eq("user_id", userId);
+
     setPostList(resp.body);
 
     return resp.body;
@@ -170,8 +184,9 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.homeScreenContainer}>
+    <>
       <Points navigation={navigation} />
+      {postUploading === true ? <PostUploading /> : null}
 
       <View style={styles.feedContainer}>
         {postList.length === 0 ? (
@@ -216,38 +231,43 @@ export default function HomeScreen({ navigation, route }) {
             </TouchableOpacity>
           </ScrollView>
         ) : (
-          <FlatList
-            ref={ref}
-            keyExtractor={(item) => item.id}
-            data={postList}
-            refreshing={refreshing}
-            onRefresh={() => refreshFeed()}
-            initialNumToRender={3}
-            contentContainerStyle={{
-              borderBottomWidth: 0.8,
-              borderBottomColor: "#EDEDED",
-            }}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
-              if (item.mediaType === "image") {
-                return <ImagePost item={item} navigation={navigation} />;
-              }
+          <>
+            <FlatList
+              ref={ref}
+              keyExtractor={(item) => item.id}
+              data={postList}
+              refreshing={refreshing}
+              onRefresh={() => refreshFeed()}
+              initialNumToRender={3}
+              contentContainerStyle={{
+                borderBottomWidth: 0.8,
+                borderBottomColor: "#EDEDED",
+              }}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => {
+                if (item.mediaType === "image") {
+                  return <HomeImagePost item={item} navigation={navigation} />;
+                }
 
-              if (item.mediaType === "video") {
-                return <VideoPost navigation={navigation} item={item} />;
-              }
-            }}
-          />
+                if (item.mediaType === "video") {
+                  return <HomeVideoPost navigation={navigation} item={item} />;
+                }
+
+                if (item.mediaType === "status") {
+                  return <HomeStatusPost navigation={navigation} item={item} />;
+                }
+              }}
+            />
+          </>
         )}
       </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   homeScreenContainer: {
     backgroundColor: "white",
-    justifyContent: "center",
   },
 
   profileimage: {

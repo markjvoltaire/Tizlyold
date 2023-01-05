@@ -37,65 +37,70 @@ const HomeStackNavigator = ({ route }) => {
   const { user, setUser } = useUser();
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{
-          headerBackVisible: false,
-          headerTitle: () => <Header />,
-        }}
-      />
-      <Stack.Screen name="SettingsScreen" component={Settings} />
+    <>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{
+            headerBackVisible: false,
+            headerTitle: () => <Header />,
+          }}
+        />
+        <Stack.Screen name="SettingsScreen" component={Settings} />
 
-      <Stack.Screen
-        name="ProfileDetail2"
-        component={ProfileDetail}
-        options={{
-          headerBackVisible: false,
-          headerTitle: () => <Header />,
-        }}
-      />
+        <Stack.Screen
+          name="ProfileDetail2"
+          component={ProfileDetail}
+          options={{
+            headerBackVisible: false,
+            headerTitle: () => <Header />,
+          }}
+        />
 
-      <Stack.Screen
-        name="UserSub"
-        component={UserProfileSubscribers}
-        options={{
-          headerBackVisible: false,
-          headerTitle: () => <Header />,
-        }}
-      />
+        <Stack.Screen
+          name="UserSub"
+          component={UserProfileSubscribers}
+          options={{
+            headerBackVisible: false,
+            headerTitle: () => <Header />,
+          }}
+        />
 
-      <Stack.Screen
-        name="GeneralSettings"
-        component={GeneralSettings}
-        options={{
-          headerBackVisible: false,
-          headerTitle: () => <Header />,
-        }}
-      />
+        <Stack.Screen
+          name="GeneralSettings"
+          component={GeneralSettings}
+          options={{
+            headerBackVisible: false,
+            headerTitle: () => <Header />,
+          }}
+        />
 
-      <Stack.Screen
-        name="ImageDetails"
-        sharedElements={(route) => {
-          const { item } = route.params;
-          return [item];
-        }}
-        component={ImageDetails}
-      />
+        <Stack.Screen
+          name="ImageDetails"
+          sharedElements={(route) => {
+            const { item } = route.params;
+            return [item];
+          }}
+          component={ImageDetails}
+        />
 
-      <Stack.Screen name="UserProfile2" component={UserProfile} />
-      <Stack.Screen name="UserProfilePost" component={UserProfilePostDetail} />
-      <Stack.Screen
-        name="UserSubcriber"
-        component={UserProfileSubscribers}
-        sharedElements={(route) => {
-          const { item } = route.params;
-          return [item];
-        }}
-      />
-      <Stack.Screen name="NotificationsScreen" component={Notifications} />
-    </Stack.Navigator>
+        <Stack.Screen name="UserProfile2" component={UserProfile} />
+        <Stack.Screen
+          name="UserProfilePost"
+          component={UserProfilePostDetail}
+        />
+        <Stack.Screen
+          name="UserSubcriber"
+          component={UserProfileSubscribers}
+          sharedElements={(route) => {
+            const { item } = route.params;
+            return [item];
+          }}
+        />
+        <Stack.Screen name="NotificationsScreen" component={Notifications} />
+      </Stack.Navigator>
+    </>
   );
 };
 

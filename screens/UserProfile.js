@@ -83,11 +83,19 @@ export default function UserProfile({ navigation, route }) {
     const getPost = async () => {
       const resp = await getCurrentUserPosts();
       setPosts(resp);
+
       setLoading(false);
     };
     getUserById();
     getPost();
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      refreshFeed();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
@@ -224,26 +232,21 @@ export default function UserProfile({ navigation, route }) {
 
         <FullSeperator />
         <View style={styles.feedContainer}>
-          <FlatList
-            ref={ref}
-            keyExtractor={(item) => item.id}
-            data={posts}
-            renderItem={({ item }) => {
-              return (
-                <View key={item.id}>
-                  <UserProfileFeed
-                    navigation={navigation}
-                    route={route}
-                    post={item}
-                    navState={navState}
-                    setPosts={setPosts}
-                    user={user}
-                    setUser={setUser}
-                  />
-                </View>
-              );
-            }}
-          />
+          {posts.map((item) => {
+            return (
+              <View key={item.id}>
+                <UserProfileFeed
+                  navigation={navigation}
+                  route={route}
+                  post={item}
+                  navState={navState}
+                  setPosts={setPosts}
+                  user={user}
+                  setUser={setUser}
+                />
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
       <Animated.View
@@ -288,41 +291,6 @@ export default function UserProfile({ navigation, route }) {
           source={require("../assets/backButton2.png")}
         />
       </TouchableOpacity>
-
-      <Image
-        style={{
-          height: height * 0.04,
-          width: width * 0.17,
-          borderRadius: 10,
-          position: "absolute",
-          left: width * 0.8,
-          top: height * 0.058,
-        }}
-        source={require("../assets/rectangleBlur.png")}
-      />
-
-      <Image
-        resizeMode="contain"
-        style={{
-          height: height * 0.02,
-          position: "absolute",
-          top: height * 0.068,
-          left: width * 0.22,
-          aspectRatio: 1,
-        }}
-        source={require("../assets/coin.png")}
-      />
-
-      <Text
-        style={{
-          left: width * 0.885,
-          top: height * 0.069,
-          fontWeight: "600",
-          position: "absolute",
-        }}
-      >
-        {points}
-      </Text>
     </>
   );
 }

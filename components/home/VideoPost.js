@@ -6,7 +6,7 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import { Video } from "expo-av";
+import { Video, AVPlaybackStatus } from "expo-av";
 import React, { useState, useEffect } from "react";
 import UserButtons from "./UserButtons";
 
@@ -73,8 +73,8 @@ export default function VideoPost({ item, navigation, route }) {
   let width = Dimensions.get("window").width;
 
   return (
-    <View style={{ top: 10 }}>
-      <View style={{ alignSelf: "center", right: 20, top: 40 }}>
+    <View style={{ top: height * 0.01 }}>
+      <View style={{ paddingBottom: height * 0.01 }}>
         <PostHeader navigation={navigation} item={item} />
       </View>
       <Pressable

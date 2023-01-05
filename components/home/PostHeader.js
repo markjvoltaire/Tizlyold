@@ -5,6 +5,7 @@ import { supabase } from "../../services/supabase";
 
 import { useUser } from "../../context/UserContext";
 import ImageHeader from "../post/ImageHeader";
+import ProfilePostHeader from "../post/ProfilePostHeader";
 
 export default function PostHeader({ item, navigation }) {
   const { user, setUser } = useUser();
@@ -39,7 +40,7 @@ export default function PostHeader({ item, navigation }) {
 
   if (loading) {
     return (
-      <View style={{ alignSelf: "center" }}>
+      <View style={{ alignSelf: "center", left: width * 0.03 }}>
         <View style={{ alignSelf: "center" }}>
           <View
             style={{ paddingTop: height * 0.03, paddingBottom: height * 0.01 }}

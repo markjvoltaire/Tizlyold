@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import React from "react";
 import {
   SharedElement,
@@ -9,9 +16,9 @@ import { useUser } from "../../context/UserContext";
 
 export default function UserProfileHeader({ item, navigation, userInfo }) {
   const { user } = useUser();
-
+  const width = Dimensions.get("window").width;
   return (
-    <View style={{ alignSelf: "center" }}>
+    <View style={{ alignSelf: "center", right: width * 0.05 }}>
       <SharedElement id={item.id}>
         <Image
           style={{

@@ -57,86 +57,88 @@ export default function UserProfileImagePost({
     <View style={{ paddingBottom: 90 }}>
       <View
         style={{
-          top: 32,
-          flex: 1,
+          top: height * 0.02,
         }}
       >
         <UserProfileHeader navigation={navigation} item={post} user={user} />
-      </View>
 
-      <Pressable
-        key={post.id}
-        onPress={() =>
-          navigation.push("ImageDetails", {
-            item: post,
-          })
-        }
-      >
-        <SharedElement id={post.id}>
-          <Animated.Image
-            source={require("../../assets/defaultImage.png")}
-            style={{
-              height: height * 0.452,
-              position: "absolute",
-              opacity: defaultImageAnimated,
-              aspectRatio: 1,
-              alignSelf: "center",
-              borderRadius: 10,
-              borderColor: "#5C5C5C",
-              borderWidth: 0.2,
-            }}
-            resizeMode="cover"
-            onLoad={handleDefaultImageLoad}
-          />
-        </SharedElement>
-
-        <SharedElement id={post.id}>
-          <Animated.Image
-            source={{ uri: post.media }}
-            style={{
-              height: height * 0.452,
-              opacity: imageAnimated,
-              aspectRatio: 1,
-              alignSelf: "center",
-              borderRadius: 10,
-              borderColor: "#5C5C5C",
-              borderWidth: 0.2,
-            }}
-            resizeMode="cover"
-            onLoad={handleImageLoad}
-          />
-        </SharedElement>
-      </Pressable>
-
-      <View style={{ top: 7 }}>
-        <Text
-          style={{
-            left: width * 0.03,
-            top: 12,
-            fontWeight: "700",
-            textAlign: "left",
-            width: 390,
-            paddingBottom: 30,
-            lineHeight: 20,
-          }}
+        <Pressable
+          key={post.id}
+          onPress={() =>
+            navigation.push("ImageDetails", {
+              item: post,
+            })
+          }
+          style={{ bottom: height * 0.045 }}
         >
-          {post.description}
-        </Text>
-        <Image
-          resizeMode="contain"
-          style={{ width: 70, left: 10, bottom: 30 }}
-          source={require("../../assets/photoBean.png")}
-        />
-      </View>
+          <SharedElement id={post.id}>
+            <Animated.Image
+              source={require("../../assets/defaultImage.png")}
+              style={{
+                height: height * 0.452,
+                position: "absolute",
+                opacity: defaultImageAnimated,
+                aspectRatio: 1,
+                alignSelf: "center",
+                borderRadius: 10,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+              }}
+              resizeMode="cover"
+              onLoad={handleDefaultImageLoad}
+            />
+          </SharedElement>
 
-      <CurrentUserButtons
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-        saveIsPressed={saveIsPressed}
-        setSaveIsPressed={setSaveIsPressed}
-        navigation={navigation}
-        item={post}
-      />
+          <SharedElement id={post.id}>
+            <Animated.Image
+              source={{ uri: post.media }}
+              style={{
+                height: height * 0.452,
+                opacity: imageAnimated,
+                aspectRatio: 1,
+                alignSelf: "center",
+                borderRadius: 10,
+                borderColor: "#5C5C5C",
+                borderWidth: 0.2,
+              }}
+              resizeMode="cover"
+              onLoad={handleImageLoad}
+            />
+          </SharedElement>
+        </Pressable>
+
+        <View style={{ bottom: height * 0.034 }}>
+          <Text
+            style={{
+              left: width * 0.03,
+              top: 12,
+              fontWeight: "700",
+              textAlign: "left",
+              width: 390,
+              paddingBottom: 30,
+              lineHeight: 20,
+            }}
+          >
+            {post.description}
+          </Text>
+          <Image
+            resizeMode="contain"
+            style={{ width: 70, left: 10, bottom: 30 }}
+            source={require("../../assets/photoBean.png")}
+          />
+        </View>
+
+        <View style={{ bottom: height * 0.1 }}>
+          <CurrentUserButtons
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
+            navigation={navigation}
+            item={post}
+          />
+        </View>
+      </View>
     </View>
   );
 }

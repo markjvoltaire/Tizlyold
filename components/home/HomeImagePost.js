@@ -9,21 +9,15 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import UserButtons from "../home/UserButtons";
-import {
-  SharedElement,
-  createSharedElementStackNavigator,
-} from "react-navigation-shared-element";
-import CurrentUserButtons from "../home/CurrentUserButtons";
+import CurrentUserButtons from "./CurrentUserButtons";
 import { useUser } from "../../context/UserContext";
-import { useLike } from "../../context/LikeContext";
-
 import { supabase } from "../../services/supabase";
-import PostSkeleton from "./PostSkeleton";
-import PostHeader from "../home/PostHeader";
+import PostSkeleton from "../profile/PostSkeleton";
 import ProfilePostHeader from "../post/ProfilePostHeader";
+import UserButtons from "./UserButtons";
+import HomePostHeader from "../post/HomePostHeader";
 
-export default function ProfileImagePost({ item, navigation, followingId }) {
+export default function HomeImagePost({ navigation, item }) {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const { user, setUser } = useUser();
@@ -65,7 +59,17 @@ export default function ProfileImagePost({ item, navigation, followingId }) {
   }, []);
 
   const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomColor: "#EDEDED",
+        borderBottomWidth: 2.0,
+        opacity: 1.3,
+        width: 390,
+        alignSelf: "center",
+      }}
+    />
+  );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -113,7 +117,7 @@ export default function ProfileImagePost({ item, navigation, followingId }) {
             paddingBottom: 3,
           }}
         >
-          <ProfilePostHeader item={item} />
+          <HomePostHeader navigation={navigation} item={item} />
         </View>
 
         <Pressable onPress={() => navigation.push("ImageDetails", { item })}>
@@ -192,38 +196,4 @@ export default function ProfileImagePost({ item, navigation, followingId }) {
   );
 }
 
-{
-  /* <Image
-            style={{
-              height: 35,
-              width: 35,
-              borderRadius: 100,
-              position: "absolute",
-              left: 20,
-              top: 330,
-            }}
-            source={{ uri: item.profileimage }}
-          />
-          <Text
-            style={{
-              position: "absolute",
-              color: "white",
-              top: 342,
-              left: 60,
-              fontWeight: "500",
-              fontSize: 15,
-            }}
-          >
-            {item.username}
-          </Text> */
-}
-
-const styles = StyleSheet.create({
-  fullSeperator: {
-    borderBottomColor: "#EDEDED",
-    borderBottomWidth: 2.0,
-    opacity: 1.3,
-    width: 390,
-    alignSelf: "center",
-  },
-});
+const styles = StyleSheet.create({});

@@ -34,6 +34,8 @@ import { supabase } from "../services/supabase";
 import SearchView from "../components/explore/SearchView";
 import { useUser } from "../context/UserContext";
 import Points from "../views/Points";
+import { usePosts } from "../context/PostContext";
+import PostUploading from "../components/PostUploading";
 
 export default function Explore({ navigation }) {
   const { user, setUser } = useUser();
@@ -44,7 +46,7 @@ export default function Explore({ navigation }) {
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState("");
   const [input, setInput] = useState(false);
-
+  const { postUploading } = usePosts();
   useEffect(() => {
     fetchUsers();
     return () => {};
@@ -118,6 +120,7 @@ export default function Explore({ navigation }) {
   return (
     <View style={styles.container}>
       <Points navigation={navigation} />
+      {postUploading === true ? <PostUploading /> : null}
 
       <TextInput
         style={styles.searchInput}

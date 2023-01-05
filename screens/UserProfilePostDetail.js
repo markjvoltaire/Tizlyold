@@ -14,6 +14,12 @@ import { supabase } from "../services/supabase";
 export default function UserProfilePostDetail({ navigation, route }) {
   const { post } = route.params;
 
+  function addNumber(num1, num2) {
+    return num1 + num2;
+  }
+
+  addNumber(2, 4);
+
   return (
     <View style={{ flex: 1 }}>
       <SharedElement id={post.id}>

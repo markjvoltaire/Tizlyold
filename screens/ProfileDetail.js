@@ -23,6 +23,9 @@ import ProfileImagePost from "../components/profile/ProfileImagePost";
 import ProfileVideoPost from "../components/profile/ProfileVideoPost";
 import BannerSkeleton from "../components/profile/BannerSkeleton";
 import { Dimensions } from "react-native";
+import ProfileTextPost from "../components/profile/CurrentUserTextPost";
+import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
+import Purchases from "react-native-purchases";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -40,23 +43,8 @@ export default function ProfileDetail({ navigation, route }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const { item } = route.params;
   const [userInfo, setUserInfo] = useState(item);
-
-  async function getUserById() {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", item.user_id);
-
-    return data;
-  }
-
-  useEffect(() => {
-    const log = async () => {
-      const resp = await getUserById();
-      resp.map((i) => setUserDetails(i));
-    };
-    log();
-  }, []);
+  const [subscriptions, setSubscriptions] = useState();
+  const [subStatus, setSubStatus] = useState(false);
 
   async function getUserPoints() {
     const userId = supabase.auth.currentUser.id;
@@ -69,64 +57,18 @@ export default function ProfileDetail({ navigation, route }) {
     return profiles;
   }
 
-  async function getUser() {
+  async function checkSubStatus() {
     const userId = supabase.auth.currentUser.id;
 
-    const { data: profiles, error } = await supabase
-      .from("profiles")
+    const resp = await supabase
+      .from("subscriptions")
       .select("*")
-      .eq("user_id", item.user_id);
+      .eq("creatorId", item.user_id)
+      .eq("userId", userId);
 
-    return profiles;
-  }
+    console.log("resp.body", resp.body);
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const resp = await getUser();
-      resp.map((i) => setUserTizlyPoints(i.tizlyPoints));
-    };
-
-    getUserInfo();
-  }, []);
-
-  useEffect(() => {
-    const getPoints = async () => {
-      const resp = await getUserPoints();
-      resp.map((i) => setPoints(i.tizlyPoints));
-    };
-    getPoints();
-  }, []);
-
-  async function subtractCoins() {
-    const userId = supabase.auth.currentUser.id;
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .update({ tizlyPoints: points - 10 })
-      .eq("user_id", userId);
-
-    error === null ? handleFollow() : Alert.alert(error);
-
-    profiles.map((i) => setPoints(i.tizlyPoints));
-
-    return profiles;
-  }
-
-  async function addCoins() {
-    const userId = supabase.auth.currentUser.id;
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .update({ tizlyPoints: userTizlyPoints + item.subCost })
-      .eq("user_id", item.user_id);
-  }
-
-  async function handleSubscriptions() {
-    if (points - item.subCost < 0) {
-      Alert.alert("Insufficent Coins To Access Content");
-    } else {
-      subtractCoins();
-      addCoins();
-      setIsFollowing(true);
-    }
+    return resp.body;
   }
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -186,7 +128,7 @@ export default function ProfileDetail({ navigation, route }) {
     const { data } = await supabase
       .from("profiles")
       .select("*")
-      .eq("user_id", route.params.user_id)
+      .eq("user_id", item.user_id)
       .single();
 
     return data;
@@ -195,6 +137,7 @@ export default function ProfileDetail({ navigation, route }) {
   useEffect(() => {
     const getUser = async () => {
       const resp = await getProfileDetail();
+
       setProfile(resp);
     };
     getUser();
@@ -224,6 +167,94 @@ export default function ProfileDetail({ navigation, route }) {
     ]);
 
     return resp;
+  }
+
+  const listOfProducts = [
+    "TizlySub1",
+    "TizlySub2",
+    "TizlySub3",
+    "TizlyUserSubscription004",
+    "TizlyUserSubscription005",
+    "TizlyUserSubscription006",
+    "TizlyUserSubscription007",
+    "TizlyUserSubscription008",
+  ];
+
+  useEffect(() => {
+    const main = async () => {
+      const userId = supabase.auth.currentUser.id;
+      Purchases.setDebugLogsEnabled(true);
+
+      await Purchases.configure({
+        apiKey: "appl_YzNJKcRtIKShkjSciXgXIqfSDqc",
+        appUserID: userId,
+      });
+
+      const prods = await Purchases.getProducts(listOfProducts);
+
+      console.log("prods", prods);
+
+      const customerInfo = await Purchases.getCustomerInfo();
+
+      const currentSubscription = customerInfo.activeSubscriptions;
+
+      async function findProduct() {
+        const box = {
+          allProducts: prods.map((i) => i.identifier),
+          userSubs: currentSubscription,
+        };
+
+        const intersection = box.allProducts.filter(
+          (element) => !box.userSubs.includes(element)
+        );
+
+        let availableSubscription =
+          intersection[Math.floor(Math.random() * intersection.length)];
+
+        // console.log("currentSubscription", currentSubscription);
+        console.log("availableSubscription", availableSubscription);
+        // console.log("customerInfo", customerInfo);
+
+        setSubscriptions(availableSubscription);
+      }
+
+      findProduct();
+    };
+    main();
+  }, []);
+
+  async function subscribeToUser() {
+    const customerInfo = await Purchases.getCustomerInfo();
+    try {
+      const resp = await Purchases.purchaseProduct(
+        subscriptions,
+        null,
+        Purchases.PURCHASE_TYPE.INAPP
+      );
+
+      const res = await supabase.from("subscriptions").insert([
+        {
+          userId: supabase.auth.currentUser.id,
+          creatorId: item.user_id,
+          creatorProfileImage: item.profileimage,
+          userProfileImage: user.profileimage,
+          creatorUsername: item.username,
+          userUsername: user.username,
+          creatorDisplayname: item.displayName,
+          userDisplayname: user.displayName,
+          subscriptionName: subscriptions,
+          subscriptionId: customerInfo.originalAppUserId,
+        },
+      ]);
+
+      console.log("res", res.body);
+
+      return res && resp;
+    } catch (error) {
+      if (error.userCancelled) {
+        return null;
+      }
+    }
   }
 
   async function unfollowUser() {
@@ -269,43 +300,7 @@ export default function ProfileDetail({ navigation, route }) {
 
   const photoCount = posts.filter((item) => item.mediaType === "image");
   const videoCount = posts.filter((item) => item.mediaType === "video");
-  const textCount = posts.filter((item) => item.mediaType === "text");
-
-  const createThreeButtonAlert = () =>
-    Alert.alert(
-      `subscribe to @${item.username}`,
-      `Would you like to subscribe to @${item.username} for ${item.subCost} Coins`,
-      [
-        {
-          text: "Subscribe",
-          onPress: () => handleSubscriptions(),
-        },
-        {
-          text: "Not Now",
-
-          onPress: () => null,
-          type: "cancel",
-        },
-      ]
-    );
-
-  const unsubscribeAlert = () =>
-    Alert.alert(
-      `unsubscribe to @${item.username}`,
-      `Would you like to unsubscribe to @${item.username} `,
-      [
-        {
-          text: "Unsubscribe",
-          onPress: () => unfollowUser(),
-        },
-        {
-          text: "Not Now",
-
-          onPress: () => null,
-          type: "cancel",
-        },
-      ]
-    );
+  const textCount = posts.filter((item) => item.mediaType === "status");
 
   if (loading) {
     return (
@@ -338,7 +333,7 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
         </SharedElement>
 
-        {userDetails.bannerImageType === "image" ? (
+        {profile.bannerImageType === "image" ? (
           <SharedElement id={item.id}>
             <Animated.Image
               style={{
@@ -354,12 +349,12 @@ export default function ProfileDetail({ navigation, route }) {
               }}
               resizeMode="cover"
               onLoad={handleDefaultImageLoad}
-              source={{ uri: item.bannerImage }}
+              source={{ uri: profile.bannerImage }}
             />
           </SharedElement>
         ) : (
           <Video
-            source={{ uri: item.bannerImage }}
+            source={{ uri: profile.bannerImage }}
             ref={video}
             isLooping
             shouldPlay
@@ -439,7 +434,7 @@ export default function ProfileDetail({ navigation, route }) {
           </View>
         ) : (
           <View>
-            {isFollowing === false ? (
+            {subStatus === false ? (
               <>
                 <View
                   style={{
@@ -550,7 +545,7 @@ export default function ProfileDetail({ navigation, route }) {
                   </View>
                 </View>
                 <View style={{ alignItems: "center", top: 65 }}>
-                  <TouchableOpacity onPress={() => createThreeButtonAlert()}>
+                  <TouchableOpacity onPress={() => subscribeToUser()}>
                     <Image
                       style={{
                         resizeMode: "contain",
@@ -564,7 +559,7 @@ export default function ProfileDetail({ navigation, route }) {
                 </View>
               </>
             ) : (
-              <View style={{ paddingBottom: 60 }}>
+              <View style={{ paddingBottom: 60, top: height * 0.05 }}>
                 {posts.map((item) => {
                   if (item.mediaType === "image") {
                     return (
@@ -585,6 +580,19 @@ export default function ProfileDetail({ navigation, route }) {
                           userInfo={userInfo}
                           item={item}
                           navigation={navigation}
+                        />
+                      </View>
+                    );
+                  }
+
+                  if (item.mediaType === "status") {
+                    return (
+                      <View style={{ top: 30 }} key={item.id}>
+                        <ProfileDetailStatus
+                          user={user}
+                          setUser={setUser}
+                          navigation={navigation}
+                          item={item}
                         />
                       </View>
                     );
@@ -639,41 +647,6 @@ export default function ProfileDetail({ navigation, route }) {
           source={require("../assets/backButton2.png")}
         />
       </TouchableOpacity>
-
-      <Image
-        style={{
-          height: height * 0.04,
-          width: width * 0.17,
-          borderRadius: 10,
-          position: "absolute",
-          left: width * 0.8,
-          top: height * 0.058,
-        }}
-        source={require("../assets/rectangleBlur.png")}
-      />
-
-      <Image
-        resizeMode="contain"
-        style={{
-          height: height * 0.02,
-          position: "absolute",
-          top: height * 0.068,
-          left: width * 0.22,
-          aspectRatio: 1,
-        }}
-        source={require("../assets/coin.png")}
-      />
-
-      <Text
-        style={{
-          left: width * 0.885,
-          top: height * 0.069,
-          fontWeight: "600",
-          position: "absolute",
-        }}
-      >
-        {points}
-      </Text>
     </>
   );
 }

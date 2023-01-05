@@ -142,7 +142,6 @@ export default function UserButtons({
   useEffect(() => {
     const getLikeList = async () => {
       const resp = await getAllLikes();
-   
     };
     getLikeList();
   }, []);
@@ -154,7 +153,7 @@ export default function UserButtons({
           <Image
             style={{
               top: 30,
-              height: 28,
+              height: 23,
               aspectRatio: 1,
             }}
             source={
@@ -172,7 +171,7 @@ export default function UserButtons({
           <Image
             style={{
               top: 30,
-              height: 28,
+              height: 23,
               aspectRatio: 1,
               resizeMode: "contain",
             }}
@@ -185,7 +184,7 @@ export default function UserButtons({
           <Image
             style={{
               top: 30,
-              height: 28,
+              height: 23,
               aspectRatio: 1,
               resizeMode: "contain",
             }}

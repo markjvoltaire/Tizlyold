@@ -53,9 +53,14 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import CommentScreen from "../screens/CommentScreen";
 import { supabase } from "../services/supabase";
 import GeneralSettings from "../screens/GeneralSettings";
-
-export default function AuthStack() {
+import ForgotPassword from "../screens/ForgotPassword";
+import { usePosts } from "../context/PostContext";
+export default function AuthStack({ route }) {
   const Stack = createSharedElementStackNavigator();
+
+  const { postUploading } = usePosts();
+
+  console.log("post", postUploading);
 
   return (
     <UserProvider>
@@ -89,6 +94,12 @@ export default function AuthStack() {
             <Stack.Screen
               name="GeneralSettings"
               component={GeneralSettings}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPassword}
               options={{ headerShown: false }}
             />
 

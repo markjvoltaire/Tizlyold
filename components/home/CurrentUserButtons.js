@@ -156,7 +156,7 @@ export default function CurrentUserButtons({
           <Image
             style={{
               top: 30,
-              height: 28,
+              height: 23,
               aspectRatio: 1,
             }}
             source={
@@ -174,7 +174,7 @@ export default function CurrentUserButtons({
           <Image
             style={{
               top: 30,
-              height: 28,
+              height: 23,
               aspectRatio: 1,
               resizeMode: "contain",
             }}
@@ -187,7 +187,7 @@ export default function CurrentUserButtons({
           <Image
             style={{
               top: 30,
-              height: 28,
+              height: 23,
               aspectRatio: 1,
               resizeMode: "contain",
             }}
@@ -205,7 +205,7 @@ export default function CurrentUserButtons({
             style={{
               resizeMode: "contain",
               position: "absolute",
-              height: 28,
+              height: 23,
               top: 30,
             }}
             source={require("../../assets/moreCircle.png")}

@@ -2,22 +2,27 @@ import {
   StyleSheet,
   Text,
   View,
+  Dimensions,
   Pressable,
   Image,
-  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
-import { Video } from "expo-av";
-import UserButtons from "../home/UserButtons";
+import React, { useState, useRef } from "react";
+import { Video, AVPlaybackStatus } from "expo-av";
 import { useUser } from "../../context/UserContext";
-import PostHeader from "../home/PostHeader";
 import ProfilePostHeader from "../post/ProfilePostHeader";
+import UserButtons from "./UserButtons";
+import HomePostHeader from "../post/HomePostHeader";
 
-export default function ProfileVideoPost({ item, navigation, userInfo }) {
+export default function HomeVideoPost({ navigation, item }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+
+  const { user, setUser } = useUser();
+
+  let height = Dimensions.get("window").height;
+
   const FullSeperator = () => (
     <View
       style={{
@@ -31,15 +36,11 @@ export default function ProfileVideoPost({ item, navigation, userInfo }) {
     />
   );
 
-  const { user, setUser } = useUser();
-
-  let height = Dimensions.get("window").height;
-
   return (
     <>
       <View style={{ top: 10 }}>
         <View style={{ alignSelf: "center", top: height * 0.001 }}>
-          <ProfilePostHeader item={item} />
+          <HomePostHeader navigation={navigation} item={item} />
         </View>
         <Pressable
           onPress={() =>
@@ -127,12 +128,4 @@ export default function ProfileVideoPost({ item, navigation, userInfo }) {
   );
 }
 
-const styles = StyleSheet.create({
-  fullSeperator: {
-    borderBottomColor: "#EDEDED",
-    borderBottomWidth: 2.0,
-    opacity: 1.3,
-    width: 390,
-    alignSelf: "center",
-  },
-});
+const styles = StyleSheet.create({});
