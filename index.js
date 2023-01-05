@@ -10,4 +10,4 @@ app.get("/", async (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(PORT, () => console.log(`server  is on ${PORT}`));
+app.listen(PORT, () => console.log(`server     is on ${PORT}`));
