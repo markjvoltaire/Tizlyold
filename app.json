@@ -3,7 +3,7 @@
     "name": "Tizly",
     "slug": "tizly",
     "owner": "markjvoltaire",
-    "version": "1.5.3",
+    "version": "1.5.5",
     "orientation": "portrait",
     "icon": "./assets/appIcons/icon.png",
     "userInterfaceStyle": "automatic",

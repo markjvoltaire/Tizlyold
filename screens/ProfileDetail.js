@@ -189,8 +189,6 @@ export default function ProfileDetail({ navigation, route }) {
 
       const prods = await Purchases.getProducts(listOfProducts);
 
-      // console.log("prods", prods);
-
       const customerInfo = await Purchases.getCustomerInfo();
 
       const currentSubscription = customerInfo.activeSubscriptions;
@@ -210,7 +208,6 @@ export default function ProfileDetail({ navigation, route }) {
 
         console.log("currentSubscription", currentSubscription);
         console.log("availableSubscription", availableSubscription);
-        // console.log("customerInfo", customerInfo);
 
         setSubscriptions(availableSubscription);
       }
