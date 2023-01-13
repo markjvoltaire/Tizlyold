@@ -9,13 +9,10 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../services/supabase";
-import PostSkeleton from "../profile/PostSkeleton";
-import ProfilePostHeader from "../post/ProfilePostHeader";
 
-export default function HomePostHeader({ item, navigation }) {
+export default function HomeUserPostHeader() {
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const { user, setUser } = useUser();
@@ -110,11 +107,7 @@ export default function HomePostHeader({ item, navigation }) {
       style={{ alignSelf: "center", top: height * 0.04, right: width * 0.05 }}
     >
       <TouchableOpacity
-        onPress={() => {
-          user.user_id === item.user_id
-            ? navigation.navigate("UserProfile2")
-            : navigation.push("ProfileDetail2", { item });
-        }}
+        onPress={() => navigation.push("ProfileDetail2", { item })}
       >
         <Image
           style={{

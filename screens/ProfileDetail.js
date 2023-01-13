@@ -7,6 +7,7 @@ import {
   ScrollView,
   Animated,
   Alert,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -18,7 +19,7 @@ import { Video } from "expo-av";
 import { SharedElement } from "react-navigation-shared-element";
 import ProfileSkeleton from "../ProfileSkeleton";
 import { usePoints } from "../context/PointsContext";
-
+import LottieView from "lottie-react-native";
 import ProfileImagePost from "../components/profile/ProfileImagePost";
 import ProfileVideoPost from "../components/profile/ProfileVideoPost";
 import BannerSkeleton from "../components/profile/BannerSkeleton";
@@ -26,6 +27,7 @@ import { Dimensions } from "react-native";
 import ProfileTextPost from "../components/profile/CurrentUserTextPost";
 import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
 import Purchases from "react-native-purchases";
+import SubLoading from "../components/loading/SubLoading";
 
 export default function ProfileDetail({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -45,17 +47,8 @@ export default function ProfileDetail({ navigation, route }) {
   const [userInfo, setUserInfo] = useState(item);
   const [subscriptions, setSubscriptions] = useState();
   const [subStatus, setSubStatus] = useState(false);
-
-  async function getUserPoints() {
-    const userId = supabase.auth.currentUser.id;
-
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .select("tizlyPoints")
-      .eq("user_id", userId);
-
-    return profiles;
-  }
+  const [subLoading, setSubLoading] = useState("idle");
+  const [refreshing, setRefreshing] = useState(false);
 
   async function checkSubStatus() {
     const userId = supabase.auth.currentUser.id;
@@ -65,8 +58,6 @@ export default function ProfileDetail({ navigation, route }) {
       .select("*")
       .eq("creatorId", item.user_id)
       .eq("userId", userId);
-
-    console.log("resp.body", resp.body);
 
     return resp.body;
   }
@@ -134,6 +125,17 @@ export default function ProfileDetail({ navigation, route }) {
     return data;
   }
 
+  async function getSubs() {
+    const resp = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("userId", user.user_id);
+
+    setStatus(resp.body[0].status);
+
+    return resp.body;
+  }
+
   useEffect(() => {
     const getUser = async () => {
       const resp = await getProfileDetail();
@@ -151,23 +153,18 @@ export default function ProfileDetail({ navigation, route }) {
     getFeed();
   }, []);
 
-  async function followUser() {
-    const resp = await supabase.from("following").insert([
-      {
-        creatorId: item.user_id,
-        userId: user.user_id,
-        userProfileImage: user.profileimage,
-        userUsername: user.username,
-        creatorUsername: item.username,
-        followingId: item.following_Id,
-        creatorDisplayname: item.displayName,
-        userDisplayname: user.displayName,
-        creatorProfileImage: item.profileimage,
-      },
-    ]);
+  useEffect(() => {
+    const checkSub = async () => {
+      const resp = await checkSubStatus();
 
-    return resp;
-  }
+      if (resp[0] === undefined) {
+        setSubStatus(false);
+      } else {
+        setSubStatus("SUBSTATUS", resp[0]);
+      }
+    };
+    checkSub();
+  }, []);
 
   const listOfProducts = [
     "TizlySub1",
@@ -192,7 +189,7 @@ export default function ProfileDetail({ navigation, route }) {
 
       const prods = await Purchases.getProducts(listOfProducts);
 
-      console.log("prods", prods);
+      // console.log("prods", prods);
 
       const customerInfo = await Purchases.getCustomerInfo();
 
@@ -211,7 +208,7 @@ export default function ProfileDetail({ navigation, route }) {
         let availableSubscription =
           intersection[Math.floor(Math.random() * intersection.length)];
 
-        // console.log("currentSubscription", currentSubscription);
+        console.log("currentSubscription", currentSubscription);
         console.log("availableSubscription", availableSubscription);
         // console.log("customerInfo", customerInfo);
 
@@ -225,6 +222,7 @@ export default function ProfileDetail({ navigation, route }) {
 
   async function subscribeToUser() {
     const customerInfo = await Purchases.getCustomerInfo();
+    setSubLoading("loading");
     try {
       const resp = await Purchases.purchaseProduct(
         subscriptions,
@@ -243,35 +241,24 @@ export default function ProfileDetail({ navigation, route }) {
           creatorDisplayname: item.displayName,
           userDisplayname: user.displayName,
           subscriptionName: subscriptions,
-          subscriptionId: customerInfo.originalAppUserId,
         },
       ]);
 
-      console.log("res", res.body);
+      setSubStatus(res.body[0].status);
 
-      return res && resp;
+      setSubLoading("idle");
+
+      return resp && res;
     } catch (error) {
       if (error.userCancelled) {
-        return null;
+        setSubLoading("idle");
+      } else {
+        setSubLoading("idle");
+        Alert.alert("Something Went Wrong, Try Again");
+        console.log("error", error);
       }
     }
   }
-
-  async function unfollowUser() {
-    const resp = await supabase
-      .from("following")
-      .delete()
-      .eq("userId", user.user_id)
-      .eq("creatorId", item.user_id);
-
-    setIsFollowing(false);
-
-    return resp;
-  }
-
-  const handleFollow = () => {
-    isFollowing === false ? followUser() : unfollowUser();
-  };
 
   if (loading) {
     return (
@@ -317,6 +304,14 @@ export default function ProfileDetail({ navigation, route }) {
 
   const diffclamp = Animated.diffClamp(scrollY, 0, 45);
 
+  // const onRefresh = React.useCallback(() => {
+  //   console.log("YOOOOO");
+  // }, []);
+
+  async function onRefresh() {
+    setSubStatus(true);
+  }
+
   return (
     <>
       <ScrollView
@@ -324,6 +319,9 @@ export default function ProfileDetail({ navigation, route }) {
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, backgroundColor: "white" }}
       >
@@ -545,17 +543,19 @@ export default function ProfileDetail({ navigation, route }) {
                   </View>
                 </View>
                 <View style={{ alignItems: "center", top: 65 }}>
-                  <TouchableOpacity onPress={() => subscribeToUser()}>
-                    <Image
-                      style={{
-                        resizeMode: "contain",
-                        height: 215,
-                        width: 215,
-                        alignSelf: "center",
-                      }}
-                      source={require("../assets/accessButton.png")}
-                    />
-                  </TouchableOpacity>
+                  {subLoading === "idle" ? (
+                    <TouchableOpacity onPress={() => subscribeToUser()}>
+                      <Image
+                        style={{
+                          resizeMode: "contain",
+                          height: 215,
+                          width: 215,
+                          alignSelf: "center",
+                        }}
+                        source={require("../assets/accessButton.png")}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
               </>
             ) : (
@@ -647,6 +647,12 @@ export default function ProfileDetail({ navigation, route }) {
           source={require("../assets/backButton2.png")}
         />
       </TouchableOpacity>
+
+      {subLoading === "idle" ? null : subLoading === "loading" ? (
+        <View style={{ position: "absolute", alignSelf: "center" }}>
+          <SubLoading />
+        </View>
+      ) : null}
     </>
   );
 }

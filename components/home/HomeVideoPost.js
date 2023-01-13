@@ -11,6 +11,7 @@ import { Video, AVPlaybackStatus } from "expo-av";
 import { useUser } from "../../context/UserContext";
 import ProfilePostHeader from "../post/ProfilePostHeader";
 import UserButtons from "./UserButtons";
+import CurrentUserButtons from "./CurrentUserButtons";
 import HomePostHeader from "../post/HomePostHeader";
 
 export default function HomeVideoPost({ navigation, item }) {

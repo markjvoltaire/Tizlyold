@@ -30,6 +30,8 @@ import HomeVideoPost from "../components/home/HomeVideoPost";
 import HomeStatusPost from "../components/home/HomeStatusPost";
 import { usePosts } from "../context/PostContext";
 import PostUploading from "../components/PostUploading";
+import { Appearance, useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -39,11 +41,10 @@ export default function HomeScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
-  const [userFollowingId, setUserFollowingId] = useState();
-  const pushAction = StackActions.replace("Explore");
-  const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const [creatorIds, setcreatorIds] = useState();
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
   const ref = React.useRef(null);
   useScrollToTop(ref);
   const { postUploading } = usePosts();
@@ -92,9 +93,8 @@ export default function HomeScreen({ navigation, route }) {
   async function getFollowing() {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
-      .from("following")
+      .from("subscriptions")
       .select("*")
-      .eq("following", true)
       .eq("userId", userId);
 
     setFollow(resp.body);
@@ -113,55 +113,33 @@ export default function HomeScreen({ navigation, route }) {
   useEffect(() => {
     const getFollowingList = async () => {
       const resp = await getFollowing();
+
+      const followingList = resp.map((item) => item.creatorId);
+      setcreatorIds(followingList);
     };
     getFollowingList();
-  }, []);
-
-  async function getFollowingId() {
-    const userId = supabase.auth.currentUser.id;
-
-    const resp = await supabase
-      .from("post")
-      .select("followingId")
-      .eq("user_id", userId);
-
-    setUserFollowingId(resp.body);
-
-    const list = resp.body.map((item) => item.followingId);
-    setFollowingId(list);
-
-    return resp.body;
-  }
-
-  useEffect(() => {
-    const getUserFollowingId = async () => {
-      const resp = await getFollowingId();
-    };
-    getUserFollowingId();
   }, []);
 
   async function getPosts() {
     const userId = supabase.auth.currentUser.id;
     const respon = await getFollowing();
-    const list = respon.map((item) => item.followingId);
-    setFollowingId(list);
+    const list = respon.map((item) => item.creatorId);
 
-    const userPostList = { list, followingId };
+    setFollowingId(list);
 
     const resp = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [userPostList.list])
+      .in("user_id", [list])
       .order("date", { ascending: false });
 
-    const currentUserPost = await supabase
-      .from("post")
-      .select("*")
-      .eq("user_id", userId);
+    const res = await supabase.from("post").select("*").eq("user_id", userId);
+
+    const fullList = res.body.concat(resp.body);
 
     setPostList(resp.body);
 
-    return resp.body;
+    return fullList;
   }
 
   useEffect(() => {
@@ -185,10 +163,11 @@ export default function HomeScreen({ navigation, route }) {
 
   return (
     <>
+      <StatusBar />
       <Points navigation={navigation} />
       {postUploading === true ? <PostUploading /> : null}
 
-      <View style={styles.feedContainer}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         {postList.length === 0 ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -266,6 +245,14 @@ export default function HomeScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+  lightContainer: {
+    backgroundColor: "#d0d0c0",
+  },
+
+  darkContainer: {
+    backgroundColor: "#242c40",
+  },
+
   homeScreenContainer: {
     backgroundColor: "white",
   },

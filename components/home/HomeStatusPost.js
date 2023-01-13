@@ -4,6 +4,8 @@ import ProfilePostHeader from "../post/ProfilePostHeader";
 import StatusText from "../post/StatusText";
 import UserButtons from "./UserButtons";
 import HomePostHeader from "../post/HomePostHeader";
+import { useUser } from "../../context/UserContext";
+import CurrentUserButtons from "./CurrentUserButtons";
 
 export default function HomeStatusPost({ item, navigation }) {
   const [isPressed, setIsPressed] = useState(false);
@@ -11,6 +13,8 @@ export default function HomeStatusPost({ item, navigation }) {
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
+
+  const { user, setUser } = useUser();
 
   const FullSeperator = () => (
     <View
@@ -41,14 +45,25 @@ export default function HomeStatusPost({ item, navigation }) {
       </View>
 
       <View style={{ bottom: height * 0.04 }}>
-        <UserButtons
-          isPressed={isPressed}
-          setIsPressed={setIsPressed}
-          saveIsPressed={saveIsPressed}
-          setSaveIsPressed={setSaveIsPressed}
-          navigation={navigation}
-          item={item}
-        />
+        {item.user_id === user.user_id ? (
+          <CurrentUserButtons
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
+            navigation={navigation}
+            item={item}
+          />
+        ) : (
+          <UserButtons
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            saveIsPressed={saveIsPressed}
+            setSaveIsPressed={setSaveIsPressed}
+            item={item}
+            navigation={navigation}
+          />
+        )}
       </View>
       <FullSeperator />
     </View>

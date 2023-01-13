@@ -50,8 +50,6 @@ export default function PostForm({ navigation }) {
 
   const { setPostUploading, postUploading } = usePosts();
 
-  console.log("postLoading", postUploading);
-
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -129,6 +127,7 @@ export default function PostForm({ navigation }) {
       : uploadToCloudinary(postURI);
     setUploadProgress("loading");
     setPostUploading(true);
+    setDescription("");
     navigation.goBack();
   };
 
