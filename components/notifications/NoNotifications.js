@@ -29,7 +29,7 @@ export default function NoNotifications({ navigation }) {
         <Text
           style={{
             fontWeight: "600",
-            fontSize: 20.1,
+            fontSize: 20.2,
             color: "#686877",
           }}
         >
