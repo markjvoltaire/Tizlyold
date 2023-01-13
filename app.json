@@ -1,33 +1,51 @@
 {
   "expo": {
     "name": "Tizly",
-    "slug": "Tizly",
-    "version": "1.0.0",
+    "slug": "tizly",
+    "owner": "markjvoltaire",
+    "version": "1.5.3",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appIcons/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/appIcons/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library."
+      },
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tizly.Tizly",
+      "buildNumber": "11"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Tizly wants to access your camera roll"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b2467dea-2503-4843-b4ef-97ad4a30aa58"
+      }
     }
   }
 }
