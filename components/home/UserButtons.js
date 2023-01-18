@@ -10,16 +10,15 @@ import { getAllLikes } from "../../services/user";
 
 export default function UserButtons({
   item,
-  isPressed,
-  setIsPressed,
-  saveIsPressed,
-  setSaveIsPressed,
+
   post,
   navigation,
   likeList,
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
+  const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
   const { user } = useUser();
 
   const creatorId = item.user_id;

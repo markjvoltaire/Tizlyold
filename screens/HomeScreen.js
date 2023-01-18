@@ -8,6 +8,7 @@ import {
   FlatList,
   RefreshControl,
   Animated,
+  Dimensions,
 } from "react-native";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -19,7 +20,7 @@ import { useScrollToTop } from "@react-navigation/native";
 import Skeleton from "../Skeleton";
 import Points from "../views/Points";
 import { useLike } from "../context/LikeContext";
-import { getAllLikes } from "../services/user";
+import { getAllLikes, creatorsYouMayLike } from "../services/user";
 import ImagePost from "../components/home/ImagePost";
 import VideoPost from "../components/home/VideoPost";
 import Status from "../components/post/Status";
@@ -42,8 +43,12 @@ export default function HomeScreen({ navigation, route }) {
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
   const [creatorIds, setcreatorIds] = useState();
+  const [creators, setCreators] = useState();
 
   const FullSeperator = () => <View style={styles.fullSeperator} />;
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
 
   const ref = React.useRef(null);
   useScrollToTop(ref);
@@ -149,6 +154,21 @@ export default function HomeScreen({ navigation, route }) {
     getUserPost();
   }, []);
 
+  useEffect(() => {
+    const getUsers = async () => {
+      const resp = await creatorsYouMayLike();
+      setCreators(resp);
+    };
+    getUsers();
+  }, []);
+
+  useEffect(() => {
+    const log = async () => {
+      const resp = await creatorsYouMayLike();
+    };
+    log();
+  }, []);
+
   if (loading) {
     return (
       <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -167,79 +187,143 @@ export default function HomeScreen({ navigation, route }) {
       <Points navigation={navigation} />
       {postUploading === true ? <PostUploading /> : null}
 
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        {postList.length === 0 ? (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => refreshFeed()}
-              />
-            }
-          >
-            <Text
-              style={{
-                position: "absolute",
-                fontWeight: "800",
-                fontSize: 20,
-                alignSelf: "center",
-                top: 50,
-              }}
-            >
-              Your Feed Is Currently Empty
-            </Text>
-            <Image
-              style={{
-                position: "absolute",
-                height: 300,
-                resizeMode: "contain",
-                top: 200,
-                alignSelf: "center",
-              }}
-              source={require("../assets/mobile-application.png")}
-            />
-            <TouchableOpacity
-              style={{ top: 600, alignItems: "center" }}
-              onPress={() => navigation.navigate("Explore")}
-            >
-              <Image
-                style={styles.exploreButton}
-                source={require("../assets/exploreCreators.png")}
-              />
-            </TouchableOpacity>
-          </ScrollView>
-        ) : (
-          <>
-            <FlatList
-              ref={ref}
-              keyExtractor={(item) => item.id}
-              data={postList}
+      {postList.length === 0 ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
               refreshing={refreshing}
               onRefresh={() => refreshFeed()}
-              initialNumToRender={3}
-              contentContainerStyle={{
-                borderBottomWidth: 0.8,
-                borderBottomColor: "#EDEDED",
-              }}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => {
-                if (item.mediaType === "image") {
-                  return <HomeImagePost item={item} navigation={navigation} />;
-                }
-
-                if (item.mediaType === "video") {
-                  return <HomeVideoPost navigation={navigation} item={item} />;
-                }
-
-                if (item.mediaType === "status") {
-                  return <HomeStatusPost navigation={navigation} item={item} />;
-                }
-              }}
             />
-          </>
-        )}
-      </View>
+          }
+          style={{ flex: 1, backgroundColor: "white" }}
+        >
+          <Text
+            style={{
+              alignSelf: "center",
+              top: height * 0.05,
+              fontWeight: "600",
+              fontSize: 20,
+            }}
+          >
+            Creators You May Like
+          </Text>
+          <View
+            style={{
+              backgroundColor: "white",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              top: height * 0.08,
+              marginBottom: height * 0.2,
+            }}
+          >
+            {creators.map((item) => {
+              return (
+                <View style={{ paddingBottom: 30 }} key={item.id}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      user.id === item.id
+                        ? navigation.navigate("UserProfile2")
+                        : navigation.push("ProfileDetail2", {
+                            item,
+                          });
+                    }}
+                  >
+                    <Image
+                      style={{
+                        height: 170,
+                        width: 170,
+                        margin: width * 0.01,
+                        borderRadius: 13,
+                        borderWidth: 0.2,
+                        resizeMode: "contain",
+                      }}
+                      source={{ uri: item.profileimage }}
+                    />
+
+                    <Image
+                      style={{
+                        height: 170,
+                        width: 170,
+                        margin: width * 0.01,
+                        borderRadius: 13,
+                        position: "absolute",
+                      }}
+                      source={require("../assets/fader.png")}
+                    />
+
+                    <Text
+                      style={{
+                        position: "absolute",
+                        top: height * 0.155,
+                        color: "white",
+                        fontWeight: "800",
+                        fontSize: 10.5,
+                        left: width * 0.02,
+                      }}
+                    >
+                      {item.displayName}
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+
+                        color: "#D7D8DA",
+                        fontWeight: "500",
+                        left: width * 0.02,
+                        fontSize: 10.5,
+                        top: height * 0.17,
+                      }}
+                    >
+                      @{item.username}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+
+          <TouchableOpacity
+            style={{ bottom: height * 0.08, alignItems: "center" }}
+            onPress={() => navigation.navigate("Explore")}
+          >
+            <Image
+              style={styles.exploreButton}
+              source={require("../assets/exploreCreators.png")}
+            />
+          </TouchableOpacity>
+        </ScrollView>
+      ) : (
+        <>
+          <FlatList
+            ref={ref}
+            keyExtractor={(item) => item.id}
+            data={postList}
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+            initialNumToRender={3}
+            contentContainerStyle={{
+              borderBottomWidth: 0.8,
+              borderBottomColor: "#EDEDED",
+            }}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              if (item.mediaType === "image") {
+                return <HomeImagePost item={item} navigation={navigation} />;
+              }
+
+              if (item.mediaType === "video") {
+                return <HomeVideoPost navigation={navigation} item={item} />;
+              }
+
+              if (item.mediaType === "status") {
+                return <HomeStatusPost navigation={navigation} item={item} />;
+              }
+            }}
+          />
+        </>
+      )}
     </>
   );
 }

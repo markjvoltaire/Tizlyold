@@ -1,51 +1,309 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Animated,
+  Dimensions,
+} from "react-native";
+import React, { useState } from "react";
 import {
   SharedElement,
   createSharedElementStackNavigator,
 } from "react-navigation-shared-element";
-
 import { useUser } from "../../context/UserContext";
+import { Video } from "expo-av";
+import UserButtons from "../home/UserButtons";
 
-export default function ProfileHeader({ item, navigation, userInfo }) {
+export default function ProfileHeader({
+  item,
+  navigation,
+  userInfo,
+  profile,
+  posts,
+}) {
+  const defaultImageAnimated = new Animated.Value(0);
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+
+  const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
+
+  const handleDefaultImageLoad = () => {
+    Animated.timing(defaultImageAnimated, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const { user } = useUser();
 
   return (
-    <View style={{ alignSelf: "center" }}>
-      <View style={{ alignSelf: "center" }}>
-        <SharedElement id={item.id}>
+    <View
+      style={{ position: "absolute", top: height * 0.2, alignSelf: "center" }}
+    >
+      {profile.bannerImageType === "image" ? (
+        <>
+          <Animated.Image
+            style={{
+              width: width,
+              height: height * 0.54,
+              opacity: defaultImageAnimated,
+              bottom: height * 0.2,
+            }}
+            source={{ uri: profile.bannerImage }}
+            onLoad={handleDefaultImageLoad}
+          />
           <Image
             style={{
-              height: 35,
-              width: 35,
-              borderRadius: 100,
-              bottom: 30,
+              width: width,
+              height: height * 0.54,
+              position: "absolute",
+              bottom: height * 0.2,
             }}
-            source={
-              user.user_id === item.user_id
-                ? { uri: user.profileimage }
-                : { uri: userInfo.profileimage }
-            }
+            source={require("../../assets/fader.png")}
           />
-        </SharedElement>
-        <View style={{ bottom: 63, left: 40 }}>
-          {user.user_id === item.user_id ? (
-            <Text style={{ fontWeight: "800" }}>{user.displayName}</Text>
-          ) : (
-            <Text style={{ fontWeight: "800" }}>{userInfo.displayName}</Text>
-          )}
-          <Text
+        </>
+      ) : (
+        <>
+          <Video
+            source={{ uri: profile.bannerImage }}
+            ref={video}
+            isLooping
+            shouldPlay
+            isMuted
             style={{
-              fontWeight: "600",
-              color: "#A1A1B3",
+              height: height * 0.54,
+              aspectRatio: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+              position: "absolute",
+              bottom: height * 0.2,
             }}
-          >
-            @{userInfo.username}
-          </Text>
-        </View>
+            resizeMode="cover"
+            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          />
+          <Image
+            style={{
+              width: width,
+              height: height * 0.54,
+              bottom: height * 0.2,
+            }}
+            source={require("../../assets/fader.png")}
+          />
+        </>
+      )}
+      <View style={{ position: "absolute" }}>
+        <Image
+          style={{
+            position: "absolute",
+            top: height * 0.16,
+            left: width * 0.04,
+            width: 50,
+            height: 50,
+            resizeMode: "contain",
+
+            borderRadius: 100,
+            aspectRatio: 1,
+          }}
+          source={
+            profile.profileimage === null
+              ? require("../../assets/noProfilePic.jpeg")
+              : { uri: profile.profileimage }
+          }
+        />
+      </View>
+
+      <View
+        style={{ position: "absolute", left: width * 0.19, top: height * 0.16 }}
+      >
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 22,
+            width: 400,
+            color: "white",
+          }}
+        >
+          {profile.displayName}
+        </Text>
+        <Text
+          style={{
+            fontSize: 15,
+            width: 400,
+            color: "white",
+            fontWeight: "500",
+          }}
+        >
+          @{profile.username}
+        </Text>
+
+        <Text
+          style={{
+            color: "white",
+            right: width * 0.15,
+            top: height * 0.025,
+            fontWeight: "700",
+          }}
+        >
+          {profile.bio}
+        </Text>
+      </View>
+
+      <View
+        style={{ position: "absolute", top: height * 0.23, left: width * 0.03 }}
+      >
+        <TouchableOpacity>
+          <Image
+            style={{
+              width: width * 0.21,
+              resizeMode: "contain",
+              left: width * 0.27,
+              position: "absolute",
+            }}
+            source={require("../../assets/messageButton.png")}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Image
+            style={{
+              width: width * 0.21,
+              resizeMode: "contain",
+
+              position: "absolute",
+            }}
+            source={require("../../assets/followbutton.png")}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({});
+
+// <View style={{ alignSelf: "center", marginBottom: 1000 }}>
+//   {profile.bannerImageType === "image" ? (
+//     <>
+//       <Animated.Image
+//         style={{
+//           width: width,
+//           height: height * 0.54,
+//           opacity: defaultImageAnimated,
+//         }}
+//         source={{ uri: profile.bannerImage }}
+//         onLoad={handleDefaultImageLoad}
+//       />
+//       <Image
+//         style={{
+//           width: width,
+//           height: height * 0.54,
+//           position: "absolute",
+//         }}
+//         source={require("../../assets/fader.png")}
+//       />
+//     </>
+//   ) : (
+//     <>
+//       <Video
+//         source={{ uri: profile.bannerImage }}
+//         ref={video}
+//         isLooping
+//         shouldPlay
+//         isMuted
+//         style={{
+//           height: height * 0.54,
+//           aspectRatio: 1,
+//           alignSelf: "center",
+//           borderRadius: 10,
+//           position: "absolute",
+//         }}
+//         resizeMode="cover"
+//         onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+//       />
+//       <Image
+//         style={{
+//           width: width,
+//           height: height * 0.54,
+//         }}
+//         source={require("../../assets/fader.png")}
+//       />
+//     </>
+//   )}
+//   <View style={{ bottom: height * 0.18, left: width * 0.19 }}>
+//     <Image
+//       style={{
+//         position: "absolute",
+//         right: width * 1.04,
+//         width: 50,
+//         height: 50,
+//         resizeMode: "contain",
+
+//         borderRadius: 100,
+//         aspectRatio: 1,
+//       }}
+//       source={
+//         profile.profileimage === null
+//           ? require("../../assets/noProfilePic.jpeg")
+//           : { uri: profile.profileimage }
+//       }
+//     />
+//     <Text
+//       style={{
+//         fontWeight: "bold",
+//         fontSize: 22,
+//         width: 400,
+//         color: "white",
+//       }}
+//     >
+//       {profile.displayName}
+//     </Text>
+//     <Text
+//       style={{
+//         fontSize: 15,
+//         width: 400,
+//         color: "white",
+//       }}
+//     >
+//       @{profile.username}
+//     </Text>
+
+//     <Text
+//       style={{
+//         color: "white",
+//         right: width * 0.15,
+//         top: height * 0.025,
+//         fontWeight: "700",
+//       }}
+//     >
+//       {profile.bio}
+//     </Text>
+//     <TouchableOpacity>
+//       <Image
+//         style={{
+//           width: width * 0.21,
+//           resizeMode: "contain",
+//           right: width * 0.7,
+//           position: "absolute",
+//         }}
+//         source={require("../../assets/messageButton.png")}
+//       />
+//     </TouchableOpacity>
+
+//     <TouchableOpacity>
+//       <Image
+//         style={{
+//           width: width * 0.21,
+//           resizeMode: "contain",
+//           right: width * 0.96,
+//           position: "absolute",
+//         }}
+//         source={require("../../assets/followbutton.png")}
+//       />
+//     </TouchableOpacity>
+//   </View>
+// </View>

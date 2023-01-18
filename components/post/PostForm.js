@@ -12,6 +12,7 @@ import {
   Platform,
   Dimensions,
   FlatList,
+  Switch,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -49,6 +50,9 @@ export default function PostForm({ navigation }) {
   const [selected, setSelected] = useState("");
 
   const { setPostUploading, postUploading } = usePosts();
+
+  const [isEnabled, setIsEnabled] = useState(true);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -106,6 +110,7 @@ export default function PostForm({ navigation }) {
         bannerImage: bannerImage,
         bio: bio,
         followingId: followingId,
+        subsOnly: isEnabled,
       },
     ]);
 
@@ -115,6 +120,7 @@ export default function PostForm({ navigation }) {
       setPostUploading(false);
     } else {
       setUploadProgress("");
+      console.log("error", resp.error);
       Alert.alert("Something Went Wrong");
     }
 
@@ -123,7 +129,7 @@ export default function PostForm({ navigation }) {
 
   const addPost = async () => {
     postURI === {} || null || undefined
-      ? Alert.alert("Something Went Wrong")
+      ? Alert.alert("Something Went Wrong") && setUploadProgress()
       : uploadToCloudinary(postURI);
     setUploadProgress("loading");
     setPostUploading(true);
@@ -165,6 +171,7 @@ export default function PostForm({ navigation }) {
         bannerImage: bannerImage,
         bio: bio,
         followingId: followingId,
+        subsOnly: isEnabled,
       },
     ]);
 
@@ -174,6 +181,7 @@ export default function PostForm({ navigation }) {
       setImagePreview();
     } else {
       setUploadProgress("");
+      console.log("ERROR", res.error);
       Alert.alert("Something Went Wrong");
     }
 
@@ -415,6 +423,47 @@ export default function PostForm({ navigation }) {
           autoPlay
         />
       ) : null}
+
+      <View style={{ position: "absolute" }}>
+        <Switch
+          style={{
+            position: "absolute",
+            top: height * 0.65,
+            alignSelf: "center",
+            right: width * 0.33,
+          }}
+          trackColor={{ false: "red", true: "#410ADF" }}
+          thumbColor={isEnabled ? "white" : "white"}
+          ios_backgroundColor="#00A3FF"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+
+        {isEnabled === false ? (
+          <Text
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+              top: height * 0.6,
+              fontWeight: "700",
+              right: width * 0.08,
+            }}
+          >
+            Available For Everyone
+          </Text>
+        ) : (
+          <Text
+            style={{
+              position: "absolute",
+              right: width * -0.05,
+              top: height * 0.6,
+              fontWeight: "700",
+            }}
+          >
+            Available For Subscribers Only
+          </Text>
+        )}
+      </View>
     </View>
   );
 }

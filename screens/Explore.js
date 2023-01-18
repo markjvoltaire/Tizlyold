@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { Appearance } from "react-native";
 
 import HomeBoard from "../components/home/HomeBoard";
 import TrendingCreators from "../components/explore/TrendingCreators";
@@ -36,6 +37,7 @@ import { useUser } from "../context/UserContext";
 import Points from "../views/Points";
 import { usePosts } from "../context/PostContext";
 import PostUploading from "../components/PostUploading";
+import dartkMode from "../styles/darkmode";
 
 export default function Explore({ navigation }) {
   const { user, setUser } = useUser();
@@ -46,6 +48,12 @@ export default function Explore({ navigation }) {
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState("");
   const [input, setInput] = useState(false);
+  const [theme, setTheme] = useState(Appearance.getColorScheme());
+
+  Appearance.addChangeListener((scheme) => {
+    setTheme(scheme.colorScheme);
+  });
+
   const { postUploading } = usePosts();
   useEffect(() => {
     fetchUsers();

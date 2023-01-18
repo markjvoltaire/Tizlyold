@@ -16,7 +16,7 @@ export default function SubLoading() {
           aspectRatio: 1,
           backgroundColor: "#EEEEEE",
           alignSelf: "center",
-          top: height * 0.35,
+          bottom: height * 0.2,
           borderRadius: 20,
           alignItems: "center",
         }}
@@ -25,12 +25,20 @@ export default function SubLoading() {
         style={{
           height: height * 0.2,
           position: "absolute",
-          top: height * 0.14,
+          alignSelf: "center",
+          bottom: height * 0.08,
         }}
         source={require("../../assets/lottie/purpleBox.json")}
         autoPlay
       />
-      <Text style={{ fontSize: 15, top: height * 0.38, fontWeight: "600" }}>
+      <Text
+        style={{
+          fontSize: 15,
+          fontWeight: "600",
+          alignSelf: "center",
+          bottom: height * 0.45,
+        }}
+      >
         Processing Subscription
       </Text>
     </>

@@ -49,14 +49,14 @@ export default function ProfileHomeView({
 
   if (post.mediaType === "status") {
     return (
-      <>
+      <View style={{ bottom: 95 }}>
         <CurrentUserTextPost
           user={user}
           setUser={setUser}
           navigation={navigation}
           item={post}
         />
-      </>
+      </View>
     );
   }
 }

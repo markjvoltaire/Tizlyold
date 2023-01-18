@@ -1,131 +1,272 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState } from "react";
+import ProfilePostHeader from "../post/ProfilePostHeader";
+import StatusText from "../post/StatusText";
 import UserButtons from "../home/UserButtons";
-import { Video, AVPlaybackStatus } from "expo-av";
-import { supabase } from "../../services/supabase";
-import { useUser } from "../../context/UserContext";
-import ProfileUserButtons from "./ProfileUserButtons";
-import ImagePost from "../home/ImagePost";
-import ProfileImagePost from "./ProfileImagePost";
-import ProfileVideoPost from "./ProfileVideoPost";
+import { Video } from "expo-av";
 
-export default function ProfileFeedList({ item, route, navigation }) {
+export default function ProfileFeedList({ freePosts, profile, navigation }) {
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  const { user } = useUser();
-  const userId = user.user_id;
-  const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const [loading, setLoading] = useState(true);
+  return (
+    <View style={{ bottom: height * 0.11, marginBottom: height * 0.6 }}>
+      {freePosts.map((item) => {
+        if (item.mediaType === "status") {
+          return (
+            <>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: 10,
+                  paddingBottom: 68,
+                }}
+              >
+                <View style={styles.userContainer}>
+                  <Image
+                    source={{ uri: item.profileimage }}
+                    style={styles.profileImage}
+                  />
+                  <View style={styles.userTextContainer}>
+                    <Text style={styles.name}>{item.displayName}</Text>
+                    <Text style={styles.username}>@{item.username}</Text>
+                  </View>
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.tweet}>{item.description}</Text>
+                </View>
+              </View>
 
-  if (item.mediaType === "image") {
-    return <ProfileImagePost navigation={navigation} item={item} />;
-  }
-
-  if (item.mediaType === "video") {
-    return <ProfileVideoPost navigation={navigation} item={item} />;
-  }
-
-  if (item.mediaType === "text") {
-    useEffect(() => {
-      const unsubscribe = navigation.addListener("focus", () => {
-        async function getAllLikes() {
-          const res = await supabase
-            .from("likes")
-            .select("*")
-            .eq("userId", userId)
-            .eq("postId", item.id)
-            .eq("liked_Id", item.likeId);
-
-          res.body.map((like) => setIsPressed(like.liked));
-
-          if (isPressed === undefined || false) {
-            setIsPressed(false);
-          }
-
-          return res.body;
+              <View style={{ bottom: height * 0.072 }}>
+                <UserButtons navigation={navigation} item={item} />
+                <FullSeperator />
+              </View>
+            </>
+          );
         }
-        getAllLikes();
-      });
-      return unsubscribe;
-    }, [navigation]);
-    return (
-      <View style={{ paddingBottom: 130 }}>
-        <View style={{ alignSelf: "center", paddingBottom: 45, left: 25 }}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("ProfileDetail", {
-                user_id: item.user_id,
-                bannerImage: item.bannerImage,
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bio: item.bio,
-              })
-            }
-          >
-            <Image
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 100,
-                right: 55,
-                top: 37,
-              }}
-              source={{ uri: item.profileimage }}
-            />
-            <Text style={{ right: 6, fontWeight: "600", fontSize: 16 }}>
-              {item.displayName}
-            </Text>
-            <Text
-              style={{
-                fontWeight: "500",
-                fontSize: 12,
-                color: "#73738B",
-                right: 5,
-              }}
-            >
-              @{item.username}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ alignSelf: "center", width: 400 }}>
-          <Text
-            style={{
-              textAlign: "left",
-              fontSize: 16,
-              lineHeight: 27,
-              fontWeight: "600",
-              paddingBottom: 40,
-              alignSelf: "center",
-            }}
-          >
-            {item.description}
-          </Text>
-        </View>
-        <View>
-          <ProfileUserButtons
-            isPressed={isPressed}
-            setIsPressed={setIsPressed}
-            saveIsPressed={saveIsPressed}
-            setSaveIsPressed={setSaveIsPressed}
-            item={item}
-          />
-        </View>
-      </View>
-    );
-  }
+
+        if (item.mediaType === "image") {
+          return (
+            <>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: 10,
+                  paddingBottom: 68,
+                  bottom: height * 0.02,
+                }}
+              >
+                <View style={styles.textContainer}>
+                  <Image
+                    style={{
+                      height: height * 0.45,
+                      width: width * 0.995,
+                      borderRadius: 18,
+                    }}
+                    source={{ uri: item.media }}
+                  />
+
+                  <Image
+                    style={{
+                      height: height * 0.45,
+                      width: width * 0.995,
+                      borderRadius: 18,
+                      position: "absolute",
+                    }}
+                    source={require("../../assets/fader.png")}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    position: "absolute",
+                    top: height * 0.4,
+                    right: width * 0.67,
+                  }}
+                >
+                  <View style={styles.userContainer}>
+                    <Image
+                      source={{ uri: item.profileimage }}
+                      style={styles.profileImage}
+                    />
+                    <View style={styles.userTextContainer}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: "white",
+                          fontFamily: "Helvetica-Bold",
+                        }}
+                      >
+                        {item.displayName}
+                      </Text>
+                      <Text style={styles.username}>@{item.username}</Text>
+                    </View>
+                  </View>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 17,
+                      lineHeight: 22,
+                      bottom: height * 0.002,
+
+                      right: width * 0.02,
+                    }}
+                  >
+                    {item.description}
+                  </Text>
+                </View>
+              </View>
+              <View style={{ bottom: height * 0.072 }}>
+                <UserButtons navigation={navigation} item={item} />
+                <FullSeperator />
+              </View>
+            </>
+          );
+        }
+
+        if (item.mediaType === "video") {
+          return (
+            <>
+              <View style={{ alignSelf: "center", bottom: height * 0.01 }}>
+                <TouchableOpacity
+                  onPress={async () => {
+                    await video?.current?.playAsync();
+                    video?.current?.presentFullscreenPlayer();
+                  }}
+                >
+                  <Video
+                    ref={video}
+                    resizeMode="cover"
+                    isLooping
+                    isMuted
+                    style={{
+                      height: height * 0.45,
+                      width: width * 0.995,
+                      borderRadius: 18,
+                    }}
+                    source={{ uri: item.media }}
+                  />
+                  <Image
+                    style={{
+                      height: height * 0.45,
+                      width: width * 0.995,
+                      borderRadius: 18,
+                      position: "absolute",
+                    }}
+                    source={require("../../assets/fader.png")}
+                  />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginBottom: 10,
+                    paddingBottom: 15,
+                    position: "absolute",
+                    top: height * 0.38,
+                    left: width * 0.032,
+                  }}
+                >
+                  <Image
+                    source={{ uri: item.profileimage }}
+                    style={styles.profileImage}
+                  />
+                  <View style={styles.userTextContainer}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 16,
+                        color: "white",
+                      }}
+                    >
+                      {item.displayName}
+                    </Text>
+                    <Text style={styles.username}>@{item.username}</Text>
+                  </View>
+                </View>
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    fontSize: 17,
+                    lineHeight: 22,
+                    paddingBottom: 10,
+                    left: 10,
+                    top: 5,
+                  }}
+                >
+                  {item.description}
+                </Text>
+              </View>
+              <View style={{ bottom: height * 0.012, paddingBottom: 30 }}>
+                <UserButtons navigation={navigation} item={item} />
+                <FullSeperator />
+              </View>
+            </>
+          );
+        }
+      })}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  tweetContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 10,
+  },
   fullSeperator: {
-    position: "absolute",
-    borderBottomColor: "#EDEDED",
-    borderBottomWidth: 2.0,
-    opacity: 1.8,
+    borderBottomColor: "grey",
+    borderBottomWidth: 1.8,
+    opacity: 0.2,
     width: 900,
-    height: 3,
-    top: 305,
+    left: 1,
+    top: 52,
+  },
+  userContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    paddingBottom: 15,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  userTextContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  username: {
+    color: "#A1A1B3",
+  },
+  textContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  tweet: {
+    textAlign: "left",
+    fontWeight: "600",
+    fontSize: 17,
+    lineHeight: 22,
   },
 });
