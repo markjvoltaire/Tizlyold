@@ -73,7 +73,7 @@ export default function HomeScreen({ navigation, route }) {
     }).start();
   };
 
-  const [follow, setFollow] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -95,14 +95,26 @@ export default function HomeScreen({ navigation, route }) {
     getUserProfile();
   }, []);
 
-  async function getFollowing() {
+  async function getSubscriptions() {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
       .from("subscriptions")
       .select("*")
       .eq("userId", userId);
 
-    setFollow(resp.body);
+    setSubscriptions(resp.body);
+
+    return resp.body;
+  }
+
+  async function getFollowing() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("userFollowings")
+      .select("*")
+      .eq("userId", userId);
+
+    setSubscriptions(resp.body);
 
     return resp.body;
   }
@@ -117,7 +129,7 @@ export default function HomeScreen({ navigation, route }) {
 
   useEffect(() => {
     const getFollowingList = async () => {
-      const resp = await getFollowing();
+      const resp = await getSubscriptions();
 
       const followingList = resp.map((item) => item.creatorId);
       setcreatorIds(followingList);
@@ -125,24 +137,37 @@ export default function HomeScreen({ navigation, route }) {
     getFollowingList();
   }, []);
 
-  async function getPosts() {
+  async function getFreePosts() {
     const userId = supabase.auth.currentUser.id;
     const respon = await getFollowing();
     const list = respon.map((item) => item.creatorId);
+  }
+
+  async function getPosts() {
+    const userId = supabase.auth.currentUser.id;
+    const respon = await getSubscriptions();
+    const resp = await getFollowing();
+    const list = respon.map((item) => item.creatorId);
+    const freeList = resp.map((item) => item.creatorId);
 
     setFollowingId(list);
 
-    const resp = await supabase
+    const paidPost = await supabase
       .from("post")
       .select("*")
       .in("user_id", [list])
       .order("date", { ascending: false });
 
-    const res = await supabase.from("post").select("*").eq("user_id", userId);
+    const freePosts = await supabase
+      .from("post")
+      .select("*")
+      .in("user_id", [freeList])
+      .eq("subsOnly", false)
+      .order("id", { ascending: false });
 
-    const fullList = res.body.concat(resp.body);
+    const fullList = freePosts.body.concat(paidPost.body);
 
-    setPostList(resp.body);
+    setPostList(fullList);
 
     return fullList;
   }
@@ -308,6 +333,7 @@ export default function HomeScreen({ navigation, route }) {
               borderBottomColor: "#EDEDED",
             }}
             showsVerticalScrollIndicator={false}
+            style={{ backgroundColor: "white" }}
             renderItem={({ item }) => {
               if (item.mediaType === "image") {
                 return <HomeImagePost item={item} navigation={navigation} />;

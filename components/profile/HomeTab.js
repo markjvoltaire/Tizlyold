@@ -13,6 +13,7 @@ export default function HomeTab({
   videoCount,
   photoCount,
   navigation,
+  isFollowing,
 }) {
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
@@ -52,6 +53,7 @@ export default function HomeTab({
   if (freePosts.length > 0) {
     return (
       <ProfileFeedList
+        isFollowing={isFollowing}
         profile={profile}
         navigation={navigation}
         freePosts={freePosts}

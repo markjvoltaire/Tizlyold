@@ -18,7 +18,6 @@ export default function CommentList({
   saveIsPressed,
   setSaveIsPressed,
 }) {
-
   return (
     <View style={{ paddingBottom: 310 }}>
       <View style={{ top: 10 }}>
@@ -31,15 +30,15 @@ export default function CommentList({
           item={item}
         />
       </View>
-      {/* {commentList.length === 0 ? (
+      {commentList.length === 0 ? (
         <View>
           <Text style={styles.commentsHeader}>No Comments</Text>
         </View>
       ) : (
         <Text style={styles.commentsHeader}>Comments</Text>
-      )} */}
+      )}
       <View style={{ top: 130 }}>
-        {/* {commentList.map((comment) => {
+        {commentList.map((comment) => {
           return (
             <ScrollView>
               <Image
@@ -76,7 +75,7 @@ export default function CommentList({
               </View>
             </ScrollView>
           );
-        })} */}
+        })}
       </View>
     </View>
   );

@@ -21,6 +21,7 @@ export default function ProfileNav({
   subLoading,
   subscribeToUser,
   freePosts,
+  isFollowing,
 }) {
   const [nav, setNav] = useState("Home");
   const FullSeperator = () => <View style={styles.fullSeperator} />;
@@ -58,6 +59,7 @@ export default function ProfileNav({
 
       <View style={{ top: height * 0.6 }}>
         <ProfileGrid
+          isFollowing={isFollowing}
           freePosts={freePosts}
           nav={nav}
           posts={posts}

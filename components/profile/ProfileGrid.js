@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Paywall from "./Paywall";
 import HomeTab from "./HomeTab";
+import SubTab from "./SubTab";
 
 export default function ProfileGrid({
   nav,
@@ -13,6 +14,7 @@ export default function ProfileGrid({
   profile,
   freePosts,
   navigation,
+  isFollowing,
 }) {
   if (nav === "Home") {
     return (
@@ -27,6 +29,7 @@ export default function ProfileGrid({
           </View>
         ) : (
           <HomeTab
+            isFollowing={isFollowing}
             textCount={textCount}
             videoCount={videoCount}
             photoCount={photoCount}
@@ -52,7 +55,7 @@ export default function ProfileGrid({
             />
           </View>
         ) : (
-          <Text style={{ alignSelf: "center" }}>IM A SUBSCRIBER</Text>
+          <SubTab profile={profile} posts={posts} navigation={navigation} />
         )}
       </View>
     );

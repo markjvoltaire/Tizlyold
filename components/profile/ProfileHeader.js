@@ -152,34 +152,6 @@ export default function ProfileHeader({
           {profile.bio}
         </Text>
       </View>
-
-      <View
-        style={{ position: "absolute", top: height * 0.23, left: width * 0.03 }}
-      >
-        <TouchableOpacity>
-          <Image
-            style={{
-              width: width * 0.21,
-              resizeMode: "contain",
-              left: width * 0.27,
-              position: "absolute",
-            }}
-            source={require("../../assets/messageButton.png")}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image
-            style={{
-              width: width * 0.21,
-              resizeMode: "contain",
-
-              position: "absolute",
-            }}
-            source={require("../../assets/followbutton.png")}
-          />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

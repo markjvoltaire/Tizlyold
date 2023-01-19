@@ -74,6 +74,7 @@ export default function ProfileDetail({ navigation, route }) {
       .from("post")
       .select("*")
       .eq("user_id", item.user_id)
+      .eq("subsOnly", true)
       .order("id", { ascending: false });
 
     return post;
@@ -90,10 +91,38 @@ export default function ProfileDetail({ navigation, route }) {
     return post;
   }
 
+  async function followUser() {
+    const resp = await supabase.from("userFollowings").insert([
+      {
+        creatorId: item.user_id,
+        userId: user.user_id,
+        userProfileImage: user.profileimage,
+        userUsername: user.username,
+        creatorUsername: item.username,
+        followingId: item.following_Id,
+        creatorDisplayname: item.displayName,
+        userDisplayname: user.displayName,
+        creatorProfileImage: item.profileimage,
+      },
+    ]);
+
+    return resp;
+  }
+
+  async function unfollowUser() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("userFollowings")
+      .delete()
+      .eq("userId", userId)
+      .eq("creatorId", item.user_id);
+    return resp.body;
+  }
+
   async function getFollowing() {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
-      .from("following")
+      .from("userFollowings")
       .select("*")
       .eq("creatorId", item.user_id)
       .eq("userId", userId);
@@ -286,6 +315,11 @@ export default function ProfileDetail({ navigation, route }) {
     }
   }
 
+  async function handleFollowing() {
+    isFollowing === false ? followUser() : unfollowUser();
+    setIsFollowing((previousState) => !previousState);
+  }
+
   if (loading) {
     return (
       <View>
@@ -364,6 +398,7 @@ export default function ProfileDetail({ navigation, route }) {
         />
 
         <ProfileNav
+          isFollowing={isFollowing}
           profile={profile}
           posts={posts}
           freePosts={freePosts}
@@ -375,6 +410,41 @@ export default function ProfileDetail({ navigation, route }) {
           navigation={navigation}
           subscribeToUser={subscribeToUser}
         />
+        <View
+          style={{
+            position: "absolute",
+            top: height * 0.43,
+            left: width * 0.03,
+          }}
+        >
+          <TouchableOpacity>
+            <Image
+              style={{
+                width: width * 0.21,
+                resizeMode: "contain",
+                left: width * 0.27,
+                position: "absolute",
+              }}
+              source={require("../assets/messageButton.png")}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => handleFollowing()}>
+            <Image
+              style={{
+                width: width * 0.21,
+                resizeMode: "contain",
+
+                position: "absolute",
+              }}
+              source={
+                isFollowing === false
+                  ? require("../assets/followbutton.png")
+                  : require("../assets/followingbutton.png")
+              }
+            />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
       <Animated.View
         style={{

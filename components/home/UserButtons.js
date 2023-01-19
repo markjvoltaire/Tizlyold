@@ -179,7 +179,7 @@ export default function UserButtons({
         </TouchableOpacity>
       </View>
       <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => handleSavePress()}>
+        <TouchableOpacity>
           <Image
             style={{
               top: 30,
@@ -187,11 +187,7 @@ export default function UserButtons({
               aspectRatio: 1,
               resizeMode: "contain",
             }}
-            source={
-              saveIsPressed === true
-                ? require("../../assets/BookmarkSaved.png")
-                : require("../../assets/Bookmark.png")
-            }
+            source={require("../../assets/moreCircle.png")}
           />
         </TouchableOpacity>
       </View>
