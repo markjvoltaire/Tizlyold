@@ -45,8 +45,6 @@ export default function HomeScreen({ navigation, route }) {
   const [creatorIds, setcreatorIds] = useState();
   const [creators, setCreators] = useState();
 
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
-
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
 
@@ -206,6 +204,19 @@ export default function HomeScreen({ navigation, route }) {
     getPosts();
   };
 
+  const FullSeperator = () => (
+    <View
+      style={{
+        position: "absolute",
+
+        alignSelf: "center",
+        borderBottomColor: "grey",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        opacity: 0.5,
+        width: 600,
+      }}
+    />
+  );
   return (
     <>
       <StatusBar />
@@ -336,11 +347,21 @@ export default function HomeScreen({ navigation, route }) {
             style={{ backgroundColor: "white" }}
             renderItem={({ item }) => {
               if (item.mediaType === "image") {
-                return <HomeImagePost item={item} navigation={navigation} />;
+                return (
+                  <>
+                    <HomeImagePost item={item} navigation={navigation} />
+                    <FullSeperator />
+                  </>
+                );
               }
 
               if (item.mediaType === "video") {
-                return <HomeVideoPost navigation={navigation} item={item} />;
+                return (
+                  <>
+                    <HomeVideoPost navigation={navigation} item={item} />
+                    <FullSeperator />
+                  </>
+                );
               }
 
               if (item.mediaType === "status") {

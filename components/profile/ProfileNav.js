@@ -24,7 +24,17 @@ export default function ProfileNav({
   isFollowing,
 }) {
   const [nav, setNav] = useState("Home");
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomWidth: 1.8,
+        opacity: 0.1,
+        width: 900,
+        left: 1,
+        bottom: height * 0.124,
+      }}
+    />
+  );
 
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
@@ -33,29 +43,57 @@ export default function ProfileNav({
     <View style={{ top: 120 }}>
       <TouchableOpacity onPress={() => setNav("Home")}>
         {nav === "Home" ? (
-          <Text style={styles.home}>Home</Text>
+          <Text
+            style={{
+              position: "absolute",
+              fontWeight: "900",
+              top: 390,
+              left: width * 0.18,
+            }}
+          >
+            Home
+          </Text>
         ) : (
-          <Text style={styles.homeInactive}>Home</Text>
+          <Text
+            style={{
+              position: "absolute",
+              fontWeight: "900",
+              top: 390,
+              left: width * 0.18,
+              color: "#A1A1B3",
+            }}
+          >
+            Home
+          </Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => setNav("Subscribers")}>
         {nav === "Subscribers" ? (
-          <Text style={styles.subscribers}>Subscribers</Text>
+          <Text
+            style={{
+              position: "absolute",
+              fontWeight: "900",
+              top: 390,
+              left: width * 0.65,
+            }}
+          >
+            Subscribers
+          </Text>
         ) : (
-          <Text style={styles.subscribersInactive}>Subscribers</Text>
+          <Text
+            style={{
+              position: "absolute",
+              fontWeight: "900",
+              top: 390,
+              left: width * 0.65,
+              color: "#A1A1B3",
+            }}
+          >
+            Subscribers
+          </Text>
         )}
       </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => setNav("Shop")}>
-        {nav === "Shop" ? (
-          <Text style={styles.shop}>Shop</Text>
-        ) : (
-          <Text style={styles.shopInactive}>Shop</Text>
-        )}
-      </TouchableOpacity>
-
-      <FullSeperator />
 
       <View style={{ top: height * 0.6 }}>
         <ProfileGrid
@@ -76,6 +114,7 @@ export default function ProfileNav({
           <View style={{ alignItems: "center", bottom: height * 0.16 }}>
             {subLoading === "idle" ? (
               <TouchableOpacity onPress={() => subscribeToUser()}>
+                <FullSeperator />
                 <Image
                   style={{
                     resizeMode: "contain",
@@ -159,6 +198,5 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     width: 900,
     left: 1,
-    top: 430,
   },
 });

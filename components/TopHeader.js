@@ -25,8 +25,8 @@ export default function TopHeader({ navigation }) {
     <View
       style={{
         borderBottomColor: "#EDEDED",
-        borderBottomWidth: 2.0,
-        opacity: 1.8,
+        borderBottomWidth: 9.0,
+        opacity: 9.8,
         width: 900,
         left: 1,
         top: height * 0.06,
@@ -71,6 +71,12 @@ export default function TopHeader({ navigation }) {
               : { uri: user.profileimage }
           }
         />
+        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+          <Image
+            style={{ height: 30, width: 30, left: 340, bottom: 32 }}
+            source={require("../assets/Setting.jpg")}
+          />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

@@ -1,16 +1,19 @@
 import { StyleSheet, View, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Video, AVPlaybackStatus } from "expo-av";
+
 import { supabase } from "../services/supabase";
 import UserPostDetails from "../components/post/UserPostDetails";
 import VideoHeader from "../components/post/VideoHeader";
 import { useUser } from "../context/UserContext";
 import LottieView from "lottie-react-native";
+import VideoPlayer from "react-native-video-controls";
+
+import Video from "react-native-video";
 
 export default function Player({ route, navigation }) {
   const [comment, setComment] = useState("");
   const { user, setUser } = useUser();
-  const video = React.useRef(null);
+
   const [status, setStatus] = useState({});
   const [post, setPost] = useState([]);
   const [commentList, setCommentList] = useState([]);
@@ -168,7 +171,7 @@ export default function Player({ route, navigation }) {
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
-        <VideoHeader navigation={navigation} route={route} />
+        {/* <VideoHeader navigation={navigation} route={route} /> */}
         <View key={item.id} style={{ top: 80 }}>
           <View
             style={{
@@ -189,18 +192,19 @@ export default function Player({ route, navigation }) {
               autoPlay
             />
           </View>
-          <Video
-            ref={video}
+          <VideoPlayer
+            toggleResizeModeOnFullscreen={true}
+            onBack={() => navigation.goBack()}
+            tapAnywhereToPause={true}
+            seekColor={"red"}
+            pictureInPicture={true}
+            controls={true}
             source={{ uri: item.media }}
-            isLooping
-            useNativeControls
-            shouldPlay={true}
             style={{
               height: height * 0.26,
               width: width,
               position: "absolute",
             }}
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
         </View>
       </View>

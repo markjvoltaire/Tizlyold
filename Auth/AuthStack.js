@@ -146,7 +146,7 @@ export default function AuthStack({ route }) {
             <Stack.Screen
               name="Settings"
               component={Settings}
-              options={{ headerShown: false, gestureEnabled: false }}
+              options={{ headerShown: false }}
             />
 
             <Stack.Screen

@@ -18,15 +18,54 @@ export default function ProfileImagePost({ item, profile, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   let height = Dimensions.get("window").height;
   let width = Dimensions.get("window").width;
+
+  const FullSeperator = () => (
+    <View
+      style={{
+        borderBottomWidth: 1.8,
+        opacity: 0.1,
+        width: 900,
+        left: 1,
+        position: "absolute",
+      }}
+    />
+  );
   return (
     <>
       <View
         key={item.id}
         style={{
           alignSelf: "center",
-          bottom: height * 0.12,
+          bottom: height * 0.1,
         }}
       >
+        <FullSeperator />
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf: "center",
+            marginBottom: 10,
+            paddingBottom: 15,
+            top: height * 0.015,
+          }}
+        >
+          <Image
+            source={{ uri: profile.profileimage }}
+            style={styles.profileImage}
+          />
+          <View style={styles.userTextContainer}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 12,
+              }}
+            >
+              {item.displayName}
+            </Text>
+            <Text style={styles.username}>@{item.username}</Text>
+          </View>
+        </View>
+
         <Pressable onPress={() => setModalVisible(true)}>
           <Image
             style={{
@@ -46,49 +85,23 @@ export default function ProfileImagePost({ item, profile, navigation }) {
             source={require("../../assets/fader.png")}
           />
         </Pressable>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 10,
-            paddingBottom: 15,
-            position: "absolute",
-            top: height * 0.4,
-            left: width * 0.032,
-          }}
-        >
-          <Image
-            source={{ uri: profile.profileimage }}
-            style={styles.profileImage}
-          />
-          <View style={styles.userTextContainer}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 12,
-                color: "white",
-              }}
-            >
-              {item.displayName}
-            </Text>
-            <Text style={styles.username}>@{item.username}</Text>
-          </View>
-        </View>
+
         <Text
           style={{
             fontWeight: "600",
             fontSize: 14,
             lineHeight: 22,
             paddingBottom: 10,
-            left: 10,
+            left: width * 0.02,
             top: 5,
           }}
         >
           {item.description}
         </Text>
+        <UserButtons navigation={navigation} item={item} />
       </View>
+
       <View style={{ bottom: height * 0.012, paddingBottom: 30 }}>
-        {/* <FullSeperator /> */}
         <Modal animationType="fade" visible={modalVisible}>
           <View style={{ backgroundColor: "black", flex: 1, opacity: 1 }}>
             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
@@ -122,7 +135,7 @@ const styles = StyleSheet.create({
     opacity: 0.2,
     width: 900,
     left: 1,
-    top: 52,
+    position: "absolute",
   },
   userContainer: {
     flexDirection: "row",

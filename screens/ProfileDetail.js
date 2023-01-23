@@ -417,33 +417,36 @@ export default function ProfileDetail({ navigation, route }) {
             left: width * 0.03,
           }}
         >
-          <TouchableOpacity>
-            <Image
-              style={{
-                width: width * 0.21,
-                resizeMode: "contain",
-                left: width * 0.27,
-                position: "absolute",
-              }}
-              source={require("../assets/messageButton.png")}
-            />
-          </TouchableOpacity>
+          {subLoading === "idle" ? (
+            <>
+              {/* <TouchableOpacity>
+                <Image
+                  style={{
+                    width: width * 0.21,
+                    resizeMode: "contain",
+                    left: width * 0.27,
+                    position: "absolute",
+                  }}
+                  source={require("../assets/messageButton.png")}
+                />
+              </TouchableOpacity> */}
+              <TouchableOpacity onPress={() => handleFollowing()}>
+                <Image
+                  style={{
+                    width: width * 0.21,
+                    resizeMode: "contain",
 
-          <TouchableOpacity onPress={() => handleFollowing()}>
-            <Image
-              style={{
-                width: width * 0.21,
-                resizeMode: "contain",
-
-                position: "absolute",
-              }}
-              source={
-                isFollowing === false
-                  ? require("../assets/followbutton.png")
-                  : require("../assets/followingbutton.png")
-              }
-            />
-          </TouchableOpacity>
+                    position: "absolute",
+                  }}
+                  source={
+                    isFollowing === false
+                      ? require("../assets/followbutton.png")
+                      : require("../assets/followingbutton.png")
+                  }
+                />
+              </TouchableOpacity>
+            </>
+          ) : null}
         </View>
       </ScrollView>
       <Animated.View

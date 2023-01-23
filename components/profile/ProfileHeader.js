@@ -22,6 +22,7 @@ export default function ProfileHeader({
   userInfo,
   profile,
   posts,
+  subloading,
 }) {
   const defaultImageAnimated = new Animated.Value(0);
   let height = Dimensions.get("window").height;

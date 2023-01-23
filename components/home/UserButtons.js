@@ -145,53 +145,57 @@ export default function UserButtons({
     getLikeList();
   }, []);
 
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
+
   return (
-    <View style={styles.userButtonsContainer}>
-      <View style={styles.likeButtonContainer}>
-        <TouchableOpacity onPress={() => handlePress()}>
-          <Image
-            style={{
-              top: 30,
-              height: 23,
-              aspectRatio: 1,
-            }}
-            source={
-              isPressed === true
-                ? require("../../assets/likedHeart.png")
-                : require("../../assets/Heart.png")
-            }
-          />
-        </TouchableOpacity>
+    <>
+      <View style={styles.userButtonsContainer}>
+        <View style={styles.likeButtonContainer}>
+          <TouchableOpacity onPress={() => handlePress()}>
+            <Image
+              style={{
+                top: 30,
+                height: 23,
+                aspectRatio: 1,
+              }}
+              source={
+                isPressed === true
+                  ? require("../../assets/likedHeart.png")
+                  : require("../../assets/Heart.png")
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.commentButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CommentScreen", { item })}
+          >
+            <Image
+              style={{
+                top: 30,
+                height: 23,
+                aspectRatio: 1,
+                resizeMode: "contain",
+              }}
+              source={require("../../assets/Chat.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.saveButtonContainer}>
+          <TouchableOpacity>
+            <Image
+              style={{
+                top: 30,
+                height: 23,
+                aspectRatio: 1,
+                resizeMode: "contain",
+              }}
+              source={require("../../assets/moreCircle.png")}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.commentButtonContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CommentScreen", { item })}
-        >
-          <Image
-            style={{
-              top: 30,
-              height: 23,
-              aspectRatio: 1,
-              resizeMode: "contain",
-            }}
-            source={require("../../assets/Chat.png")}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.saveButtonContainer}>
-        <TouchableOpacity>
-          <Image
-            style={{
-              top: 30,
-              height: 23,
-              aspectRatio: 1,
-              resizeMode: "contain",
-            }}
-            source={require("../../assets/moreCircle.png")}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </>
   );
 }
 

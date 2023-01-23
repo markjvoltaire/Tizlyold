@@ -28,7 +28,7 @@ export default function SubLoading() {
           alignSelf: "center",
           bottom: height * 0.08,
         }}
-        source={require("../../assets/lottie/purpleBox.json")}
+        source={require("../../assets/lottie/fasterGreyLoader.json")}
         autoPlay
       />
       <Text

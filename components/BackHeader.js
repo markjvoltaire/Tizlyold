@@ -43,18 +43,6 @@ export default function BackHeader({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-
-      <View style={{ bottom: height * 0.075, left: width * 0.78 }}>
-        <Image
-          resizeMode="contain"
-          style={{ width: 20, height: 20, borderRadius: 100 }}
-          source={require("../assets/coin.png")}
-        />
-
-        <View style={{ left: width * 0.08, bottom: height * 0.022 }}>
-          <Text style={{ fontWeight: "600" }}>{points}</Text>
-        </View>
-      </View>
     </SafeAreaView>
   );
 }

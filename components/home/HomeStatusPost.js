@@ -24,7 +24,7 @@ export default function HomeStatusPost({ item, navigation }) {
         opacity: 1.3,
         width: 390,
         alignSelf: "center",
-        top: height * 0.025,
+        top: height * 0.045,
       }}
     />
   );

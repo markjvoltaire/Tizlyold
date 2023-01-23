@@ -33,16 +33,18 @@ export default function ProfileFeedList({
   const FullSeperator = () => <View style={styles.fullSeperator} />;
 
   return (
-    <View style={{ top: 10, marginBottom: height * 0.7 }}>
+    <View style={{ marginBottom: height * 0.6, bottom: height * 0.02 }}>
       {freePosts.map((item) => {
         return (
-          <View key={item.id}>
+          <View style={{ paddingBottom: height * 0.02 }} key={item.id}>
             {item.mediaType === "image" ? (
-              <ProfileImagePost
-                profile={profile}
-                navigation={navigation}
-                item={item}
-              />
+              <>
+                <ProfileImagePost
+                  profile={profile}
+                  navigation={navigation}
+                  item={item}
+                />
+              </>
             ) : null}
 
             {item.mediaType === "video" ? (
@@ -68,11 +70,8 @@ const styles = StyleSheet.create({
   },
   fullSeperator: {
     borderBottomColor: "grey",
-    borderBottomWidth: 1.8,
+    borderBottomWidth: 9.8,
     opacity: 0.2,
-    width: 900,
-    left: 1,
-    top: 52,
   },
   userContainer: {
     flexDirection: "row",
