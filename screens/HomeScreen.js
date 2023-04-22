@@ -8,6 +8,7 @@ import {
   FlatList,
   RefreshControl,
   Animated,
+  Dimensions,
 } from "react-native";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -19,7 +20,7 @@ import { useScrollToTop } from "@react-navigation/native";
 import Skeleton from "../Skeleton";
 import Points from "../views/Points";
 import { useLike } from "../context/LikeContext";
-import { getAllLikes } from "../services/user";
+import { getAllLikes, creatorsYouMayLike } from "../services/user";
 import ImagePost from "../components/home/ImagePost";
 import VideoPost from "../components/home/VideoPost";
 import Status from "../components/post/Status";
@@ -30,6 +31,8 @@ import HomeVideoPost from "../components/home/HomeVideoPost";
 import HomeStatusPost from "../components/home/HomeStatusPost";
 import { usePosts } from "../context/PostContext";
 import PostUploading from "../components/PostUploading";
+import { Appearance, useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen({ navigation, route }) {
   const { user, setUser } = useUser();
@@ -39,11 +42,12 @@ export default function HomeScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [followingId, setFollowingId] = useState([]);
-  const [userFollowingId, setUserFollowingId] = useState();
-  const pushAction = StackActions.replace("Explore");
-  const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const FullSeperator = () => <View style={styles.fullSeperator} />;
+  const [creatorIds, setcreatorIds] = useState();
+  const [creators, setCreators] = useState();
+
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
+
   const ref = React.useRef(null);
   useScrollToTop(ref);
   const { postUploading } = usePosts();
@@ -67,7 +71,7 @@ export default function HomeScreen({ navigation, route }) {
     }).start();
   };
 
-  const [follow, setFollow] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   async function getUserById() {
     const userId = supabase.auth.currentUser.id;
@@ -89,15 +93,26 @@ export default function HomeScreen({ navigation, route }) {
     getUserProfile();
   }, []);
 
+  async function getSubscriptions() {
+    const userId = supabase.auth.currentUser.id;
+    const resp = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("userId", userId);
+
+    setSubscriptions(resp.body);
+
+    return resp.body;
+  }
+
   async function getFollowing() {
     const userId = supabase.auth.currentUser.id;
     const resp = await supabase
-      .from("following")
+      .from("userFollowings")
       .select("*")
-      .eq("following", true)
       .eq("userId", userId);
 
-    setFollow(resp.body);
+    setSubscriptions(resp.body);
 
     return resp.body;
   }
@@ -112,56 +127,47 @@ export default function HomeScreen({ navigation, route }) {
 
   useEffect(() => {
     const getFollowingList = async () => {
-      const resp = await getFollowing();
+      const resp = await getSubscriptions();
+
+      const followingList = resp.map((item) => item.creatorId);
+      setcreatorIds(followingList);
     };
     getFollowingList();
   }, []);
 
-  async function getFollowingId() {
+  async function getFreePosts() {
     const userId = supabase.auth.currentUser.id;
-
-    const resp = await supabase
-      .from("post")
-      .select("followingId")
-      .eq("user_id", userId);
-
-    setUserFollowingId(resp.body);
-
-    const list = resp.body.map((item) => item.followingId);
-    setFollowingId(list);
-
-    return resp.body;
+    const respon = await getFollowing();
+    const list = respon.map((item) => item.creatorId);
   }
-
-  useEffect(() => {
-    const getUserFollowingId = async () => {
-      const resp = await getFollowingId();
-    };
-    getUserFollowingId();
-  }, []);
 
   async function getPosts() {
     const userId = supabase.auth.currentUser.id;
-    const respon = await getFollowing();
-    const list = respon.map((item) => item.followingId);
+    const respon = await getSubscriptions();
+    const resp = await getFollowing();
+    const list = respon.map((item) => item.creatorId);
+    const freeList = resp.map((item) => item.creatorId);
+
     setFollowingId(list);
 
-    const userPostList = { list, followingId };
-
-    const resp = await supabase
+    const paidPost = await supabase
       .from("post")
       .select("*")
-      .in("followingId", [userPostList.list])
+      .in("user_id", [list])
       .order("date", { ascending: false });
 
-    const currentUserPost = await supabase
+    const freePosts = await supabase
       .from("post")
       .select("*")
-      .eq("user_id", userId);
+      .in("user_id", [freeList])
+      .eq("subsOnly", false)
+      .order("id", { ascending: false });
 
-    setPostList(resp.body);
+    const fullList = freePosts.body.concat(paidPost.body);
 
-    return resp.body;
+    setPostList(fullList);
+
+    return fullList;
   }
 
   useEffect(() => {
@@ -169,6 +175,21 @@ export default function HomeScreen({ navigation, route }) {
       const resp = await getPosts();
     };
     getUserPost();
+  }, []);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const resp = await creatorsYouMayLike();
+      setCreators(resp);
+    };
+    getUsers();
+  }, []);
+
+  useEffect(() => {
+    const log = async () => {
+      const resp = await creatorsYouMayLike();
+    };
+    log();
   }, []);
 
   if (loading) {
@@ -183,89 +204,186 @@ export default function HomeScreen({ navigation, route }) {
     getPosts();
   };
 
+  const FullSeperator = () => (
+    <View
+      style={{
+        position: "absolute",
+
+        alignSelf: "center",
+        borderBottomColor: "grey",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        opacity: 0.5,
+        width: 600,
+      }}
+    />
+  );
   return (
     <>
+      <StatusBar />
       <Points navigation={navigation} />
       {postUploading === true ? <PostUploading /> : null}
 
-      <View style={styles.feedContainer}>
-        {postList.length === 0 ? (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => refreshFeed()}
-              />
-            }
-          >
-            <Text
-              style={{
-                position: "absolute",
-                fontWeight: "800",
-                fontSize: 20,
-                alignSelf: "center",
-                top: 50,
-              }}
-            >
-              Your Feed Is Currently Empty
-            </Text>
-            <Image
-              style={{
-                position: "absolute",
-                height: 300,
-                resizeMode: "contain",
-                top: 200,
-                alignSelf: "center",
-              }}
-              source={require("../assets/mobile-application.png")}
-            />
-            <TouchableOpacity
-              style={{ top: 600, alignItems: "center" }}
-              onPress={() => navigation.navigate("Explore")}
-            >
-              <Image
-                style={styles.exploreButton}
-                source={require("../assets/exploreCreators.png")}
-              />
-            </TouchableOpacity>
-          </ScrollView>
-        ) : (
-          <>
-            <FlatList
-              ref={ref}
-              keyExtractor={(item) => item.id}
-              data={postList}
+      {postList.length === 0 ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
               refreshing={refreshing}
               onRefresh={() => refreshFeed()}
-              initialNumToRender={3}
-              contentContainerStyle={{
-                borderBottomWidth: 0.8,
-                borderBottomColor: "#EDEDED",
-              }}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => {
-                if (item.mediaType === "image") {
-                  return <HomeImagePost item={item} navigation={navigation} />;
-                }
-
-                if (item.mediaType === "video") {
-                  return <HomeVideoPost navigation={navigation} item={item} />;
-                }
-
-                if (item.mediaType === "status") {
-                  return <HomeStatusPost navigation={navigation} item={item} />;
-                }
-              }}
             />
-          </>
-        )}
-      </View>
+          }
+          style={{ flex: 1, backgroundColor: "white" }}
+        >
+          <Text
+            style={{
+              alignSelf: "center",
+              top: height * 0.05,
+              fontWeight: "600",
+              fontSize: 20,
+            }}
+          >
+            Creators You May Like
+          </Text>
+          <View
+            style={{
+              backgroundColor: "white",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+              top: height * 0.08,
+              marginBottom: height * 0.2,
+            }}
+          >
+            {creators.map((item) => {
+              return (
+                <View style={{ paddingBottom: 30 }} key={item.id}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      user.id === item.id
+                        ? navigation.navigate("UserProfile2")
+                        : navigation.push("ProfileDetail2", {
+                            item,
+                          });
+                    }}
+                  >
+                    <Image
+                      style={{
+                        height: 170,
+                        width: 170,
+                        margin: width * 0.01,
+                        borderRadius: 13,
+                        borderWidth: 0.2,
+                        resizeMode: "contain",
+                      }}
+                      source={{ uri: item.profileimage }}
+                    />
+
+                    <Image
+                      style={{
+                        height: 170,
+                        width: 170,
+                        margin: width * 0.01,
+                        borderRadius: 13,
+                        position: "absolute",
+                      }}
+                      source={require("../assets/fader.png")}
+                    />
+
+                    <Text
+                      style={{
+                        position: "absolute",
+                        top: height * 0.155,
+                        color: "white",
+                        fontWeight: "800",
+                        fontSize: 10.5,
+                        left: width * 0.02,
+                      }}
+                    >
+                      {item.displayName}
+                    </Text>
+                    <Text
+                      style={{
+                        position: "absolute",
+
+                        color: "#D7D8DA",
+                        fontWeight: "500",
+                        left: width * 0.02,
+                        fontSize: 10.5,
+                        top: height * 0.17,
+                      }}
+                    >
+                      @{item.username}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+
+          <TouchableOpacity
+            style={{ bottom: height * 0.08, alignItems: "center" }}
+            onPress={() => navigation.navigate("Explore")}
+          >
+            <Image
+              style={styles.exploreButton}
+              source={require("../assets/exploreCreators.png")}
+            />
+          </TouchableOpacity>
+        </ScrollView>
+      ) : (
+        <>
+          <FlatList
+            ref={ref}
+            keyExtractor={(item) => item.id}
+            data={postList}
+            refreshing={refreshing}
+            onRefresh={() => refreshFeed()}
+            initialNumToRender={3}
+            contentContainerStyle={{
+              borderBottomWidth: 0.8,
+              borderBottomColor: "#EDEDED",
+            }}
+            showsVerticalScrollIndicator={false}
+            style={{ backgroundColor: "white" }}
+            renderItem={({ item }) => {
+              if (item.mediaType === "image") {
+                return (
+                  <>
+                    <HomeImagePost item={item} navigation={navigation} />
+                    <FullSeperator />
+                  </>
+                );
+              }
+
+              if (item.mediaType === "video") {
+                return (
+                  <>
+                    <HomeVideoPost navigation={navigation} item={item} />
+                    <FullSeperator />
+                  </>
+                );
+              }
+
+              if (item.mediaType === "status") {
+                return <HomeStatusPost navigation={navigation} item={item} />;
+              }
+            }}
+          />
+        </>
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  lightContainer: {
+    backgroundColor: "#d0d0c0",
+  },
+
+  darkContainer: {
+    backgroundColor: "#242c40",
+  },
+
   homeScreenContainer: {
     backgroundColor: "white",
   },

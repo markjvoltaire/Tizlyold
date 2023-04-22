@@ -15,7 +15,7 @@ import { supabase } from "../services/supabase";
 
 import { getUserPoints } from "../services/points";
 
-export default function TopHeader({ navigation, tizlyPoints }) {
+export default function TopHeader({ navigation }) {
   const { user, setUser } = useUser();
   const { points, setPoints } = usePoints();
   const [query, setQuery] = useState();
@@ -25,8 +25,8 @@ export default function TopHeader({ navigation, tizlyPoints }) {
     <View
       style={{
         borderBottomColor: "#EDEDED",
-        borderBottomWidth: 2.0,
-        opacity: 1.8,
+        borderBottomWidth: 9.0,
+        opacity: 9.8,
         width: 900,
         left: 1,
         top: height * 0.06,
@@ -71,18 +71,12 @@ export default function TopHeader({ navigation, tizlyPoints }) {
               : { uri: user.profileimage }
           }
         />
-      </View>
-
-      <View style={{ bottom: height * 0.1, left: width * 0.78 }}>
-        <Image
-          resizeMode="contain"
-          style={{ width: 20, height: 20, borderRadius: 100 }}
-          source={require("../assets/coin.png")}
-        />
-
-        <View style={{ left: width * 0.08, bottom: height * 0.022 }}>
-          <Text style={{ fontWeight: "600" }}>{points}</Text>
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+          <Image
+            style={{ height: 30, width: 30, left: 340, bottom: 32 }}
+            source={require("../assets/Setting.jpg")}
+          />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

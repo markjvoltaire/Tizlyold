@@ -32,6 +32,7 @@ export default function CurrentUserTextPost({
         opacity: 1.3,
         width: 390,
         alignSelf: "center",
+        borderBottomEndRadius: 100,
       }}
     />
   );

@@ -9,8 +9,8 @@ export default function StatusText({ item }) {
       <Text
         style={{
           textAlign: "left",
-          fontWeight: "500",
-          fontSize: 17,
+          fontWeight: "600",
+          fontSize: 16,
           lineHeight: height * 0.029,
           color: "#4F4E4E",
         }}

@@ -1,131 +1,110 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Pressable,
+  Alert,
+} from "react-native";
+import React, { useState } from "react";
+import ProfilePostHeader from "../post/ProfilePostHeader";
+import StatusText from "../post/StatusText";
 import UserButtons from "../home/UserButtons";
-import { Video, AVPlaybackStatus } from "expo-av";
-import { supabase } from "../../services/supabase";
-import { useUser } from "../../context/UserContext";
-import ProfileUserButtons from "./ProfileUserButtons";
-import ImagePost from "../home/ImagePost";
+import { Video } from "expo-av";
+import PostUserInfo from "./PostUserInfo";
 import ProfileImagePost from "./ProfileImagePost";
 import ProfileVideoPost from "./ProfileVideoPost";
 
-export default function ProfileFeedList({ item, route, navigation }) {
+export default function ProfileFeedList({
+  freePosts,
+  profile,
+  navigation,
+  isFollowing,
+}) {
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+
   const FullSeperator = () => <View style={styles.fullSeperator} />;
-  const { user } = useUser();
-  const userId = user.user_id;
-  const [isPressed, setIsPressed] = useState(false);
-  const [saveIsPressed, setSaveIsPressed] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  if (item.mediaType === "image") {
-    return <ProfileImagePost navigation={navigation} item={item} />;
-  }
+  return (
+    <View style={{ marginBottom: height * 0.6, bottom: height * 0.02 }}>
+      {freePosts.map((item) => {
+        return (
+          <View style={{ paddingBottom: height * 0.02 }} key={item.id}>
+            {item.mediaType === "image" ? (
+              <>
+                <ProfileImagePost
+                  profile={profile}
+                  navigation={navigation}
+                  item={item}
+                />
+              </>
+            ) : null}
 
-  if (item.mediaType === "video") {
-    return <ProfileVideoPost navigation={navigation} item={item} />;
-  }
-
-  if (item.mediaType === "text") {
-    useEffect(() => {
-      const unsubscribe = navigation.addListener("focus", () => {
-        async function getAllLikes() {
-          const res = await supabase
-            .from("likes")
-            .select("*")
-            .eq("userId", userId)
-            .eq("postId", item.id)
-            .eq("liked_Id", item.likeId);
-
-          res.body.map((like) => setIsPressed(like.liked));
-
-          if (isPressed === undefined || false) {
-            setIsPressed(false);
-          }
-
-          return res.body;
-        }
-        getAllLikes();
-      });
-      return unsubscribe;
-    }, [navigation]);
-    return (
-      <View style={{ paddingBottom: 130 }}>
-        <View style={{ alignSelf: "center", paddingBottom: 45, left: 25 }}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("ProfileDetail", {
-                user_id: item.user_id,
-                bannerImage: item.bannerImage,
-                username: item.username,
-                displayName: item.displayName,
-                profileimage: item.profileimage,
-                bio: item.bio,
-              })
-            }
-          >
-            <Image
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 100,
-                right: 55,
-                top: 37,
-              }}
-              source={{ uri: item.profileimage }}
-            />
-            <Text style={{ right: 6, fontWeight: "600", fontSize: 16 }}>
-              {item.displayName}
-            </Text>
-            <Text
-              style={{
-                fontWeight: "500",
-                fontSize: 12,
-                color: "#73738B",
-                right: 5,
-              }}
-            >
-              @{item.username}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ alignSelf: "center", width: 400 }}>
-          <Text
-            style={{
-              textAlign: "left",
-              fontSize: 16,
-              lineHeight: 27,
-              fontWeight: "600",
-              paddingBottom: 40,
-              alignSelf: "center",
-            }}
-          >
-            {item.description}
-          </Text>
-        </View>
-        <View>
-          <ProfileUserButtons
-            isPressed={isPressed}
-            setIsPressed={setIsPressed}
-            saveIsPressed={saveIsPressed}
-            setSaveIsPressed={setSaveIsPressed}
-            item={item}
-          />
-        </View>
-      </View>
-    );
-  }
+            {item.mediaType === "video" ? (
+              <ProfileVideoPost
+                isFollowing={isFollowing}
+                profile={profile}
+                navigation={navigation}
+                item={item}
+              />
+            ) : null}
+          </View>
+        );
+      })}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  tweetContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 10,
+  },
   fullSeperator: {
-    position: "absolute",
-    borderBottomColor: "#EDEDED",
-    borderBottomWidth: 2.0,
-    opacity: 1.8,
-    width: 900,
-    height: 3,
-    top: 305,
+    borderBottomColor: "grey",
+    borderBottomWidth: 9.8,
+    opacity: 0.2,
+  },
+  userContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    paddingBottom: 15,
+  },
+  profileImage: {
+    width: 25,
+    height: 25,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  userTextContainer: {
+    justifyContent: "center",
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  username: {
+    color: "#A1A1B3",
+    fontSize: 12,
+  },
+  textContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  tweet: {
+    textAlign: "left",
+    fontWeight: "600",
+    fontSize: 17,
+    lineHeight: 22,
   },
 });

@@ -69,7 +69,6 @@ export default function TrendingCreators({ navigation, route }) {
                   style={{
                     width: width * 0.3,
                     height: height * 0.15,
-
                     borderRadius: 13,
                     position: "absolute",
                   }}

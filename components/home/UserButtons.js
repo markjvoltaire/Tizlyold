@@ -10,16 +10,15 @@ import { getAllLikes } from "../../services/user";
 
 export default function UserButtons({
   item,
-  isPressed,
-  setIsPressed,
-  saveIsPressed,
-  setSaveIsPressed,
+
   post,
   navigation,
   likeList,
 }) {
   const [likedPosts, setLikedPosts] = useState();
   const [loading, setLoading] = useState(true);
+  const [isPressed, setIsPressed] = useState(false);
+  const [saveIsPressed, setSaveIsPressed] = useState(false);
   const { user } = useUser();
 
   const creatorId = item.user_id;
@@ -146,57 +145,57 @@ export default function UserButtons({
     getLikeList();
   }, []);
 
+  const FullSeperator = () => <View style={styles.fullSeperator} />;
+
   return (
-    <View style={styles.userButtonsContainer}>
-      <View style={styles.likeButtonContainer}>
-        <TouchableOpacity onPress={() => handlePress()}>
-          <Image
-            style={{
-              top: 30,
-              height: 23,
-              aspectRatio: 1,
-            }}
-            source={
-              isPressed === true
-                ? require("../../assets/likedHeart.png")
-                : require("../../assets/Heart.png")
-            }
-          />
-        </TouchableOpacity>
+    <>
+      <View style={styles.userButtonsContainer}>
+        <View style={styles.likeButtonContainer}>
+          <TouchableOpacity onPress={() => handlePress()}>
+            <Image
+              style={{
+                top: 30,
+                height: 23,
+                aspectRatio: 1,
+              }}
+              source={
+                isPressed === true
+                  ? require("../../assets/likedHeart.png")
+                  : require("../../assets/Heart.png")
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.commentButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CommentScreen", { item })}
+          >
+            <Image
+              style={{
+                top: 30,
+                height: 23,
+                aspectRatio: 1,
+                resizeMode: "contain",
+              }}
+              source={require("../../assets/Chat.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.saveButtonContainer}>
+          <TouchableOpacity>
+            <Image
+              style={{
+                top: 30,
+                height: 23,
+                aspectRatio: 1,
+                resizeMode: "contain",
+              }}
+              source={require("../../assets/moreCircle.png")}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.commentButtonContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CommentScreen", { item })}
-        >
-          <Image
-            style={{
-              top: 30,
-              height: 23,
-              aspectRatio: 1,
-              resizeMode: "contain",
-            }}
-            source={require("../../assets/Chat.png")}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.saveButtonContainer}>
-        <TouchableOpacity onPress={() => handleSavePress()}>
-          <Image
-            style={{
-              top: 30,
-              height: 23,
-              aspectRatio: 1,
-              resizeMode: "contain",
-            }}
-            source={
-              saveIsPressed === true
-                ? require("../../assets/BookmarkSaved.png")
-                : require("../../assets/Bookmark.png")
-            }
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </>
   );
 }
 

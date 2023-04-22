@@ -110,7 +110,11 @@ export default function HomePostHeader({ item, navigation }) {
       style={{ alignSelf: "center", top: height * 0.04, right: width * 0.05 }}
     >
       <TouchableOpacity
-        onPress={() => navigation.push("ProfileDetail2", { item })}
+        onPress={() => {
+          user.user_id === item.user_id
+            ? navigation.navigate("UserProfile2")
+            : navigation.push("ProfileDetail2", { item });
+        }}
       >
         <Image
           style={{

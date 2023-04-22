@@ -60,8 +60,6 @@ export default function AuthStack({ route }) {
 
   const { postUploading } = usePosts();
 
-  console.log("post", postUploading);
-
   return (
     <UserProvider>
       <FollowProvider>
@@ -104,6 +102,12 @@ export default function AuthStack({ route }) {
             />
 
             <Stack.Screen
+              name="BioScreen"
+              component={BioScreen}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
               name="ExploreScreen"
               component={ExploreStackNavigator}
               options={{ headerShown: false, gestureEnabled: false }}
@@ -142,7 +146,7 @@ export default function AuthStack({ route }) {
             <Stack.Screen
               name="Settings"
               component={Settings}
-              options={{ headerShown: false, gestureEnabled: false }}
+              options={{ headerShown: false }}
             />
 
             <Stack.Screen

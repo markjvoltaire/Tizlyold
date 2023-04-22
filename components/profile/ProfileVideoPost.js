@@ -5,124 +5,151 @@ import {
   Pressable,
   Image,
   Dimensions,
+  Modal,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { Video } from "expo-av";
+import VideoPlayer from "react-native-video-controls";
 import UserButtons from "../home/UserButtons";
 import { useUser } from "../../context/UserContext";
 import PostHeader from "../home/PostHeader";
 import ProfilePostHeader from "../post/ProfilePostHeader";
+import * as VideoThumbnails from "expo-video-thumbnails";
 
-export default function ProfileVideoPost({ item, navigation, userInfo }) {
+export default function ProfileVideoPost({
+  item,
+  navigation,
+  userInfo,
+  profile,
+}) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [isPressed, setIsPressed] = useState(false);
   const [saveIsPressed, setSaveIsPressed] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  let height = Dimensions.get("window").height;
+  let width = Dimensions.get("window").width;
   const FullSeperator = () => (
     <View
       style={{
-        borderBottomColor: "#EDEDED",
-        borderBottomWidth: 2.0,
-        opacity: 1.3,
-        width: 390,
-        alignSelf: "center",
-        bottom: height * 0.03,
+        borderBottomWidth: 1.8,
+        opacity: 0.1,
+        width: 900,
+
+        position: "absolute",
       }}
     />
   );
 
   const { user, setUser } = useUser();
 
-  let height = Dimensions.get("window").height;
+  async function handleVideo() {
+    await video?.current?.playAsync();
+    video?.current?.presentFullscreenPlayer();
+    setIsFullscreen(true);
+  }
 
   return (
     <>
-      <View style={{ top: 10 }}>
-        <View style={{ alignSelf: "center", top: height * 0.001 }}>
-          <ProfilePostHeader item={item} />
+      <View
+        key={item.id}
+        style={{
+          alignSelf: "center",
+          bottom: height * 0.1,
+        }}
+      >
+        <FullSeperator />
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf: "center",
+            marginBottom: 10,
+            paddingBottom: 15,
+            top: height * 0.015,
+          }}
+        >
+          <Image
+            source={{ uri: profile.profileimage }}
+            style={styles.profileImage}
+          />
+          <View style={styles.userTextContainer}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 12,
+              }}
+            >
+              {item.displayName}
+            </Text>
+            <Text style={styles.username}>@{item.username}</Text>
+          </View>
         </View>
+
         <Pressable
-          onPress={() =>
-            navigation.navigate("Player", {
-              id: item.id,
-              username: item.username,
-              profileimage: item.profileimage,
-              displayName: item.displayName,
-              user_id: item.user_id,
-              item,
-            })
-          }
+          onPress={async () => {
+            setModalVisible(true);
+          }}
         >
           <Video
-            source={{ uri: item.media }}
-            ref={video}
-            style={{
-              height: height * 0.454,
-              aspectRatio: 1,
-              alignSelf: "center",
-              borderRadius: 10,
-            }}
             resizeMode="cover"
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+            ref={video}
+            shouldPlay={false}
+            style={{
+              height: height * 0.45,
+              width: width * 0.995,
+              borderRadius: 18,
+            }}
+            posterSource={{ uri: item.profileimage }}
+            source={{ uri: item.media }}
           />
-
           <Image
             style={{
+              height: height * 0.45,
+              width: width * 0.995,
+              borderRadius: 18,
               position: "absolute",
-              width: 50,
-              top: 160,
-              alignSelf: "center",
-              resizeMode: "contain",
             }}
-            source={require("../../assets/playButton.png")}
+            source={require("../../assets/fader.png")}
           />
         </Pressable>
+        <Text
+          style={{
+            fontWeight: "500",
+            fontSize: 14,
+            lineHeight: 22,
+            paddingBottom: 10,
+            left: 10,
+            top: 5,
+          }}
+        >
+          {item.description}
+        </Text>
+        <View style={{ bottom: height * 0.02 }}>
+          <UserButtons item={item} navigation={navigation} />
+        </View>
+      </View>
 
-        <View style={{ paddingBottom: 30 }}>
-          <Text
+      <Modal animationType="slide" visible={modalVisible}>
+        <View style={{ backgroundColor: "black", flex: 1, opacity: 1 }}>
+          <VideoPlayer
+            onEnd={() => setModalVisible(false)}
+            onBack={() => setModalVisible(false)}
+            seekColor={"#00A3FF"}
+            disableFullscreen
+            controls={true}
+            disableVolume
             style={{
-              left: 13,
-              top: 12,
-              fontWeight: "700",
-              textAlign: "left",
-              width: 390,
-              paddingBottom: 30,
-              lineHeight: 20,
+              width: "100%",
+              height: height * 0.9,
             }}
-          >
-            {item.description}
-          </Text>
-          <Image
-            resizeMode="contain"
-            style={{ width: 70, left: 10, bottom: 30 }}
-            source={require("../../assets/videoBean.png")}
+            source={{ uri: item.media }}
           />
         </View>
-
-        <View style={{ bottom: 90 }}>
-          {item.user_id === user.user_id ? (
-            <CurrentUserButtons
-              isPressed={isPressed}
-              setIsPressed={setIsPressed}
-              saveIsPressed={saveIsPressed}
-              setSaveIsPressed={setSaveIsPressed}
-              navigation={navigation}
-              item={item}
-            />
-          ) : (
-            <UserButtons
-              isPressed={isPressed}
-              setIsPressed={setIsPressed}
-              saveIsPressed={saveIsPressed}
-              setSaveIsPressed={setSaveIsPressed}
-              item={item}
-              navigation={navigation}
-            />
-          )}
-        </View>
-
-        <FullSeperator />
-      </View>
+      </Modal>
     </>
   );
 }
@@ -134,5 +161,65 @@ const styles = StyleSheet.create({
     opacity: 1.3,
     width: 390,
     alignSelf: "center",
+  },
+
+  videoContainer: {
+    width: "100%",
+    height: "50%",
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  video: {
+    width: "100%",
+    height: "100%",
+  },
+
+  tweetContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 10,
+  },
+  fullSeperator: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 1.8,
+    opacity: 0.2,
+    width: 900,
+    left: 1,
+    top: 52,
+  },
+  userContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    paddingBottom: 15,
+  },
+  profileImage: {
+    width: 25,
+    height: 25,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  userTextContainer: {
+    justifyContent: "center",
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  username: {
+    color: "#A1A1B3",
+    fontSize: 12,
+  },
+  textContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  tweet: {
+    textAlign: "left",
+    fontWeight: "600",
+    fontSize: 17,
+    lineHeight: 22,
   },
 });
