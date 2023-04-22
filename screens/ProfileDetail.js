@@ -26,7 +26,7 @@ import BannerSkeleton from "../components/profile/BannerSkeleton";
 import { Dimensions } from "react-native";
 import ProfileTextPost from "../components/profile/CurrentUserTextPost";
 import ProfileDetailStatus from "../components/profile/ProfileDetailStatus";
-import Purchases from "react-native-purchases";
+
 import SubLoading from "../components/loading/SubLoading";
 
 import ProfileNav from "../components/profile/ProfileNav";
@@ -221,100 +221,6 @@ export default function ProfileDetail({ navigation, route }) {
     checkSub();
   }, []);
 
-  const listOfProducts = [
-    "TizlySub1",
-    "TizlySub2",
-    "TizlySub3",
-    "TizlyUserSubscription004",
-    "TizlyUserSubscription005",
-    "TizlyUserSubscription006",
-    "TizlyUserSubscription007",
-    "TizlyUserSubscription008",
-  ];
-
-  useEffect(() => {
-    const main = async () => {
-      const userId = supabase.auth.currentUser.id;
-      Purchases.setDebugLogsEnabled(true);
-
-      await Purchases.configure({
-        apiKey: "appl_YzNJKcRtIKShkjSciXgXIqfSDqc",
-        appUserID: userId,
-      });
-
-      const prods = await Purchases.getProducts(listOfProducts);
-
-      // console.log("prods", prods);
-
-      const customerInfo = await Purchases.getCustomerInfo();
-
-      const currentSubscription = customerInfo.activeSubscriptions;
-
-      async function findProduct() {
-        const box = {
-          allProducts: prods.map((i) => i.identifier),
-          userSubs: currentSubscription,
-        };
-
-        const intersection = box.allProducts.filter(
-          (element) => !box.userSubs.includes(element)
-        );
-
-        let availableSubscription =
-          intersection[Math.floor(Math.random() * intersection.length)];
-
-        // console.log("currentSubscription", currentSubscription);
-        // console.log("availableSubscription", availableSubscription);
-        // console.log("customerInfo", customerInfo);
-
-        setSubscriptions(availableSubscription);
-      }
-
-      findProduct();
-    };
-    main();
-  }, []);
-
-  async function subscribeToUser() {
-    const customerInfo = await Purchases.getCustomerInfo();
-    setSubLoading("loading");
-    try {
-      const resp = await Purchases.purchaseProduct(
-        subscriptions,
-        null,
-        Purchases.PURCHASE_TYPE.INAPP
-      );
-
-      const res = await supabase.from("subscriptions").insert([
-        {
-          userId: supabase.auth.currentUser.id,
-          creatorId: item.user_id,
-          creatorProfileImage: item.profileimage,
-          userProfileImage: user.profileimage,
-          creatorUsername: item.username,
-          userUsername: user.username,
-          creatorDisplayname: item.displayName,
-          userDisplayname: user.displayName,
-          subscriptionName: subscriptions,
-        },
-      ]);
-
-      setSubStatus(res.body[0].status);
-
-      setSubLoading("idle");
-
-      return resp && res;
-    } catch (error) {
-      if (error.userCancelled) {
-        setSubLoading("idle");
-      } else {
-        setSubLoading("idle");
-        Alert.alert("Something Went Wrong, Try Again");
-        console.log("error", error);
-      }
-    }
-  }
-
   async function handleFollowing() {
     isFollowing === false ? followUser() : unfollowUser();
     setIsFollowing((previousState) => !previousState);
@@ -394,7 +300,6 @@ export default function ProfileDetail({ navigation, route }) {
           videoCount={videoCount}
           textCount={textCount}
           subLoading={subLoading}
-          subscribeToUser={subscribeToUser}
         />
 
         <ProfileNav
@@ -408,7 +313,6 @@ export default function ProfileDetail({ navigation, route }) {
           textCount={textCount}
           subLoading={subLoading}
           navigation={navigation}
-          subscribeToUser={subscribeToUser}
         />
         <View
           style={{
